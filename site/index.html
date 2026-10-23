@@ -14,62 +14,90 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-cover.png">
 <title>The Bot Beat the Hacker</title>
-<meta name="description" content="Automated searchers watched for crypto exploits, copied them and landed first. A data-journalism reconstruction of the races, from the mempool to the builder auction to the block.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/race.css">
+<link rel="stylesheet" href="assets/index.css">
 </head>
-<body>
+<body data-page="index">
 <main id="main">
-  <section class="hero" aria-labelledby="h1">
-    <canvas id="forest" aria-hidden="true"></canvas>
-    <div class="wrap">
-      <div class="herogrid">
-        <div>
-          <p class="kicker">The dark forest, 2021 to 2026</p>
-          <h1 id="h1">The bot beat the hacker.</h1>
-          <p class="dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
+  <section class="hx art-hero night" aria-labelledby="h1" style="--art-x:74%;--art-y:56%">
+    <picture class="art"><img src="assets/art/art-02-race-to-block-gate-1672.webp" srcset="assets/art/art-02-race-to-block-gate-800.webp 800w, assets/art/art-02-race-to-block-gate-1280.webp 1280w, assets/art/art-02-race-to-block-gate-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A green streak and an amber streak of light race across wet ground at night toward a tall glowing gate." fetchpriority="high" decoding="async"></picture>
+    <div class="wrap hx-open">
+      <div class="hx-text">
+        <p class="kick-line hx-kicker">A three-part series on the dark forest, 2021 to 2026</p>
+        <h1 id="h1">The bot beat the hacker.</h1>
+        <p class="hx-dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
+        <p class="hx-cta"><a class="btn" href="race.html">Start with part 1: the race</a><a class="btn btn-ghost" href="#data">Data and evidence</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap hx-race-sec" aria-label="The Makina race, playable">
+      <figure class="hx-race" id="hx-race" aria-labelledby="hx-race-h">
+        <div class="hx-race-top">
+          <p class="hx-race-k">Watch one race</p>
+          <h2 id="hx-race-h">Makina, <span id="hx-date">20 Jan 2026</span></h2>
+          <p id="hx-sum">Loading the race&hellip;</p>
         </div>
-        <figure class="slotfig" id="hookfig" style="margin:0"></figure>
-      </div>
-      <div class="prose hook" id="makina" aria-live="off">
-        <p id="hook">Loading the first race&hellip;</p>
-      </div>
-
-      <div class="stats" id="stats" role="list"></div>
-      <p class="statnote" id="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#table">the table below</a>, with a link to the saved source behind every value.</p>
-    </div>
+        <div class="hx-ctrl" id="hx-ctrl"></div>
+        <div class="hx-cap" id="hx-cap" aria-live="polite"></div>
+        <div class="hx-chart" id="hx-chart"></div>
+        <div class="hx-split" id="hx-split"></div>
+        <figcaption class="hx-src" id="hx-src"></figcaption>
+      </figure>
   </section>
 
-  <section class="sec wrap" id="famous" aria-labelledby="famous-h">
-    <h2 id="famous-h">Hacks you may have heard of</h2>
-    <div class="prose"><p>Some of the best-known incidents where a bot got to the money first. Each card opens the race replay.</p></div>
-    <ul class="famous" id="famlist"></ul>
+  <section class="sec wrap" id="numbers" aria-labelledby="num-h">
+    <h2 id="num-h" class="sr">The headline numbers</h2>
+    <div class="nums" id="stats" role="list"></div>
+    <p class="statnote" id="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#data">the race table</a>, with a link to the saved source behind every value.</p>
   </section>
 
-  <section class="sec wrap" id="story">
-    <h2>What a race looks like</h2>
-    <div class="prose">
-      <p>An attacker sends a transaction that drains a contract. Before that transaction lands, it exists in three places at once: in the public mempool, if it was sent there; in the builder auction that runs inside every twelve-second slot; and, once the slot is won, in the block.</p>
-      <p>A bot that spots the attack can copy it, swap in its own address, and bid for the block. The winning bid is the only thing the proposer sees. Everything else in this piece is reconstructed from saved responses: relay bid streams, mempool archives, blocks and traces. Pick any race below and replay it.</p>
+  <section class="sec wrap" id="series" aria-labelledby="series-h">
+    <h2 id="series-h">Read the series</h2>
+    <div class="parts" id="parts"></div>
+  </section>
+
+  <section class="art-band night fam-band" id="famous" aria-labelledby="famous-h" style="--art-x:72%;--art-y:50%">
+    <picture class="art"><img src="assets/art/art-05-stopwatch-returned-envelope-1672.webp" srcset="assets/art/art-05-stopwatch-returned-envelope-800.webp 800w, assets/art/art-05-stopwatch-returned-envelope-1280.webp 1280w, assets/art/art-05-stopwatch-returned-envelope-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A silver stopwatch resting against a dark envelope on wet stone." loading="lazy" decoding="async"></picture>
+    <div class="wrap">
+      <p class="kick-line">Where the money went</p>
+      <h2 id="famous-h">Hacks you may have heard of</h2>
+      <div class="prose"><p>Where the money went in the best-known races. Each bar is everything the bot took: what went back to the victim, what was paid to the block builder and proposer to go first, what the bot kept, and gas and other costs. Where money was later added from other funds, the bar includes it and says so underneath.</p></div>
     </div>
   </section>
+  <section class="sec wrap fam-sec" aria-label="Famous races, the whole money split">
+    <div class="fig-key fam-key" aria-hidden="true"><span><i class="s-ret"></i>returned to the victim</span><span><i class="s-bld"></i>builder and proposer</span><span><i class="s-bot"></i>kept by the bot</span><span><i class="s-oth"></i>gas and other</span><span><i class="s-unk"></i>unknown</span></div>
+    <ol class="famx" id="famlist"></ol>
+  </section>
 
-  <section class="sec wrap" id="table" aria-labelledby="table-h">
-    <h2 id="table-h">Every race, side by side</h2>
-    <div class="prose"><p>Sort by any column. Each row opens a replay. The small <a class="raw" href="methods.html#raw">raw</a> tags open the saved response behind a number.</p></div>
-    <div class="tools">
-      <span id="filt-l">Show</span>
-      <div class="seg" role="group" aria-labelledby="filt-l">
-        <button type="button" id="f-head" aria-pressed="true">Bot beat the hacker</button>
-        <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
+  <section class="sec wrap ev-sec" id="data" aria-labelledby="data-h">
+    <div class="ev-head">
+      <h2 id="data-h">Data and evidence</h2>
+      <p class="ev-lede">Every race we checked, including the ones that turned out not to be races. Each row opens a replay; every number links the saved response it came from.</p>
+      <ul class="ev-links">
+        <li><a href="methods.html"><b>Methods</b><span>how races were found, timed and counted</span></a></li>
+        <li><a href="paper.html"><b>Paper</b><span>the full findings, with every caveat</span></a></li>
+        <li><a href="data/incidents.json"><b>incidents.json</b><span>the dataset behind this table</span></a></li>
+      </ul>
+    </div>
+    <div id="table">
+      <h3 id="table-h">Every race, side by side</h3>
+      <div class="tools">
+        <span id="filt-l">Show</span>
+        <div class="seg" role="group" aria-labelledby="filt-l">
+          <button type="button" id="f-head" aria-pressed="true">Bot beat the hacker</button>
+          <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
+        </div>
+        <span class="muted" id="count"></span>
       </div>
-      <span class="muted" id="count"></span>
+      <div class="tblwrap"><table class="cmp" id="cmp" aria-labelledby="table-h"></table></div>
+      <p class="tblnote" id="tblnote"></p>
     </div>
-    <div class="tblwrap"><table class="cmp" id="cmp"></table></div>
-    <p class="tblnote" id="tblnote"></p>
   </section>
 
   <section class="sec wrap" id="types" aria-labelledby="types-h">
@@ -91,15 +119,9 @@
     <p class="tblnote" id="msgnote"></p>
   </section>
 
-  <section class="sec wrap" aria-labelledby="more-h">
-    <h2 id="more-h">Then go deeper</h2>
-    <div class="pair">
-      <a class="tz" href="explainer.html"><h3>How front-running bots work</h3><p>Eight steps from a hidden exploit to a block, with a reverse-engineered bot (Yoink) as the worked example: the calldata interpreter, address substitution, the profit guard and the per-mille bribe.</p></a>
-      <a class="tz" href="evolution.html"><h3>Has the dark forest evolved?</h3><p id="evo-teaser">Attackers went private. The charts show how much, and what it did to the bots' window.</p></a>
-    </div>
-  </section>
 </main>
 <script src="assets/common.js"></script>
+<script src="assets/race.js"></script>
 <script src="assets/index.js"></script>
 </body>
 </html>

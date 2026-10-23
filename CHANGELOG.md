@@ -2,6 +2,16 @@
 
 Dates are the data snapshot date. Corrections are welcome: see the README, "Report a correction".
 
+## 2026-10-23: v2 site, a three-part series
+
+Same data snapshot as the first release; the site is rebuilt around three parts.
+
+- **Part 1, the race.** Makina told second by second, with every bid for the next block on a linear ETH scale. Per-race pages use the same chart; the log scale is now an optional toggle.
+- **Part 2, how the bot works.** One bot taken apart step by step on the Ronin copy (58 of 61 calldata words identical): the decoded program, the profit check, the per-mille payment rule, the auction and the payouts.
+- **Part 3, has the dark forest changed?** Attacker transactions seen in the public mempool, constructor-only exploits, the deploy-to-attack gap and bot payments by era.
+- **Whole money splits.** Every split shows returned to the victim, paid to the builder and proposer, kept by the bot and other costs, and closes to the amount moved; rows mixing unpriced tokens say "mixed, not reconciled". An independent check of every rendered number found scope and wording issues (no wrong headline figures); all were fixed.
+- **Reduced motion.** Every visual renders complete with reduced motion on; motion only starts from the reader's controls.
+
 ## 2026-10-21: first public release
 
 Data snapshot through 21 October 2026.

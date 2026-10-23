@@ -3,140 +3,162 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How front-running bots work | The Bot Beat the Hacker</title>
-<meta name="description" content="Eight steps from a hidden exploit to a block, with the reverse-engineered Yoink bot as the worked example.">
+<title>How the bot works | The Bot Beat the Hacker</title>
+<meta name="description" content="Part 2 of 3. One front-running bot, Yoink, taken apart step by step on the Ronin bridge copy: watch, simulate, copy and swap the beneficiary, check the profit, set the bribe, bid, get in first, pay out, give it back.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/explainer.css">
 </head>
-<body>
-<main id="main" class="wrap">
-  <header class="ihead" style="padding-bottom:20px">
-    <h1>How a front-running bot beats a hacker</h1>
-    <p class="lede" style="margin-top:20px">One toy exploit, followed through eight steps: a public <code>withdraw(to)</code> function that pays whoever the caller names. Then the same story with a real bot, Yoink, taken apart from its on-chain behaviour.</p>
-    <p class="small mono muted prose">Evidence labels follow the project: confirmed on chain unless marked <em>inferred</em>. Pre-August-2023 claims are in-block evidence only.</p>
+<body data-part="2">
+<main id="main" class="xp">
+
+  <header class="xp-hero">
+    <div class="xp-open art-hero night scrim-wide" style="--art-x:80%;--art-y:46%">
+      <picture class="art"><img src="assets/art/art-04-copied-mechanism-1672.webp" srcset="assets/art/art-04-copied-mechanism-800.webp 800w, assets/art/art-04-copied-mechanism-1280.webp 1280w, assets/art/art-04-copied-mechanism-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A brass mechanism hanging over still, dark water, its exact copy reflected beneath it." fetchpriority="high" decoding="async"></picture>
+      <div class="wrap xp-open-in">
+        <p data-series-kicker="2"></p>
+        <h1>How a bot steals a hack in one block</h1>
+        <p class="xp-dek" id="dek">On 6 August 2024 a user asked the Ronin bridge to pay out <span class="q">2,640.82 USDC</span>. Seconds after that request showed up in public, a bot called Yoink had copied it, changed <b>3 of its 61 words</b>, and collected <span class="q">1,998,046.875 USDC</span> instead. This page takes that bot apart, one step at a time.</p>
+      </div>
+    </div>
+    <div class="wrap xp-under">
+    <div class="xp-top">
+    <figure class="hw" id="hero-words" aria-label="The user's request and Yoink's copy, word by word"><p class="loading">Reading both transactions…</p></figure>
+    </div>
+
+    <section class="machine" aria-labelledby="mach-h">
+      <div class="mach-head">
+        <p id="mach-h">The whole machine, using the Ronin copy. Press play to walk through it, or pick any step.</p>
+        <div class="mach-ctrl" role="group" aria-label="Walk through the steps">
+          <button class="xbtn solid" type="button" id="m-play">Play</button>
+          <button class="xbtn" type="button" id="m-prev" aria-label="Previous step">Back</button>
+          <button class="xbtn" type="button" id="m-next" aria-label="Next step">Next</button>
+          <button class="xbtn" type="button" id="m-all">Show all</button>
+        </div>
+      </div>
+      <ol class="mach" id="mach"></ol>
+      <div class="mach-prog" aria-hidden="true"><i id="m-prog"></i></div>
+      <p class="mach-cap" id="mach-cap" aria-live="polite"></p>
+    </section>
+    </div>
   </header>
 
-  <div class="steps">
-    <section class="step" id="s1"><div><span class="n">Step 1 of 8</span><h2>The attacker prepares, usually in two transactions</h2>
-      <p>Most exploits are split in two: deploy an exploit contract, then trigger it. In BACKRUNNER's sample of 54 attacks (January 2023 to May 2024), 50 had the exploit contract deployed at least a second before the trigger. That gap is the bot's window.</p>
-      <p>Some attacks do everything inside a contract's constructor, so no separate trigger exists to copy. Exploit contracts also tend to carry their own guards: an equality check on <code>msg.sender</code> or <code>tx.origin</code> against a constant is the most common.</p></div>
-      <figure><svg id="f1" viewBox="0 0 520 190" role="img" aria-label="Two lane timeline: deploy the exploit contract in block N, trigger it later, with the gap between them marked"></svg><figcaption>The window between deploy and trigger. Our own measurement of that gap by year is on <a href="evolution.html">the evolution page</a>.</figcaption></figure></section>
+  <div class="wrap">
 
-    <section class="step" id="s2"><div><span class="n">Step 2 of 8</span><h2>The transaction travels in public, or in private</h2>
-      <p>A public transaction is broadcast over the peer-to-peer network, so anyone running a node sees it. A private one goes straight to a builder or a searcher-facing relay and stays invisible until it is included.</p>
-      <p>BACKRUNNER (a different method, a different sample) measured 158 attack transactions between January 2023 and May 2024 and found only 17 in the public mempool before block broadcast. In our own measurement, <span id="ev-vis">most exploit transactions never touched the public mempool</span>.</p></div>
-      <figure><svg id="f2" viewBox="0 0 520 190" role="img" aria-label="A fork in the road: the transaction goes either to the public mempool where many nodes see it, or privately to a builder"></svg><figcaption>Where the mempool archive has no sighting we say "not seen", never "private". The submission route remains unknown.</figcaption></figure></section>
+    <section class="xs" id="watch" aria-labelledby="h-watch">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 1 of 10</span>
+        <h2 id="h-watch">Watch for anything that pays</h2>
+        <p>A bot has to notice money it could take before anyone else does. That can be a request still waiting in the public mempool, a setup transaction that just landed, or a contract that was just deployed.</p>
+        <p>Here are three races, each read left to right in time: what became public first, then where the bot's copy landed.</p>
+      </div>
+      <div class="xs-vis" id="v-watch"><p class="loading">Loading the three races…</p></div>
+    </section>
 
-    <section class="step" id="s3"><div><span class="n">Step 3 of 8</span><h2>The bot sees it, and throws most things away</h2>
-      <p>A generalized front-runner watches pending transactions. Nearly all are not worth a simulation, so a cheap filter runs first. Real deployments read from low-latency feeds rather than their own gossip.</p>
-      <p>We have not measured the bot's funnel, so the diagram is qualitative: thousands in, a handful simulated.</p></div>
-      <figure><svg id="f3" viewBox="0 0 520 190" role="img" aria-label="A funnel: many pending transactions pass a cheap filter, then a few enter simulation"></svg><figcaption>Qualitative. No counts are claimed.</figcaption></figure></section>
+    <section class="xs" id="simulate" aria-labelledby="h-simulate">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 2 of 10</span>
+        <h2 id="h-simulate">Run it in private first</h2>
+        <p>Before copying anything, a bot must know what a transaction does. It runs it on its own copy of the chain and reads off who ends up richer.</p>
+        <p>That morning an upgrade had broken a check in the Ronin bridge, so a withdrawal request with a different recipient, or a bigger amount, would still pay. We replayed the same tests on a local copy of the chain. Nothing was broadcast.</p>
+      </div>
+      <div class="xs-vis" id="v-simulate"><p class="loading">Loading the replays…</p></div>
+    </section>
 
-    <section class="step" id="s4"><div><span class="n">Step 4 of 8</span><h2>Simulate on a fork and find who gains</h2>
-      <p>The bot runs the pending transaction against a local fork of the latest state. If it reverts, give up. If it succeeds, look for an account whose balance goes up. If no one gains, give up.</p>
-      <p>The original Dark Forest essay added a nastier detail: a bot can execute the transaction and copy profitable <em>internal</em> calls from its trace, which defeated simple obfuscation.</p></div>
-      <figure><svg id="f4" viewBox="0 0 520 190" role="img" aria-label="Pending transaction goes into a fork of the latest state with an EVM trace, then who gained is read from token balance changes; two exits: reverted, or no gainer"></svg></figure></section>
+    <section class="xs" id="copy" aria-labelledby="h-copy">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 3 of 10</span>
+        <h2 id="h-copy">Copy it, and change who gets paid</h2>
+        <p>The user's request is 61 words of 32 bytes. Yoink's copy kept 58 of them, including all 16 validator signatures that approve the withdrawal.</p>
+        <p>It changed only the two recipient addresses, to its own contract, and the amount.</p>
+      </div>
+      <div class="xs-vis" id="v-copy"><p class="loading">Reading both transactions…</p></div>
+    </section>
 
-    <section class="step" id="s5"><div><span class="n">Step 5 of 8</span><h2>Rewrite it so the profit lands with the bot</h2>
-      <p>The naive version replaces the victim's address in the calldata with the bot's. It works when the profit goes to the sender, or to an address the calldata names. Where the attack runs through the attacker's own contract, a bot has to rebuild that contract with its own addresses swapped in.</p>
-      <p>Guards matter. If the copy reverts on a <code>CALLER == constant</code> check, a capable bot patches the comparison and redeploys. And some attacks cannot be copied at all: constructor-only exploits, private-only ones, hash-gated ones.</p>
-      <p>The real Ronin diff is below, in the Yoink section.</p></div>
-      <figure><svg id="f5" viewBox="0 0 520 220" role="img" aria-label="Before and after calldata: the attacker's address is replaced by the bot's address; a CALLER equals constant check is struck out"></svg></figure></section>
+    <section class="xs" id="wrap" aria-labelledby="h-wrap">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 4 of 10</span>
+        <h2 id="h-wrap">Wrap the copy in a small program</h2>
+        <p>Yoink's contract has no fixed strategy. Calls to its main entry carry a little program: a header, then a list of operations run in order.</p>
+        <p>The copied request is just one operation. The rest turn the haul into ETH or send it to the bot's vault. Pick a race to read its tape.</p>
+      </div>
+      <div class="xs-vis" id="v-wrap"><p class="loading">Decoding the tapes…</p></div>
+    </section>
 
-    <section class="step" id="s6"><div><span class="n">Step 6 of 8</span><h2>Decide how much to bid, and where to send it</h2>
-      <p>Era by era the mechanism changed. Before 2021, bots fought public gas auctions. From December 2020, Flashbots bundles let searchers pay a miner privately, by gas price or a direct <code>coinbase</code> transfer. Since the Merge the bundle goes to a builder, who includes it and bids for the slot.</p>
-      <p>The cost of winning is large. In the races on this site the bot's coinbase payment is often most of the loot: <a href="index.html#table">see the "to builder" column</a>.</p></div>
-      <figure><svg id="f6" viewBox="0 0 520 210" role="img" aria-label="Three eras of paying for position: gas price, bundle with coinbase payment, builder bid"></svg></figure></section>
+    <section class="xs" id="check" aria-labelledby="h-check">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 5 of 10</span>
+        <h2 id="h-check">Refuse to lose money</h2>
+        <p>The contract notes its balance before the program runs and again after. If the gain is smaller than a minimum written in the header, the whole transaction undoes itself with the message <code>poor</code>.</p>
+        <p>If the check fails, everything the transaction did is rolled back. Only the gas is still spent.</p>
+      </div>
+      <div class="xs-vis" id="v-check"><p class="loading">Loading…</p></div>
+    </section>
 
-    <section class="step" id="s7"><div><span class="n">Step 7 of 8</span><h2>The builder auction inside the 12-second slot</h2>
-      <p>Builders send bids to relays. The relay forwards the best to the proposer, who signs a header, and only then is the block released. A builder's later bid can replace its earlier one. The auction is effectively over when the proposer signs, not when anyone asks for a header.</p>
-      <p>That is why the replays on this site draw bids against time relative to slot start, and why a bid that arrives a second late can be higher and still lose.</p></div>
-      <figure><svg id="f7" viewBox="0 0 520 220" role="img" aria-label="A 12 second slot clock with rows for searcher, builders, relay and proposer and marks for bids rising, header request, header signed and block published"></svg><figcaption>Schematic. Real timings for each race are in the replays.</figcaption></figure></section>
+    <section class="xs" id="bribe" aria-labelledby="h-bribe">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 6 of 10</span>
+        <h2 id="h-bribe">Hand most of the profit to the block builder</h2>
+        <p>Yoink sets its bribe in the value field of its own call. Below 1,000 the value is a share of the profit in thousandths. From 1,000 up it is a fixed amount.</p>
+        <p>At Ronin the value was 999: 99.9% of the profit went to whoever built the block. Try the rule yourself; the presets are real transactions.</p>
+      </div>
+      <div class="xs-vis" id="v-bribe"><p class="loading">Loading…</p></div>
+    </section>
 
-    <section class="step" id="s8"><div><span class="n">Step 8 of 8</span><h2>Afterwards: who owns the money?</h2>
-      <p>Nothing in the protocol decides. In practice it is ad hoc: on-chain messages, bounty offers of around 10%, sometimes nothing. The SEAL Safe Harbor (a pre-agreed rescue framework) sets a 72-hour return window and a bounty <a href="https://frameworks.securityalliance.org/safe-harbor/overview/" target="_blank" rel="noopener">live overview</a> (<a href="https://web.archive.org/web/https://frameworks.securityalliance.org/safe-harbor/overview/" target="_blank" rel="noopener">archive lookup</a>); as far as we read it, it does not address MEV bots. We found no documented case of a bot refusing to return and being pursued, and say "we found none", not "none exist".</p>
-      <p id="fates"></p></div>
-      <figure><svg id="f8" viewBox="0 0 520 230" role="img" aria-label="Decision tree from the bot holding funds to returned, returned minus bounty, kept or disputed"></svg></figure></section>
+    <section class="xs" id="bid" aria-labelledby="h-bid">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 7 of 10</span>
+        <h2 id="h-bid">Win the auction for the block</h2>
+        <p>A bribe only helps if the block carrying it is the one that gets published. Builders bid for each 12-second slot, and the proposer picks one, normally the highest.</p>
+        <p>Every dot below is one bid for the Ronin block, in ETH, against seconds from the slot's start.</p>
+      </div>
+      <div class="xs-vis" id="v-bid"><p class="loading">Loading the bids…</p></div>
+    </section>
+
+    <section class="xs" id="first" aria-labelledby="h-first">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 8 of 10</span>
+        <h2 id="h-first">Get in line ahead of the original</h2>
+        <p>Order inside a block decides who is paid. Yoink's copy ran near the top of its block; the user's own request came one block later and failed, because that withdrawal had already been paid.</p>
+      </div>
+      <div class="xs-vis" id="v-first"><p class="loading">Loading the blocks…</p></div>
+    </section>
+
+    <section class="xs" id="payout" aria-labelledby="h-payout">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 9 of 10</span>
+        <h2 id="h-payout">Pay the builder, then get most of it back</h2>
+        <p>Inside the one transaction the USDC became ETH and the bribe went to the block's builder. Later in the same block the builder sent most of it straight back to Yoink's contract and paid the proposer the winning bid.</p>
+        <p>The builder and Yoink look like one operator: the refunds, the builder's name and EigenPhi's labelling all point that way. That link is inferred, not proven.</p>
+      </div>
+      <div class="xs-vis" id="v-payout"><p class="loading">Loading the block's payments…</p></div>
+    </section>
+
+    <section class="xs" id="return" aria-labelledby="h-return">
+      <div class="xs-text">
+        <span class="xs-n"><i></i>Step 10 of 10</span>
+        <h2 id="h-return">Sometimes, give it back</h2>
+        <p>Nothing in the protocol makes a bot return anything. At Ronin, Yoink moved the money out before anyone had asked, and most of it reached a Ronin Safe that afternoon.</p>
+        <p>Across Yoink's races in our data the answer varies, from almost everything returned to nothing found.</p>
+      </div>
+      <div class="xs-vis" id="v-return"><p class="loading">Loading the returns…</p></div>
+    </section>
+
+    <section class="limits" aria-labelledby="h-limits">
+      <div><h2 id="h-limits">What we cannot see</h2><p class="small muted mono">Evidence is on-chain behaviour, saved relay and mempool responses, and our local replays.</p></div>
+      <ul>
+        <li><b>The off-chain half.</b> How Yoink finds targets, how it simulates and how it picks the bribe all happen on its own servers. Steps 1 and 2 describe what any bot must do; the chain only shows the result.</li>
+        <li><b>Some names are ours.</b> The names of the swap operations (2 to 5) are inferred from what they do, and so is the reading that the Ronin amount came from a search for the largest payable amount.</li>
+        <li><b>"First seen" is the archive's clock.</b> It is when the Flashbots mempool archive's sources saw a transaction, not when Yoink did.</li>
+        <li><b>Builder and bot as one operator</b> is inferred from in-block refunds, the builder name and EigenPhi's statement. No operator statement or on-chain label confirms it.</li>
+      </ul>
+    </section>
+
+    <div data-partnav-slot></div>
   </div>
-
-  <section class="sec" id="yoink" style="border-top:1px solid var(--line)">
-    <h2>Inside one bot: Yoink</h2>
-    <div class="prose"><p>Yoink is the bot we could take apart furthest: at Ronin we can put a user's calldata and the bot's copy side by side. It has three generations of contract and an input format that decodes exactly. Everything below comes from its on-chain behaviour and local replays. Its off-chain logic is invisible to us.</p></div>
-
-    <h3>Three generations</h3>
-    <div style="overflow-x:auto"><table class="ops"><thead><tr><th></th><th>gen 1</th><th>gen 2</th><th>gen 3</th></tr></thead><tbody>
-      <tr><th scope="row">Created</th><td>2022-12-02</td><td>2023-08-31</td><td>2025-02-08</td></tr>
-      <tr><th scope="row">Runtime size</th><td>8,586 B</td><td>10,318 B</td><td>9,954 B</td></tr>
-      <tr><th scope="row">Callback store</th><td>n/a</td><td>SSTORE</td><td>TSTORE</td></tr>
-      <tr><th scope="row">Uniswap v4</th><td>no</td><td>no</td><td>yes</td></tr>
-      <tr><th scope="row">Reverted txs</th><td>1,191 of 2,970 (40.1%)</td><td>69 of 8,148 (0.85%)</td><td>90 of 9,635 (0.93%)</td></tr>
-    </tbody></table></div>
-    <p class="small muted mono">Sample sizes differ: gen 1 was only sampled (3,000 txs). Most gen 2 and gen 3 reverts are zero-value calls. <a class="raw" href="downloads/yoink/corpus_stats.json">corpus_stats.json</a></p>
-
-    <h3>1. A calldata interpreter</h3>
-    <div class="prose"><p>The bot is not a hard-coded strategy. Its main entry takes a small program: a header, optional stored templates, then a list of operations. That is why one contract can replay a Balancer flash loan, 25 DeFi Plaza calls and a Uniswap v4 swap.</p></div>
-    <pre class="code" aria-label="Calldata grammar">selector | x:uint128 | f:uint8 (+36 B extension if nonzero) | nStores:uint8
- | stores: key:4, then entries [flag:1 | lenScript:4 | lenRet:4 | script | ret]   (flag 0xff = last)
- | ops until end of calldata</pre>
-    <div style="overflow-x:auto"><table class="ops"><thead><tr><th>op</th><th>what it does</th><th>layout</th></tr></thead><tbody>
-      <tr><td>0</td><td>CALL</td><td>len:3, to:20, data</td></tr>
-      <tr><td>1</td><td>CALL with value</td><td>len:3, to:20, value:16, data</td></tr>
-      <tr><td>2 to 5</td><td>V2 / V3 sell and buy <em>(names inferred)</em></td><td>pool:20, token:20, a:16, b:16</td></tr>
-      <tr><td>6, 7</td><td>pay the callback; advance to the next stored script</td><td>token:20 / key:4</td></tr>
-      <tr><td>8</td><td>sweep: send balance minus 1 to the vault</td><td>token:20, min:16</td></tr>
-      <tr><td>9</td><td>unwrap WETH</td><td>none</td></tr>
-      <tr><td>0x0a, 0x0b</td><td>Uniswap v4 swap (gen 3 only)</td><td>59 bytes</td></tr>
-    </tbody></table></div>
-    <p>Callbacks from pools and lenders re-enter the contract and run a script embedded in the original call or a template stored for that callback.</p>
-
-    <h3>2. Address substitution: 58 of 61 words identical</h3>
-    <div class="prose"><p>At Ronin, a user's pending withdrawal was copied by the bot. Here is the user's 1,956-byte calldata and the bot's, word by word. Grey words are identical. Red words changed.</p></div>
-    <div id="ronin"></div>
-
-    <h3>3. Simulate, then the profit guard</h3>
-    <div class="prose"><p>The contract takes a balance snapshot before and after the script and reverts with the string <code>poor</code> unless the balance rose by at least a caller-chosen minimum <code>x</code>. A bad guess costs gas, not capital. That is also why gen 2 and gen 3 revert so rarely: the off-chain simulation filters first.</p></div>
-    <pre class="code">profit = S1 - S0
-require(S1 >= S0 + x)  else revert "poor"</pre>
-
-    <h3>4. A per-mille bribe to the block's coinbase</h3>
-    <div class="prose"><p>The call's <code>msg.value</code> is not a payment. It is a parameter that the contract turns into a coinbase transfer. Below 1,000 it is a per-mille share of the profit; at 1,000 or more it is a fixed amount.</p></div>
-    <pre class="code">msg.value == 0:     no payment
-msg.value  < 1000:  bribe = profit * v / 1000;  if bribe > profit - x then bribe = (profit - x) / 2
-msg.value >= 1000:  bribe = v * 1e11 wei
-coinbase.transfer(bribe)</pre>
-    <div style="overflow-x:auto"><table class="ops"><thead><tr><th>local test</th><th>v</th><th>x</th><th>profit</th><th>coinbase received</th></tr></thead><tbody>
-      <tr><td>plain</td><td>999</td><td>0</td><td>1 ETH</td><td>0.999 ETH</td></tr>
-      <tr><td>plain</td><td>500</td><td>0</td><td>1 ETH</td><td>0.5 ETH</td></tr>
-      <tr><td>fixed</td><td>1,000</td><td>0</td><td>1 ETH</td><td>0.0001 ETH</td></tr>
-      <tr><td>fixed</td><td>10,000,000</td><td>0</td><td>1 ETH</td><td>1 ETH</td></tr>
-      <tr><td>halving rule</td><td>999</td><td>0.5</td><td>1 ETH</td><td>0.25 ETH</td></tr>
-      <tr><td>min-profit</td><td>999</td><td>2</td><td>1 ETH</td><td>reverts "poor"</td></tr>
-    </tbody></table></div>
-    <p class="small muted mono">These are local anvil tests, not chain data: <a class="raw" href="downloads/yoink/blackbox_results.json">blackbox_results.json</a>. The formula then matches real transactions to the wei:</p>
-    <div id="bribes"></div>
-
-    <h3>5. The builder refund round trip</h3>
-    <div class="prose"><p>The bot pays nearly all of its profit to the block's fee recipient. In two of the three blocks below the builder then sends part of it straight back to the bot's contract in the same block, and at Ronin nearly all of it. The proposer gets only the winning bid.</p></div>
-    <div id="refunds"></div>
-    <p class="small muted mono">Who operates the builder behind these blocks is not proven by chain data alone. EigenPhi's labelling names it as Yoink's; we report that and have not verified it on chain.</p>
-
-    <h3>What is not known</h3>
-    <ul class="prose small"><li>The off-chain logic: how it finds targets, how it simulates, how it chooses <code>v</code>.</li><li>The names of ops 2 to 5, and the explanation that the Ronin quantity came from bisection (2,000,000 x (1 - 2<sup>-10</sup>)). Both are inferences.</li><li>Gen 1 was only sampled and not decoded further.</li><li>"First seen" is the mempool archive's observation, not the bot's.</li></ul>
-  </section>
-
-  <section class="sec" aria-labelledby="atk">
-    <h2 id="atk">What attackers do about bots</h2>
-    <div style="overflow-x:auto"><table class="ops"><thead><tr><th>Tactic</th><th>Evidence</th></tr></thead><tbody>
-      <tr><td>Send privately to a builder instead of the mempool</td><td>141 of 158 invisible (BACKRUNNER); STING cannot see private txs</td></tr>
-      <tr><td>Access control: <code>msg.sender</code> or <code>tx.origin</code> equals a constant, a hash of the origin, a signed ticket</td><td>"Almost all attacks" (STING); common in the Onyx exploit contract (BACKRUNNER)</td></tr>
-      <tr><td>Profit control, execution splitting, bytecode obfuscation</td><td>32 documented strategies (EVScope)</td></tr>
-      <tr><td>Constructor-only or self-destructing exploit</td><td>EVScope, BACKRUNNER; see our <a href="evolution.html">own measurement</a></td></tr>
-    </tbody></table></div>
-    <p class="small"><a href="methods.html#prior">Prior work and what this project adds</a></p>
-  </section>
 </main>
 <script src="assets/common.js"></script>
 <script src="assets/explainer.js"></script>

@@ -3,84 +3,214 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Has the dark forest evolved? | The Bot Beat the Hacker</title>
-<meta name="description" content="Attackers went private, started doing everything in one transaction, and stopped leaving bots a window. What the numbers show, and what they cannot.">
+<title>Has the dark forest changed? | The Bot Beat the Hacker</title>
+<meta name="description" content="Part 3 of The Bot Beat the Hacker. Attackers went private, started doing the whole job in one transaction, and stopped leaving bots a window. The bots that still win changed too.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/evolution.css">
 </head>
-<body>
-<main id="main" class="wrap">
-  <header class="ihead">
-    <h1>Has the dark forest evolved?</h1>
-    <p class="lede" style="margin-top:20px" id="lede">Loading the measurements&hellip;</p>
-    <div class="banner" id="banner" role="note" hidden></div>
+<body class="ev" data-part="3">
+<main id="main">
+
+  <header class="ev-hero art-hero night" style="--art-x:62%;--art-y:50%">
+    <picture class="art"><img src="assets/art/art-01-dark-forest-1672.webp" srcset="assets/art/art-01-dark-forest-800.webp 800w, assets/art/art-01-dark-forest-1280.webp 1280w, assets/art/art-01-dark-forest-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A dark pine forest seen from above at night, a glowing green trail winding through the trees." fetchpriority="high" decoding="async"></picture>
+    <div class="wrap ev-hero-in">
+      <div class="ev-hero-txt">
+        <p data-series-kicker></p>
+        <h1>Has the dark forest changed?</h1>
+        <p class="ev-dek">Ethereum used to be a place where a hacker's transaction sat in public for a few seconds and any bot could copy it. That world is mostly gone. Here is what changed, measured on 281 exploits from 2017 to 2026.</p>
+      </div>
+      <ol class="ev-toc" id="toc" aria-label="Five changes, one per chapter"></ol>
+    </div>
   </header>
 
-  <div class="stats" id="stats" role="list" style="margin-top:28px"></div>
+  <!-- 1 -->
+  <section class="ev-ch" id="ch1" aria-labelledby="h1t">
+    <div class="wrap">
+      <header class="ev-chh">
+        <span class="ev-n" aria-hidden="true">1</span>
+        <div>
+          <h2 id="h1t">Attackers stopped waiting in public</h2>
+          <p class="ev-lede" id="ch1-lede"></p>
+        </div>
+      </header>
 
-  <section class="fig" aria-labelledby="h-meas">
-    <h2 id="h-meas">What can be measured, and when</h2>
-    <div class="prose"><p>The public mempool archive we rely on begins on 7 August 2023. Before that, nobody saved which transactions were pending, so for older exploits we have in-block evidence only. Every number below says which part of the timeline it comes from.</p></div>
-    <div class="chart" id="c-meas"></div>
-  </section>
+      <figure class="ev-fig" aria-labelledby="f1cap">
+        <div class="ev-vs" id="c1-vs"></div>
+        <figcaption id="f1cap" class="ev-cap"></figcaption>
+      </figure>
 
-  <section class="fig" aria-labelledby="h-a">
-    <h2 id="h-a">Almost no exploit transaction shows up in the public archive</h2>
-    <div class="figcols">
-      <div class="prose"><p id="a-text"></p><p class="small muted">The comparison group matters. A transaction missing from the archive could be private or simply missed by it, so we count how many <em>other</em> transactions in the same blocks were in the archive. If the archive were poor, the blue line would be low too.</p></div>
-      <div><div class="chart" id="c-a"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-a"></div></details></div>
+      <figure class="ev-fig ev-night" aria-labelledby="f1bcap">
+        <h3 class="ev-figt" id="c1-gridt">The resolved attacker transactions since the archive began, one square each. Lit: the archive saw it in public.</h3>
+        <div class="ev-lights" id="c1-grid" role="img"></div>
+        <div id="c1-key"></div>
+        <figcaption id="f1bcap" class="ev-cap"></figcaption>
+      </figure>
+      <div class="ev-cols3" id="ch1-side"></div>
+
+      <figure class="ev-fig" aria-labelledby="f1ccap">
+        <h3 class="ev-figt">Quarter by quarter: the archive kept seeing ordinary traffic, not attackers</h3>
+        <div class="ev-chart" id="c1-q"></div>
+        <figcaption id="f1ccap" class="ev-cap"></figcaption>
+      </figure>
+      <p class="ev-how" id="ch1-how"></p>
     </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-b">
-    <h2 id="h-b">More attacks happen in a single transaction</h2>
-    <div class="figcols">
-      <div class="prose"><p id="b-text"></p><p class="small muted">A constructor-only exploit runs entirely while its contract is being created. There is nothing pending to copy except the whole deployment, so a bot has to rebuild the contract with its own addresses. Whiskers are 95% Wilson intervals. Years with fewer than ten exploits are drawn faint.</p></div>
-      <div><div class="chart" id="c-b"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-b"></div></details></div>
+  <!-- 2 -->
+  <section class="ev-ch" id="ch2" aria-labelledby="h2t">
+    <div class="wrap">
+      <header class="ev-chh">
+        <span class="ev-n" aria-hidden="true">2</span>
+        <div>
+          <h2 id="h2t">Then they stopped leaving a second step</h2>
+          <p class="ev-lede" id="ch2-lede"></p>
+        </div>
+      </header>
+
+      <figure class="ev-fig" aria-labelledby="f2acap">
+        <div class="ev-shapes" id="c2-shapes"></div>
+        <figcaption id="f2acap" class="ev-cap">A copier needs something to copy. The two-step attack leaves a contract on chain for as long as the attacker waits. The one-step attack leaves nothing until it has already landed.</figcaption>
+      </figure>
+
+      <figure class="ev-fig" aria-labelledby="f2bcap">
+        <h3 class="ev-figt">Share of exploits that left a bot no window, by year</h3>
+        <ul class="ev-key"><li><i style="background:var(--atk)"></i>constructor-only, one transaction</li><li><i style="background:var(--atk);opacity:.38"></i>other ways to leave no window</li></ul>
+        <div class="ev-chart" id="c2-bars"></div>
+        <figcaption id="f2bcap" class="ev-cap"></figcaption>
+      </figure>
+      <p class="ev-how" id="ch2-how"></p>
     </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-c">
-    <h2 id="h-c">The window between deploy and attack is shrinking</h2>
-    <div class="figcols">
-      <div class="prose"><p id="c-text"></p><p class="small muted">Only exploits whose attack contract was deployed within the previous seven days are drawn. A zero gap means the same block or the same transaction, so a bot sees nothing before the attack lands.</p></div>
-      <div><div class="chart" id="c-c"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-c"></div></details></div>
+  <!-- 3 -->
+  <section class="ev-ch" id="ch3" aria-labelledby="h3t">
+    <div class="wrap">
+      <header class="ev-chh">
+        <span class="ev-n" aria-hidden="true">3</span>
+        <div>
+          <h2 id="h3t">The window shrank to about a minute</h2>
+          <p class="ev-lede" id="ch3-lede"></p>
+        </div>
+      </header>
+
+      <figure class="ev-fig" aria-labelledby="f3acap">
+        <h3 class="ev-figt">How long a fresh attack contract waited before it struck (median, minutes)</h3>
+        <div class="ev-chart" id="c3-gap"></div>
+        <figcaption id="f3acap" class="ev-cap"></figcaption>
+      </figure>
+
+      <div class="ev-story">
+        <h3 class="ev-h3">What one block leaves a copier: Makina, January 2026</h3>
+        <p class="ev-p" id="ch3-mk"></p>
+        <figure class="ev-fig" aria-labelledby="f3bcap">
+          <div class="ev-chart" id="c3-mk"></div>
+          <figcaption id="f3bcap" class="ev-cap"></figcaption>
+        </figure>
+        <p class="ev-p" id="ch3-mk2"></p>
+        <ul class="ev-dw" id="c3-dw"></ul>
+      </div>
+      <p class="ev-how" id="ch3-how"></p>
     </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-d">
-    <h2 id="h-d">Attackers stopped bidding in the gas auction</h2>
-    <div class="figcols">
-      <div class="prose"><p id="d-text"></p><p class="small muted">The priority fee is what the transaction pays on top of the base fee. It collapsed for everyone after the Merge, so the useful comparison is against the block's own median. Exploits with a zero tip cannot be drawn on a log scale; they are counted in the table.</p></div>
-      <div><div class="chart" id="c-d"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-d"></div></details></div>
+  <!-- 4 -->
+  <section class="ev-ch" id="ch4" aria-labelledby="h4t">
+    <div class="wrap">
+      <header class="ev-chh">
+        <span class="ev-n" aria-hidden="true">4</span>
+        <div>
+          <h2 id="h4t">Bots pay the builders, attackers mostly don't</h2>
+          <p class="ev-lede" id="ch4-lede"></p>
+        </div>
+      </header>
+
+      <figure class="ev-fig" aria-labelledby="f4acap">
+        <h3 class="ev-figt">Share of transactions that paid the block builder directly</h3>
+        <ul class="ev-key"><li><i style="background:var(--atk)"></i>attacker transactions, by year</li><li><i style="background:var(--bot)"></i>bot transactions, all years</li></ul>
+        <div class="ev-chart" id="c4-att"></div>
+        <figcaption id="f4acap" class="ev-cap"></figcaption>
+      </figure>
+
+      <figure class="ev-fig" aria-labelledby="f4bcap">
+        <h3 class="ev-figt">In the races a bot won: share of the take paid to the block builder</h3>
+        <div class="ev-chart" id="c4-races"></div>
+        <figcaption id="f4bcap" class="ev-cap"></figcaption>
+      </figure>
+
+      <figure class="ev-fig" aria-labelledby="f4ccap">
+        <h3 class="ev-figt" id="c4-split-t"></h3>
+        <div class="ev-split" id="c4-split"></div>
+        <figcaption id="f4ccap" class="ev-cap"></figcaption>
+      </figure>
+      <p class="ev-how" id="ch4-how"></p>
     </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-e">
-    <h2 id="h-e">What the correction removed</h2>
-    <div class="prose" id="e-text"></div>
-    <div style="overflow-x:auto"><table class="ops" id="t-e"></table></div>
+  <!-- 5 -->
+  <section class="ev-ch" id="ch5" aria-labelledby="h5t">
+    <div class="wrap">
+      <header class="ev-chh">
+        <span class="ev-n" aria-hidden="true">5</span>
+        <div>
+          <h2 id="h5t">The bots that still win changed too</h2>
+          <p class="ev-lede" id="ch5-lede"></p>
+        </div>
+      </header>
+
+      <figure class="ev-fig" aria-labelledby="f5acap">
+        <h3 class="ev-figt">Bot transactions against attacker transactions in the same exploit listings</h3>
+        <div class="ev-db" id="c5-db"></div>
+        <figcaption id="f5acap" class="ev-cap"></figcaption>
+      </figure>
+
+      <figure class="ev-fig" aria-labelledby="f5bcap">
+        <h3 class="ev-figt">The 19 races a bot won, by year and by what the bot copied</h3>
+        <div class="ev-lanes" id="c5-lanes"></div>
+        <figcaption id="f5bcap" class="ev-cap"></figcaption>
+      </figure>
+
+      <div class="ev-two ev-two-even">
+        <div class="ev-side prose" id="ch5-side"></div>
+        <aside class="ev-cb" id="c5-cb" aria-label="Where c0ffeebabe.eth appears"></aside>
+      </div>
+      <p class="ev-how" id="ch5-how"></p>
+    </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-f">
-    <h2 id="h-f">Definitions</h2>
-    <dl class="defs">
-      <dt>exposure: public or private</dt><dd>An exploit transaction is <em>public</em> if the mempool archive saw it before its block was proposed. It is <em>private</em> if the archive covered that day, saw many of the other transactions in the same block, and never saw this one. Otherwise the label is unknown. Private here means "not in the archive", which is strong evidence and not proof.</dd>
-      <dt>ordinary transactions in the same blocks</dt><dd>The share of other transactions in the exploit's block that the archive saw. This is the control for the archive's coverage on that day.</dd>
-      <dt>constructor-only exploit</dt><dd>The attack runs inside the attack contract's constructor, so deployment and attack are one transaction.</dd>
-      <dt>deploy-to-attack gap</dt><dd>Seconds between the block that created the attack contract and the block of the attack, only for contracts created within seven days before.</dd>
-      <dt>tip</dt><dd>Effective priority fee per gas, in gwei, of the first attack transaction. The block median is the median tip across all transactions in that block.</dd>
-      <dt>sample</dt><dd>Exploits listed in the DeFiHackLabs reproduction repository on Ethereum mainnet. It is a sample of public, reproduced incidents, not of all attacks.</dd>
-    </dl>
+  <section class="ev-end" aria-labelledby="hend">
+    <div class="art-band night ev-endband" style="--art-x:50%;--art-y:30%">
+      <picture class="art"><img src="assets/art/art-06-dark-forest-bottom-band-1672.webp" srcset="assets/art/art-06-dark-forest-bottom-band-800.webp 800w, assets/art/art-06-dark-forest-bottom-band-1280.webp 1280w, assets/art/art-06-dark-forest-bottom-band-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A glowing green trail running across a dark forest canopy seen from above." loading="lazy" decoding="async"></picture>
+      <div class="wrap"><p class="kick-line">The answer</p><h2 id="hend">So, has it changed?</h2></div>
+    </div>
+    <div class="wrap">
+      <div class="ev-sum" id="sum"></div>
+      <div data-partnav-slot></div>
+    </div>
   </section>
 
-  <section class="fig" aria-labelledby="h-g">
-    <h2 id="h-g">Download the data</h2>
-    <p class="small muted">Every figure on this page can be recomputed from these files. The per-exploit file carries a link to each saved response it was built from.</p>
-    <table class="dltable" id="t-dl"></table>
+  <section class="ev-data" aria-labelledby="hdata">
+    <div class="wrap">
+      <h2 id="hdata">Every number on this page</h2>
+      <p class="ev-p muted" id="data-intro"></p>
+      <div class="ev-tables" id="tables"></div>
+      <h3 class="ev-h3">Words used on this page</h3>
+      <dl class="ev-defs">
+        <dt>Public mempool</dt><dd>The shared waiting room where pending transactions are visible to every node before they land in a block.</dd>
+        <dt>Seen in the public mempool</dt><dd>The Mempool Dumpster archive recorded the transaction before its block was proposed. Not seen, when the archive saw many of the other transactions in the same block, is strong evidence that the transaction went privately to a builder.</dd>
+        <dt>Ordinary transactions in the same blocks</dt><dd>The other transactions in each exploit's block. Their seen share is the control for how much the archive was catching that day.</dd>
+        <dt>Constructor-only exploit</dt><dd>The attack runs inside the attack contract's constructor, so creating the contract and attacking are one transaction.</dd>
+        <dt>No watchable window</dt><dd>A constructor-only exploit, an attack contract created inside the attack transaction, or one deployed in the same block as the attack.</dd>
+        <dt>Fresh deploy-to-attack gap</dt><dd>Time from the block that created an attacker-owned contract to the block of the attack, for contracts created at most seven days before.</dd>
+        <dt>Paid the builder</dt><dd>A direct ETH transfer to the block's fee recipient (the builder) inside the transaction. It is how a transaction buys its place in the block.</dd>
+        <dt>Deploy-window copy</dt><dd>A bot used the attacker's own on-chain setup (a deployed contract, an upgrade or a prepare() call) before the attacker's own attack call landed.</dd>
+        <dt>Sample</dt><dd>Ethereum mainnet exploits reproduced in the DeFiHackLabs repository, with the sender of each listed transaction classified. It is a sample of public, reproduced incidents, not of all attacks.</dd>
+      </dl>
+      <table class="ev-dl" id="t-dl"></table>
+    </div>
   </section>
 </main>
 <script src="assets/common.js"></script>

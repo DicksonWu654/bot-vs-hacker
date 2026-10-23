@@ -948,8 +948,31 @@ def overlay(row, cons):
         row["detection_delay_ms"] = cons["detection_delay_ms"]
         row["delay_method"] = cons.get("detection_method")
         row["detection_delay_ub_ms"] = cons.get("detection_delay_ub_ms")
+    mon = money_of(cons)
+    if mon:
+        row["money"] = mon
     row["consolidated"] = True
     return row
+
+
+def money_of(cons):
+    """v2 money split: where every ETH of the take went (bot net, returns by side, bounty). Copied from the
+    consolidated loot/fate records so pages can show the whole split (returned / builder+proposer / bot / other)."""
+    lt, ft = cons.get("loot") or {}, cons.get("fate") or {}
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+    m = {
+        "bot_net_eth": lt.get("bot_net_eth"), "priority_fee_eth": lt.get("priority_fee_paid_eth"),
+        "returned_total_eth": ft.get("returned_total_eth"), "returned_by_bot_side_eth": ft.get("returned_by_bot_side_eth"),
+        "returned_by_builder_eth": ft.get("returned_by_builder_or_proposer_eth"), "bounty_kept_eth": ft.get("bounty_kept_eth"),
+        "victim_loss_eth": ft.get("victim_loss_eth"),
+    }
+    m = {k: v for k, v in m.items() if num(v)}
+    if isinstance(ft.get("bounty_desc"), str) and ft.get("bounty_desc"):
+        m["bounty_desc"] = ft["bounty_desc"]
+    cn = lt.get("captured_native")
+    if isinstance(cn, dict) and cn.get("desc"):
+        m["captured_desc"] = cn["desc"]
+    return m
 
 
 def _nrm(x):
@@ -1822,6 +1845,9 @@ def main():
         detail["headline"] = row["headline"]
         detail, row = scrub_c0(detail, row)
         scrub_makina_narrative(detail)
+        # every relay bid file behind the row's bid total, so the race table can link all of them (not just Flashbots)
+        if isinstance(row.get("raw"), dict):
+            row["raw"]["bids_all"] = [dict(relay=a["relay"], url=a["url"]) for a in (((detail.get("auction") or {}).get("raw") or {}).get("bids_all") or [])]
         (DATA_OUT / "incident" / f"{row['id']}.json").write_text(json.dumps(detail, separators=(",", ":")))
         rows.append(row)
     # consolidated rows with no replay (rejected non-races, late copies): table rows only, no race page

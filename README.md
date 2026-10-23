@@ -2,7 +2,7 @@
 
 When a smart contract is exploited, the attacker is not the only one who can read the exploit. A generalized front-runner, a bot that copies a profitable transaction and swaps in its own beneficiary, can sometimes land its copy first. This repository reconstructs those races on Ethereum, second by second: 29 incidents split into 43 races, with the block-builder auction rebuilt from relay bid traces and the attacker's first-seen time from the Flashbots mempool archive wherever those exist. In 15 incidents (19 races) a bot beat the hacker, with the recorded verdicts. Euler is excluded because the copier may be the attacker’s own second account.
 
-- Live site: https://bot-beat-the-hacker.shadow654.chatgpt.site (source in `site/`)
+- Live site: https://bot-beat-the-hacker.shadow654.chatgpt.site (source in `site/`), a three-part series: The race (`race.html`), How the bot works (`explainer.html`), Has the dark forest changed? (`evolution.html`)
 - Paper: https://bot-beat-the-hacker.shadow654.chatgpt.site/paper.html (also `paper/paper.md` here)
 - Repository: https://github.com/DicksonWu654/bot-vs-hacker
 
