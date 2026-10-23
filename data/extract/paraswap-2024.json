@@ -1,0 +1,261 @@
+[
+ {
+  "slug": "paraswap-2024",
+  "name": "Paraswap Augustus V6 uniswapV3SwapCallback missing caller check",
+  "date_utc": "2024-03-19T18:25:35Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "bot-was-first-exploiter",
+  "race_type_reason": "Yoink's tx is the first direct call to Augustus V6's uniswapV3SwapCallback entry in the scanned range; no earlier or same-block attacker tx exists, and the next such call is 11 h 13 min later by independent actors who did not replay Yoink's calldata.",
+  "one_liner": "Yoink was the first to exploit Paraswap Augustus V6's missing callback caller check, pulling 12,479 OPSEC (6.46 WETH) from one approving wallet 11 hours before anyone else; no return to the victim or Paraswap found.",
+  "attacker": {
+   "eoa": null,
+   "eoas": [],
+   "contracts": [],
+   "funding": "n/a",
+   "funding_tx": null,
+   "deploy_tx": null,
+   "deploy_block": null,
+   "attack_txs": [],
+   "none_reason": "No hostile attacker earlier than or in the same block as the bot: Yoink's tx is the first direct callback call in blocks 19426044-19481999; the later actors (from 2024-03-20 05:38 UTC) are independent users of the same bug."
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "tx": "0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60",
+   "block": 19470561,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "Yoink (same bot, 2nd tx)",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0xaed21758134ab27c8866dd5d82c04186609bed7549a75c80422496764c1fee58",
+    "block": 19470561,
+    "position": 1,
+    "status": "success",
+    "role": "post-exploit arbitrage of the V3/V2 price tx0 had moved; 0.098 ETH to coinbase"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0x0000000000d67e5d5f991a40f04ed40fa3b150df",
+    "tx": "0x83f11ad653a9cdee52e54db2365947c61dd054af250f7fcf52240967eea4095a",
+    "block": 19473885,
+    "position": 198,
+    "status": "success",
+    "role": "2024-03-20T05:38:47Z: BNT (token 0x1f573d6f...) 30,000.00000000089 moved 0x6133de40 -> 0x62c94e37; callback `from` = third-party wallet. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0x0000000000d67e5d5f991a40f04ed40fa3b150df",
+    "tx": "0x893fc9c3b9d4837f5afa950784ade06c4d82343883acce933e13dc2a932c58e6",
+    "block": 19474225,
+    "position": 277,
+    "status": "success",
+    "role": "2024-03-20T06:47:23Z: 20,000 USDT 0x567b8492 -> 0xdcf83d17. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0x8c036aa7ef5b58922f72f9d9cfd70c9d18add40e",
+    "tx": "0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe",
+    "block": 19474732,
+    "position": 23,
+    "status": "success",
+    "role": "2024-03-20T08:29:23Z: 145 CTSI via fake pool -> 0.0123 WETH to EOA. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+    "tx": "0xfb3ec9ba69c0d7cd79a763167409f740c8a45af02a1dd4a947f39834a04ecb06",
+    "block": 19475538,
+    "position": 14,
+    "status": "success",
+    "role": "2024-03-20T11:13:35Z: 1,033,695 XWG taken from 0x7a6c8dcc... (victim wallet), tip 4.58 gwei. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+    "tx": "0x9104735d148856507a797abeb4493b20ca79da9da0949c7ad49d6f056b4e69d9",
+    "block": 19475708,
+    "position": 45,
+    "status": "success",
+    "role": "2024-03-20T11:47:59Z: 335.94 UNIBOT. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0xcc3a5dc003b3a58621745a39f706ef9646d5c481",
+    "tx": "0x904099bdaf93097c24d91fdb75bf607c9125ec4c8794056bed9f5aeb11b2b6dd",
+    "block": 19476151,
+    "position": 3,
+    "status": "success",
+    "role": "2024-03-20T13:16:47Z: 39,994.4 USDP. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   },
+   {
+    "label": "independent later actor",
+    "eoa": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+    "tx": "0x1e73c4205822c28a5cb85fa354771bb4a72eb1778b68932e7ab7ba9559db09ec",
+    "block": 19479351,
+    "position": 0,
+    "status": "success",
+    "role": "2024-03-21T00:02:11Z: 35,568 cvxPrisma. independent later use of the same bug; not a replay of Yoink; attribution (Velora white hack vs attacker) unverified except where a source says so"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2024-03-19 (csv and sourcelog present); Yoink's tx 0x35a73969 is not in it (private flow). There is no attacker tx to look up.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No trigger tx: the bot found the bug itself; no attacker or user tx preceded it."
+  },
+  "attacker_block": null,
+  "attacker_block_note": "No attacker tx exists to compare against; the first independent use of the bug is block 19473885 (2024-03-20T05:38:47Z), after the bot.",
+  "attacker_reference": {
+   "kind": "none",
+   "block": null,
+   "tx": null
+  },
+  "auction": {
+   "block": 19470561,
+   "slot": 8670726,
+   "slot_start_utc_ms": 1710872735000,
+   "relays_answered": [
+    "ultrasound"
+   ],
+   "n_bids": 0,
+   "n_builders": 0,
+   "bids_per_relay": {},
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": 2.2228751502720994,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": 2.2228751502720994,
+   "proposer_payment_tx": "0x3e0523a3fa76c726de186de67619f25a82af74fae931f3a770efb8deb3b289c1",
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/paraswap-2024/race_19470561.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block19470561.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "No bid history: Flashbots has no bids for this slot (proposer not registered there) and Ultrasound's 2024-03 bids have expired; only the delivered payload (Ultrasound, builder 'I can haz block?', 2.2229 ETH to the proposer) exists."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 6.463332789527,
+   "gross_loot_method": "WETH.withdraw ETH delivered to the Yoink contract in the bot tx trace, from selling 12,479.437 OPSEC (pulled from victim wallet 0x0cc396f5 by Augustus V6) into Uniswap V3 pool 0x45f4d604",
+   "captured_native": {
+    "amount": "12479.437104",
+    "unit": "OPSEC",
+    "desc": "OPSEC transferFrom the approving wallet 0x0cc396f5 to the V3 pool, sold for 6.4633 WETH"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 6.450406123948,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 4.336929660883,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 4.349856326462,
+   "loot_note": "Scope is tx0 (index 0): gross 6.4633 ETH, 99.8% (6.4504) paid to the coinbase, priority fee 0. The builder refund (index 13, 4.3369 ETH) is a block-level remainder: coinbase payments in the block are 6.5484 ETH (tx0 + tx1), proposer got 2.2229 ETH, so the refund also covers Yoink's arbitrage tx1 (net +0.0092 ETH). bot_net = gross - coinbase + refund; with tx1 included the incident's figure is 4.359 ETH."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "No return to the victim wallet 0x0cc396f5 or to Paraswap/Velora found. Checked: no Yoink -> victim transfer in blocks 19470561-19475000 (trace_filter, empty) and the victim's inbound ETH to block 19490000 is only two transfers from 0x3fc91a3a (5.905 ETH total, blocks 19470763 and 19471472, source unknown and not shown to be a Yoink or Paraswap return). Full-history check of Yoink's later flows was not done. 'None found' is not 'none'.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": 4.349856326462,
+   "returned_txs": [],
+   "public_statement": "Velora post-mortem (not retrievable here, HTTP 403) reportedly lists ~$24K initial loss matching this tx; DeFiHackLabs and Etherscan label the actor a whitehat, which on-chain behaviour does not support.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_19470561.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_19470561.json",
+    "site/raw/rpc/receipts_19470561.json"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json",
+    "site/raw/rpc/trace_block_19470561.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_19470561.json",
+    "site/raw/rpc/block_19470561.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_19470561.json",
+    "site/raw/rpc/trace_block_19470561.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json",
+    "site/raw/rpc/block_19470561.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json",
+    "site/raw/rpc/block_19470561.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.return_status": [
+    "site/raw/rpc/para_victim_in_19470562_19490000.json",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "no trigger tx exists; Yoink's own tx is not in mempool-dumpster"
+   },
+   {
+    "field": "auction.bids",
+    "why": "no bid history for slot 8670726 (Flashbots had no bids, Ultrasound history expired)"
+   },
+   {
+    "field": "fate.returned_*",
+    "why": "full-history trace of Yoink's later flows not done; Velora post-mortem not fetchable"
+   }
+  ],
+  "discrepancies": [
+   "DeFiHackLabs/press date the incident 2024-03-20 (Paraswap pause); the first on-chain abuse is this tx on 2024-03-19 18:25:35Z.",
+   "incident.json 'Yoink net 4.359 ETH' includes tx1 (+0.0092) and the whole builder refund; the row's bot_net for tx0 only is 4.34986 ETH."
+  ],
+  "evidence_notes": [
+   "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json: tx0 = Yoink contract -> Augustus V6 0x00000000fdac... selector 0xfa461e33 (callback entry) at depth 1 with no Augustus swap above it; Augustus then calls V3 pool 0x45f4d604 swap(recipient = Yoink) and pulls OPSEC from the victim wallet via transferFrom; WETH.withdraw then coinbase transfer.",
+   "Across the 253 saved trace_filter chunks (blocks 19426044-19481999, toAddress = Augustus) the earliest call to 0xfa461e33 at trace depth <= 1 is this tx (19470561/0); the next is block 19473885 (11 h 13 min later), then 19474732.",
+   "incidents/paraswap-2024/callback_calldata_words.json: same selector and layout in the later actors' calls but different victim/token/amount, so they are independent uses of the bug, not replays of Yoink's calldata.",
+   "Bribe rule: msg.value 998 (per mille) x 6.4633 WETH = 6.4504 ETH, equal to the coinbase transfer in the trace; builder 'I can haz block?' then refunded 4.3369 ETH at index 13."
+  ],
+  "incident_dir": "incidents/paraswap-2024"
+ }
+]

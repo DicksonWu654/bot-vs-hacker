@@ -1,0 +1,1147 @@
+{
+ "yoink_eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+ "method": "(1) 98 decoded on-chain messages (yoink_messages.json) matched to Yoink bot txs by quoted hashes and timing; (2) DeFiHackLabs exploit blocks (research/chain-scan/exploits_mainnet.json) +-3..5 blocks vs Yoink bot txs; (3) bot internal-transfer lists (coinbase = last outgoing ETH transfer, msg.value>0). Candidates only, not verified: no victim-call/calldata diffs done. Per-mille profit estimate only valid for gen2/gen3 (msg.value<1000); gen0/gen1 use absolute bribes.",
+ "evidence_level": "candidate (in-block / message evidence only; pre-Aug-2023 has no mempool archive)",
+ "already_in_incident_list_reference": [
+  "ronin-2024",
+  "kelp-rseth-2026",
+  "defiplaza-2024",
+  "uncx-2026",
+  "time-2023",
+  "transitswap-2022",
+  "paraswap-2024",
+  "alkimiya-2025",
+  "sushi-rp2-2023",
+  "makina-2026",
+  "curve-vyper-2023",
+  "balancer-2025",
+  "securedfinance-2026",
+  "bifi-2026"
+ ],
+ "candidates": [
+  {
+   "name": "DFX Finance reentrancy (2022-11-10)",
+   "confidence": "probable",
+   "in_our_incident_list": false,
+   "why": "DHL attack tx 0x6bfd9e28.. at block 15941704 idx 72; Yoink gen0b (0x6c6b87d4) made 8 coinbase-paying txs in blocks 15941742-15941768 (37-64 blocks after the attacker), then funded its bot with 65 ETH (tx 0xe3b1af6c0d2f..). Victim message + Yoink reply \"I frontran the real attacker\" (2022-11-11).",
+   "yoink_txs": [
+    {
+     "tx": "0x2b6274ae9444a479a57109f98e50c863991f6b1fa6e1a584e52ef5b809e7c779",
+     "block": 15941742,
+     "index": 125,
+     "time_utc": "2022-11-10T19:35:35Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "53056169",
+     "status": "success",
+     "coinbase_or_last_out_eth": 5.3056
+    },
+    {
+     "tx": "0x3f6ba6eebc94c8c232df79d21a2a3b3c7a0db53fb34070a419cf5085fcf5ddba",
+     "block": 15941742,
+     "index": 127,
+     "time_utc": "2022-11-10T19:35:35Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "100000000",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.0
+    },
+    {
+     "tx": "0x8fa75cabacbcf6a787e7fb9bc3a11c63b3194e98739b3a8040e3a86319a55ecd",
+     "block": 15941742,
+     "index": 129,
+     "time_utc": "2022-11-10T19:35:35Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "100000000",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.0
+    },
+    {
+     "tx": "0x4cb9683236110ff66962c1d6f90e9468363d7bce1d4af81de5c3db35827854e7",
+     "block": 15941742,
+     "index": 131,
+     "time_utc": "2022-11-10T19:35:35Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "100000000",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.0
+    },
+    {
+     "tx": "0xe95006c7126a2780fde0605a1fdc5f2595b025a92abdaf374da396ef0fddaab6",
+     "block": 15941749,
+     "index": 2,
+     "time_utc": "2022-11-10T19:37:11Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "19882701",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.9883
+    },
+    {
+     "tx": "0x1345cb9a90ff214741a301628f011d57cb4e6efafa2fcd1ea5c61656d7432b64",
+     "block": 15941758,
+     "index": 0,
+     "time_utc": "2022-11-10T19:38:59Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "100000000",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.0
+    },
+    {
+     "tx": "0x5ab66fe01ec576ff3fa5db4e4b1c697f59ab4fcfff983ce33333989b23290e4e",
+     "block": 15941760,
+     "index": 0,
+     "time_utc": "2022-11-10T19:39:23Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "100000000",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.0
+    },
+    {
+     "tx": "0x72eb1a18d3b005127dd896be8bfb90506596b7e3959f19a551c0b724f40030b2",
+     "block": 15941768,
+     "index": 0,
+     "time_utc": "2022-11-10T19:40:59Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "82884841",
+     "status": "success",
+     "coinbase_or_last_out_eth": 8.2885
+    }
+   ],
+   "total_coinbase_eth": 65.58,
+   "messages": [
+    {
+     "tx": "0x0611b4d704111fbfd9e32c5e91aa15d910f34fefbd517c8510d47d7985224b26",
+     "time_utc": "2022-11-10T23:32:11Z",
+     "direction": "to_yoink",
+     "quote": "Hello,! A protocol I was in got exploited, it seems your mev contract caught the exploiter as well I think, and so got some of the funds he drained.\r\n\r\nAs a victim, I hope you can contact the team of dfx.finance and help us."
+    },
+    {
+     "tx": "0xe72e71ed6a36aa886b812a244f06395e2945cf90686f100c82185dd4a8ae5ae9",
+     "time_utc": "2022-11-11T02:02:47Z",
+     "direction": "to_yoink",
+     "quote": "Please reach out to the DFX team at [contact redacted] to discuss the return of funds received on Nov 10 2022. Bounty will be provided for safe return of funds"
+    },
+    {
+     "tx": "0x24cb57288c47556b51f365ba2808954970dc7550548c45e6f49a7047041825fa",
+     "time_utc": "2022-11-11T02:51:35Z",
+     "direction": "from_yoink",
+     "quote": "I frontran the real attacker, will reach out shortly from [email redacted]"
+    }
+   ],
+   "returned": "not located (DFX asked for return; Yoink replied it would email)",
+   "note": "gen0b bribe encoding is absolute (msg.value*1e11 wei), not per-mille."
+  },
+  {
+   "name": "\"$X\" token LP-token burn mishap (2022-10-21)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "Victim quoted tx hash 0xa1bca7d2ef.. (message 0xfd4aab0f.. / sender 0xb790a054..) is Yoink bot tx at idx 4; Yoink later states ~33 ETH profit, ~630 ETH holder losses, and declined to return (\"botched LP token burn for X token\").",
+   "yoink_txs": [
+    {
+     "tx": "0xa1bca7d2effa1fba1e993da50cad13ea54b79b2a338c84cee15b9abf97958eb6",
+     "block": 15799692,
+     "index": 4,
+     "time_utc": "2022-10-21T23:14:11Z",
+     "bot_contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+     "msg_value": "302",
+     "status": "success",
+     "coinbase_or_last_out_eth": 9.9957,
+     "est_profit_eth_from_permille_rule": 33.098
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x7948d4acbfae33a40b9687bb8f628fb972d9397864b6e63166fa1e06431aea4d",
+     "time_utc": "2022-10-22T00:04:35Z",
+     "direction": "to_yoink",
+     "quote": "Bro, that was almost my entire portfolio...8 ETH gone.\n\nPlease send back, it's nothing to you.\n\nPlease"
+    },
+    {
+     "tx": "0xfd4aab0f849a59e95b54c1c818a3aac043ecff0d67c19aa3cbfdcd5870305426",
+     "time_utc": "2022-10-23T01:25:23Z",
+     "direction": "from_yoink",
+     "quote": "Willing to discuss the return of some funds. Please have the developer reach out to me at [email redacted]"
+    },
+    {
+     "tx": "0x706ddb9a93aeab435a346760d8f884e9bfe2b4da61f31b68f7f7bf5279c9066f",
+     "time_utc": "2022-10-24T16:38:11Z",
+     "direction": "from_yoink",
+     "quote": "To all those affected by the botched LP token burn for X token, I sympathize. I had initially planned to return some portion of the funds that my bot yoinked, but unfortunately, no longer see the point. I've attached my last email to the to"
+    },
+    {
+     "tx": "0x702652cfec757ee18402f209e0a4ab13629a002f3b79efe39d3a34d89d381346",
+     "time_utc": "2022-10-31T08:53:59Z",
+     "direction": "to_yoink",
+     "quote": "Hi. Man,I mistakenly redirected liquidity to the pool. when I try to get it back. The submitted transaction happens to be discovered by your EVM bot. and front-running deals. I lost all my ETH. I still have hundreds of thousands of loans to"
+    }
+   ],
+   "returned": "declined (message 2022-10-24); earlier offered 90% (2022-10-23) for Transit, a different incident"
+  },
+  {
+   "name": "Conic Finance crvUSD/ETH omnipool (2023-07-21)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "DHL Conic02 attacker block 17743470; Yoink gen1 (0xd050e0a4) made 10 consecutive-block txs 17743471-17743480 (idx 0/4), ~1.4-2.7 ETH coinbase each; Yoink states it took 125.82 ETH, spent 35.48 ETH on gas/bribes, returned 81.307 ETH (10% bounty kept by agreement).",
+   "yoink_txs": [
+    {
+     "tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+     "block": 17743471,
+     "index": 0,
+     "time_utc": "2023-07-21T19:01:47Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "131",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.6484,
+     "est_profit_eth_from_permille_rule": 12.583
+    },
+    {
+     "tx": "0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80",
+     "block": 17743472,
+     "index": 0,
+     "time_utc": "2023-07-21T19:01:59Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "195",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.4497,
+     "est_profit_eth_from_permille_rule": 12.563
+    },
+    {
+     "tx": "0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd",
+     "block": 17743473,
+     "index": 0,
+     "time_utc": "2023-07-21T19:02:11Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "187",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.3445,
+     "est_profit_eth_from_permille_rule": 12.538
+    },
+    {
+     "tx": "0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f",
+     "block": 17743474,
+     "index": 0,
+     "time_utc": "2023-07-21T19:02:23Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "215",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.6898,
+     "est_profit_eth_from_permille_rule": 12.511
+    },
+    {
+     "tx": "0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41",
+     "block": 17743475,
+     "index": 0,
+     "time_utc": "2023-07-21T19:02:35Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "194",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.4217,
+     "est_profit_eth_from_permille_rule": 12.483
+    },
+    {
+     "tx": "0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308",
+     "block": 17743476,
+     "index": 4,
+     "time_utc": "2023-07-21T19:02:47Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "109",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.3796,
+     "est_profit_eth_from_permille_rule": 12.657
+    },
+    {
+     "tx": "0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa",
+     "block": 17743477,
+     "index": 0,
+     "time_utc": "2023-07-21T19:02:59Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "110",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.3916,
+     "est_profit_eth_from_permille_rule": 12.651
+    },
+    {
+     "tx": "0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080",
+     "block": 17743478,
+     "index": 0,
+     "time_utc": "2023-07-21T19:03:11Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "211",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.6661,
+     "est_profit_eth_from_permille_rule": 12.636
+    },
+    {
+     "tx": "0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c",
+     "block": 17743479,
+     "index": 0,
+     "time_utc": "2023-07-21T19:03:23Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "170",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.1445,
+     "est_profit_eth_from_permille_rule": 12.615
+    },
+    {
+     "tx": "0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8",
+     "block": 17743480,
+     "index": 0,
+     "time_utc": "2023-07-21T19:03:35Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "183",
+     "status": "success",
+     "coinbase_or_last_out_eth": 2.3039,
+     "est_profit_eth_from_permille_rule": 12.589
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x6382dad8f1f08c90aa74a01bae2ec414161821b276f8955cb8dddc68856c03ce",
+     "time_utc": "2023-07-22T16:43:59Z",
+     "direction": "to_yoink",
+     "quote": "This is a message from Conic Finance. Your bot has replicated an attack on Conic Finance that resulted in funds being stolen. We are writing you to know if you would be open to returning these funds in exchange for a bounty."
+    },
+    {
+     "tx": "0xaf1535ea5bee7ccbc048eafd1fe0771c31cde51d065e6abc2c4aa2c1f9d264ff",
+     "time_utc": "2023-07-22T23:34:47Z",
+     "direction": "from_yoink",
+     "quote": "By my calculations, my bot took 125.82415 Eth while spending 35.48275 in gas fees and bribes, leaving 90.34139 to return. Does that seem correct? Would appreciate a bounty, but leave that up to you. Let me know how much / where to return th"
+    },
+    {
+     "tx": "0x9074a68818751bcfe88c22f483784bf686481ee8b7b3f81e00b03d36628a4b47",
+     "time_utc": "2023-07-23T14:05:35Z",
+     "direction": "to_yoink",
+     "quote": "Thank you very much for the quick reply and for accepting to return the funds. This is very much appreciated in these hard times for us. These are also the numbers we computed. We would like to offer you a bounty of 10% of your profits, so "
+    },
+    {
+     "tx": "0xd9f718386aa359cd5f2d15619a3a536eb3d17eb10c0cac78106440b3d4c92ce5",
+     "time_utc": "2023-07-23T19:39:47Z",
+     "direction": "to_yoink",
+     "quote": "Thank you very much for returning the funds so quickly. All the best from all the Conic Team."
+    }
+   ],
+   "returned": [
+    {
+     "eth": 81.307,
+     "tx": "0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4",
+     "note": "Yoink bot internal transfer to conicfinance.eth, block 17756778"
+    }
+   ]
+  },
+  {
+   "name": "UniBank (2023-09-04)",
+   "confidence": "probable",
+   "in_our_incident_list": false,
+   "why": "Victim message \"nice job man, lesson learnt\" 2023-09-05 01:00; Yoink gen1 tx at 2023-09-04 21:22 with ~22.8 ETH coinbase (est. profit ~30.6 ETH); Yoink did not return (asked owner to email).",
+   "yoink_txs": [
+    {
+     "tx": "0x632d90a9cda85301c4972cf383520ebc30085a94778dca6d844508ed07004242",
+     "block": 18065775,
+     "index": 2,
+     "time_utc": "2023-09-04T21:22:35Z",
+     "bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+     "msg_value": "747",
+     "status": "success",
+     "coinbase_or_last_out_eth": 22.8301,
+     "est_profit_eth_from_permille_rule": 30.562
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x8171baabff1f5f874f8ae0d147a1f911fd47b487d9375a2376bdb9c1e99ea16d",
+     "time_utc": "2023-09-05T01:00:59Z",
+     "direction": "to_yoink",
+     "quote": "Alright, nice job man, lesson learnt. wish u r a white hat and could send me back my fund. appreciate ur kindness.\n\nor if u need to talk or tease me, ping me at [email redacted]"
+    },
+    {
+     "tx": "0xc8f132b0a1ed46ba27318c0e5f90d4bb6623ebcadfc64f99f2d5d949be0c4db0",
+     "time_utc": "2023-09-05T01:13:47Z",
+     "direction": "from_yoink",
+     "quote": "No clue who you are, but if you happen to know [ENS redacted], please have them contact me at [email redacted]"
+    }
+   ],
+   "returned": "none located"
+  },
+  {
+   "name": "TaoPad reward extraction (2024-02-14)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "Victim quoted Yoink tx 0x5853b7a0.. and their failed tx; Yoink returned 26.32 ETH (\"entire bot profit\") on 2024-02-15. Not an exploit by Yoink: it front-ran the project extracting its own rewards via a known bug.",
+   "yoink_txs": [
+    {
+     "tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+     "block": 19226503,
+     "index": 0,
+     "time_utc": "2024-02-14T13:27:35Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "49",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.3968,
+     "est_profit_eth_from_permille_rule": 28.506
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x1c900a5c5d0aa25d2cc931682f470d38c158ad54b06d15e689f3d607e7545e84",
+     "time_utc": "2024-02-14T13:54:59Z",
+     "direction": "to_yoink",
+     "quote": "Hi, \nTaoPad team here. We were extracting the rewards from our contract that was previously exploited some weeks ago and we have been frontran by your bot. \nCan you please return the funds to taopad.eth 0x98915686E23032a1D3b8596BaDD7fAdf147"
+    },
+    {
+     "tx": "0x20d4929ea446a16473b90336c1f0a419f7be5744e2064c5bfb4c11a0868efc8f",
+     "time_utc": "2024-02-14T20:50:47Z",
+     "direction": "from_yoink",
+     "quote": "Can you send me more details on Blockscan chat? Just want to make sure it wasn't a failed rug attempt."
+    },
+    {
+     "tx": "0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32",
+     "time_utc": "2024-02-15T12:53:35Z",
+     "direction": "from_yoink",
+     "quote": "Thanks for the explanation, sent back the entire bot profit."
+    }
+   ],
+   "returned": [
+    {
+     "eth": 26.32,
+     "tx": "0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32"
+    }
+   ]
+  },
+  {
+   "name": "Unizen exploit (2024-03-08/09)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "The 7 tx hashes in Unizen's message are Yoink gen2 txs in blocks 19393223-19393726 (DHL UnizenIO2 attacker block 19393361, UnizenIO 19393770). Yoink states profit 0.33 ETH + 13,566 USDT + 4,809 USDC; returned 90% of ETH profit (0.29808 ETH) and refused the rest (validator bribes).",
+   "yoink_txs": [
+    {
+     "tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+     "block": 19393726,
+     "index": 0,
+     "time_utc": "2024-03-08T23:39:59Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "978",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.3763,
+     "est_profit_eth_from_permille_rule": 0.385
+    },
+    {
+     "tx": "0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437",
+     "block": 19393363,
+     "index": 0,
+     "time_utc": "2024-03-08T22:23:59Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "83",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.0115,
+     "est_profit_eth_from_permille_rule": 0.138
+    },
+    {
+     "tx": "0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746",
+     "block": 19393342,
+     "index": 0,
+     "time_utc": "2024-03-08T22:19:23Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "993",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.9543,
+     "est_profit_eth_from_permille_rule": 1.968
+    },
+    {
+     "tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+     "block": 19393298,
+     "index": 0,
+     "time_utc": "2024-03-08T22:10:23Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "971",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.3755,
+     "est_profit_eth_from_permille_rule": 0.387
+    },
+    {
+     "tx": "0xaeb81988bb0b1bcae375f979f9ecb8146d811b42170a8ebe11467625240178a2",
+     "block": 19393264,
+     "index": 0,
+     "time_utc": "2024-03-08T22:02:47Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "980",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.7576,
+     "est_profit_eth_from_permille_rule": 0.773
+    },
+    {
+     "tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+     "block": 19393262,
+     "index": 0,
+     "time_utc": "2024-03-08T22:02:23Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "958214",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.0958
+    },
+    {
+     "tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+     "block": 19393223,
+     "index": 0,
+     "time_utc": "2024-03-08T21:52:59Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "34521105",
+     "status": "success",
+     "coinbase_or_last_out_eth": 3.4521
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x0dc8ce3e98d006cd1ba446544b289d960477347e8826efa788d6b879a59cd09d",
+     "time_utc": "2024-03-10T09:59:35Z",
+     "direction": "to_yoink",
+     "quote": "Dear Security Professional,\n\nWe urge you to restore the misappropriated funds to the below specified wallet addresses:\n\nEthereum:\n0x6003327a621Fc16C74BAf08229CC45A96e44F9Ee\n\nPolygon:\n0x95b47001111484B62da0E404aDBC157aA6628a52\n\nAvalanche:\n0x"
+    },
+    {
+     "tx": "0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c",
+     "time_utc": "2024-03-10T20:38:59Z",
+     "direction": "from_yoink",
+     "quote": "Returning 90% of profits"
+    },
+    {
+     "tx": "0x4840a6a42adf52bdf79b85296b68c10e8b2e4c19862f820eb91a655779e3840b",
+     "time_utc": "2024-03-12T12:31:47Z",
+     "direction": "from_yoink",
+     "quote": "Afraid you'll have to try and claw that back from the validators. In 0x4a69, for example, I did acquire 13.5K USDT, but you're missing the 2.45 Eth bribe to Lido which I had to pay in order to build that block."
+    }
+   ],
+   "returned": [
+    {
+     "eth": 0.29808,
+     "tx": "0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c"
+    },
+    {
+     "eth": 0.12,
+     "tx": "0xc55c11a46203fa5bd806cf320489e5e0a94891a033b8e5659ddfa919c0401b3a",
+     "note": "2024-03-09 \"Sent back bot profit, unfortunately most wasted on validator bribe\" to 0xe2588450.. (event not identified; may be Unizen-related)"
+    }
+   ]
+  },
+  {
+   "name": "MintSwap (2024-04-01)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "Both tx hashes in MintSwap's message are Yoink gen2 txs (blocks 19563164/19563165); coinbase 14.4 + 54.5 ETH. Yoink: profit 101.8 ETH, ~9 ETH to validators; returned 91.62 ETH to the LP 0x5b03.. (tx 0x1d3c141c..).",
+   "yoink_txs": [
+    {
+     "tx": "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+     "block": 19563164,
+     "index": 0,
+     "time_utc": "2024-04-01T19:49:35Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 14.3694,
+     "est_profit_eth_from_permille_rule": 14.384
+    },
+    {
+     "tx": "0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620",
+     "block": 19563165,
+     "index": 0,
+     "time_utc": "2024-04-01T19:49:47Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 54.5072,
+     "est_profit_eth_from_permille_rule": 54.562
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0xfe5020429a451908be819ee7b3dc833115cc32e902e759ea6a8bdc4d8110d5c0",
+     "time_utc": "2024-04-01T22:01:59Z",
+     "direction": "to_yoink",
+     "quote": "Hi, we are reaching out to you about a vulnerability you exploited on MintSwap\n\nFUNDS DRAINED---\n67.85 ETH (~$238,000)\n4,446,673 vMINT (~$238,000)\n\nTotal : ~$4,75000 (all converted in ETH)\n, https://etherscan.io/tx/0xd2337efb820b7bce143bd94"
+    },
+    {
+     "tx": "0x89af126f81e8cfcc7026da0ff5c203338444fdeff8bb54284ea38af3b18a1055",
+     "time_utc": "2024-04-02T03:23:11Z",
+     "direction": "from_yoink",
+     "quote": "My profit looks to have been 101.8 Eth. In addition, roughly 9 Eth was sent to validators in order to land those txs. You'll need to contact them to get that part of the funds back. Appreciate the offer of a bounty, will then be returning 9"
+    },
+    {
+     "tx": "0x07473e4c9cfddd270f2d2e153072afbe73b37771fef08a59e8d1f1cfae1bba9a",
+     "time_utc": "2024-04-02T15:38:35Z",
+     "direction": "from_yoink",
+     "quote": "Already sent. https://etherscan.io/tx/0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c"
+    }
+   ],
+   "returned": [
+    {
+     "eth": 91.62,
+     "tx": "0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c"
+    }
+   ]
+  },
+  {
+   "name": "Airpuff uniETH vault (2024-04-05)",
+   "confidence": "strong (but disputed as exploit)",
+   "in_our_incident_list": false,
+   "why": "Airpuff's two hashes are Yoink gen2 txs (blocks 19588496/19588910, 33.6 and 22.8 ETH coinbase, 99.9% bribe). Yoink: \"not sure I'd classify a simple sandwich as an exploit\"; no return seen.",
+   "yoink_txs": [
+    {
+     "tx": "0xb8a5927f665cb8330747be4cb2767097ffbd3fd1eca9d62e53c31319dfce38a0",
+     "block": 19588496,
+     "index": 0,
+     "time_utc": "2024-04-05T08:57:11Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 33.6096,
+     "est_profit_eth_from_permille_rule": 33.643
+    },
+    {
+     "tx": "0x73ce81455c1d8d2550342c518ad8142e06c600bd34c07311f70d1dfaec2158a0",
+     "block": 19588910,
+     "index": 0,
+     "time_utc": "2024-04-05T10:21:23Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 22.7787,
+     "est_profit_eth_from_permille_rule": 22.801
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x328eeb58b8da43d458c0a60d3531da1a56f0a80cdca43357bae81f3d892a6eba",
+     "time_utc": "2024-04-05T12:51:47Z",
+     "direction": "to_yoink",
+     "quote": "This is Airpuff Team. We hope this message finds you well. We are reaching out to address a recent incident involving our uniETH vault, where it appears that you have taken advantage of a MEV transaction, resulting in a total of 65ETH. \n\nht"
+    },
+    {
+     "tx": "0xb3b3776a579ac9988130620765862cead743dff96d57cd82107ced7678bce5eb",
+     "time_utc": "2024-04-05T13:40:11Z",
+     "direction": "from_yoink",
+     "quote": "Hi, can you reach out to [email redacted] with some more details? Kind of torn on this one, not sure if I'd classify a simple sandwich as an exploit ..."
+    }
+   ],
+   "returned": "none located"
+  },
+  {
+   "name": "Disputed: VY token tax-address (2024-04-03)",
+   "confidence": "weak",
+   "in_our_incident_list": false,
+   "why": "Student asks refund of VY purchase; Yoink: \"not clear to me that the VY stuff was a hack\". No tx identified.",
+   "yoink_txs": [],
+   "messages": [
+    {
+     "tx": "0xed2745af213f3e20230b46bbdfcd504cf34a96137088ed3500356f04df229801",
+     "time_utc": "2024-04-03T01:26:23Z",
+     "direction": "to_yoink",
+     "quote": "This is the hash of my VY token purchase: 0x23f9533a23382626ea09cd49a514f15f383f0c588e920e8c5e1afce7ed2fff2e. I know you hacked the tax address and stole part of the tokens for trading. I would be grateful if you could refund the eth amount"
+    },
+    {
+     "tx": "0xfe6d770d8be6e5d04f17ae063d6af58d40ffaca47abcb835cf9ab9643925644c",
+     "time_utc": "2024-04-03T12:49:47Z",
+     "direction": "from_yoink",
+     "quote": "Hey, not clear to me that the VY stuff was a hack. If so, please get the token dev to contact me for a refund."
+    }
+   ],
+   "returned": "none"
+  },
+  {
+   "name": "DANK BOY token rug-by-bug (2024-10-23)",
+   "confidence": "strong",
+   "in_our_incident_list": false,
+   "why": "Deployer message 03:04 UTC 2024-10-23; Yoink gen2 tx at 02:42 (block 21025366, 5.61 ETH coinbase). Yoink alleges serial rugger and sent 2.33 ETH \"Courtesy of rugger\" to 0x9d727911.. on 2024-10-28.",
+   "yoink_txs": [
+    {
+     "tx": "0x6b37f89e83822ff54a93e78f16d92d84948d0edfa2f76e417396f01b9eddfa3e",
+     "block": 21025366,
+     "index": 0,
+     "time_utc": "2024-10-23T02:42:47Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 5.6142,
+     "est_profit_eth_from_permille_rule": 5.62
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0xad7a3749ff60eed356937ad450f78cffaa6346330a0aed772ce0d2d1009a2059",
+     "time_utc": "2024-10-23T03:04:23Z",
+     "direction": "to_yoink",
+     "quote": "Hi, there\nHow are you doing?\nI just deployed DANK BOY token (https://etherscan.io/token/0xea78b2c986fdde16be358803ebdf6917194e0bdb).\nBut there was an issue in the contract.\nIt would be much appreciated if you could refund me.\n\nThanks.\nBest "
+    },
+    {
+     "tx": "0xc7ca329b083dbfa5615be36cdf33234a7f9c065d1394c45d5ae1e1e140ff9c54",
+     "time_utc": "2024-10-23T12:09:11Z",
+     "direction": "from_yoink",
+     "quote": "You seem to be launching quite a few tokens these days, which all end with you draining the entire liquidity. If you can convince me you're not a serial rugger (good luck!) I'll return the funds. Otherwise will donate to some charity on you"
+    },
+    {
+     "tx": "0x7916c7b30b9bab971b30c0978cf38a93ae1666c52bdb7c66ca85fa80585aab2f",
+     "time_utc": "2024-10-28T13:57:35Z",
+     "direction": "from_yoink",
+     "quote": "Courtesy of rugger 0xE43a776a333b0bA9B4D58E79d546f5c3f07Efc5a"
+    }
+   ],
+   "returned": [
+    {
+     "eth": 2.33,
+     "tx": "0x7916c7b30b9bab971b30c0978cf38a93ae1666c52bdb7c66ca85fa80585aab2f",
+     "note": "donated to third party, not to the victim"
+    }
+   ]
+  },
+  {
+   "name": "Erc20transfer access-control (DHL 2024-10-22)",
+   "confidence": "probable",
+   "in_our_incident_list": false,
+   "why": "DHL attack tx 0x7f2540af.. IS a Yoink gen2 tx (block 21019772 idx 0, 99.9% bribe, 5.57 ETH to coinbase) - the PoC lists the bot, not the attacker. Needs attacker identification.",
+   "yoink_txs": [
+    {
+     "tx": "0x7f2540af4a1f7b0172a46f5539ebf943dd5418422e4faa8150d3ae5337e92172",
+     "block": 21019772,
+     "index": 0,
+     "time_utc": "2024-10-22T07:57:11Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 5.5715,
+     "est_profit_eth_from_permille_rule": 5.577
+    }
+   ],
+   "messages": [],
+   "returned": "unknown"
+  },
+  {
+   "name": "SASHAToken price manipulation (DHL 2024-10-06)",
+   "confidence": "weak-probable",
+   "in_our_incident_list": false,
+   "why": "Yoink gen2 txs idx 0-2 in the block after DHL exploit block 20905302 (value 997/991/965).",
+   "yoink_txs": [
+    {
+     "tx": "0x03f1b8f1aa7247bb4cbae17ed21c4d11d25f2a3a340d285440d21ff3c90613a4",
+     "block": 20905303,
+     "index": 0,
+     "time_utc": "2024-10-06T08:25:11Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "997",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.5639,
+     "est_profit_eth_from_permille_rule": 0.566
+    },
+    {
+     "tx": "0x1a64093132c0814a80403ec491eb57cfa915ef6644c6c892439774ed201cf7bb",
+     "block": 20905303,
+     "index": 1,
+     "time_utc": "2024-10-06T08:25:11Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "991",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.1413,
+     "est_profit_eth_from_permille_rule": 0.143
+    },
+    {
+     "tx": "0x621b5b6a330b507001e3f9cf892d77c668e5a60871d880a4644684c0e3aec096",
+     "block": 20905303,
+     "index": 2,
+     "time_utc": "2024-10-06T08:25:11Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "965",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.0351,
+     "est_profit_eth_from_permille_rule": 0.036
+    }
+   ],
+   "messages": [],
+   "returned": "unknown"
+  },
+  {
+   "name": "XBridge logic flaw (DHL 2024-04-24)",
+   "confidence": "weak",
+   "in_our_incident_list": false,
+   "why": "Yoink gen2 tx idx 13 in the DHL exploit block 19723701 (value 595).",
+   "yoink_txs": [
+    {
+     "tx": "0x32724a3cfd5462effd9d9afe1de2d08ef28352e07f04ac3c7e86cf4aab9e3373",
+     "block": 19723701,
+     "index": 13,
+     "time_utc": "2024-04-24T07:18:35Z",
+     "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "msg_value": "595",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.0124,
+     "est_profit_eth_from_permille_rule": 0.021
+    }
+   ],
+   "messages": [],
+   "returned": "unknown"
+  },
+  {
+   "name": "Peapods Finance (2025-07-09)",
+   "confidence": "probable",
+   "in_our_incident_list": false,
+   "why": "Peapods message 2025-07-10 offers 10% bounty; Yoink gen3 made 4 consecutive txs at block 22883324 (idx 1-4; 8.6/4.3/1.9/1.5 ETH coinbase) on 2025-07-09 18:09 UTC. Second Peapods message 2025-10-09: ~2 ETH leftover in the leverage manager; Yoink returned 1.416285 ETH (profit minus 10%) tx 0xcd6d475f...",
+   "yoink_txs": [
+    {
+     "tx": "0xd685d0741cf257493c8d804a0daca45f48284ffac1bf749f63326699781ffd6e",
+     "block": 22883324,
+     "index": 1,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 8.5666,
+     "est_profit_eth_from_permille_rule": 8.575
+    },
+    {
+     "tx": "0xe3c1629edeaecf33b4b1d8c023f5fe04cfdfef74d621ca1a3867ef0be95b274f",
+     "block": 22883324,
+     "index": 2,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "998",
+     "status": "success",
+     "coinbase_or_last_out_eth": 4.2635,
+     "est_profit_eth_from_permille_rule": 4.272
+    },
+    {
+     "tx": "0x7ff4360ecf45aff3a3e7cdb7c071221f628fcc15720c2457e11130bb8e8b0199",
+     "block": 22883324,
+     "index": 3,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "996",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.9031,
+     "est_profit_eth_from_permille_rule": 1.911
+    },
+    {
+     "tx": "0x218efbbc2e8d739bd0813a493805727756245ff214221f1e674ede2430579fd7",
+     "block": 22883324,
+     "index": 4,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "998",
+     "status": "success",
+     "coinbase_or_last_out_eth": 1.4818,
+     "est_profit_eth_from_permille_rule": 1.485
+    },
+    {
+     "tx": "0x373208dfa7c843bbba3c7883f1a79522c9bed6edb7479c5be9d17ca6427b3cf4",
+     "block": 22883324,
+     "index": 5,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "985",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.5463,
+     "est_profit_eth_from_permille_rule": 0.555
+    },
+    {
+     "tx": "0x738d3b4ed3bfd368b8b6ca7f51781f1b654b6f8a51d9ef116b4c40419cc7a71f",
+     "block": 22883324,
+     "index": 6,
+     "time_utc": "2025-07-09T18:09:23Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "994",
+     "status": "success",
+     "coinbase_or_last_out_eth": 0.4189,
+     "est_profit_eth_from_permille_rule": 0.421
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0xf24a946485ebd0aa518fa8f4c8180eec24bc7039b6209f4af1184102077f3d91",
+     "time_utc": "2025-07-10T12:07:35Z",
+     "direction": "to_yoink",
+     "quote": "We acknowledge the recent exploit involving illiquid pools used as oracle sources within the Peapods Protocol.\n\nWe are offering a 10% white-hat bounty for the safe return of the exploited funds.\n\nIf 90% or more of the funds are returned to "
+    },
+    {
+     "tx": "0x0a5694d33bdd4e58c6f91200f7bdf3b7fe9a67f0bbdf51d5325bcd0e6f04480a",
+     "time_utc": "2025-10-09T16:43:59Z",
+     "direction": "to_yoink",
+     "quote": "Hi there, we see you were able to fetch the ~2 ETH leftover in our leverage manager from a previous user's tx. We have resolved this code issue already, but would appreciate if you'd be willing to give us the lion share of that USDC back an"
+    },
+    {
+     "tx": "0xcd6d475f859cddeb637906c668dc616f1f470033bdb44f4b99c40eb84dacd3e6",
+     "time_utc": "2025-10-09T17:46:23Z",
+     "direction": "from_yoink",
+     "quote": "Returning profits minus 10% bounty"
+    }
+   ],
+   "returned": [
+    {
+     "eth": 1.416285,
+     "tx": "0xcd6d475f859cddeb637906c668dc616f1f470033bdb44f4b99c40eb84dacd3e6"
+    }
+   ]
+  },
+  {
+   "name": "Eywa (2026-02-01..03)",
+   "confidence": "weak",
+   "in_our_incident_list": false,
+   "why": "Eywa message (block 24382682) says tokens Yoink received came from an exploit; Eywa gives block 24364392 as time zero. Yoink gen3 big txs 2026-02-03 18:23 (23.7 ETH) and 18:41 (12.7 ETH) and 2026-02-01 18:27 (3.8 ETH) are candidates only.",
+   "yoink_txs": [
+    {
+     "tx": "0xa931df3e66bdf2d91219d084a869e082d03b7d3f6253ae56b11da1894ab2a243",
+     "block": 24378092,
+     "index": 1,
+     "time_utc": "2026-02-03T18:23:11Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 23.6808,
+     "est_profit_eth_from_permille_rule": 23.704
+    },
+    {
+     "tx": "0x2ff37310de3d0f6aa1fef0e88bc417ce7e34a551401a7d6c65b30c68248e8fa0",
+     "block": 24378182,
+     "index": 1,
+     "time_utc": "2026-02-03T18:41:11Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 12.6582,
+     "est_profit_eth_from_permille_rule": 12.671
+    },
+    {
+     "tx": "0x8b13422271ece061c832c1c55c2ff18e13054e14fda470f5c7a2b66e9ab8456b",
+     "block": 24363800,
+     "index": 0,
+     "time_utc": "2026-02-01T18:27:11Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 3.7962,
+     "est_profit_eth_from_permille_rule": 3.8
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x7dc2fab052c3fafe5f14169ddb39b51d83c4205649d3250c892fc1ac4c67d5f3",
+     "time_utc": "2026-02-04T09:46:35Z",
+     "direction": "to_yoink",
+     "quote": "Hello, \n\nThe tokens you received from 0xAc8f44ceCa92b2a4b30360E5bd3043850a0FFcbE has come from a smart contract exploit, and was taken unrightfully from users. We do not believe this was intentional on your part and there was no malicious i"
+    }
+   ],
+   "returned": "unknown"
+  },
+  {
+   "name": "Attacker complaining Flashbots leaked tx to Yoink (2026-03-10)",
+   "confidence": "probable",
+   "in_our_incident_list": false,
+   "why": "Message at block 24627239 (\"Why did you leak my attack transaction to yoink?\"); Yoink gen3 tx at block 24627181 idx 0 (58 blocks earlier) paid 10.23 ETH coinbase (99.9% bribe).",
+   "yoink_txs": [
+    {
+     "tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+     "block": 24627181,
+     "index": 0,
+     "time_utc": "2026-03-10T12:50:59Z",
+     "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+     "msg_value": "999",
+     "status": "success",
+     "coinbase_or_last_out_eth": 10.2256,
+     "est_profit_eth_from_permille_rule": 10.236
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64",
+     "time_utc": "2026-03-10T13:02:35Z",
+     "direction": "to_yoink",
+     "quote": "Fuck you flashbots. Why did you leak my attack transaction to yoink?"
+    }
+   ],
+   "returned": "none"
+  },
+  {
+   "name": "Early-days unmatched returns (2022-09)",
+   "confidence": "weak",
+   "in_our_incident_list": false,
+   "why": "2022-09-02 Yoink sent 7.5 ETH to 0xd74918a7.. (\"Your contract is vulnerable, revoke permissions... Returning most of the funds as Eth\"); candidate capture: gen0a tx 0x74d4ce54.. (2022-09-02 02:20, block 15456497 idx 0, 6.07 ETH coinbase). 2022-09-29 4.96 ETH sent to 0xeb9485f9.. \"Please use Flashbots next time\" - no capture tx identified.",
+   "yoink_txs": [
+    {
+     "tx": "0x74d4ce544281060c5869d3ca6a823ef6512a9fb272349a3aad002d617c89ba42",
+     "block": 15456497,
+     "index": 0,
+     "time_utc": "2022-09-02T02:20:29Z",
+     "bot_contract": "0x8788a7cfd63cf06d0d7716c6a66f54b58248c896",
+     "msg_value": "60694563",
+     "status": "success",
+     "coinbase_or_last_out_eth": 6.0695
+    }
+   ],
+   "messages": [
+    {
+     "tx": "0xb34c5e2cef45add8f1bca8fdfb8b417c8e6241434621238841872529320e50d2",
+     "time_utc": "2022-09-02T18:35:10Z",
+     "direction": "from_yoink",
+     "quote": "Your contract is vulnerable, you need to revoke permissions immediately. Too lazy to figure out how to take the shitcoin, but I assume it's also at risk. Returning most of the funds as Eth."
+    },
+    {
+     "tx": "0x948104594da9fef9cb1041b984358a6f0881a41efee26a4ff0ed25f7924e40e3",
+     "time_utc": "2022-09-29T20:20:35Z",
+     "direction": "from_yoink",
+     "quote": "Please use Flashbots next time"
+    }
+   ],
+   "returned": [
+    {
+     "eth": 7.5,
+     "tx": "0xb34c5e2cef45add8f1bca8fdfb8b417c8e6241434621238841872529320e50d2"
+    },
+    {
+     "eth": 4.96,
+     "tx": "0x948104594da9fef9cb1041b984358a6f0881a41efee26a4ff0ed25f7924e40e3"
+    }
+   ]
+  }
+ ],
+ "unattributed_large_captures": {
+  "filter": "gen2/gen3 txs with msg.value 990-999 per-mille and last outgoing ETH >= 60 (coinbase pay ~ whole profit). Most are probably market-dislocation arbs/liquidations, not exploit captures; listed so nothing is missed.",
+  "rows": [
+   {
+    "tx": "0x1a00941dd99058ef43d5ece9153ea1da58fcd580aaedaf57088a1862804666ca",
+    "block": 18828911,
+    "index": 1,
+    "time_utc": "2023-12-20T18:30:47Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 120.6806,
+    "est_profit_eth_from_permille_rule": 120.801,
+    "trace_calls": 109
+   },
+   {
+    "tx": "0x070cefc312e758312c135a08596be3352e7853b6a9a6b67c8f9adff272fa1c51",
+    "block": 18871827,
+    "index": 1,
+    "time_utc": "2023-12-26T19:03:47Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 571.442,
+    "est_profit_eth_from_permille_rule": 572.014,
+    "trace_calls": 161
+   },
+   {
+    "tx": "0x566a77361aa2e09b7cbaeaed3ac63cbfc4a731e860d0d8293eea932e56baf5ea",
+    "block": 18930121,
+    "index": 0,
+    "time_utc": "2024-01-03T23:33:11Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 128.9805,
+    "est_profit_eth_from_permille_rule": 129.11,
+    "trace_calls": 23
+   },
+   {
+    "tx": "0x49350cfee16df5d18c5b1bfe0976458797d017dd3227218d479f8d76ec988faa",
+    "block": 18930121,
+    "index": 1,
+    "time_utc": "2024-01-03T23:33:11Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 123.9744,
+    "est_profit_eth_from_permille_rule": 124.099,
+    "trace_calls": 24
+   },
+   {
+    "tx": "0xe4ce934db9f0aa6bb3350d94600e7d7356ceef82b46c843e0a21ce76ae73b471",
+    "block": 18930121,
+    "index": 2,
+    "time_utc": "2024-01-03T23:33:11Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 78.7863,
+    "est_profit_eth_from_permille_rule": 78.865,
+    "trace_calls": 24
+   },
+   {
+    "tx": "0x74877c32aa8a42e2f7f0837eec0d5fdd3f544b53a47eef24104a47d070554e9e",
+    "block": 19068483,
+    "index": 1,
+    "time_utc": "2024-01-23T09:29:59Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 63.17,
+    "est_profit_eth_from_permille_rule": 63.233,
+    "trace_calls": 111
+   },
+   {
+    "tx": "0xe9c156ea4fef64b5576a1e650f5ccfed937ca718f72d1608d53aa4fb6aed7e43",
+    "block": 19180082,
+    "index": 1,
+    "time_utc": "2024-02-08T01:08:59Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "997",
+    "status": "success",
+    "coinbase_or_last_out_eth": 76.2171,
+    "est_profit_eth_from_permille_rule": 76.446,
+    "trace_calls": 14
+   },
+   {
+    "tx": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+    "block": 20468848,
+    "index": 1,
+    "time_utc": "2024-08-06T10:11:47Z",
+    "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 795.615,
+    "est_profit_eth_from_permille_rule": 796.411,
+    "trace_calls": 19
+   },
+   {
+    "tx": "0xe01619258ece728b4e6ba14e51e6d81a2611bd58c910d86a9334bdd7165a3080",
+    "block": 21295834,
+    "index": 0,
+    "time_utc": "2024-11-29T20:48:59Z",
+    "bot_contract": "0x97f0fa1e5bf44f0dbd8dc5ee5e0d017667ae0c34",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 102.5804,
+    "est_profit_eth_from_permille_rule": 102.683,
+    "trace_calls": 35
+   },
+   {
+    "tx": "0xf3b7c2bf85b8ad99aa4bfeabcad1e5fe55248dc2b8f9410b9cd0eae9830e42f2",
+    "block": 21762738,
+    "index": 0,
+    "time_utc": "2025-02-03T01:35:35Z",
+    "bot_contract": "0x97f0fa1e5bf44f0dbd8dc5ee5e0d017667ae0c34",
+    "msg_value": "999",
+    "status": "success",
+    "coinbase_or_last_out_eth": 171.0407,
+    "est_profit_eth_from_permille_rule": 171.212,
+    "trace_calls": 15
+   },
+   {
+    "tx": "0xbddb390674851f06d28bd813ec5557bff1d2157edcd0e20077c9ec19c7172e99",
+    "block": 23550276,
+    "index": 0,
+    "time_utc": "2025-10-10T22:21:59Z",
+    "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+    "msg_value": "997",
+    "status": "success",
+    "coinbase_or_last_out_eth": 91.8136,
+    "est_profit_eth_from_permille_rule": 92.09,
+    "trace_calls": 128
+   },
+   {
+    "tx": "0x109a3de8883cd77934cbb1fac146e2ee1485e65351ebaf8955e2399b1488e96f",
+    "block": 23550276,
+    "index": 27,
+    "time_utc": "2025-10-10T22:21:59Z",
+    "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+    "msg_value": "993",
+    "status": "success",
+    "coinbase_or_last_out_eth": 62.1229,
+    "est_profit_eth_from_permille_rule": 62.561,
+    "trace_calls": 325
+   }
+  ]
+ }
+}

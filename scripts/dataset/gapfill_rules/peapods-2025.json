@@ -1,0 +1,29 @@
+[
+ {
+  "slug": "peapods-2025",
+  "sub": "second-attempt",
+  "verdict": "related-not-frontrun",
+  "race_type": "post-failure-replay",
+  "why": "Press (Phalcon/BlockSec via Quadriga, Peapods' thank-you message) says Yoink front-ran the attacker's second attempt. On chain the attacker (EOA 0x277da2d1) succeeded on pair 1 at block 22873986 idx 4 (+78.19 ETH), then tried the USDC pair 0xca1154bb in blocks 22874007/08/09 (txs 0xdc774417, 0x505db202, 0xa03582cc); each pair-2 leg reverted inside the attacker's try/catch. Yoink's tx 0xff8e9226 (block 22874010 idx 0, 12 s after the last attempt) has the same 42 state-changing calls (role-normalised similarity 1.0, same 10M USDC Morpho loan, same swap sizes) and its borrow passed, taking 174,258.31 USDC (11.4944 ETH to coinbase, no builder refund). No attacker tx is shown pending: the attempts had already landed, the attacker's calldata on the pre-Yoink state still reverts (debug_traceCall), and none of either side's txs is in the mempool archive. Yoink adapted and completed a failed, already-mined attack; it did not pre-empt anything we can show. Yoink returned 126,891.81 USDC (90% after recouping 33,267 USDC for its stated 11.95 ETH bribe).",
+  "strength": ["high", "replay/adaptation is shown call-for-call; 'no pending tx' is an absence of evidence (both sides private flow), and why the attacker's borrow reverts while Yoink's passes is undetermined"],
+  "headline_note": null
+ },
+ {
+  "slug": "peapods-2025",
+  "sub": "07-09-followup",
+  "verdict": "rejected",
+  "race_type": "no-race",
+  "why": "Yoink-message lead dated 2025-07-09. Block 22883324 (2025-07-09T18:09:23Z, 18.6 ETH bid) holds 36 Yoink txs (idx 1-4 pay 1.5-8.6 ETH to the coinbase), but none touches any of 102 Peapods-specific addresses (pairs, vaults, pods, LeverageManager, team-admin call targets, July trace addresses minus common infrastructure); the sampled tx's calls are USDC/USDT/PYUSD pool operations. There is no Peapods attacker or user tx to race or copy on that date. The Peapods incident is 2025-07-08 (block 22874010) and its return was agreed 2025-07-10.",
+  "strength": ["high", "address-set check over the full block trace; lead was a message date, not a tx"],
+  "headline_note": null
+ },
+ {
+  "slug": "peapods-2025",
+  "sub": "oct-leftover",
+  "verdict": "related-not-frontrun",
+  "race_type": "bot-was-first-exploiter",
+  "why": "2025-10-09: a user's removeLeverage tx 0x60b2c65c (block 23540172 idx 1) left 8,957.748779 USDC in the Peapods LeverageManager 0x4e6ef371. Yoink's tx 0xe00aea94 (block 23540182 idx 0, ~2 min / 10 blocks later) swept it via a different LeverageManager function (not a replay of the user's calldata): gross 1.8066 ETH, 1.8048 ETH to coinbase, 1.5725 ETH builder refund, net 1.5736 ETH. Peapods messaged Yoink (tx 0x0a5694d3) and Yoink returned 1.416285 ETH (tx 0xcd6d475f, block 23541758) = 90% of net, 'minus 10% bounty'. No attacker exists and nothing was pending: Yoink was the first and only sweeper. A separate 39,452 USDC leftover (block 23540670) was swept by 0x095308cb, not Yoink, and is not part of this row.",
+  "strength": ["medium", "first-sweeper and return are on chain; whether Yoink saw the user's tx pending is unknown (neither tx in the mempool archive)"],
+  "headline_note": null
+ }
+]

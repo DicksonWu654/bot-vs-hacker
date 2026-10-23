@@ -1,0 +1,5 @@
+UNCX token vesting
+Yoink's tx took the X-token drain in block 26191920 (pos 0); the attacker's identical call set landed one block later and reverted. Yoink's wallet later returned 8.10335 ETH and 82,143,476.36 X, keeping exactly 20,000,000 X.
+Yoink landed in block 26191920 before the attacker's X-token transaction in block 26191921. The ZC transactions came later: another address in block 26191993, then c0ffeebabe.eth's transaction 0xf57b7dbf... at position 0 of block 26191995. Its EOA later returned 15.764813 ETH on Base. These ZC transactions followed the attacker's block 26191745.
+
+Source: the incident page on the site; every figure links its saved raw response there.

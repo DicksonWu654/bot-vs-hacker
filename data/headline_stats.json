@@ -1,0 +1,1503 @@
+{
+ "generated": "2026-10-22T09:46:49Z",
+ "counts": {
+  "rows": 43,
+  "incidents": 29,
+  "headline_rows": 19,
+  "headline_incidents": 15,
+  "headline_incident_slugs": [
+   "alkimiya-2025",
+   "bifi-2026",
+   "blueberry-2024",
+   "curve-vyper-2023",
+   "defiplaza-2024",
+   "dodo-v2-2021",
+   "earningfarm-2022",
+   "kelp-rseth-2026",
+   "makina-2026",
+   "neemo-2025",
+   "punk-2021",
+   "shoco-2023",
+   "transitswap-2022",
+   "uncx-2026",
+   "unizen-2024"
+  ],
+  "headline_definition": "verdict == confirmed-onchain AND race_type in {beat-pending-attack, deploy-window-copy}; Euler excluded because operator identity is unresolved",
+  "by_verdict": {
+   "confirmed-onchain": 24,
+   "related-not-frontrun": 16,
+   "rejected": 3
+  },
+  "by_race_type": {
+   "beat-pending-attack": 15,
+   "post-failure-replay": 7,
+   "deploy-window-copy": 5,
+   "bot-was-first-exploiter": 5,
+   "late-copy": 4,
+   "beat-whitehat-or-user": 4,
+   "no-race": 3
+  },
+  "by_era": {
+   "mature-pbs-2024-26": 27,
+   "early-pbs-2022-23": 13,
+   "mev-geth-2021-22": 3
+  },
+  "by_bot": {
+   "Yoink": 21,
+   "anon searcher": 6,
+   "c0ffeebabe.eth": 6,
+   "none": 2,
+   "Bitfinding (whitehat)": 1,
+   "Curve pETH front-runner 0x6ec2": 1,
+   "Antelope (DODO)": 1,
+   "0xa57 (Earning.Farm bot)": 1,
+   "Makina searcher 0x935b": 1,
+   "Ronin ETH-leg searcher": 1,
+   "Ronin racer 3": 1,
+   "BlockSec (whitehat)": 1
+  },
+  "by_evidence_level_mempool": {
+   "absent-from-archive": 18,
+   "in-block-only": 15,
+   "measured": 10
+  },
+  "headline_by_race_type": {
+   "beat-pending-attack": 15,
+   "deploy-window-copy": 4
+  },
+  "headline_by_era": {
+   "mature-pbs-2024-26": 11,
+   "early-pbs-2022-23": 6,
+   "mev-geth-2021-22": 2
+  },
+  "headline_by_bot": {
+   "Yoink": 8,
+   "c0ffeebabe.eth": 4,
+   "anon searcher": 3,
+   "Curve pETH front-runner 0x6ec2": 1,
+   "Antelope (DODO)": 1,
+   "0xa57 (Earning.Farm bot)": 1,
+   "Makina searcher 0x935b": 1
+  },
+  "verdict_by_race_type": {
+   "beat-pending-attack": {
+    "confirmed-onchain": 15
+   },
+   "beat-whitehat-or-user": {
+    "confirmed-onchain": 4
+   },
+   "bot-was-first-exploiter": {
+    "related-not-frontrun": 5
+   },
+   "deploy-window-copy": {
+    "confirmed-onchain": 5
+   },
+   "late-copy": {
+    "related-not-frontrun": 4
+   },
+   "no-race": {
+    "rejected": 3
+   },
+   "post-failure-replay": {
+    "related-not-frontrun": 7
+   }
+  }
+ },
+ "ordering": {
+  "earlier-block": 9,
+  "same-block-earlier-index": 6,
+  "before-attacker-call-landed": 4
+ },
+ "blocks_ahead": {
+  "headline_rows_with_value": {
+   "alkimiya-2025": 1,
+   "blueberry-2024": 1,
+   "curve-vyper-2023/pETH": 0,
+   "curve-vyper-2023/msETH": 2,
+   "curve-vyper-2023/CRV-ETH-wave2": 3,
+   "defiplaza-2024": 1,
+   "dodo-v2-2021": 0,
+   "earningfarm-2022": 0,
+   "punk-2021": 0,
+   "shoco-2023": 0,
+   "transitswap-2022": 0,
+   "uncx-2026/yoink-X": 1,
+   "unizen-2024/pending-ads": 1,
+   "unizen-2024/pending-usdt": 1,
+   "unizen-2024/pending-xi": 2
+  },
+  "definition": "attacker_block - bot.block (positive = bot landed earlier)"
+ },
+ "loot": {
+  "note": "gross_loot_eth = ETH-equivalent extracted by the bot tx(s) of each row before paying the builder (priced inside the tx where possible); rows whose loot is not priced in ETH (DODO, Euler, ZC copiers, alETH/CRV wave 1) are excluded from every ETH total. Sushi RP2 is an incident-wide figure (scope all-bots-in-incident) and is reported separately.",
+  "rows_with_gross_bot_tx_scope": 33,
+  "total_gross_loot_eth_bot_tx_scope": 26844.1225,
+  "total_gross_loot_eth_headline_rows": 18428.2979,
+  "headline_rows_without_eth_price": [
+   "dodo-v2-2021"
+  ],
+  "sushi_rp2_incident_wide": {
+   "gross_loot_eth": 1800.0,
+   "returned_eth": 875.0
+  },
+  "total_returned_eth_bot_tx_scope": 21088.3133,
+  "returned_pct_of_gross_bot_tx_rows_with_both": 81.195,
+  "rows_with_return_figure": 28,
+  "returned_headline_rows": {
+   "rows": 14,
+   "known_zero_rows": 3,
+   "returned_eth": 14594.0935,
+   "gross_eth": 17557.3338,
+   "pct": 83.122
+  },
+  "median_row_returned_pct": 79.2,
+  "returns": {
+   "definitions": {
+    "gross": "returned_total_eth (reached the victim side, from the bot AND any builder pass-through, net of bounty) / gross_loot_eth taken from the victim in the bot tx",
+    "bot_net": "returned_by_bot_side_eth (builder pass-through excluded) / loot.bot_net_eth (gross - coinbase - gas + builder refund); rows with a ~0 or non-comparable net are excluded",
+    "victim_loss": "returned_total_eth / victim_loss_eth (the victim's ETH-equivalent loss to the bot tx; equals gross except Earning.Farm, Balancer and UNCX)"
+   },
+   "legacy_alias": "fate.returned_pct == fate.returned_pct_of_gross for every row (documented in harmonize_log.json)",
+   "gross": {
+    "all_bot_tx_rows": {
+     "rows": 28,
+     "known_zero_rows": 8,
+     "pooled_pct": 81.195,
+     "sum_returned_eth": 21088.3133,
+     "sum_denominator_eth": 25972.4411,
+     "median_row_pct": 79.2,
+     "min_row_pct": 0.0,
+     "max_row_pct": 100.0,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 82.539,
+      "balancer-2025": 90.0,
+      "bifi-2026": 0.0,
+      "blueberry-2024": 95.399,
+      "conic-2023/eth-pool": 0.0,
+      "curve-vyper-2023/pETH": 89.99,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 10.464,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.392,
+      "makina-2026": 70.868,
+      "metapool-2025": 80.349,
+      "neemo-2025": 80.006,
+      "paraswap-2024": 67.179,
+      "peapods-2025/second-attempt": 72.818,
+      "peapods-2025/oct-leftover": 78.394,
+      "punk-2021": 55.355,
+      "ronin-2024/eth-leg": 99.9,
+      "ronin-2024/racer3": 0.0,
+      "ronin-2024/yoink-usdc": 99.503,
+      "saddle-2022": 100.0,
+      "securedfinance-2026": 0.0,
+      "shoco-2023": 0.0,
+      "taopad-2024": 92.333,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.441,
+      "uncx-2026/yoink-X": 99.548
+     }
+    },
+    "headline_rows": {
+     "rows": 14,
+     "known_zero_rows": 3,
+     "pooled_pct": 83.122,
+     "sum_returned_eth": 14594.0935,
+     "sum_denominator_eth": 17557.3338,
+     "median_row_pct": 81.273,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.999,
+     "per_row": {
+      "alkimiya-2025": 82.539,
+      "bifi-2026": 0.0,
+      "blueberry-2024": 95.399,
+      "curve-vyper-2023/pETH": 89.99,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 10.464,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.392,
+      "makina-2026": 70.868,
+      "neemo-2025": 80.006,
+      "punk-2021": 55.355,
+      "shoco-2023": 0.0,
+      "transitswap-2022": 90.441,
+      "uncx-2026/yoink-X": 99.548
+     }
+    },
+    "yoink_rows": {
+     "rows": 13,
+     "known_zero_rows": 2,
+     "pooled_pct": 94.641,
+     "sum_returned_eth": 4092.9518,
+     "sum_denominator_eth": 4324.7303,
+     "median_row_pct": 80.349,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.548,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 82.539,
+      "defiplaza-2024": 10.464,
+      "kelp-rseth-2026": 99.392,
+      "metapool-2025": 80.349,
+      "paraswap-2024": 67.179,
+      "peapods-2025/second-attempt": 72.818,
+      "peapods-2025/oct-leftover": 78.394,
+      "ronin-2024/yoink-usdc": 99.503,
+      "taopad-2024": 92.333,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.441,
+      "uncx-2026/yoink-X": 99.548
+     }
+    }
+   },
+   "bot_net": {
+    "all_bot_tx_rows": {
+     "rows": 25,
+     "known_zero_rows": 8,
+     "pooled_pct": 85.48,
+     "sum_returned_eth": 19722.8831,
+     "sum_denominator_eth": 23073.1652,
+     "median_row_pct": 89.2,
+     "min_row_pct": 0.0,
+     "max_row_pct": 100.05,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 86.904,
+      "balancer-2025": 90.0,
+      "bifi-2026": 0.0,
+      "conic-2023/eth-pool": 0.0,
+      "curve-vyper-2023/pETH": 89.991,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 98.657,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.999,
+      "makina-2026": 0.0,
+      "metapool-2025": 89.079,
+      "neemo-2025": 80.02,
+      "paraswap-2024": 99.819,
+      "peapods-2025/second-attempt": 89.2,
+      "peapods-2025/oct-leftover": 90.0,
+      "punk-2021": 83.207,
+      "ronin-2024/eth-leg": 100.0,
+      "ronin-2024/racer3": 0.0,
+      "ronin-2024/yoink-usdc": 99.99,
+      "saddle-2022": 100.05,
+      "shoco-2023": 0.0,
+      "taopad-2024": 99.984,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.469
+     }
+    },
+    "headline_rows": {
+     "rows": 12,
+     "known_zero_rows": 4,
+     "pooled_pct": 89.838,
+     "sum_returned_eth": 13228.6633,
+     "sum_denominator_eth": 14725.0363,
+     "median_row_pct": 85.055,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.999,
+     "per_row": {
+      "alkimiya-2025": 86.904,
+      "bifi-2026": 0.0,
+      "curve-vyper-2023/pETH": 89.991,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 98.657,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.999,
+      "makina-2026": 0.0,
+      "neemo-2025": 80.02,
+      "punk-2021": 83.207,
+      "shoco-2023": 0.0,
+      "transitswap-2022": 90.469
+     }
+    },
+    "yoink_rows": {
+     "rows": 12,
+     "known_zero_rows": 2,
+     "pooled_pct": 97.289,
+     "sum_returned_eth": 4084.8484,
+     "sum_denominator_eth": 4198.6576,
+     "median_row_pct": 90.234,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.999,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 86.904,
+      "defiplaza-2024": 98.657,
+      "kelp-rseth-2026": 99.999,
+      "metapool-2025": 89.079,
+      "paraswap-2024": 99.819,
+      "peapods-2025/second-attempt": 89.2,
+      "peapods-2025/oct-leftover": 90.0,
+      "ronin-2024/yoink-usdc": 99.99,
+      "taopad-2024": 99.984,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.469
+     }
+    }
+   },
+   "victim_loss": {
+    "all_bot_tx_rows": {
+     "rows": 26,
+     "known_zero_rows": 8,
+     "pooled_pct": 81.1,
+     "sum_returned_eth": 20845.735,
+     "sum_denominator_eth": 25703.6733,
+     "median_row_pct": 75.606,
+     "min_row_pct": 0.0,
+     "max_row_pct": 100.0,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 82.539,
+      "bifi-2026": 0.0,
+      "blueberry-2024": 95.399,
+      "conic-2023/eth-pool": 0.0,
+      "curve-vyper-2023/pETH": 89.99,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 10.464,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.392,
+      "makina-2026": 70.868,
+      "metapool-2025": 80.349,
+      "neemo-2025": 80.006,
+      "paraswap-2024": 67.179,
+      "peapods-2025/second-attempt": 72.818,
+      "peapods-2025/oct-leftover": 78.394,
+      "punk-2021": 55.355,
+      "ronin-2024/eth-leg": 99.9,
+      "ronin-2024/racer3": 0.0,
+      "ronin-2024/yoink-usdc": 99.503,
+      "saddle-2022": 100.0,
+      "securedfinance-2026": 0.0,
+      "shoco-2023": 0.0,
+      "taopad-2024": 92.333,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.441
+     }
+    },
+    "headline_rows": {
+     "rows": 13,
+     "known_zero_rows": 3,
+     "pooled_pct": 83.115,
+     "sum_returned_eth": 14585.9901,
+     "sum_denominator_eth": 17549.0937,
+     "median_row_pct": 80.006,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.999,
+     "per_row": {
+      "alkimiya-2025": 82.539,
+      "bifi-2026": 0.0,
+      "blueberry-2024": 95.399,
+      "curve-vyper-2023/pETH": 89.99,
+      "curve-vyper-2023/CRV-ETH-wave2": 99.999,
+      "defiplaza-2024": 10.464,
+      "earningfarm-2022": 0.0,
+      "kelp-rseth-2026": 99.392,
+      "makina-2026": 70.868,
+      "neemo-2025": 80.006,
+      "punk-2021": 55.355,
+      "shoco-2023": 0.0,
+      "transitswap-2022": 90.441
+     }
+    },
+    "yoink_rows": {
+     "rows": 12,
+     "known_zero_rows": 2,
+     "pooled_pct": 94.631,
+     "sum_returned_eth": 4084.8484,
+     "sum_denominator_eth": 4316.5902,
+     "median_row_pct": 79.371,
+     "min_row_pct": 0.0,
+     "max_row_pct": 99.503,
+     "per_row": {
+      "alkemi-2026/wbtc-yoink": 0.0,
+      "alkimiya-2025": 82.539,
+      "defiplaza-2024": 10.464,
+      "kelp-rseth-2026": 99.392,
+      "metapool-2025": 80.349,
+      "paraswap-2024": 67.179,
+      "peapods-2025/second-attempt": 72.818,
+      "peapods-2025/oct-leftover": 78.394,
+      "ronin-2024/yoink-usdc": 99.503,
+      "taopad-2024": 92.333,
+      "time-2023": 0.0,
+      "transitswap-2022": 90.441
+     }
+    }
+   },
+   "headline_rows_returned_by_builder_or_proposer": {
+    "rows": {
+     "blueberry-2024": 366.626810481,
+     "makina-2026": 920.7
+    },
+    "sum_eth": 1287.3268,
+    "share_of_headline_returned_eth_pct": 8.821
+   },
+   "rows_without_bot_net_pct_but_with_return": {
+    "blueberry-2024": "returned_pct_of_bot_net not meaningful: bot-tx net is 0.0464 ETH (gross 457.68 - coinbase 457.55 - gas 0.09) but the bot's EOA sent 70 ETH from other funds, so a share of net is not meaningful (ratio about 1,500x); the builder, not the bot, returned the rest",
+    "euler-copybot-2023": "returned_pct_of_bot_net not computed: bot_net_eth 0.0 is under 0.05 ETH",
+    "securedfinance-2026": "returned_pct_of_bot_net not computed: bot_net_eth 0.011034371 is under 0.05 ETH",
+    "uncx-2026/yoink-X": "returned_pct_of_bot_net not meaningful: bot_net_eth (0.0041) counts only the ETH side of the tx; Yoink's net is mostly the 102,143,476 X tokens swept to its vault (unpriced). The 8.10 ETH returned exceeds the ETH-side net; token leg: 82,143,476.36 of 102,143,476.36 X returned = 80.42%, 20,000,000 X ",
+    "uncx-2026/zc-copiers": ""
+   },
+   "incident_wide_rows_not_pooled": {
+    "conic-2023/crvusd-pool": {
+     "returned_total_eth": 81.30725100000001,
+     "returned_pct_of_gross": 64.62,
+     "returned_pct_of_bot_net": 90.0
+    },
+    "mintswap-2024": {
+     "returned_total_eth": 91.62,
+     "returned_pct_of_gross": 82.552,
+     "returned_pct_of_bot_net": 90.002
+    },
+    "peapods-2025/07-09-followup": {
+     "returned_total_eth": null,
+     "returned_pct_of_gross": null,
+     "returned_pct_of_bot_net": null
+    },
+    "sushi-rp2-2023": {
+     "returned_total_eth": 875.0,
+     "returned_pct_of_gross": 48.611,
+     "returned_pct_of_bot_net": 88.115
+    },
+    "unizen-2024/half-copies": {
+     "returned_total_eth": null,
+     "returned_pct_of_gross": null,
+     "returned_pct_of_bot_net": null
+    }
+   },
+   "headline_rows_by_status": {
+    "alkimiya-2025": "partial",
+    "bifi-2026": "none",
+    "blueberry-2024": "partial",
+    "curve-vyper-2023/pETH": "returned",
+    "curve-vyper-2023/msETH": "unknown",
+    "curve-vyper-2023/CRV-ETH-wave2": "returned",
+    "defiplaza-2024": "partial",
+    "dodo-v2-2021": "partial",
+    "earningfarm-2022": "none",
+    "kelp-rseth-2026": "partial",
+    "makina-2026": "partial",
+    "neemo-2025": "returned",
+    "punk-2021": "partial",
+    "shoco-2023": "none",
+    "transitswap-2022": "returned",
+    "uncx-2026/yoink-X": "partial",
+    "unizen-2024/pending-ads": "partial",
+    "unizen-2024/pending-usdt": "partial",
+    "unizen-2024/pending-xi": "partial"
+   }
+  },
+  "return_status_counts": {
+   "partial": 21,
+   "none": 9,
+   "returned": 7,
+   "unknown": 6
+  },
+  "return_status_counts_headline": {
+   "partial": 11,
+   "returned": 4,
+   "none": 3,
+   "unknown": 1
+  },
+  "total_captured_usd_reported_where_known": 38576357.0,
+  "captured_usd_caveat": "sum of per-row headline/pool-loss USD figures from the postmortems cited in raw_refs; definitions differ (pool loss vs bot take), so treat as an order of magnitude only"
+ },
+ "block_producer_share": {
+  "definition": "bot tx's direct coinbase transfers + its gas priority fee, as % of the bot's gross loot (before any builder refund/pass-through). Pooled = sum/sum over single-bot-tx rows with a priced loot.",
+  "all_rows": {
+   "rows": 33,
+   "sum_paid_eth": 2797.7434,
+   "sum_gross_eth": 26844.1225,
+   "pooled_pct": 10.422,
+   "after_refunds": {
+    "rows": 27,
+    "sum_paid_minus_refund_eth": 1935.3909,
+    "pooled_pct": 15.162,
+    "median_row_pct": 9.8
+   },
+   "median_row_pct": 5.5
+  },
+  "headline_rows": {
+   "rows": 18,
+   "sum_paid_eth": 1925.0525,
+   "sum_gross_eth": 18428.2979,
+   "pooled_pct": 10.446,
+   "after_refunds": {
+    "rows": 14,
+    "sum_paid_minus_refund_eth": 1870.2205,
+    "pooled_pct": 32.774,
+    "median_row_pct": 11.608
+   },
+   "median_row_pct": 3.0785
+  },
+  "by_era_headline": {
+   "mev-geth-2021-22": {
+    "rows": 1,
+    "sum_paid_eth": 0.0103,
+    "sum_gross_eth": 2868.8777,
+    "pooled_pct": 0.0,
+    "after_refunds": {
+     "rows": 0,
+     "sum_paid_minus_refund_eth": 0,
+     "pooled_pct": null,
+     "median_row_pct": null
+    },
+    "median_row_pct": 0.0
+   },
+   "early-pbs-2022-23": {
+    "rows": 6,
+    "sum_paid_eth": 19.0183,
+    "sum_gross_eth": 10366.6147,
+    "pooled_pct": 0.183,
+    "after_refunds": {
+     "rows": 3,
+     "sum_paid_minus_refund_eth": 18.814,
+     "pooled_pct": 3.663,
+     "median_row_pct": 2.258
+    },
+    "median_row_pct": 0.015
+   },
+   "mature-pbs-2024-26": {
+    "rows": 11,
+    "sum_paid_eth": 1906.0239,
+    "sum_gross_eth": 5192.8055,
+    "pooled_pct": 36.705,
+    "after_refunds": {
+     "rows": 11,
+     "sum_paid_minus_refund_eth": 1851.4065,
+     "pooled_pct": 35.653,
+     "median_row_pct": 26.842
+    },
+    "median_row_pct": 97.8
+   }
+  },
+  "by_bot_headline": {
+   "0xa57 (Earning.Farm bot)": {
+    "rows": 1,
+    "sum_paid_eth": 18.7171,
+    "sum_gross_eth": 480.1081,
+    "pooled_pct": 3.899,
+    "after_refunds": {
+     "rows": 1,
+     "sum_paid_minus_refund_eth": 18.7171,
+     "pooled_pct": 3.899,
+     "median_row_pct": 3.899
+    },
+    "median_row_pct": 3.899
+   },
+   "Curve pETH front-runner 0x6ec2": {
+    "rows": 1,
+    "sum_paid_eth": 0.0309,
+    "sum_gross_eth": 6106.6547,
+    "pooled_pct": 0.001,
+    "after_refunds": {
+     "rows": 0,
+     "sum_paid_minus_refund_eth": 0,
+     "pooled_pct": null,
+     "median_row_pct": null
+    },
+    "median_row_pct": 0.001
+   },
+   "Makina searcher 0x935b": {
+    "rows": 1,
+    "sum_paid_eth": 1299.0499,
+    "sum_gross_eth": 1299.18,
+    "pooled_pct": 99.99,
+    "after_refunds": {
+     "rows": 1,
+     "sum_paid_minus_refund_eth": 1299.0499,
+     "pooled_pct": 99.99,
+     "median_row_pct": 99.99
+    },
+    "median_row_pct": 99.99
+   },
+   "Yoink": {
+    "rows": 8,
+    "sum_paid_eth": 148.4223,
+    "sum_gross_eth": 3282.6562,
+    "pooled_pct": 4.521,
+    "after_refunds": {
+     "rows": 8,
+     "sum_paid_minus_refund_eth": 93.8049,
+     "pooled_pct": 2.858,
+     "median_row_pct": 22.5175
+    },
+    "median_row_pct": 97.44999999999999
+   },
+   "anon searcher": {
+    "rows": 3,
+    "sum_paid_eth": 0.1249,
+    "sum_gross_eth": 2987.5706,
+    "pooled_pct": 0.004,
+    "after_refunds": {
+     "rows": 2,
+     "sum_paid_minus_refund_eth": 0.1146,
+     "pooled_pct": 0.097,
+     "median_row_pct": 1.138
+    },
+    "median_row_pct": 0.018
+   },
+   "c0ffeebabe.eth": {
+    "rows": 4,
+    "sum_paid_eth": 458.7074,
+    "sum_gross_eth": 4272.1283,
+    "pooled_pct": 10.737,
+    "after_refunds": {
+     "rows": 2,
+     "sum_paid_minus_refund_eth": 458.5341,
+     "pooled_pct": 87.217,
+     "median_row_pct": 50.71
+    },
+    "median_row_pct": 0.735
+   }
+  },
+  "sushi_rp2_incident_wide_pct_to_builders_and_proposers": 44.832,
+  "proposer_share": {
+   "definition": "winning bid (the proposer payment) / bot gross loot; bot-tx scope rows whose tx is in the winning block and whose bid history exists",
+   "rows": 23,
+   "pooled_pct": 4.47,
+   "median_row_pct": 6.974,
+   "headline_rows": 12,
+   "headline_median_row_pct": 12.476999999999999
+  },
+  "per_row": {
+   "alkemi-2026/wbtc-yoink": {
+    "headline": false,
+    "pct_to_builder": 99.9,
+    "pct_to_proposer": 10.114,
+    "builder_refund_to_bot_eth": 9.190671700387883,
+    "builder_payout_to_victim_eth": null
+   },
+   "alkemi-2026/eth-vault-copiers": {
+    "headline": false,
+    "pct_to_builder": 0.113,
+    "pct_to_proposer": 1.713,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "alkimiya-2025": {
+    "headline": true,
+    "pct_to_builder": 99.9,
+    "pct_to_proposer": 5.063,
+    "builder_refund_to_bot_eth": 48.278272182122,
+    "builder_payout_to_victim_eth": null
+   },
+   "balancer-2025": {
+    "headline": false,
+    "pct_to_builder": 0.022,
+    "pct_to_proposer": 6.974,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "bifi-2026": {
+    "headline": true,
+    "pct_to_builder": 1.45,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "blueberry-2024": {
+    "headline": true,
+    "pct_to_builder": 99.97,
+    "pct_to_proposer": 19.891,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": 366.506850348
+   },
+   "conic-2023/crvusd-pool": {
+    "headline": false,
+    "pct_to_builder": 17.039,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "conic-2023/eth-pool": {
+    "headline": false,
+    "pct_to_builder": 0.004,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "curve-vyper-2023/pETH": {
+    "headline": true,
+    "pct_to_builder": 0.001,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "curve-vyper-2023/msETH": {
+    "headline": true,
+    "pct_to_builder": 0.02,
+    "pct_to_proposer": 0.042,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "curve-vyper-2023/CRV-ETH-wave2": {
+    "headline": true,
+    "pct_to_builder": 0.0,
+    "pct_to_proposer": 0.017,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "defiplaza-2024": {
+    "headline": true,
+    "pct_to_builder": 90.367,
+    "pct_to_proposer": 85.22,
+    "builder_refund_to_bot_eth": 4.761056907491175,
+    "builder_payout_to_victim_eth": null
+   },
+   "earningfarm-2022": {
+    "headline": true,
+    "pct_to_builder": 3.899,
+    "pct_to_proposer": 3.921,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "kelp-rseth-2026": {
+    "headline": true,
+    "pct_to_builder": 0.607,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "makina-2026": {
+    "headline": true,
+    "pct_to_builder": 99.99,
+    "pct_to_proposer": 21.269,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": 920.7
+   },
+   "metapool-2025": {
+    "headline": false,
+    "pct_to_builder": 9.8,
+    "pct_to_proposer": 9.875,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "mintswap-2024": {
+    "headline": false,
+    "pct_to_builder": 99.83,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 101.728581546,
+    "builder_payout_to_victim_eth": null
+   },
+   "neemo-2025": {
+    "headline": true,
+    "pct_to_builder": 0.018,
+    "pct_to_proposer": 0.03,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "paraswap-2024": {
+    "headline": false,
+    "pct_to_builder": 99.8,
+    "pct_to_proposer": 34.392,
+    "builder_refund_to_bot_eth": 4.336929660883,
+    "builder_payout_to_victim_eth": null
+   },
+   "peapods-2025/second-attempt": {
+    "headline": false,
+    "pct_to_builder": 18.359,
+    "pct_to_proposer": 19.873,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "peapods-2025/oct-leftover": {
+    "headline": false,
+    "pct_to_builder": 99.9,
+    "pct_to_proposer": 12.861,
+    "builder_refund_to_bot_eth": 1.572455422953,
+    "builder_payout_to_victim_eth": null
+   },
+   "punk-2021": {
+    "headline": true,
+    "pct_to_builder": 0.0,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "ronin-2024/eth-leg": {
+    "headline": false,
+    "pct_to_builder": 0.1,
+    "pct_to_proposer": 0.101,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "ronin-2024/racer3": {
+    "headline": false,
+    "pct_to_builder": 89.983,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "ronin-2024/yoink-usdc": {
+    "headline": false,
+    "pct_to_builder": 99.9,
+    "pct_to_proposer": 1.387,
+    "builder_refund_to_bot_eth": 791.7422846752371,
+    "builder_payout_to_victim_eth": null
+   },
+   "saddle-2022": {
+    "headline": false,
+    "pct_to_builder": 0.05,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": null,
+    "builder_payout_to_victim_eth": null
+   },
+   "securedfinance-2026": {
+    "headline": false,
+    "pct_to_builder": 99.96,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "shoco-2023": {
+    "headline": true,
+    "pct_to_builder": 2.258,
+    "pct_to_proposer": 3.191,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "sushi-rp2-2023": {
+    "headline": false,
+    "pct_to_builder": 44.832,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "taopad-2024": {
+    "headline": false,
+    "pct_to_builder": 4.9,
+    "pct_to_proposer": 4.923,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "time-2023": {
+    "headline": false,
+    "pct_to_builder": 5.5,
+    "pct_to_proposer": 5.587,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "transitswap-2022": {
+    "headline": true,
+    "pct_to_builder": 0.01,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "uncx-2026/yoink-X": {
+    "headline": true,
+    "pct_to_builder": 99.9,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 0.0,
+    "builder_payout_to_victim_eth": null
+   },
+   "unizen-2024/pending-ads": {
+    "headline": true,
+    "pct_to_builder": 97.8,
+    "pct_to_proposer": 29.567,
+    "builder_refund_to_bot_eth": 0.273011,
+    "builder_payout_to_victim_eth": null
+   },
+   "unizen-2024/pending-usdt": {
+    "headline": true,
+    "pct_to_builder": 99.614,
+    "pct_to_proposer": 70.716,
+    "builder_refund_to_bot_eth": 0.99992,
+    "builder_payout_to_victim_eth": null
+   },
+   "unizen-2024/pending-xi": {
+    "headline": true,
+    "pct_to_builder": 97.1,
+    "pct_to_proposer": 19.961,
+    "builder_refund_to_bot_eth": 0.305127,
+    "builder_payout_to_victim_eth": null
+   },
+   "unizen-2024/half-copies": {
+    "headline": false,
+    "pct_to_builder": 68.627,
+    "pct_to_proposer": null,
+    "builder_refund_to_bot_eth": 2.220043,
+    "builder_payout_to_victim_eth": null
+   }
+  }
+ },
+ "detection_delay": {
+  "definition": "ms from the first pre-inclusion public-mempool sighting of the trigger tx (attacker tx/deploy or the user's withdrawal) to the first bid of the builder that won the block with a step-up (>=2x its own earlier best and >=0.5 ETH); contents of non-winning bids are not visible",
+  "n_measured": 5,
+  "median_ms": 873,
+  "measured": [
+   {
+    "row": "blueberry-2024",
+    "trigger": "attacker-tx",
+    "delay_ms": 266,
+    "upper_bound_ms": 1194,
+    "method": "winning-builder-first-stepup"
+   },
+   {
+    "row": "defiplaza-2024",
+    "trigger": "attacker-deploy",
+    "delay_ms": 3013,
+    "upper_bound_ms": 3818,
+    "method": "winning-builder-first-stepup"
+   },
+   {
+    "row": "ronin-2024/eth-leg",
+    "trigger": "user-tx",
+    "delay_ms": 873,
+    "upper_bound_ms": null,
+    "method": "winning-builder-first-stepup"
+   },
+   {
+    "row": "ronin-2024/yoink-usdc",
+    "trigger": "user-tx",
+    "delay_ms": 4138,
+    "upper_bound_ms": 4939,
+    "method": "winning-builder-first-stepup"
+   },
+   {
+    "row": "unizen-2024/pending-usdt",
+    "trigger": "attacker-tx",
+    "delay_ms": 443,
+    "upper_bound_ms": 1958,
+    "method": "winning-builder-first-stepup"
+   }
+  ],
+  "median_upper_bound_ms": 2888.0,
+  "headline_rows_measured": [
+   "blueberry-2024",
+   "defiplaza-2024",
+   "unizen-2024/pending-usdt"
+  ],
+  "median_ms_headline_rows": 443,
+  "min_ms": 266,
+  "max_ms": 4138,
+  "unmeasurable_reason": "attacker/bot txs of most archive-era incidents were absent from mempool-dumpster; before 2023-08-07 no mempool archive exists"
+ },
+ "mempool_visibility_in_our_set": {
+  "dumpster_era_rows": 28,
+  "attacker_or_user_trigger_seen_public_before_inclusion": 8,
+  "rows": [
+   "blueberry-2024",
+   "defiplaza-2024",
+   "ronin-2024/eth-leg",
+   "ronin-2024/yoink-usdc",
+   "securedfinance-2026",
+   "taopad-2024",
+   "unizen-2024/pending-ads",
+   "unizen-2024/pending-usdt"
+  ]
+ },
+ "auction": {
+  "median_n_bids_where_known": 500,
+  "median_winning_bid_eth_headline_where_known": 0.9900700857186591
+ },
+ "sensitivity": {
+  "excluding_c0ffeebabe_rows": {
+   "rows": 15,
+   "incidents": 13,
+   "definition": "Headline rows excluding the four c0ffeebabe.eth rows whose call-level comparison is withheld by publication policy",
+   "loot": {
+    "note": "gross_loot_eth = ETH-equivalent extracted by the bot tx(s) of each row before paying the builder (priced inside the tx where possible); rows whose loot is not priced in ETH (DODO, Euler, ZC copiers, alETH/CRV wave 1) are excluded from every ETH total. Sushi RP2 is an incident-wide figure (scope all-bots-in-incident) and is reported separately.",
+    "rows_with_gross_bot_tx_scope": 14,
+    "total_gross_loot_eth_bot_tx_scope": 14156.1696,
+    "total_gross_loot_eth_headline_rows": 14156.1696,
+    "headline_rows_without_eth_price": [
+     "dodo-v2-2021"
+    ],
+    "sushi_rp2_incident_wide": {
+     "gross_loot_eth": null,
+     "returned_eth": null
+    },
+    "total_returned_eth_bot_tx_scope": 11277.8246,
+    "returned_pct_of_gross_bot_tx_rows_with_both": 79.691,
+    "rows_with_return_figure": 11,
+    "returned_headline_rows": {
+     "rows": 11,
+     "known_zero_rows": 2,
+     "returned_eth": 11277.8246,
+     "gross_eth": 14151.9326,
+     "pct": 79.691
+    },
+    "median_row_returned_pct": 80.006,
+    "returns": {
+     "definitions": {
+      "gross": "returned_total_eth (reached the victim side, from the bot AND any builder pass-through, net of bounty) / gross_loot_eth taken from the victim in the bot tx",
+      "bot_net": "returned_by_bot_side_eth (builder pass-through excluded) / loot.bot_net_eth (gross - coinbase - gas + builder refund); rows with a ~0 or non-comparable net are excluded",
+      "victim_loss": "returned_total_eth / victim_loss_eth (the victim's ETH-equivalent loss to the bot tx; equals gross except Earning.Farm, Balancer and UNCX)"
+     },
+     "legacy_alias": "fate.returned_pct == fate.returned_pct_of_gross for every row (documented in harmonize_log.json)",
+     "gross": {
+      "headline_rows": {
+       "rows": 11,
+       "known_zero_rows": 2,
+       "pooled_pct": 79.691,
+       "sum_returned_eth": 11277.8246,
+       "sum_denominator_eth": 14151.9326,
+       "median_row_pct": 80.006,
+       "min_row_pct": 0.0,
+       "max_row_pct": 99.548,
+       "per_row": {
+        "alkimiya-2025": 82.539,
+        "curve-vyper-2023/pETH": 89.99,
+        "defiplaza-2024": 10.464,
+        "earningfarm-2022": 0.0,
+        "kelp-rseth-2026": 99.392,
+        "makina-2026": 70.868,
+        "neemo-2025": 80.006,
+        "punk-2021": 55.355,
+        "shoco-2023": 0.0,
+        "transitswap-2022": 90.441,
+        "uncx-2026/yoink-X": 99.548
+       }
+      },
+      "yoink_rows": {
+       "rows": 5,
+       "known_zero_rows": 0,
+       "pooled_pct": 97.06,
+       "sum_returned_eth": 3182.0375,
+       "sum_denominator_eth": 3278.4193,
+       "median_row_pct": 90.441,
+       "min_row_pct": 10.464,
+       "max_row_pct": 99.548,
+       "per_row": {
+        "alkimiya-2025": 82.539,
+        "defiplaza-2024": 10.464,
+        "kelp-rseth-2026": 99.392,
+        "transitswap-2022": 90.441,
+        "uncx-2026/yoink-X": 99.548
+       }
+      }
+     },
+     "bot_net": {
+      "headline_rows": {
+       "rows": 10,
+       "known_zero_rows": 3,
+       "pooled_pct": 87.865,
+       "sum_returned_eth": 10349.0212,
+       "sum_denominator_eth": 11778.3073,
+       "median_row_pct": 85.055,
+       "min_row_pct": 0.0,
+       "max_row_pct": 99.999,
+       "per_row": {
+        "alkimiya-2025": 86.904,
+        "curve-vyper-2023/pETH": 89.991,
+        "defiplaza-2024": 98.657,
+        "earningfarm-2022": 0.0,
+        "kelp-rseth-2026": 99.999,
+        "makina-2026": 0.0,
+        "neemo-2025": 80.02,
+        "punk-2021": 83.207,
+        "shoco-2023": 0.0,
+        "transitswap-2022": 90.469
+       }
+      },
+      "yoink_rows": {
+       "rows": 4,
+       "known_zero_rows": 0,
+       "pooled_pct": 99.71,
+       "sum_returned_eth": 3173.9341,
+       "sum_denominator_eth": 3183.179,
+       "median_row_pct": 94.563,
+       "min_row_pct": 86.904,
+       "max_row_pct": 99.999,
+       "per_row": {
+        "alkimiya-2025": 86.904,
+        "defiplaza-2024": 98.657,
+        "kelp-rseth-2026": 99.999,
+        "transitswap-2022": 90.469
+       }
+      }
+     },
+     "victim_loss": {
+      "headline_rows": {
+       "rows": 10,
+       "known_zero_rows": 2,
+       "pooled_pct": 79.68,
+       "sum_returned_eth": 11269.7212,
+       "sum_denominator_eth": 14143.6925,
+       "median_row_pct": 75.437,
+       "min_row_pct": 0.0,
+       "max_row_pct": 99.392,
+       "per_row": {
+        "alkimiya-2025": 82.539,
+        "curve-vyper-2023/pETH": 89.99,
+        "defiplaza-2024": 10.464,
+        "earningfarm-2022": 0.0,
+        "kelp-rseth-2026": 99.392,
+        "makina-2026": 70.868,
+        "neemo-2025": 80.006,
+        "punk-2021": 55.355,
+        "shoco-2023": 0.0,
+        "transitswap-2022": 90.441
+       }
+      },
+      "yoink_rows": {
+       "rows": 4,
+       "known_zero_rows": 0,
+       "pooled_pct": 97.054,
+       "sum_returned_eth": 3173.9341,
+       "sum_denominator_eth": 3270.2791,
+       "median_row_pct": 86.49,
+       "min_row_pct": 10.464,
+       "max_row_pct": 99.392,
+       "per_row": {
+        "alkimiya-2025": 82.539,
+        "defiplaza-2024": 10.464,
+        "kelp-rseth-2026": 99.392,
+        "transitswap-2022": 90.441
+       }
+      }
+     },
+     "headline_rows_returned_by_builder_or_proposer": {
+      "rows": {
+       "makina-2026": 920.7
+      },
+      "sum_eth": 920.7,
+      "share_of_headline_returned_eth_pct": 8.164
+     },
+     "rows_without_bot_net_pct_but_with_return": {
+      "uncx-2026/yoink-X": "returned_pct_of_bot_net not meaningful: bot_net_eth (0.0041) counts only the ETH side of the tx; Yoink's net is mostly the 102,143,476 X tokens swept to its vault (unpriced). The 8.10 ETH returned exceeds the ETH-side net; token leg: 82,143,476.36 of 102,143,476.36 X returned = 80.42%, 20,000,000 X "
+     },
+     "incident_wide_rows_not_pooled": {},
+     "headline_rows_by_status": {
+      "alkimiya-2025": "partial",
+      "curve-vyper-2023/pETH": "returned",
+      "defiplaza-2024": "partial",
+      "dodo-v2-2021": "partial",
+      "earningfarm-2022": "none",
+      "kelp-rseth-2026": "partial",
+      "makina-2026": "partial",
+      "neemo-2025": "returned",
+      "punk-2021": "partial",
+      "shoco-2023": "none",
+      "transitswap-2022": "returned",
+      "uncx-2026/yoink-X": "partial",
+      "unizen-2024/pending-ads": "partial",
+      "unizen-2024/pending-usdt": "partial",
+      "unizen-2024/pending-xi": "partial"
+     }
+    },
+    "return_status_counts": {
+     "partial": 10,
+     "returned": 3,
+     "none": 2
+    },
+    "return_status_counts_headline": {
+     "partial": 10,
+     "returned": 3,
+     "none": 2
+    },
+    "total_captured_usd_reported_where_known": 14093131.0,
+    "captured_usd_caveat": "sum of per-row headline/pool-loss USD figures from the postmortems cited in raw_refs; definitions differ (pool loss vs bot take), so treat as an order of magnitude only"
+   },
+   "block_producer_share": {
+    "definition": "bot tx's direct coinbase transfers + its gas priority fee, as % of the bot's gross loot (before any builder refund/pass-through). Pooled = sum/sum over single-bot-tx rows with a priced loot.",
+    "all_rows": {
+     "rows": 14,
+     "sum_paid_eth": 1466.345,
+     "sum_gross_eth": 14156.1696,
+     "pooled_pct": 10.358,
+     "after_refunds": {
+      "rows": 12,
+      "sum_paid_minus_refund_eth": 1411.6864,
+      "pooled_pct": 27.249,
+      "median_row_pct": 11.608
+     },
+     "median_row_pct": 47.133
+    },
+    "headline_rows": {
+     "rows": 14,
+     "sum_paid_eth": 1466.345,
+     "sum_gross_eth": 14156.1696,
+     "pooled_pct": 10.358,
+     "after_refunds": {
+      "rows": 12,
+      "sum_paid_minus_refund_eth": 1411.6864,
+      "pooled_pct": 27.249,
+      "median_row_pct": 11.608
+     },
+     "median_row_pct": 47.133
+    },
+    "by_era_headline": {
+     "mev-geth-2021-22": {
+      "rows": 1,
+      "sum_paid_eth": 0.0103,
+      "sum_gross_eth": 2868.8777,
+      "pooled_pct": 0.0,
+      "after_refunds": {
+       "rows": 0,
+       "sum_paid_minus_refund_eth": 0,
+       "pooled_pct": null,
+       "median_row_pct": null
+      },
+      "median_row_pct": 0.0
+     },
+     "early-pbs-2022-23": {
+      "rows": 4,
+      "sum_paid_eth": 18.845,
+      "sum_gross_eth": 6620.2281,
+      "pooled_pct": 0.285,
+      "after_refunds": {
+       "rows": 3,
+       "sum_paid_minus_refund_eth": 18.814,
+       "pooled_pct": 3.663,
+       "median_row_pct": 2.258
+      },
+      "median_row_pct": 1.134
+     },
+     "mature-pbs-2024-26": {
+      "rows": 9,
+      "sum_paid_eth": 1447.4898,
+      "sum_gross_eth": 4667.0637,
+      "pooled_pct": 31.015,
+      "after_refunds": {
+       "rows": 9,
+       "sum_paid_minus_refund_eth": 1392.8724,
+       "pooled_pct": 29.845,
+       "median_row_pct": 26.842
+      },
+      "median_row_pct": 97.8
+     }
+    },
+    "by_bot_headline": {
+     "0xa57 (Earning.Farm bot)": {
+      "rows": 1,
+      "sum_paid_eth": 18.7171,
+      "sum_gross_eth": 480.1081,
+      "pooled_pct": 3.899,
+      "after_refunds": {
+       "rows": 1,
+       "sum_paid_minus_refund_eth": 18.7171,
+       "pooled_pct": 3.899,
+       "median_row_pct": 3.899
+      },
+      "median_row_pct": 3.899
+     },
+     "Curve pETH front-runner 0x6ec2": {
+      "rows": 1,
+      "sum_paid_eth": 0.0309,
+      "sum_gross_eth": 6106.6547,
+      "pooled_pct": 0.001,
+      "after_refunds": {
+       "rows": 0,
+       "sum_paid_minus_refund_eth": 0,
+       "pooled_pct": null,
+       "median_row_pct": null
+      },
+      "median_row_pct": 0.001
+     },
+     "Makina searcher 0x935b": {
+      "rows": 1,
+      "sum_paid_eth": 1299.0499,
+      "sum_gross_eth": 1299.18,
+      "pooled_pct": 99.99,
+      "after_refunds": {
+       "rows": 1,
+       "sum_paid_minus_refund_eth": 1299.0499,
+       "pooled_pct": 99.99,
+       "median_row_pct": 99.99
+      },
+      "median_row_pct": 99.99
+     },
+     "Yoink": {
+      "rows": 8,
+      "sum_paid_eth": 148.4223,
+      "sum_gross_eth": 3282.6562,
+      "pooled_pct": 4.521,
+      "after_refunds": {
+       "rows": 8,
+       "sum_paid_minus_refund_eth": 93.8049,
+       "pooled_pct": 2.858,
+       "median_row_pct": 22.5175
+      },
+      "median_row_pct": 97.44999999999999
+     },
+     "anon searcher": {
+      "rows": 3,
+      "sum_paid_eth": 0.1249,
+      "sum_gross_eth": 2987.5706,
+      "pooled_pct": 0.004,
+      "after_refunds": {
+       "rows": 2,
+       "sum_paid_minus_refund_eth": 0.1146,
+       "pooled_pct": 0.097,
+       "median_row_pct": 1.138
+      },
+      "median_row_pct": 0.018
+     }
+    },
+    "sushi_rp2_incident_wide_pct_to_builders_and_proposers": null,
+    "proposer_share": {
+     "definition": "winning bid (the proposer payment) / bot gross loot; bot-tx scope rows whose tx is in the winning block and whose bid history exists",
+     "rows": 9,
+     "pooled_pct": 17.916,
+     "median_row_pct": 19.961,
+     "headline_rows": 9,
+     "headline_median_row_pct": 19.961
+    },
+    "per_row": {
+     "alkimiya-2025": {
+      "headline": true,
+      "pct_to_builder": 99.9,
+      "pct_to_proposer": 5.063,
+      "builder_refund_to_bot_eth": 48.278272182122,
+      "builder_payout_to_victim_eth": null
+     },
+     "curve-vyper-2023/pETH": {
+      "headline": true,
+      "pct_to_builder": 0.001,
+      "pct_to_proposer": null,
+      "builder_refund_to_bot_eth": null,
+      "builder_payout_to_victim_eth": null
+     },
+     "defiplaza-2024": {
+      "headline": true,
+      "pct_to_builder": 90.367,
+      "pct_to_proposer": 85.22,
+      "builder_refund_to_bot_eth": 4.761056907491175,
+      "builder_payout_to_victim_eth": null
+     },
+     "earningfarm-2022": {
+      "headline": true,
+      "pct_to_builder": 3.899,
+      "pct_to_proposer": 3.921,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "kelp-rseth-2026": {
+      "headline": true,
+      "pct_to_builder": 0.607,
+      "pct_to_proposer": null,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "makina-2026": {
+      "headline": true,
+      "pct_to_builder": 99.99,
+      "pct_to_proposer": 21.269,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": 920.7
+     },
+     "neemo-2025": {
+      "headline": true,
+      "pct_to_builder": 0.018,
+      "pct_to_proposer": 0.03,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "punk-2021": {
+      "headline": true,
+      "pct_to_builder": 0.0,
+      "pct_to_proposer": null,
+      "builder_refund_to_bot_eth": null,
+      "builder_payout_to_victim_eth": null
+     },
+     "shoco-2023": {
+      "headline": true,
+      "pct_to_builder": 2.258,
+      "pct_to_proposer": 3.191,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "transitswap-2022": {
+      "headline": true,
+      "pct_to_builder": 0.01,
+      "pct_to_proposer": null,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "uncx-2026/yoink-X": {
+      "headline": true,
+      "pct_to_builder": 99.9,
+      "pct_to_proposer": null,
+      "builder_refund_to_bot_eth": 0.0,
+      "builder_payout_to_victim_eth": null
+     },
+     "unizen-2024/pending-ads": {
+      "headline": true,
+      "pct_to_builder": 97.8,
+      "pct_to_proposer": 29.567,
+      "builder_refund_to_bot_eth": 0.273011,
+      "builder_payout_to_victim_eth": null
+     },
+     "unizen-2024/pending-usdt": {
+      "headline": true,
+      "pct_to_builder": 99.614,
+      "pct_to_proposer": 70.716,
+      "builder_refund_to_bot_eth": 0.99992,
+      "builder_payout_to_victim_eth": null
+     },
+     "unizen-2024/pending-xi": {
+      "headline": true,
+      "pct_to_builder": 97.1,
+      "pct_to_proposer": 19.961,
+      "builder_refund_to_bot_eth": 0.305127,
+      "builder_payout_to_victim_eth": null
+     }
+    }
+   }
+  }
+ },
+ "backrunner_comparison": {
+  "source": "arXiv 2409.06213 (BACKRUNNER), attack txs Jan 2023 - May 2024 as quoted in data/evolution/findings.txt",
+  "backrunner_paper": {
+   "attack_txs": 158,
+   "visible_in_public_mempool": 17,
+   "public_pct": 10.8,
+   "intercepted_by_their_own_bots": 18,
+   "intercepted_pct": 11.4,
+   "constructor_attack_txs": 4,
+   "deployed_1s_before_trigger": "50 of 54"
+  },
+  "ours_w6_v2_same_window_attacker_only": {
+   "window": "2023-08-07 .. 2024-05-31 (earliest mempool-dumpster data to the end of BACKRUNNER's window)",
+   "unit": "exploits (first attacker tx), not txs",
+   "resolved": 67,
+   "public": 8,
+   "public_pct": 11.94,
+   "v1_all_senders": {
+    "resolved": 75,
+    "public": 8,
+    "public_pct": 10.667
+   },
+   "source_file": "data/evolution/per_exploit_v2.json"
+  },
+  "ours_w6_v2_all_dumpster_era_attacker_only": {
+   "window": "2023-08-07 .. 2026-10",
+   "resolved": 202,
+   "public": 9,
+   "public_pct": 4.455,
+   "note": "ordinary txs in the same blocks were seen 62.5% (86% in 2023H2, ~50% in 2025-26), see by_era_v2.json attacker_only.overall"
+  },
+  "ours_incident_set": {
+   "definition": "headline races (bot beat the hacker) from 2023-08-07 on, where the mempool archive covers the day",
+   "headline_races_in_dumpster_era": 11,
+   "attacker_trigger_tx_seen_public_before_inclusion": 4,
+   "seen": [
+    "blueberry-2024",
+    "defiplaza-2024",
+    "unizen-2024/pending-ads",
+    "unizen-2024/pending-usdt"
+   ],
+   "not_seen": [
+    "alkimiya-2025",
+    "bifi-2026",
+    "kelp-rseth-2026",
+    "makina-2026",
+    "neemo-2025",
+    "uncx-2026/yoink-X",
+    "unizen-2024/pending-xi"
+   ],
+   "reading": "most bot wins in the archive era were against attackers whose txs never appeared in the public mempool: the bots' view of the attacker is a private/builder-side or on-chain-setup (deploy/prepare) view, not the public pool BACKRUNNER measures"
+  },
+  "comparability_notes": [
+   "BACKRUNNER counts attack TRANSACTIONS and detects interception with its own bots/nodes; we count EXPLOITS and detect copies from on-chain evidence, so 'intercepted 18/158' has no counterpart here (see findings_v2.txt, EXTERNAL COMPARISON and strongest-evidence point 7 for the chain scan).",
+   "Public-visibility shares agree in the overlapping window (BACKRUNNER 10.8%; ours 11.9% attacker-only v2, 10.7% v1), and fall to 4.5% over the whole dumpster era."
+  ]
+ }
+}

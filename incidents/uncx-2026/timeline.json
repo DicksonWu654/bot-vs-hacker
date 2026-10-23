@@ -1,0 +1,157 @@
+{
+ "slug": "uncx-2026",
+ "note": "No mempool first-seen exists for any focus tx (not in mempool-dumpster 2026-10-14): in-block evidence + relay bid times only.",
+ "events": [
+  {
+   "t_utc": "2026-10-14T14:47:35Z",
+   "kind": "fund",
+   "actor": "attacker EOA 0x78c9b118",
+   "detail": "0.1 ETH from 0x6d2afff4 (block 26191433); +0.9 ETH block 26191480, +2.5 ETH block 26191573",
+   "tx": "0x52fe1a5aa857a3e6f6f0c12f559019da382c294238601b967a74b03c01c5b93b",
+   "raw_ref": "site/raw/etherscan/tl_txlist_0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3_0_99999999_asc.json"
+  },
+  {
+   "t_utc": "2026-10-14T14:50:11Z",
+   "kind": "deploy",
+   "actor": "attacker",
+   "detail": "attack contract 0x6cebdf09... created (block 26191446)",
+   "tx": "0x477c8060aa22478b436d6120ffe5954775cb02974acd09d7c52ae1500b73d4d9",
+   "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0x477c8060aa22478b436d6120ffe5954775cb02974acd09d7c52ae1500b73d4d9.json"
+  },
+  {
+   "t_utc": "2026-10-14T15:49:59Z",
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "block 26191745 pos 1: first drain (EDGEN, ZC, LO0P, PAAL, pepecoin), 0.8 ETH lock fees, priority 4.50 gwei, builder Quasar; bid delivered +1914..2059ms on 7 relays, 0.0633 ETH; tx not in mempool-dumpster (private)",
+   "tx": "0x352065378c4a41b77e5b6a1e5b5616cd2886c3e1a2c87ed3db8e5ddddc23823d",
+   "raw_ref": "site/raw/rpc/block_26191745.json"
+  },
+  {
+   "t_utc": "2026-10-14T15:58:23Z",
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "block 26191787: retry on uPEG, reverted \"play failed\" (5 victim calls, all reverted)",
+   "tx": "0x8a9cd4d5eab00f904b3ca6c024236f8b039e96615e48c325877f073db63f5669",
+   "raw_ref": "site/raw/rpc/block_26191787.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26191787.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-14T16:14:23Z",
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "block 26191867: retry on uPEG, reverted \"play failed\" (5 victim calls, all reverted)",
+   "tx": "0x61d69eac21be96e5d2337181b8f4a8c90e5b0690ec9755e4cc1fefdfdb030bfa",
+   "raw_ref": "site/raw/rpc/block_26191867.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26191867.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-14T16:21:35Z",
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "block 26191903: retry on uPEG, reverted \"play failed\" (5 victim calls, all reverted)",
+   "tx": "0xd99620373176ab6bdde6d723ec487448fedbf4f5272bce9105f1270576f74287",
+   "raw_ref": "site/raw/rpc/block_26191903.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26191903.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-14T16:24:58.018Z",
+   "kind": "bid",
+   "actor": "builder.ultrasound.money",
+   "detail": "first elevated bid for slot 15430923: 0.118 ETH, 99 txs (baseline ~0.0106 ETH); t=-982ms",
+   "raw_ref": "incidents/uncx-2026/race_26191920.json"
+  },
+  {
+   "t_utc": "2026-10-14T16:24:59.749Z",
+   "kind": "bid",
+   "actor": "Titan builder / builder.ultrasound.money",
+   "detail": "burst of ascending bids from +749ms: 0.118 -> 0.198 -> 0.278 -> 0.357 -> ... -> 0.842 ETH by +765ms (blocks with 140/200 txs)",
+   "raw_ref": "incidents/uncx-2026/race_26191920.json"
+  },
+  {
+   "t_utc": "2026-10-14T16:24:59.785Z",
+   "kind": "bid",
+   "actor": "builder.ultrasound.money",
+   "detail": "winning submission (titan relay) 0.841589 ETH, 140 txs, hash 0x399f52b7...",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc": "2026-10-14T16:24:59Z",
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "block 26191920 pos 0: 27 lock/withdraw iterations on X, coinbase 8.131967 ETH, 0 priority fee",
+   "tx": "0xbf7e5182694d0703051951520c176135dac63d772b328468ce783b37dd7a8a7c",
+   "raw_ref": "site/raw/rpc/block_26191920.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26191920.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-14T16:25:11Z",
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "block 26191921 pos 3: same X calls (26 iterations, same amount) reverted \"play failed\"; priority 9.70 gwei; winning builder Titan 0.02038 ETH (bid +2629ms)",
+   "tx": "0xfd6f57ec11b40faea66f42b48e044c173408b0570e706f5ad6286177808da7cc",
+   "raw_ref": "site/raw/rpc/block_26191921.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26191921.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-14T16:39:35Z",
+   "kind": "tx",
+   "actor": "ZC copycat 1 (0x053d984e)",
+   "detail": "block 26191993 pos 3: contract creation + 2 ZC locks, priority 0.15 gwei, Titan builder 0.01645 ETH (+1260..1273ms)",
+   "tx": "0x55b34cd6e8da7e6cfafb91f746c1ae0425b97a29a54c61dbc40d69d0eb9d72fc",
+   "raw_ref": "site/raw/rpc/block_26191993.json"
+  },
+  {
+   "t_utc": "2026-10-14T16:39:59Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe.eth",
+   "detail": "block 26191995 pos 0: c0ffeebabe.eth's tx follows the ZC copier from block 26191993, coinbase 0.116363 ETH; builder.ultrasound.money bid 0.039738 ETH delivered via titan relay at +944ms (jump from 0.0252 to 0.0399 at +900ms)",
+   "tx": "0xf57b7dbfdb24aa811012bbdc4e70c1027c7b2cca6b5d776881a44f488afc6bae",
+   "raw_ref": "site/raw/rpc/block_26191995.json",
+   "raw_refs": [
+    "site/raw/rpc/block_26191993.json",
+    "site/raw/rpc/trace_block_26191995.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-15T13:42:09Z",
+   "kind": "return",
+   "actor": "c0ffeebabe.eth (Base)",
+   "detail": "15.764813 ETH to 0xfafdcd6b... on Base (block 52641191 pos 80)",
+   "tx": "0x7ed6c60ca8b53e259c1d327a03d6e3242ba88a9c2b98f8ccb3ebca9ff60d37ca",
+   "raw_ref": "site/raw/rpc-base/base_tx_0x7ed6c60ca8b53e259c1d327a03d6e3242ba88a9c2b98f8ccb3ebca9ff60d37ca.json"
+  },
+  {
+   "t_utc": "2026-10-16T14:01:35Z",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "8.10335 ETH to 0x32f0eb06... (block 26205561 pos 10)",
+   "tx": "0x07614e32f26762ef90d3010f8f4460302a6689ab4444c62015fb04cb2edc02d2",
+   "raw_ref": "site/raw/rpc/tx_0x07614e32f26762ef90d3010f8f4460302a6689ab4444c62015fb04cb2edc02d2.json"
+  },
+  {
+   "t_utc": "2026-10-16T14:02:11Z",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "82,143,476.362922687 X to 0x32f0eb06... (block 26205564 pos 9); 20,000,000 X retained",
+   "tx": "0xf0ae2cd77698882e35437500891907327765f4e36f33c7dcd88683be7c757301",
+   "raw_ref": "site/raw/rpc/receipt_0xf0ae2cd77698882e35437500891907327765f4e36f33c7dcd88683be7c757301.json"
+  },
+  {
+   "t_utc": "2026-10-17",
+   "kind": "message",
+   "actor": "UNCX (via Odaily/Phemex)",
+   "detail": "incident report summary: 10 tokens, 11 withdrawal txs, ~$807,600, whitehat returned 82,143,476 X and 23.8682 ETH",
+   "raw_ref": "site/raw/web-w4/uncx2026_odaily_525326.html"
+  }
+ ]
+}

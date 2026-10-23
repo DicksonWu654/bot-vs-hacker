@@ -1,0 +1,252 @@
+[
+ {
+  "slug": "punk-2021",
+  "name": "Punk Protocol fair-launch pools (2021-08-10): an anonymous white-hat bot copied the attacker's pending initialize() takeover and landed two slots ahead of him; ~$4.95M of the $8.95M returned",
+  "date_utc": "2021-08-10T06:54:58Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "Bot tx 0x597d11c0 (index 50, 43.33 gwei) replays the attacker's pending tx 0x7604c7dd (index 52, 40.00 gwei, same block): same 9 victim calls in the same pool order with identical initialize() arguments except the new forge address; it even leaves the attacker's EOA as the USDC recipient. The attacker's tx still succeeded but got dust. Anvil: attacker alone would have received all $8.95M; attacker first makes the bot's tx revert. Ordering is by gas price; no mempool archive in 2021.",
+  "one_liner": "A front-running bot copied the Punk Protocol attacker's pool takeover and landed at index 50 vs his 52 in block 12995895 (43.33 vs 40.00 gwei): $5.95M USDT+DAI taken, $4.95M returned, $1M kept; it also mis-sent $3.0M USDC to the attacker. Pre-Merge, in-block evidence only.",
+  "attacker": {
+   "eoa": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "eoas": [
+    "0x1d5a56402425c1099497c1ad715a6b56aaccb72b"
+   ],
+   "contracts": [
+    "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+    "0x1c39e47a2968f166a11c4af9088dd45ccd13b13d"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0x561f33ab782bafc60504c67653d49e8706dd83f63795f373dbb0fa258c05cb44",
+   "deploy_tx": "0x2d636161292b293ee1a07da79239d1298828e803f81d525954bb4160f2704c2e",
+   "deploy_block": 12994067,
+   "attack_txs": [
+    {
+     "hash": "0x2d636161292b293ee1a07da79239d1298828e803f81d525954bb4160f2704c2e",
+     "block": 12994067,
+     "index": 101,
+     "status": "success",
+     "role": "deploys attack contract 0x1695ce70 (41 gwei), 6.9 h before the race"
+    },
+    {
+     "hash": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+     "block": 12995895,
+     "index": 52,
+     "status": "success",
+     "role": "attack tx: initialize+invest+withdrawToForge on the USDC, USDT, DAI pools; succeeded but withdrew only dust because the bot was two slots ahead (40.00 gwei)"
+    },
+    {
+     "hash": "0xa76cd31bcd48869621e7f2698ac8754699026acd0655a6d33280224dabed4cfa",
+     "block": 12996594,
+     "index": 205,
+     "status": "success",
+     "role": "second hit, 45 gwei: 45,100.32 DAI of fresh deposits (~$45K)"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "anonymous white-hat front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff)",
+   "eoa": "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+   "contract": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+   "block": 12995895,
+   "position": 50,
+   "status": "success",
+   "priority_fee_gwei": 13.304427186
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: pre-Merge (Aug 2021); mempool-dumpster starts 2023-08-07 so neither tx has a first-seen time. Both are type-2 txs ordered by effective gas price (idx 49 43.60, bot 43.33, idx 51 40.27, attacker 40.00 gwei); neither pays the miner directly (no coinbase transfer) and the block's bundle-like txs sit at idx 0-2, so no Flashbots bundle is inferred for either tx. The Flashbots blocks API is decommissioned (HTTP 410).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen exists (pre-Merge, no archive). The bot's copy is shown by the call tree and by the unrewritten USDC recipient, not by timing; the attacker's contract existed from block 12994067 (~6.9 h) and his tx landed two slots behind the bot in the same block."
+  },
+  "attacker_block": 12995895,
+  "attacker_block_note": "The attacker's tx 0x7604c7dd landed in the SAME block at index 52 and succeeded (status 1) but withdrew only 0.028802 USDC, 0.036879 USDT, 0.030391 DAI.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 12995895,
+   "tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281"
+  },
+  "auction": {
+   "block": 12995895,
+   "slot": null,
+   "slot_start_utc_ms": null,
+   "relays_answered": [],
+   "n_bids": null,
+   "n_builders": null,
+   "bids_per_relay": null,
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": null,
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/punk-2021/race_12995895.json"
+   }
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 2868.8777,
+   "gross_loot_method": "All three pool legs the bot tx withdrew (USDC 2,995,824.696852 + USDT 3,000,022.7862 + DAI 2,954,191.5440 = $8,950,039.03, stablecoins at par) divided by 3,119.7 USD/ETH, the rate of the attacker's own 1inch sale of 2,994,824.7256 USDC for 959.9719 ETH at 07:10:24Z, 15 min after the race (tx 0x60c0757b). Derived, not an oracle price (+/-0.5%).",
+   "captured_native": {
+    "amount": "3,000,022.7862 USDT + 2,954,191.5440 DAI",
+    "unit": "USDT+DAI",
+    "desc": "token transfers from the bot contract 0x00000000b2ff to the bot EOA 0x3aa27ab2 in tx 0x597d11c0; the USDC leg (2,995,824.696852) went to the ATTACKER's EOA 0x1d5a5640 instead"
+   },
+   "captured_usd": 5954214.33,
+   "captured_usd_source": "USDT + DAI at par (stablecoins), amounts from the bot tx receipt's Transfer logs; excludes the USDC that the bot's tx sent to the attacker. Same $8.95M total as Punk's incident report / rekt.",
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.01028019784235034,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 1908.5518,
+   "loot_note": "Scope = the bot tx. gross_loot_eth covers everything it took from the pools ($8,950,039); 2,995,825 USDC of that was sent on to the attacker by the bot's copy error, so the bot's own side is $5,954,214 (bot_net_eth = that / 3,119.7 minus the tx's gas fee 0.03348 ETH, of which 0.01028 ETH tip to the miner and the rest burned as base fee). No coinbase payment. The attacker's tx in the same block paid a 0.00752 ETH tip and withdrew dust. Counterfactual (anvil): the attacker alone would have received $8,950,039.12."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 1588.0531,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 1588.0531,
+   "returned_to": "0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c (Punk Protocol's deployer wallet, which Punk's report says it moved to a safe wallet 0xec36e967 for compensation)",
+   "returned_desc": "2021-08-10 19:20:03Z and 19:21:37Z (blocks 12999327, 12999334) the bot EOA sent 3,000,058.381173 USDT and 1,954,191.544043 DAI ($4,954,249.93) to Punk's deployer wallet, after Punk messaged the bot EOA at 12:03Z (it first thought the bot was the attacker) and the bot answered 'I frontran the real attacker' at 13:45Z. Before returning, at 19:17:54Z, the bot sold 1,000,000 DAI for 319.1843 ETH on 1inch: the $1M finder's fee Punk agreed ('after paying a fee of 1M DAI up to approximately 16% of the retrieved'). ETH figures here are stablecoin amounts divided by 3,119.7 USD/ETH (the attacker's 1inch rate). Share of the $8.95M drained: 55.4%; of the bot's own USDT+DAI take: 83.2%. The $2.996M USDC the bot mis-sent to the attacker was not recovered (sold for 960.3 ETH, 968 ETH to Tornado Cash); the attacker also took 45,100 DAI in a second tx and ignored Punk's on-chain message.",
+   "bounty_kept_eth": 319.18431193663764,
+   "bounty_desc": "1,000,000 DAI (about 16.8% of the 5.954M the bot held) sold for ETH by the bot EOA before the return, with Punk's agreement",
+   "kept_by_bot_eth": 319.18431193663764,
+   "returned_txs": [
+    {
+     "tx": "0xace7c07695ec1bbf917486c3c81ee7de79c04e0309d4f6a149688463e6f83247",
+     "eth": null,
+     "block": 12999327,
+     "time_utc": "2021-08-10T19:20:03Z",
+     "note": "3,000,058.381173 USDT from the bot EOA 0x3aa27ab2 to Punk's deployer wallet 0xe36cc043 (token; = the bot's 3,000,022.7862 USDT take + 35.594772 USDT from a later separate inflow)"
+    },
+    {
+     "tx": "0x008dd92f8bcfcee400aed26d13495fbfc8351f9b21289792fc2bb9e771668147",
+     "eth": null,
+     "block": 12999334,
+     "time_utc": "2021-08-10T19:21:37Z",
+     "note": "1,954,191.544043 DAI from the bot EOA to Punk's deployer wallet (token; = the bot's 2,954,191.544043 DAI take minus the 1,000,000 DAI it kept)"
+    }
+   ],
+   "public_statement": "Rekt: 'a whitehat was able to frontrun the transactions and return over half of the funds ... my frontrun was not perfect, as I did end up sending $3M USDC to the original hacker. Rewriting txs can be tricky.' Punk incident report (Medium, read via Wayback): 'a white-hat hacker noticed this attempt of attack with a bot and made a transaction, which was executed before the original'; recovered $4,954,250 after a 1M DAI fee. On-chain, bot to attacker 2021-08-10T20:08:31Z: 'Fixed the bug in my bot which kept your USDC transfer in place.' Halborn: 'This bot observed the attacker's transaction and performed it first.'",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_12995895.json",
+   "bot.position": "site/raw/rpc/block_12995895.json",
+   "attacker_block": "site/raw/rpc/block_12995895.json",
+   "loot.gross_loot_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/trace_0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b.json",
+    "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+    "site/raw/etherscan/punk_att_eoa_tokentx.json"
+   ],
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_12995895.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_12995895.json",
+    "site/raw/rpc/block_12995895.json"
+   ],
+   "loot.bot_net_eth": [
+    "full cache only (not published)",
+    "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+    "site/raw/rpc/receipts_12995895.json"
+   ],
+   "loot.captured_usd": [
+    "full cache only (not published)",
+    "site/raw/etherscan/punk_bot_eoa_tokentx_12994000_13100000.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/punk_bot_eoa_tokentx_12994000_13100000.json",
+    "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+    "site/raw/etherscan/punk_att_eoa_tokentx.json"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/punk_bot_eoa_tokentx_12994000_13100000.json",
+    "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+    "site/raw/etherscan/punk_att_eoa_tokentx.json"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/punk_bot_eoa_txlistinternal_12994000_13100000.json",
+    "site/raw/etherscan/punk_bot_eoa_tokentx_12994000_13100000.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/punk_bot_eoa_txlistinternal_12994000_13100000.json",
+    "site/raw/etherscan/punk_bot_eoa_tokentx_12994000_13100000.json"
+   ],
+   "attacker.funding_tx": "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+   "attacker.deploy_tx": "site/raw/etherscan/punk_att_eoa_txlist.json",
+   "call_diff": [
+    "site/raw/rpc/trace_0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281.json",
+    "site/raw/rpc/trace_0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "anvil_replay": [
+    "incidents/punk-2021/anvil_replay.json"
+   ],
+   "initialize_scan": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "public_statement": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "messages": [
+    "site/raw/etherscan/punk_bot_eoa_txlist_12994000_13100000.json",
+    "site/raw/etherscan/punk_deployer_txlist_12995000_13100000.json",
+    "site/raw/etherscan/punk_att_eoa_txlist.json"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "ETH-equivalent figures (gross_loot_eth, bot_net_eth, returned_*_eth)",
+    "why": "stablecoin legs converted at the attacker's own 1inch sale rate (3,119.7 USD/ETH, saved in punk_att_eoa_txlist/txlistinternal/tokentx); no oracle price saved. The bot's own 1inch sale 12 h later implies 3,133.0."
+   },
+   {
+    "field": "pending-tx timing",
+    "why": "no mempool archive before 2023-08; whether/when the bot saw the attacker's tx pending cannot be measured"
+   }
+  ],
+  "discrepancies": [
+   "Punk's incident report lists 0x00000000b2ff... as 'AttackContract' among the initialize() arguments of the attacker's tx 0x7604c7dd; on chain the attacker's tx passes 0x1695ce70..., and 0x00000000b2ff... is the bot's contract in tx 0x597d11c0.",
+   "Rekt/Halborn say the bot returned '$5M'; on chain the return is 3,000,058.381173 USDT + 1,954,191.544043 DAI = $4,954,249.93 (Punk: $4,954,250). The USDT return is 35.594772 USDT more than the bot's USDT take (a separate later inflow to the bot EOA).",
+   "The research lead calls the bot's price '43.3 gwei' and the attacker's '40 gwei'; both txs are EIP-1559 type 2: effective prices 43.333 and 40.000 gwei, max fee 66.70 vs 40.00, max tip 13.30 vs 25.00 (the attacker's cap on maxFee, not a low tip setting, lost the ordering).",
+   "Halborn: 'the bot extracted roughly $6M' = 5,954,214.33 (USDT+DAI to the bot EOA); the third leg (2,995,824.70 USDC) went to the attacker and was not 'extracted' by the bot."
+  ],
+  "evidence_notes": [
+   "Call diff (incidents/punk-2021/call_diff.json): both txs call USDC, USDT, DAI CompoundModel pools in that order with initialize -> invest -> withdrawToForge; initialize() args 1-5 identical; arg 0 = the bot's own contract vs the attacker's 0x1695ce70.",
+   "The bot contract's USDC transfer goes to the ATTACKER EOA 0x1d5a5640 (2,995,824.696852 USDC); USDT and DAI go to the bot EOA. The bot's own message later: 'Fixed the bug in my bot which kept your USDC transfer in place'.",
+   "Anvil fork of block 12995894 (incidents/punk-2021/anvil_replay.json): attacker alone = 2,995,824.73 USDC + 3,000,022.82 USDT + 2,954,191.57 DAI; bot then attacker = on-chain figures exactly; attacker then bot = the bot's tx reverts.",
+   "trace_filter over blocks 12944900-13000000: initialize() on the three pools was called only by Punk's deployer (at deployment), the bot (idx 50) and the attacker (idx 52 and 205). Nobody else raced.",
+   "Attacker had no tx before the bot except the contract deploy (block 12994067) and two Tornado top-ups; his tx was effective 40.00 gwei (maxFee 40 caps maxPriority 25), the bot's 43.33 gwei (maxFee 66.70, tip 13.30).",
+   "Pre-Merge, in-block evidence only; no coinbase payments; the block's bundle-like txs are idx 0-2 (inferred label)."
+  ],
+  "incident_dir": "incidents/punk-2021"
+ }
+]

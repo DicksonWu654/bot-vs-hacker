@@ -1,0 +1,401 @@
+{
+ "slug": "dodo-v2-2021",
+ "name": "DODO V2 (DVM / Crowdpooling) init() exploit: two bots front-ran the real attacker, returned funds",
+ "date": "2021-03-08",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "Bot 'Antelope' (EOA 0x3554187576ec..., contract 0x00000000e84f2bbd...) beat the real attacker 'Hippo' (EOA 0x368a6558255b...) in the SAME BLOCK on two pools: block 12000022 (bot index 4 @243 gwei vs attacker index 176 @132 gwei, attacker reverted) and block 12000102 (bot index 0 @1883 gwei vs attacker index 4 @600 gwei, attacker reverted). The bot's pool.init(...) payload is byte-identical (all 8 arguments, incl. the attacker's two fake tokens FDO/FUSDT) to the attacker's; the flashLoan amounts are the same 99%-of-balance figures (differ by 99 wei). Bot 'Cheetah' (EOA 0x8a14ce0f... via proxy 0xa57bd001...) then front-ran the attacker's two WITHDRAWALS from his 'bypass' contract 0x910fd17b: its inner call to the attacker's contract is calldata byte-identical to the attacker's own pending withdraw tx (blocks 12000167 and 12000171, bot indexes 1 / 3 vs attacker indexes 77 / 78), and won a gas war against Antelope (684.25 vs 652.17 gwei). Pre-Merge: in-block evidence only; no mempool archive. Ordering is by gas price in a public gas war; no coinbase payments in any tx.",
+ "era": "2020-21 pre-Flashbots-dominance PoW; public mempool gas wars (CHI gas tokens); in-block evidence only",
+ "protocol_loss_usd": "~3.8M reported (DODO postmortem, via ChainCatcher); ~3.1M returned within 24 h by the two bots' owners; ~0.2M cashed out by the attacker; rest unrecovered",
+ "attacker": {
+  "label": "Mr. Hippo (DODO postmortem, address printed as '0x368')",
+  "eoas": [
+   "0x368a6558255bccac517da5106647d8182c571b23"
+  ],
+  "contracts": [
+   "0xaffc5f519ccaebb10f47b327a070d7323cca3fb9 (test, 11999427; its only call reverted at 11999454)",
+   "0x6d3bab0477eb376c0a65e6cda6f0b989a0b5cf89 (11999548)",
+   "0x7c41559cab1141d489de52da18bb0f41d06a56fd (main stage+attack contract, 11999896)",
+   "0x910fd17b9bfc42a6eea822912f036ef5a080be8a (bypass contract, 12000118)",
+   "0x328410f276d4fe83fc78fa56ad32d9821a5e5c1c (12000235)"
+  ],
+  "fake_tokens": [
+   "0x7f4e7fb900e0ec043718d05caee549805cab22c8 (FDO)",
+   "0xf2df8794f8f99f1ba4d8adc468ebff2e47cd7010 (FUSDT)"
+  ],
+  "deploy_tx": {
+   "main": "0x02eb0b3be66f856d3ad8b9f3f8464c3d09006e3eeb5e1cd93a56414a42685cfa",
+   "bypass": "0xb704a53483a05c0e82f9bfa51a18bc6a61a666df37cd5413277d26b678cb3958",
+   "third": "0xff60ffb86321aae0d811c3d5be51246525677467532908ebe6f91437953dff6e",
+   "first": "0x7ed0fa2d7c77f3b6b97dd8ac005c9022e3b5017d58f28c5ecf32c6439a54fb37",
+   "second": "0x916cc48c6202b785a4c84ab47495322c8686faba9f9046b1e83820ca5bd28f55"
+  },
+  "funding_tx": {
+   "hash": "0xdd0dd8d6977cbf94bff941cecbccd44a76a080fa8208c3a2426636b30883f2e6",
+   "block": 11999890,
+   "amount_eth": 1.6,
+   "from": "0x5e457dd6b9c4c429544c1217da3622968f960e43",
+   "source": "unresolved (plain EOA transfer, not Tornado; earlier funding 0x0681bde9... 1.197 ETH from 0x8f54972f.. on 2021-03-04 and 0.466 ETH from 0x3f5ce5fb... at 11998725)"
+  },
+  "txs": [
+   {
+    "hash": "0xfbf6d8305660a2cb2282b94299c51acfc51860a39b1f63a758615492ba40109d",
+    "block": 12000020,
+    "index": 117,
+    "status": 1,
+    "gas_price_gwei": 131,
+    "note": "stage on pool 0xfb609b68 (WSZO/USDT crowdpool): 6d10fe2d moves 965,470.24 FDO + 262,565.01 FUSDT (fake tokens) into the pool"
+   },
+   {
+    "hash": "0x4bc4ace313f2f5a411a5a560255ba0bba4f4913edb55ed882feaee84a3b1292e",
+    "block": 12000022,
+    "index": 176,
+    "status": 0,
+    "gas_price_gwei": 132,
+    "note": "attack tx 57a41e93 -> pool.flashLoan + callback init(FDO,FUSDT,...); REVERTED: pool already drained by Antelope at index 4 of same block"
+   },
+   {
+    "hash": "0x611e9d9d0163a1b516c27dfe21a9362e6d694a9107814c00bed82df2b6a4effe",
+    "block": 12000096,
+    "index": 124,
+    "status": 1,
+    "gas_price_gwei": 128,
+    "note": "stage on pool 0xfd87ab87 (ETHA/USDT)"
+   },
+   {
+    "hash": "0x0430d5a2dcfb0f9530fe1699e0e86a9526825da5e2072a15c4be734710f56cdb",
+    "block": 12000102,
+    "index": 4,
+    "status": 0,
+    "gas_price_gwei": 600,
+    "note": "attack on pool 0xfd87ab87; reverted behind Antelope's index-0 tx (1883 gwei)"
+   },
+   {
+    "hash": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e",
+    "block": 12000165,
+    "index": 3,
+    "status": 1,
+    "gas_price_gwei": 300,
+    "note": "bypass contract 0x910fd17b: fake-token transfers + flashLoan + init in ONE tx on wCRES/USDT pool 0x051ebd71; 1,139,456.204 USDT + 133,548.939 wCRES land in the attacker's contract"
+   },
+   {
+    "hash": "0x14084fba94df75cf8ebfbb62188aa06a29ec0e38181f73eab7b79eba750e4840",
+    "block": 12000167,
+    "index": 77,
+    "status": 1,
+    "gas_price_gwei": 142,
+    "note": "attacker's own withdraw(USDT) 0x1c03650f - gets 0 (already taken by Cheetah at index 1)"
+   },
+   {
+    "hash": "0x021a2bd6ea7b502290be4c67be33be33c5b5582676d1c00ab59f1ed53a1b576b",
+    "block": 12000171,
+    "index": 78,
+    "status": 1,
+    "gas_price_gwei": 152,
+    "note": "attacker's own withdraw(wCRES) - gets 0 (Cheetah at index 3 of same block)"
+   },
+   {
+    "hash": "0xc79dbe0aa48e0ba9f72bd74240cf50b653196ff00979bf367f11f8fa3d9b45ec",
+    "block": 12000302,
+    "index": 186,
+    "status": 1,
+    "gas_price_gwei": 154,
+    "note": "successful attack on pool 0x509ef8c6 (DODO/USDT): 21,379.23 USDT + 9,437.95 DODO to attacker EOA; no bot present"
+   }
+  ]
+ },
+ "bots": [
+  {
+   "label": "Antelope ('Mr. Antelope'; literature sweep shortlist 'Individual B')",
+   "eoa": "0x3554187576ec863af63eea81d25fbf6d3f3f13fc",
+   "contract": "0x00000000e84f2bbdfb129ed6e495c7f879f3e634",
+   "txs": [
+    "0xff9b3b2cb09d149762fcffc56ef71362bec1ef6a7d68727155c2d68f395ac1e8",
+    "0x0b062361e16a2ea0942cc1b4462b6584208c8c864609ff73aaa640aaa2d92428",
+    "0xbfe6df9308df38661b817cb56da5cacca468e894472a291d6e17d2eb7ab4e24b",
+    "0x561f7ccb27b9928df33fa97c2fb99ea3750593e908f9f0f8baf22ec7ca0c5c4a",
+    "0xa51440324c005c92eee1b5ae954366877372d342cdcede55d2ee6a2149384c81"
+   ],
+   "captured": [
+    {
+     "tx": "0xff9b3b2cb09d149762fcffc56ef71362bec1ef6a7d68727155c2d68f395ac1e8",
+     "pool": "0xfb609b68d694617e0100c7182f21e536760d438d",
+     "token": "WSZO",
+     "amount": 955815.5419888108,
+     "and": "259,939.363143 USDT"
+    },
+    {
+     "tx": "0x0b062361e16a2ea0942cc1b4462b6584208c8c864609ff73aaa640aaa2d92428",
+     "pool": "0xfd87ab87f384458a8f6f4b3c3eb222a223869f73",
+     "token": "ETHA",
+     "amount": 130968.6928,
+     "and": "326,070.1628 USDT"
+    },
+    {
+     "tx": "0xa51440324c005c92eee1b5ae954366877372d342cdcede55d2ee6a2149384c81",
+     "pool": "0x051ebd717311350f1684f89335bed4abd083a2b6",
+     "token": "wCRES+USDT",
+     "amount": "1,000 wCRES + 10,000 USDT",
+     "note": "leftovers, block 12001597 idx 0 @828 gwei"
+    },
+    {
+     "tx": "0x561f7ccb27b9928df33fa97c2fb99ea3750593e908f9f0f8baf22ec7ca0c5c4a",
+     "pool": "0x236116ff2785a4140118971191470c084f45e06f",
+     "token": "WETH+vETH",
+     "amount": "45.277 WETH + 324.258 vETH",
+     "note": "block 12001452 idx 1 @93,148 gwei, fee 8.128 ETH; pool 0x236116ff was being attacked by a different EOA 0x3984e3a7 whose flashLoan (idx 23, reverted) trails; calldata not diffed -> reported-level for this one"
+    }
+   ],
+   "coinbase_paid_eth": 0,
+   "priority_fee_gwei": {
+    "12000022": 243.1,
+    "12000102": 1883.1,
+    "12000167(failed)": 652.2,
+    "12001452": 93148.7,
+    "12001597": 828.1
+   },
+   "fees_eth": {
+    "12000022": 0.0447,
+    "12000102": 0.2601,
+    "12000167": 0.1384,
+    "12001452": 8.1281
+   },
+   "replay_evidence": "Same pool, same fake tokens, same init(): pool.init(maintainer 0x95c4f5b8..., base FDO 0x7f4e7fb9..., quote FUSDT 0xf2df8794..., lpFeeRate 0x0aa87bee538000, mtFeeRateModel 0x5e84190a..., i=1, k=1e18, isOpenTWAP=0) has byte-identical calldata in Antelope's callback and in the attacker's calls (compared in 0xff9b3b2c vs 0x4bc4ace3 [reverted, same pool], 0x0b062361 vs attacker's pool-3 tx 0x395675b5). The pool.flashLoan(base, quote, assetTo, data) frames differ only in assetTo (bot contract vs attacker contract), data (640 B embedding the init payload vs 1 B) and base/quote differ by 99 wei (attacker 0xca66dd466f0b12a313ce / 0x3c8597e9aa, bot ...136b / ...947). Pool balances: attacker had just deposited 965,470.24 FDO + 262,565.01 FUSDT in the stage tx (block 12000020) -- the bot's tx needed exactly those fake tokens to pass the repay check. The bot's tx is NOT a byte copy of the attacker tx: it is an adapted replay (own contract, own callback).",
+   "notes": "Generalized flash-loan/arb bot (hundreds of txs/day on this EOA, CHI gas tokens burned in its DODO txs). Antelope's DODO-related captures were withdrawn to the EOA (0x89f14be6.. WSZO, 0xdf72e119.. ETHA, 0x2f989241.. wCRES) and later returned (see funds_fate). Honeypot: its own tx 0xb081e1aaf4ea7d6b819fc0ffa8230586854130e6b7313fa23a0cc4509b8c3886 at block 12007194 (97.2 gwei) fell into a trap contract 0x1ef81fb7 (trace: callback sends 0.05 ETH bait); postmortem says 324 vETH lost, amount not verified."
+  },
+  {
+   "label": "Cheetah ('Mr. Cheetah')",
+   "eoa": "0x8a14ce0fecbefdcc612f340be3324655718ce1c1",
+   "contract": "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf (proxy shared by many EOAs, bot analysis 'a57 family'); executor 0x3a518964ff40ee733d30749a213d2e5c9ffb2b8c",
+   "txs": [
+    "0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f",
+    "0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211",
+    "0x4151a5051d34dcec0bc95458a7e7140381f91f0681f3839b741714714b1d4760"
+   ],
+   "captured": [
+    {
+     "tx": "0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f",
+     "token": "USDT",
+     "amount": 1139456.2044,
+     "usd": 1139456
+    },
+    {
+     "tx": "0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211",
+     "token": "wCRES",
+     "amount": 133548.9386,
+     "usd": "unpriced"
+    }
+   ],
+   "coinbase_paid_eth": 0,
+   "priority_fee_gwei": {
+    "12000167": 684.25,
+    "12000171": 559.17,
+    "12001452": 19531.1
+   },
+   "fees_eth": {
+    "12000167": 0.0509,
+    "12000171": 0.0627,
+    "12001452": 1.0037
+   },
+   "replay_evidence": "Cheetah's tx calls executor 0x3a518964 which calls the ATTACKER'S contract: 0x910fd17b.1c03650f(USDT) (block 12000167) and 0x910fd17b.1c03650f(wCRES 0xa0afaa28...) (block 12000171). These 36-byte calldatas are byte-identical to the attacker's own pending tx data (0x14084fba..., nonce 64, to 0x910fd17b, input 0x1c03650f...dac17f95; and 0x021a2bd6..., nonce 65, ...a0afaa28...) -> equal:true. Attacker's tx landed 76 / 77 positions later at 142 / 152 gwei and received 0. This is a replay of a public victim-contract call, not of the DODO-pool exploit; the attacker's contract had an unauthenticated withdraw (per postmortem). Only the observed public call is recorded; nothing deeper decoded.",
+   "notes": "Cheetah's block-12001452 tx (idx 3, 19,531 gwei) lost to Antelope (idx 1) on pool 0x236116ff: tx status 1 but inner call reverted, 1.0037 ETH fee, nothing captured. Return of ~$1.89M: reported by DODO postmortem; no matching on-chain return tx located (executor 0x3a518964 is a high-volume arb contract; not found among transfers to Antelope's recipient 0xdad3e839)."
+  }
+ ],
+ "other_racers": [
+  {
+   "who": "0x3984e3a784818f44d2994935b6c20f96eb82d3f9 (fresh EOA, nonce 0 at 12001436)",
+   "note": "second, later exploiter: direct EOA init()/sync()/flashLoan on pool 0x236116ff (blocks 12001436-12001452) and pool 0x051ebd71 (12001514-12001517); both flashLoan attempts reverted (txs 0xf4cd4a9123b858fa9d387f8447a645ba52e73aa92860d035d703c79a3c0af19f, 0x19cdadac91e785b9eb8645249f184ea8c258ebd9ff3009ed9b89c44d03efd6f1). Antelope's 12001452 idx1 and 12001517/12001597 txs preceded/succeeded them; not evaluated as separate verdict.",
+   "txs": [
+    "0xf4cd4a9123b858fa9d387f8447a645ba52e73aa92860d035d703c79a3c0af19f",
+    "0x19cdadac91e785b9eb8645249f184ea8c258ebd9ff3009ed9b89c44d03efd6f1"
+   ]
+  },
+  {
+   "who": "Cheetah vs Antelope gas war",
+   "blocks": [
+    12000167,
+    12001452
+   ],
+   "note": "12000167: Cheetah idx1 684.25 gwei beat Antelope idx4 652.17 gwei (Antelope's tx replays the same withdraw(USDT) call 0x910fd17b.1c03650f(USDT) then USDT.transfer(own EOA) and ran out of gas, tx 0xbfe6df9308df38661b817cb56da5cacca468e894472a291d6e17d2eb7ab4e24b). Fee wasted by Antelope 0.1384 ETH."
+  },
+  {
+   "who": "direct pool callers 0x05aa1630 (12002306-16) and 0x97e5fdba (12005317-42)",
+   "note": "init()/sync() and one reverted flashLoan on pool 0xfb609b68 after the main events; likely recovery attempts or copycats; not classified."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Antelope returns to 0xdad3e839ba4a48faf54f3aa187d8b6b8646e6224 (recipient presumed DODO recovery wallet; it later disburses to project parties)",
+   "tx": [
+    "0xf339a7081e2d14e9521ce8fdcf66200ff940a0ecb20d3d5381881ab4c5b81407",
+    "0x3388d9fd4c6aaf352aa465e33a4e99b04f3b4b8b4684b5121e6036a843fcef91",
+    "0xcf047d3f83581687304c9ce5ba3b0b0990e7d45c9b25f6184612a1334c829ceb",
+    "0x5c145b8ce5b8d11a9c57f787bc6b60b67d8e4f263a670809d1ba6da166d3c737",
+    "0xd9984c36ef3327e14eff5123b73e7fd37bd2d7f36adf61e5d0f3ead9ae81f181"
+   ],
+   "amount": "955,815.542 WSZO; 101,548.435 ETHA; 1,000 wCRES; 296,009 USDT; 114.507 ETH",
+   "time_utc": "2021-03-10 00:26-00:39",
+   "note": "returned ~28-34 h after the takes. Antelope had swapped USDT through the 1inch router (261,373 USDT in 0x6f760495..., 326,070 USDT in 0x3eddb8b3... to 0xe069cb01); 298,044.73 USDT came back from 0xe069cb01 at 12007457 and 296,009 USDT was returned. Full reconciliation of the 586k USDT taken vs returned (114.5 ETH also returned) not done."
+  },
+  {
+   "what": "Cheetah take",
+   "tx": [
+    "0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f",
+    "0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211"
+   ],
+   "amount": "1,139,456.204 USDT + 133,548.939 wCRES",
+   "note": "reported returned (~$1.89M) around 2021-03-09 13:00 UTC; return tx not located"
+  },
+  {
+   "what": "Attacker kept",
+   "tx": [
+    "0xc79dbe0aa48e0ba9f72bd74240cf50b653196ff00979bf367f11f8fa3d9b45ec"
+   ],
+   "amount": "21,379.23 USDT + 9,437.95 DODO (12000302); USDT 59,245 sent to 0xe877151f at 12000330; ~$200k total per postmortem, part to a CEX that froze it",
+   "note": "Hippo's three big takes (pools 1-3) were all captured by bots"
+  },
+  {
+   "what": "gas paid to miners",
+   "note": "all gas-price bids; coinbase transfers 0 in every tx; Antelope 12001452 tx alone 8.13 ETH; 12000102 0.26 ETH; Cheetah 12001452 1.00 ETH"
+  }
+ ],
+ "auction": {
+  "era": "pre-Merge PoW",
+  "relays_answered": null,
+  "bids": null,
+  "note": "No relays/slots. Race decided by gas price in the public mempool (bot txs at indexes 0-4 of their blocks); blocks mined by uupool.cn, eth-pro-hzo, ethermine, nanopool etc. Flashbots blocks API HTTP 410; inferred_bundle_like heuristic true for the focus txs only because the project's heuristic flags low-index high-gas txs -- coinbase_transfer is 0 for all, so no evidence of MEV-geth bundles. Mempool first-seen: none (mempool archive starts 2023-08-07)."
+ },
+ "sources": [
+  "https://www.chaincatcher.com/en/article/2060103 (translation of DODO postmortem by Radar Bear; saved site/raw/web/chaincatcher_2060103.html)",
+  "https://halborn.com/explained-the-dodo-dex-hack-march-2021",
+  "https://www.theblock.co/post/97734/dodo-dex-exploit-bug-attack (HTTP 403 to fetch)",
+  "DODO Medium postmortem 'With a Little Help from Our Friends' (HTTP 403; not read)"
+ ],
+ "discrepancies": [
+  "ChainCatcher's account of the postmortem says Mr. Hippo 'executed two attacks, but both were front-run by Mr. Antelope's bot' then wrote a bypass contract; on-chain: two stage+attack pairs (pools 1 and 2) front-run by Antelope, then contract #4 0x910fd17b did stage+attack in one tx on pool 3 and succeeded (12000165), then Cheetah took the proceeds. Matches.",
+  "ChainCatcher says Antelope's bot was 'spending as much as 90,000 gWei in gas price to send the transaction, with a single transaction miner fee reaching 8 ETH': tx 0x561f7ccb... (93,148.7 gwei, 8.128 ETH) is NOT on a pool Hippo attacked; it is the pool 0x236116ff race with 0x3984e3a7.",
+  "candidates.json claimed the 3 bot analysis shortlist incident txs for Antelope all copy the attacker; verified only for 0xff9b3b2c and 0x0b062361; 0x561f7ccb is a different race."
+ ],
+ "raw_refs": {
+  "antelope_pool1": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "antelope_pool2": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "antelope_failed_withdraw": {
+   "tx": "site/raw/rpc/tx_0xbfe6df9308df38661b817cb56da5cacca468e894472a291d6e17d2eb7ab4e24b.json",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "antelope_12001452": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_stage1": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_attack1_reverted": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_stage2": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_attack2_reverted": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_attack3_success": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_withdraw_usdt": {
+   "tx": "site/raw/rpc/tx_0x14084fba94df75cf8ebfbb62188aa06a29ec0e38181f73eab7b79eba750e4840.json",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_withdraw_wcres": {
+   "tx": "site/raw/rpc/tx_0x021a2bd6ea7b502290be4c67be33be33c5b5582676d1c00ab59f1ed53a1b576b.json",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "hippo_attack4": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "cheetah_usdt": {
+   "tx": "full cache only (not published)",
+   "receipt": "site/raw/rpc/receipt_0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f.json",
+   "trace": "full cache only (not published)"
+  },
+  "cheetah_wcres": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "cheetah_12001452": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "honeypot": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "etherscan": {
+   "antelope_txlist": "site/raw/etherscan/dodo_antelope_txlist.json",
+   "hippo_txlist": "site/raw/etherscan/dodo_hippo_txlist.json",
+   "pool1_tokentx": "site/raw/etherscan/dodo_pool_0xfb609b_tokentx.json",
+   "bypass_contract_tokentx": "site/raw/etherscan/dodo_h_0x910fd1_tokentx.json",
+   "cheetah_eoa_txlist": "full cache only (not published)",
+   "cheetah_exec_tokentx": "full cache only (not published)",
+   "recovery_wallet_tokentx": "site/raw/etherscan/dodo_recovery_tokentx.json",
+   "pool5_tokentx": "site/raw/etherscan/dodo_pool236_tokentx.json",
+   "second_exploiter_txlist": "full cache only (not published)"
+  },
+  "web": "site/raw/web/chaincatcher_2060103.html",
+  "race_files": [
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ]
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-pending-attack",
+ "headline": true,
+ "headline_text": "Antelope, a generic flash-loan bot, replayed the DODO attacker's init() call at index 4 of block 12000022 and took 955,815 WSZO + 259,939 USDT; the attacker's tx at index 176 reverted. Antelope later returned most of its takes. Pre-Merge, in-block evidence only.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Antelope's init() calldata is byte-identical to the attacker's; bot idx 4 (243 gwei) vs attacker idx 176 (132 gwei) in 12000022; the attacker's tx reverted.",
+  "headline_note": null,
+  "dataset_rows": [
+   "dodo-v2-2021"
+  ]
+ }
+}

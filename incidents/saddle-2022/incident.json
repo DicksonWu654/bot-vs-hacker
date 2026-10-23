@@ -1,0 +1,240 @@
+{
+ "slug": "saddle-2022",
+ "name": "Saddle Finance sUSDv2 metapool exploit and BlockSec whitehat rescue",
+ "date": "2022-04-30",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "verdict_reason": "BlockSec's rescue tx (block 14684434, 25 s / 2 blocks AFTER the attacker's reverted 2nd attempt in 14684432) is a near-clone of the attacker's attack contract that replays the attacker's own reverted tx parameters from a different address and sweeps the 1,356.73 WETH the attacker failed to take. It did NOT pre-empt a still-pending attacker tx that we can show: the attacker's next attempt used a contract deployed 76 blocks later (14684510) and landed in 14684518, so no attacker tx is evidenced as pending at 14684434. Whitehat rescue of remaining funds, funds returned. No other generalized bot copied the attacker's swap sequence on the metapool (only 3 txs ever emitted the swap-loop: attacker x2 successes + rescue). In-block evidence only (no mempool archive pre-2023-08-07).",
+ "era": "2022 pre-Merge PoW (poolin/binance/2miners blocks); Flashbots MEV-geth existed; bundle membership unknowable (blocks API 410)",
+ "evidence_level_note": "in-block evidence only; Flashbots bundle data inferred, not available",
+ "protocol_loss_usd": "~10-11M (The Block, REKT); BlockSec: ~4,900 ETH ($13.8M) at risk",
+ "attacker": {
+  "eoas": [
+   "0x63341ba917de90498f3903b199df5699b4a55ac0"
+  ],
+  "contracts": [
+   "0x7336f819775b1d31ea472681d70ce7a903482191 (attack 1)",
+   "0xcc9603cd5338e6d20eb72ba5172cf359dc2539f6 (attack 2, reverted)",
+   "0x797418a5d9dad50ecc0851e0cc23c61ef4c1b9bf (attack 3)"
+  ],
+  "deploy_tx": {
+   "attack1": "0x494b578bce7572e4fb8b1357ddf12754a28eec3439a62f6b14432dacda9cbb76",
+   "attack2": "0xa2c41910680b72e5ea236304b89cf5af9630a6f440649f50653235f10bf17492",
+   "attack3": "0x56cf6d3f402e521e3d8c369e4cc249a64c20b14eea47501ec82261f15e4a1475",
+   "note": "each contract deployed by the EOA shortly (7 / 11 / 8 blocks) before its use; blocks 14684300 / 14684421 / 14684510"
+  },
+  "funding_tx": {
+   "hash": "0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db",
+   "block": 14684286,
+   "source": "Tornado Cash 100 ETH pool 0xd90e2f92... withdraw (selector 0xb438689f) submitted by relayer 0x3a1d526d..., ~14 blocks before first deploy",
+   "raw": "site/raw/rpc/tx_0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db.json"
+  },
+  "txs": [
+   {
+    "hash": "0x494b578bce7572e4fb8b1357ddf12754a28eec3439a62f6b14432dacda9cbb76",
+    "block": 14684300,
+    "index": 157,
+    "status": 1,
+    "note": "deploy attack contract 1"
+   },
+   {
+    "hash": "0x2b023d65485c4bb68d781960c2196588d03b871dc9eb1c054f596b7ca6f7da56",
+    "block": 14684307,
+    "index": 212,
+    "status": 1,
+    "gas_price_gwei": 34.26,
+    "priority_fee_gwei": 1.0,
+    "weth_out": 3375.6729,
+    "note": "main exploit: 9 metapool swaps, 403 call frames, WETH to attacker EOA"
+   },
+   {
+    "hash": "0xa2c41910680b72e5ea236304b89cf5af9630a6f440649f50653235f10bf17492",
+    "block": 14684421,
+    "index": 218,
+    "status": 1,
+    "note": "deploy attack contract 2"
+   },
+   {
+    "hash": "0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3",
+    "block": 14684432,
+    "index": 202,
+    "status": 0,
+    "gas_price_gwei": 21.93,
+    "note": "2nd attempt; same 403-frame call tree; reverted: final WETH transfer ran out of gas (gas 2,153,653 used)"
+   },
+   {
+    "hash": "0x56cf6d3f402e521e3d8c369e4cc249a64c20b14eea47501ec82261f15e4a1475",
+    "block": 14684510,
+    "index": 170,
+    "status": 1,
+    "note": "deploy attack contract 3"
+   },
+   {
+    "hash": "0xe7e0474793aad11875c131ebd7582c8b73499dd3c5a473b59e6762d4e373d7b8",
+    "block": 14684518,
+    "index": 282,
+    "status": 1,
+    "gas_price_gwei": 30.4,
+    "weth_out": 557.0908,
+    "note": "3rd attempt, swap amounts re-sized to the remaining pool state"
+   }
+  ]
+ },
+ "bots": [
+  {
+   "label": "BlockSec rescue (whitehat, not a profit bot)",
+   "eoa": "0x811929c3c17dd598172f8078a48540fa23f44b05",
+   "contract": "0x0462bee210c7ade1ebb095e5680d61561d86e7b1",
+   "txs": [
+    "0xf1bc1ab21d717af71801633716f6866330333f5c091b1ed63eddf78325d433ee",
+    "0x9549c0cb48ec5a5a2c4703cbbbbea5638028b2d8c8adc103220ef1c7fe5e99a3"
+   ],
+   "captured": {
+    "token": "WETH",
+    "amount": 1356.7335721493866,
+    "usd": "~3.8M (BlockSec)"
+   },
+   "coinbase_paid_eth": 0,
+   "priority_fee_gwei": 179.6,
+   "gas_price_gwei": 202.527,
+   "position": "block 14684434 index 0 (contract deploy) and index 1 (rescue call); poolin.com block",
+   "replay_evidence": "Rescue tx and attacker txs A1/A2/A3 have an IDENTICAL 403-frame call tree (same sequence of call types, selectors and calldata lengths; top selector 0xaf8271f7, 9 metapool swaps selector 0x91695586, final WETH transfer). The 9 swap calls of the rescue carry the SAME amounts as A2 (first swap arg 6182463304088784855746762, second 3971618998371173672639653) - i.e. A2's parameters, not A1's (14800272147571999524518901) and not A3's (2897238356748957430431352). 154/403 frame inputs identical to A2/A1/A3 (others differ only by the contract-specific addresses/balances). Rescue contract runtime code is 17,688 bytes, differing from attacker contract 2 in 20 bytes (attacker 1 vs 2: 63 bytes; rescue vs 1: 83) - a near-clone of attack contract 2. Final WETH transfer: rescue 1356.7336 WETH vs attack 2's attempted 1356.7285 WETH (0.005 WETH difference, cause not investigated).",
+   "notes": "Sender is a pre-existing searcher-style account (txs to 0x000000b2e189... since 2022-04-05); deployed the clone in the same block (index 0 -> contract 0x0462...). Gas price 202.5 gwei (priority 179.6) with no coinbase transfer = pure gas-price bid; bundle vs public pool cannot be told (inferred only)."
+  }
+ ],
+ "other_racers": [
+  {
+   "who": "0xa5a13f62ce1113838e0d9b4559b8caf5f76463c0 via 0xa57bd001...",
+   "tx": "0x927ce677c13b27722184bc932862006efae5aa0fc2c9c401cf4db7241e9b5b5a",
+   "note": "index 2 of rescue block; does not touch the Saddle pool; unrelated arbitrage (not a copycat)"
+  },
+  {
+   "who": "0x81ebd07c...->0x1c073d50... and 0xb691ce1d / 0xb0fe3d79 -> 0xeef86c2e...",
+   "txs": [
+    "0x6de64f6cb40b3850c9a6767b445776149b5a4c4f7a2c6856c38588657701a2b9",
+    "0xfb83896250eae6271271dd7bc133a4d2a7316e9c4f24863d97651a978d36e7fb",
+    "0x913cd45d55480de11e5a869fcc2d2871418e36a2e8f08346327ec94112ee6c73",
+    "0x3189cb77035129a54078fb1a9d0eecc5be96d5e66f0cfc63f63a9502a900f0ff"
+   ],
+   "note": "post-hack single-event arbitrage/liquidity txs that touch the metapool (log 0x66172072) in blocks 14684309, 14684438, 14684444, 14684519 - one block AFTER each swap-loop tx; these are back-runs (arb), not copies of the attacker's call sequence. Not diffed further."
+  },
+  {
+   "who": "nobody else",
+   "note": "eth_getLogs/Etherscan logs for the metapool 14684000-14686500: swap-loop events (topic 0xc6c1e063) appear only in A1, the rescue and A3. Reverted copies would leave no logs and were not enumerated block by block (only blocks 14684300/307/432/434/518 traced)."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "rescued WETH held by whitehat account",
+   "tx": "0x9549c0cb48ec5a5a2c4703cbbbbea5638028b2d8c8adc103220ef1c7fe5e99a3",
+   "amount": "1356.7335721493866 WETH",
+   "to": "0x811929c3c17dd598172f8078a48540fa23f44b05"
+  },
+  {
+   "what": "rescued WETH returned to Saddle",
+   "tx": "0x22efe4743cdbd6650e745e3e6ef4f611aa316e81b5b88d5413b0cd19205ab060",
+   "amount": "1356.7335721493866 WETH",
+   "to": "0xd186540fbcc460f6a3a9e705dc6d2406cbcc1c47",
+   "block": 14686088,
+   "time_utc": "2022-04-30T14:42:29Z",
+   "note": "recipient presumed Saddle-controlled (BlockSec: returned all rescued funds to Saddle); address ownership not independently labelled"
+  },
+  {
+   "what": "attacker take",
+   "tx": [
+    "0x2b023d65485c4bb68d781960c2196588d03b871dc9eb1c054f596b7ca6f7da56",
+    "0xe7e0474793aad11875c131ebd7582c8b73499dd3c5a473b59e6762d4e373d7b8"
+   ],
+   "amount": "3375.6729 + 557.0908 WETH",
+   "to": "0x63341ba917de90498f3903b199df5699b4a55ac0"
+  },
+  {
+   "what": "builder/miner share of rescue",
+   "tx": "0x9549c0cb48ec5a5a2c4703cbbbbea5638028b2d8c8adc103220ef1c7fe5e99a3",
+   "amount": "0.3253 ETH priority fee (+0.352 ETH for the deploy tx) to poolin.com block recipient 0x8f03f1a3...",
+   "to": "block fee recipient"
+  }
+ ],
+ "auction": {
+  "era": "pre-Merge PoW; no relays/slots",
+  "relays_answered": null,
+  "bids": null,
+  "note": "Flashbots blocks API HTTP 410 (saved site/raw/flashbots-blocks-api/blocks_14684434.json). Rescue block mined by poolin.com (fee recipient 0x8f03f1a3...); attacker blocks by Binance pool / 2miners. Rescue priority fee 179.6 gwei, coinbase transfer 0 -> not bundle-shaped by the project heuristic (inferred_bundle_like=false)."
+ },
+ "sources": [
+  "https://blocksec.com/blog/blocked-saddle-finance-attack-industry-s-first-influential-blocking-to-rescue-3-800-000",
+  "https://blocksec.com/blog/how-blocksec-rescued-stolen-funds-from-technical-perspectives-of-three-representative-cases",
+  "https://rekt.news/saddle-finance-rekt2/",
+  "https://www.theblock.co/news/regulation/2022-04-30-stablecoin-dex-saddle-finance-hacked-for-10-million-144491"
+ ],
+ "discrepancies": [
+  "REKT lists 0xe7e04747... (block 14684518, SUCCESSFUL) as the 'second hack tx'; BlockSec's failed 2nd attempt is 0xd9bc8368... (14684432, reverted). Both are real; they are attempts #2 and #3 of the attacker.",
+  "candidates.json said the rescue landed 'ahead of the attacker's 3rd attempt': true but the 3rd attacker contract was only deployed at 14684510, 76 blocks after the rescue."
+ ],
+ "raw_refs": {
+  "attack1": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "attack2_reverted": {
+   "tx": "site/raw/rpc/tx_0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3.json",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "attack3": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "rescue": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "rescue_deploy": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "rescue_return": {
+   "tx": "full cache only (not published)",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "funding": {
+   "tx": "site/raw/rpc/tx_0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db.json",
+   "receipt": "full cache only (not published)",
+   "trace": "full cache only (not published)"
+  },
+  "attacker_txlist": "site/raw/etherscan/saddle_attacker_txlist.json",
+  "rescue_account_txlist": "site/raw/etherscan/saddle_rescue_txlist.json",
+  "rescue_account_tokentx": "site/raw/etherscan/saddle_rescue_tokentx.json",
+  "metapool_logs": "site/raw/etherscan/saddle_pool_logs_es.json",
+  "race_files": [
+   "incidents/saddle-2022/race_14684300.json",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "code": "full cache only (not published)"
+ },
+ "verdict_original": "related-not-frontrun",
+ "race_type": "post-failure-replay",
+ "headline": false,
+ "headline_text": "BlockSec's whitehat replayed the attacker's reverted second attempt two blocks later (near-identical contract, same amounts), swept 1,356.73 WETH the attacker had left behind and returned all of it.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "BlockSec's rescue replayed the attacker's reverted attempt 2 two blocks AFTER it was mined; no attacker tx was pending at 14684434.",
+  "headline_note": null,
+  "dataset_rows": [
+   "saddle-2022"
+  ]
+ }
+}

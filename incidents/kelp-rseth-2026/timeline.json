@@ -1,0 +1,193 @@
+[
+ {
+  "t_utc": "2026-09-14T13:29:23Z",
+  "kind": "fund",
+  "actor": "Railgun RelayAdapt -> attacker EOA 0x0dc2c5d6...",
+  "detail": "0.1283685759 ETH unshielded, block 25976003",
+  "tx": "0xd07ce4dc6acf73501467cda47400ea5768b3fa7093cca9f634ef33203b38717c",
+  "raw_ref": "site/raw/rpc/trace_0xd07ce4dc6acf73501467cda47400ea5768b3fa7093cca9f634ef33203b38717c.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:21:23Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "nonce 1 CREATE 0xccc56fc7... (same 3,539,465-gas creation as the later one), block 25980438 idx 119; never prepared",
+  "tx": "0xde4fe5b9a3456a991f639fe889d7d8d0e2812f64e81e8392517cc1f043545e81",
+  "raw_ref": "site/raw/etherscan/txlist_attacker_kelp.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:23Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "block 25980523 idx 155 (bombora.build block, delivered by ultrasound relay, 0.01176 ETH): executor 0x10605ee4 created; tip 0.000187 gwei; NOT in mempool dump",
+  "tx": "0x946e318b52474d8832451abf7716f65822f4562acb25a6ce453b159055904c69",
+  "raw_ref": "site/raw/rpc/block_25980523.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:35Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "block 25980524 idx 207 of 215 (Titan builder block, winning bid 0.004489 ETH at +2555 ms): prepare() 0xd28cebb8 on the executor; NOT in mempool dump",
+  "tx": "0x0a7d69abe64d99c77741a54639057e077d096bc68cde094a1a05590557f76e56",
+  "raw_ref": "site/raw/rpc/block_25980524.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:37.555Z",
+  "kind": "bid",
+  "actor": "Titan builder via bloxroute-regulated",
+  "detail": "winning bid for block 524 submitted (block becomes public a few seconds later)",
+  "raw_ref": "incidents/kelp-rseth-2026/race_25980524.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:39.237Z",
+  "kind": "bid",
+  "actor": "bid stream for slot 15218592 (block 525)",
+  "detail": "first bid of 5,937 across 6 relays (-7763 ms)",
+  "raw_ref": "incidents/kelp-rseth-2026/race_25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:46.173Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "0.2066 ETH, 27 txs (-827 ms)",
+  "raw_ref": "site/raw/relay-titan/bids_block25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:46.694Z",
+  "kind": "bid",
+  "actor": "Eureka via bloxroute-regulated",
+  "detail": "first bid above 2 ETH: 2.1687 ETH, 60 txs (-306 ms)",
+  "raw_ref": "site/raw/relay-bloxroute-regulated/bids_block25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:47.157Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "6.41244 ETH, 25 txs (+157 ms): value jump = the ~18.9 ETH Yoink payment is now in its block (inferred)",
+  "raw_ref": "site/raw/relay-titan/bids_block25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:47Z",
+  "kind": "block",
+  "actor": "builder.ultrasound.money (delivered by ultrasound relay, 13.862965 ETH, 27 txs)",
+  "detail": "block 25980525: idx0 Yoink 0x0e7680b0 calls attacker executor 0x882d6bfa(2900e18,0,0), pulls 2,900 rsETH out of Safe 0x40e93a52, pays 18.93122 ETH to coinbase; idx1/2 Yoink; idx3 0x492d2552 calls the same executor function, inner call reverts; idx26 builder pays proposer 13.862965 ETH",
+  "tx": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+  "raw_ref": "site/raw/rpc/block_25980525.json",
+  "raw_refs": [
+   "site/raw/etherscan/k_tokentx_0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8_25980000.json",
+   "site/raw/rpc/trace_block_25980525.json"
+  ]
+ },
+ {
+  "t_utc": "2026-09-15T04:38:47.889Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "10.12769 ETH (+889 ms), max visible 10.32 ETH (+897)",
+  "raw_ref": "site/raw/relay-titan/bids_block25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:38:48.416Z",
+  "kind": "bid",
+  "actor": "Eureka via agnostic",
+  "detail": "14.00326 ETH, 83 txs (+1416 ms), highest bid seen; ultrasound relay's block (13.863) was delivered instead",
+  "raw_ref": "site/raw/relay-agnostic/bids_block25980525.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:49:23Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "block 25980578 idx 108: nonce-4 self-transfer 0 ETH - burns the nonce of a never-mined tx (inferred stuck finishing tx)",
+  "tx": "0xe8c2776814ec291e160ac433abe96def4c3ff10e380f5d42e324e27b8463ee4f",
+  "raw_ref": "site/raw/etherscan/txlist_attacker_kelp.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:49:47Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "round 2: executor 0x28c29e84 (blk 25980580 idx 253)",
+  "tx": "0x3bed6ddfe3deca3772bf6669938b98e622d1d083dca33057b2e008ac1d982a03",
+  "raw_ref": "site/raw/etherscan/k_txlist_0x28c29e8461873b9cba1a2936994ec1fc451271b7_x.json"
+ },
+ {
+  "t_utc": "2026-09-15T04:49:59Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "round 2 prepare() on 0x28c29e84 (blk 25980581 idx 152); nobody calls it afterwards",
+  "tx": "0x3a6c3bcf7e5deacf10d7d79b768bf9ad43804fc0b742b03ff66e162eee2eca4c",
+  "raw_ref": "site/raw/rpc/tx_0x3a6c3bcf7e5deacf10d7d79b768bf9ad43804fc0b742b03ff66e162eee2eca4c.json"
+ },
+ {
+  "t_utc": "2026-09-15T05:24:47Z",
+  "kind": "tx",
+  "actor": "other (EOA 0x41a1d3ec..)",
+  "detail": "blk 25980755 idx 4: CREATE tx burns 49.99999 aEthrsETH from the Safe (liquidation-type)",
+  "tx": "0xffbc6f742c85d0c7293eca8842f66b1a72581bed1c114b52f9d6f463e5964f9a",
+  "raw_ref": "site/raw/etherscan/k_tokentx_0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8_25980000.json"
+ },
+ {
+  "t_utc": "2026-09-15T05:47:35Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "round 3: executor 0x34db93d1 (blk 25980869)",
+  "tx": "0xd96b4e43a2e56f0df0f8d16a30505d9b34562af1438116455615d235c14d612a",
+  "raw_ref": "site/raw/etherscan/txlist_attacker_kelp.json"
+ },
+ {
+  "t_utc": "2026-09-15T05:47:47Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "round 3 prepare() (blk 25980870 idx 155)",
+  "tx": "0xc543b7f1f393c05e25e160a9a97b92528db0edd425897676a604c5456d1e7b87",
+  "raw_ref": "site/raw/etherscan/txlist_attacker_kelp.json"
+ },
+ {
+  "t_utc": "2026-09-15T05:47:59Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "round 3 execute at idx 0 of the NEXT block (blk 25980871): 23.689 ETH from 0x34db93d1 to the attacker, different victim - shows the deploy/prepare/execute-at-next-block pattern",
+  "tx": "0x850342386d7446e3ce479ecc246e843961a46fa6540d279a5ef602d14deb547e",
+  "raw_ref": "site/raw/etherscan/txlistint_attacker_kelp.json"
+ },
+ {
+  "t_utc": "2026-09-15T05:53:59Z",
+  "kind": "tx",
+  "actor": "Yoink",
+  "detail": "blk 25980901 idx 0: Aave liquidation of the Safe (157.707 aEthrsETH, 8.708 WETH debt), coinbase 1.0069 ETH",
+  "tx": "0xe77f7513547d917e86e2ac8457b00e9f4336fee3908b9a674095603d467cde66",
+  "raw_ref": "site/raw/etherscan/k_tokentx_0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8_25980000.json",
+  "raw_refs": [
+   "site/raw/etherscan/w8_0x80bf7db6_txlistinternal_25873470_99999999.json"
+  ]
+ },
+ {
+  "t_utc": "2026-09-15T05:54:23Z..05:55:23Z",
+  "kind": "tx",
+  "actor": "3 bots",
+  "detail": "blks 25980903-908: 13 pulls of ~0.5 aEthrsETH each (liquidations)",
+  "raw_ref": "site/raw/etherscan/k_tokentx_0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8_25980000.json"
+ },
+ {
+  "t_utc": "2026-09-15T06:00:11Z",
+  "kind": "tx",
+  "actor": "Safe owner 0x8c2aecce..",
+  "detail": "first Safe execTransaction by the owner after the incident (blk 25980931)",
+  "tx": "0x94439062e9abbf5c2c02d97428b01d24913aced945b109abe4d6f347691135dd",
+  "raw_ref": "site/raw/etherscan/k_txlist_0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8_25980000.json"
+ },
+ {
+  "t_utc": "2026-09-16T10:26:23Z",
+  "kind": "return",
+  "actor": "Yoink vault 0xc70f00cd -> Safe owner 0x8c2aecce..",
+  "detail": "1.0 rsETH test transfer",
+  "tx": "0x03d31426be57673645f3da0de091135383e09ea7f376b55e5457bdc0267c9ac7",
+  "raw_ref": "site/raw/etherscan/c70f_rseth_real_tokentx.json"
+ },
+ {
+  "t_utc": "2026-09-16T10:38:35Z",
+  "kind": "return",
+  "actor": "Yoink vault 0xc70f00cd -> Safe owner 0x8c2aecce..",
+  "detail": "2,881.367408826118 rsETH (completes return of the 2,882.367 received)",
+  "tx": "0xe1615caa9f8fe328f6d336a8f4006a54b9342ea6b1cfb3a7fa4e733dbd120c6e",
+  "raw_ref": "site/raw/etherscan/c70f_rseth_real_tokentx.json"
+ }
+]

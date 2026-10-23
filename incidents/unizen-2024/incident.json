@@ -1,0 +1,885 @@
+{
+ "slug": "unizen-2024",
+ "name": "Unizen TradeAggregator (unchecked external call) - Ethereum, 2024-03-08",
+ "date": "2024-03-08",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "Seven Yoink txs (blocks 19393223-19393726, index 0 each) are all copies of other people's pulls; none is an independent first exploit. Three of them took funds an attacker's own tx was about to take and that tx then landed later and failed: ADS at 19393726 (attacker tx public 1.0 s before the slot, calldata identical except the recipient word), USDT at 19393223 (attacker tx public 3.3 s before the slot, 2 of its 5 victim calls adapted) and XI at 19393298 (the attacker's second-half tx reverted two blocks later; pending-ness not measured). The other four (USDC 19393262, USDC 19393264, QNT 19393342, VRA 19393363) replay the other half of a pull that attacker 0x2ad8aed8 had already landed 1-2 blocks earlier: late copies.",
+ "era": "mature-pbs-2024-26",
+ "protocol_loss_usd": {
+  "reported": 2100000,
+  "reported_source": "Rekt, 'Unizen' (2024-03-12): 'more than $2.1M'; DeFiHackLabs '~2M'; BlockSec monthly review $2.8M across Ethereum and Polygon",
+  "measured_first_tx": "2,176,228.71 USDT in the single first attacker tx 0xc12a4155 (5 wallets), i.e. the whole reported loss",
+  "note": "DeFiHackLabs UnizenIO/UnizenIO2 PoCs reproduce txs of attacker 0x2ad8aed8 (VRA and DMTR pulls) which are a small part of the loss."
+ },
+ "attacker": {
+  "summary": "No single attacker. At least five EOAs exploited the same unchecked external call in the TradeAggregator proxy (selector 0x1ef29a02 executes caller-supplied calls, so any wallet that approved the proxy can be drained), plus about a dozen copiers. Rekt lists attackers 1-4; DeFiHackLabs names 0x2ad8aed8.",
+  "eoas": [
+   {
+    "eoa": "0xb660cae1a59336676ea1887b15eb3c0badb90d78",
+    "role": "attacker 1: first exploit, 1 tx, block 19392761 index 0 (2024-03-08 20:13:35 UTC), creates contract 0xa91e156787b248479e58739b711440b6c3822eb2, 5 USDT pulls = 2,176,228.71 USDT to 0x011ee2b5a4ef3e05e11d45a241582ea191a86077",
+    "txs": [
+     "0xc12a4155c2c90707138e4aef8883c8f724371145823e2f661f19b93e5b3a9d6e"
+    ]
+   },
+   {
+    "eoa": "0xc596523b77ceb9567279b572c653ecf4ba763cb7",
+    "role": "attacker 2: contract 0x90a7482dd7fa28865f440ec0c3b783775ac01266, 14 effective txs from 19393155",
+    "n_txs": 14
+   },
+   {
+    "eoa": "0x2ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "role": "attacker 3 (DeFiHackLabs): EOA-to-proxy calls with 1 wei, 78 effective txs from 19393120 (21:29:59); from 19393252 to 19393361 11 of 12 pulls take exactly 50% of the victim balance",
+    "n_txs": 78
+   },
+   {
+    "eoa": "0x4e2ce48f0b5d97bfd4be3f6c7b6479db1aa5b365",
+    "role": "attacker 4: new EOA funded 21:48:23 by 0x4e5b2e1dc63f6b91cb6cd759936495434c7e972f, one contract-creation tx per attempt, 13 effective txs (first success 19393278)",
+    "n_txs": 13
+   },
+   {
+    "eoa": "0xd440b92739f86b00d1135b5eea871751433da2d7",
+    "role": "attacker 5 (Rekt 3): contract 0x2f744f784000de0b8f1a7da3f0021ad56c09ce1a, same funder as attacker 4, 1 tx at 19393730",
+    "n_txs": 1
+   }
+  ],
+  "other_direct_callers_unclassified": [
+   "0xa55962d18b7d16e9db1bc80f9587bcf2c6f41b7e",
+   "0xb546ae73b33a3e2405ea91f82cab74147b48efd9",
+   "0x835d4928e3447affacf07221f2894607f9a21765",
+   "0x5bc033abf645a0805ab1afe6c74f10df1f6e9b72",
+   "0xae0c81fb7a2058f6a89d4e805bba8072e191c322",
+   "0xa8bbb3742f299b183190a9b079f1c0db8924145b",
+   "0x13a99eccf9f4f1727a6218754b6667aa5113c731"
+  ],
+  "contracts": [
+   "0xa91e156787b248479e58739b711440b6c3822eb2",
+   "0x90a7482dd7fa28865f440ec0c3b783775ac01266",
+   "0x2f744f784000de0b8f1a7da3f0021ad56c09ce1a"
+  ],
+  "deploy_tx": "0xc12a4155c2c90707138e4aef8883c8f724371145823e2f661f19b93e5b3a9d6e",
+  "funding_tx": null,
+  "funding_note": "attacker 4 and 5 were funded by the same EOA 0x4e5b2e1d... (not identified); attackers 1-3 have older histories; no Tornado/mixer funding was traced.",
+  "vulnerable_contract": "0xd3f64baa732061f8b3626ee44bab354f854877ac",
+  "txs": [
+   {
+    "hash": "0xc12a4155c2c90707138e4aef8883c8f724371145823e2f661f19b93e5b3a9d6e",
+    "block": 19392761,
+    "index": 0,
+    "status": "success"
+   }
+  ],
+  "scan": {
+   "proxy_txs_scanned_from_block_19392000": 242,
+   "txs_with_third_party_pulls": 227,
+   "effective_nonzero_pull_txs": 207,
+   "distinct_senders_with_effective_nonzero_pulls": 18,
+   "file": "incidents/unizen-2024/exploit_txs.json"
+  }
+ },
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "txs": [
+    {
+     "tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+     "block": 19393223,
+     "index": 0,
+     "sub": "pending-usdt",
+     "time_utc": "2024-03-08T21:52:59Z",
+     "builder": "I can haz block?",
+     "coinbase_eth": 3.4521105,
+     "builder_refund_eth": 0.9999195398163163,
+     "proposer_payment_eth": 2.450663121682,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 2.52527656e-10,
+     "victim_pulls": [
+      {
+       "victim": "0xa340a9fb8eaa07d8a23300e6314bf41e8c4e42fc",
+       "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+       "amount_raw": 8163939786
+      },
+      {
+       "victim": "0xa17de4ec9ecb7aa25dfcbbdac8b301b674d9d10a",
+       "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+       "amount_raw": 5401745389
+      }
+     ],
+     "attacker_source_tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44"
+    },
+    {
+     "tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+     "block": 19393262,
+     "index": 0,
+     "sub": "half-copies",
+     "time_utc": "2024-03-08T22:02:23Z",
+     "builder": "rsync-builder.xyz",
+     "coinbase_eth": 0.0958214,
+     "builder_refund_eth": 0.0,
+     "proposer_payment_eth": 0.0,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 2.53745985e-10,
+     "victim_pulls": [
+      {
+       "victim": "0xbf12773b490e1deb57039061aacfa2a87deac9b9",
+       "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+       "amount_raw": 4808852621
+      }
+     ],
+     "attacker_source_tx": "0xd0bab3e76a55033e4ef47a8a52bea74313eaea3b04a23adc7c7e416d359bc3a0"
+    },
+    {
+     "tx": "0xaeb81988bb0b1bcae375f979f9ecb8146d811b42170a8ebe11467625240178a2",
+     "block": 19393264,
+     "index": 0,
+     "sub": "half-copies",
+     "time_utc": "2024-03-08T22:02:47Z",
+     "builder": "I can haz block?",
+     "coinbase_eth": 0.7576444085209435,
+     "builder_refund_eth": 0.6379243996159963,
+     "proposer_payment_eth": 0.1251170874371696,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 0.7731065393070852,
+     "victim_pulls": [
+      {
+       "victim": "0x2121fc1b00b30844fa6ef43370666d5487fc118e",
+       "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+       "amount_raw": 3026068927
+      }
+     ],
+     "attacker_source_tx": null
+    },
+    {
+     "tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+     "block": 19393298,
+     "index": 0,
+     "sub": "pending-xi",
+     "time_utc": "2024-03-08T22:10:23Z",
+     "builder": "I can haz block?",
+     "coinbase_eth": 0.3754762640671825,
+     "builder_refund_eth": 0.3051274419098213,
+     "proposer_payment_eth": 0.07718563037085756,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 0.3866902822525052,
+     "victim_pulls": [
+      {
+       "victim": "0xd04b7023f7433554c9852ae2da8046933ed6d839",
+       "token": "0x295b42684f90c77da7ea46336001010f2791ec8c",
+       "amount_raw": 1118715169744549188730880
+      }
+     ],
+     "attacker_source_tx": "0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87"
+    },
+    {
+     "tx": "0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746",
+     "block": 19393342,
+     "index": 0,
+     "sub": "half-copies",
+     "time_utc": "2024-03-08T22:19:23Z",
+     "builder": "I can haz block?",
+     "coinbase_eth": 1.9543470205661753,
+     "builder_refund_eth": 1.5821182907538183,
+     "proposer_payment_eth": 0.3779964252940663,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 1.9681238877806397,
+     "victim_pulls": [
+      {
+       "victim": "0x0f119cc79da180856f48ba317347114955ed71f1",
+       "token": "0x4a220e6096b25eadb88358cb44068a3248254675",
+       "amount_raw": 62505616219404361728
+      }
+     ],
+     "attacker_source_tx": null
+    },
+    {
+     "tx": "0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437",
+     "block": 19393363,
+     "index": 0,
+     "sub": "half-copies",
+     "time_utc": "2024-03-08T22:23:59Z",
+     "builder": "Titan (titanbuilder.xyz)",
+     "coinbase_eth": 0.01148971814155688,
+     "builder_refund_eth": 0.0,
+     "proposer_payment_eth": 0.0,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 0.13843033905490215,
+     "victim_pulls": [
+      {
+       "victim": "0x12fe4bc7d0b969055f763c5587f2ed0ca1b334f3",
+       "token": "0xf411903cbc70a74d22900a5de66a2dda66507255",
+       "amount_raw": 41611328550535574847488
+      }
+     ],
+     "attacker_source_tx": null
+    },
+    {
+     "tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+     "block": 19393726,
+     "index": 0,
+     "sub": "pending-ads",
+     "time_utc": "2024-03-08T23:39:59Z",
+     "builder": "I can haz block?",
+     "coinbase_eth": 0.37628557275080926,
+     "builder_refund_eth": 0.2730111506402814,
+     "proposer_payment_eth": 0.11375795550102642,
+     "priority_fee_gwei": 0.0,
+     "gross_eth": 0.38475007438733055,
+     "victim_pulls": [
+      {
+       "victim": "0x158fb20ff581731a84c50584f4f82751704708d8",
+       "token": "0x3106a0a076bedae847652f42ef07fd58589e001f",
+       "amount_raw": 7800000000000000000000
+      }
+     ],
+     "attacker_source_tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88"
+    }
+   ],
+   "captured": {
+    "eth_side_net": 0.331214,
+    "usdt": 13565.685174,
+    "usdc": 4808.85262,
+    "note": "net of coinbase payments, builder refunds and gas; stablecoins swept to the vault 0xc70f00cd are the USDT (tx 0x4a69a272) and USDC (tx 0x73dad216) legs"
+   },
+   "coinbase_paid_eth": 7.023174884046668,
+   "builder_refund_eth": 3.7981008227362336,
+   "gas_eth": 0.094813241645009,
+   "replay_evidence": "calldata_diffs.json: in 7 of 9 compared proxy calls all 23 calldata words are identical to the attacker's except word 2 (the recipient); the 2 USDT calls differ in word 2 and in the 2-word amount tail (the attacker's contract passes the wallet balance it reads at run time, 0 by then)",
+   "notes": "All seven txs are at index 0 of their block, priority fee 0, msg.value selects the bribe: per-mille of profit for five txs and a flat amount for two (USDT tx: 3.4521 ETH; USDC tx 0x73dad216: 0.0958 ETH); five of the seven blocks were built by 'I can haz block?' (fee recipient 0x229b8325) which refunds most of the coinbase payment to the Yoink contract."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "attacker 4 (0x4e2ce48f) pending USDT tx",
+   "tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44",
+   "block": 19393224,
+   "index": 80,
+   "status": "success (all 5 pulls 0, internally reverted)",
+   "role": "lost the two funded wallets to Yoink one block earlier"
+  },
+  {
+   "label": "0x13a99ecc pending ADS tx",
+   "tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88",
+   "block": 19393727,
+   "index": 53,
+   "status": "reverted",
+   "role": "lost the ADS wallet to Yoink one block earlier; recipient 0x011ee2b5... is attacker 1's recipient"
+  },
+  {
+   "label": "attacker 3 second-half XI tx (nonce 17)",
+   "tx": "0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87",
+   "block": 19393300,
+   "index": 62,
+   "status": "reverted",
+   "role": "own follow-up for the XI wallet, failed because Yoink took the half two blocks earlier"
+  },
+  {
+   "label": "0x00bad13f",
+   "tx": "0x97a3068283cccb80669a65fd5eca17c0b81f25a2c4ad0e936dea20075383f728",
+   "block": 19393253,
+   "index": 0,
+   "status": "success",
+   "role": "copy of attacker 3's tx 0xe179183e (19393252)"
+  },
+  {
+   "label": "0x7d671a0d",
+   "tx": "0xb866a809aaf9a00613ab51aa0a8bf6a9a83805f089677fd73b6f53eb36c2d521",
+   "block": 19393261,
+   "index": 0,
+   "status": "success",
+   "role": "copies of attacker 3's txs 0x2d551353 (19393260) and 0x6983ff43 (19393292, copy at 19393293 index 0)"
+  },
+  {
+   "label": "c0ffeebabe.eth (public tx facts only)",
+   "tx": "0x9761d94ace59f0dbfb6bda0e03d809e1f31d4324c630d75b07b0de3810e3a3f3",
+   "block": 19393357,
+   "index": 0,
+   "status": "success",
+   "role": "copy of attacker 3's tx 0x6629777e (19393356); two further c0ffeebabe txs at 19393421 index 0 and 19393574 index 8 pulled USDC from other wallets"
+  },
+  {
+   "label": "0x9efc0416",
+   "tx": "0x98036ff1c94ca68f03b1644d8194fe379f319f01fecfeb21f273c129e4f4e05b",
+   "block": 19393373,
+   "index": 0,
+   "status": "success",
+   "role": "53 small pulls (mostly 100-1000 USDT/USDC) from 19393373 on"
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Yoink returned 0.29808 ETH (first attempt reverted)",
+   "tx": "0x4f647c4d74a86e5f3719b235e96f55000a04df1e07137eed8baef09dd0c2c074",
+   "amount": "0.29808 ETH",
+   "to": "0x6003327a621fc16c74baf08229cc45a96e44f9ee",
+   "note": "first attempt 0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c (message 'Returning 90% of profits') reverted: status 0, gas limit 41,511; the research/lineages/yoink_messages.json 'returned' entry points at that reverted tx"
+  },
+  {
+   "what": "Yoink vault returned USDT",
+   "tx": "0xb3482ffed5d6251adebb3ab572bcf1f588775e7c8443506f05557dbf9504521c",
+   "amount": "12,209.116660 USDT",
+   "to": "0x6003327a621fc16c74baf08229cc45a96e44f9ee"
+  },
+  {
+   "what": "Yoink vault returned USDC",
+   "tx": "0xdac41e4153243240f864656f391736b7d169bce9018c0543019b142b4f8b1def",
+   "amount": "4,327.967358 USDC",
+   "to": "0x6003327a621fc16c74baf08229cc45a96e44f9ee"
+  },
+  {
+   "what": "Yoink kept 10% of each asset",
+   "amount": "0.0331 ETH, 1,356.57 USDT, 480.89 USDC",
+   "note": "Unizen asked for 80% (20% bounty); Yoink sent 90% of its net in every asset, declined to return more when Unizen asked for the remaining 7,600 USDT/USDC ('claw that back from the validators')"
+  },
+  {
+   "what": "builder refunds (not returned to anyone)",
+   "amount": "3.7981 ETH",
+   "note": "'I can haz block?' refunded this to the Yoink contract in 5 of the 7 blocks; proposers received 2.4507 + 0.1251 + 0.0772 + 0.3780 + 0.1138 ETH there"
+  },
+  {
+   "what": "other actors' returns to Unizen's address (context, not Yoink)",
+   "amount": "c0ffeebabe.eth 0.47645 ETH (tx 0xdfd6778a...); attacker 4 0x4e2ce48f 165,683.06 USDT; 0x5bc033ab 13.84 ETH; 0xa55962d1 1.34 ETH + 64,313.54 DAI; 0x1a56abf4 0.01136 ETH",
+   "note": "Etherscan txlist/tokentx of 0x6003327a (site/raw/etherscan/unizen_recv_*.json)"
+  }
+ ],
+ "sources": [
+  "https://alpha.rekt.news/unizen-rekt (site/raw/web-unizen/rekt_unizen.html)",
+  "https://www.halborn.com/blog/post/explained-the-unizen-hack-march-2024 (site/raw/web-unizen/halborn_unizen.html)",
+  "DeFiHackLabs src/test/2024-03/UnizenIO_exp.sol, UnizenIO2_exp.sol (clone site/raw/defihacklabs_clone/repo)",
+  "research/lineages/yoink_more_incidents.json, yoink_messages.json (Unizen/Yoink on-chain messages)"
+ ],
+ "auction": {
+  "pending-ads": {
+   "block": 19393726,
+   "slot": 8593098,
+   "slot_start_utc_ms": 1709941199000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "agnostic"
+   ],
+   "n_bids": 143,
+   "n_builders": 21,
+   "bids_per_relay": {
+    "flashbots": 143
+   },
+   "first_bid_ms_rel_slot": -9887,
+   "last_bid_ms_rel_slot": 361,
+   "winning_bid_eth": 0.11375795550102642,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "agnostic",
+    "flashbots",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 189,
+   "winning_last_submission_ms_rel_slot": 361,
+   "runner_up_eth": 0.11097302569185845,
+   "runner_up_builder": "Ty For The Block",
+   "runner_up_ms_rel_slot": 68,
+   "runner_up_other_builder_eth": 0.11097302569185845,
+   "runner_up_other_builder": "Ty For The Block",
+   "runner_up_other_builder_ms_rel_slot": 68,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.11375795550102642,
+   "proposer_paid_eth": 0.11375795550102642,
+   "proposer_payment_tx": "0xd53f76bfa53081a774df6e45425374e822b4233ab1be6bf9d65c05f45d366c04",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9887,
+     0.001432822430653598
+    ],
+    [
+     -9432,
+     0.002237572672573254
+    ],
+    [
+     -9006,
+     0.002572468238110214
+    ],
+    [
+     -8901,
+     0.002737361932573254
+    ],
+    [
+     -8411,
+     0.004211140932573254
+    ],
+    [
+     -8374,
+     0.004253140932573254
+    ],
+    [
+     -7906,
+     0.005461075411266054
+    ],
+    [
+     -7862,
+     0.006178854372885936
+    ],
+    [
+     -7140,
+     0.006690325222418021
+    ],
+    [
+     -6833,
+     0.007060709007246835
+    ],
+    [
+     -6378,
+     0.007440519449169965
+    ],
+    [
+     -6347,
+     0.007489527944640157
+    ],
+    [
+     -5863,
+     0.008565688753104157
+    ],
+    [
+     -5847,
+     0.008690931927198955
+    ],
+    [
+     -5523,
+     0.00994743139344002
+    ],
+    [
+     -4862,
+     0.010230647863451701
+    ],
+    [
+     -4703,
+     0.011237113832814758
+    ],
+    [
+     -3928,
+     0.02253569778732504
+    ],
+    [
+     -3732,
+     0.022631988562912785
+    ],
+    [
+     -3579,
+     0.022642602518677783
+    ],
+    [
+     -3220,
+     0.022736451728677783
+    ],
+    [
+     -2808,
+     0.02315352176376196
+    ],
+    [
+     -2789,
+     0.02320045686876196
+    ],
+    [
+     -2680,
+     0.023231388449114345
+    ],
+    [
+     -2142,
+     0.023318672715842592
+    ],
+    [
+     -1986,
+     0.02332049873289188
+    ],
+    [
+     -1935,
+     0.02336680673289188
+    ],
+    [
+     -1920,
+     0.02375032941024092
+    ],
+    [
+     -1868,
+     0.02378355936445141
+    ],
+    [
+     -1782,
+     0.023857674533508313
+    ],
+    [
+     -1548,
+     0.023957674533508312
+    ],
+    [
+     -1451,
+     0.02422621427328426
+    ],
+    [
+     -1425,
+     0.02428264060317226
+    ],
+    [
+     -1396,
+     0.02430574833317226
+    ],
+    [
+     -1346,
+     0.02437109060317226
+    ],
+    [
+     -1320,
+     0.02437813326811626
+    ],
+    [
+     -1201,
+     0.02447739393306021
+    ],
+    [
+     -1088,
+     0.02449884426197826
+    ],
+    [
+     -1087,
+     0.02450934426197826
+    ],
+    [
+     -1025,
+     0.02455607879528626
+    ],
+    [
+     -987,
+     0.028008989271615534
+    ],
+    [
+     -852,
+     0.033409406562539594
+    ],
+    [
+     -807,
+     0.03363257945048571
+    ],
+    [
+     -798,
+     0.036830448370463266
+    ],
+    [
+     -795,
+     0.062295625444751326
+    ],
+    [
+     -778,
+     0.06499583409021333
+    ],
+    [
+     -731,
+     0.06560682204105615
+    ],
+    [
+     -710,
+     0.065608127492244
+    ],
+    [
+     -686,
+     0.07769408324808941
+    ],
+    [
+     -630,
+     0.0802928341408898
+    ],
+    [
+     -628,
+     0.08292814832145341
+    ],
+    [
+     -603,
+     0.0829290045197914
+    ],
+    [
+     -602,
+     0.08762182537448292
+    ],
+    [
+     -597,
+     0.08768852556775357
+    ],
+    [
+     -592,
+     0.09586788041421333
+    ],
+    [
+     -478,
+     0.09669101257703468
+    ],
+    [
+     -433,
+     0.09955747936048984
+    ],
+    [
+     -29,
+     0.10249201147050721
+    ],
+    [
+     68,
+     0.11097302569185845
+    ],
+    [
+     189,
+     0.11375795550102642
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/unizen-2024/race_19393726.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block19393726.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block19393726.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block19393726.json",
+    "relay_delivered:agnostic": "site/raw/relay-agnostic/delivered_block19393726.json"
+   }
+  },
+  "pending-usdt": {
+   "block": 19393223,
+   "slot": 8592563,
+   "slot_start_utc_ms": 1709934779000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "agnostic"
+   ],
+   "n_bids": 38,
+   "n_builders": 11,
+   "bids_per_relay": {
+    "flashbots": 38
+   },
+   "first_bid_ms_rel_slot": -8603,
+   "last_bid_ms_rel_slot": -1293,
+   "winning_bid_eth": 2.450663121682,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "agnostic",
+    "flashbots",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": -1293,
+   "winning_last_submission_ms_rel_slot": -1293,
+   "runner_up_eth": 2.4506616356233155,
+   "runner_up_builder": "I can haz block?",
+   "runner_up_ms_rel_slot": -1300,
+   "runner_up_other_builder_eth": 2.433554054971849,
+   "runner_up_other_builder": "Flashbots",
+   "runner_up_other_builder_ms_rel_slot": -2814,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 2.450663121682,
+   "proposer_paid_eth": 2.450663121682,
+   "proposer_payment_tx": "0xbc19600d39ee9a319e5b775ae223b3a95b638870b42bc720e1d43b1191626aaa",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -8603,
+     0.00015085890570096
+    ],
+    [
+     -8550,
+     0.00015181721235096
+    ],
+    [
+     -8495,
+     0.000153878926534817
+    ],
+    [
+     -8158,
+     0.000311003128855817
+    ],
+    [
+     -8012,
+     0.000350678878855817
+    ],
+    [
+     -7837,
+     0.000440883964678726
+    ],
+    [
+     -7688,
+     0.000490813128855817
+    ],
+    [
+     -7182,
+     0.000500238322545501
+    ],
+    [
+     -6839,
+     0.000612124114822726
+    ],
+    [
+     -6677,
+     0.000672614679150501
+    ],
+    [
+     -6502,
+     0.000684261414431857
+    ],
+    [
+     -6173,
+     0.000743890811854401
+    ],
+    [
+     -5988,
+     0.000753979611854401
+    ],
+    [
+     -5849,
+     0.001108509109816726
+    ],
+    [
+     -5668,
+     0.002855378313285235
+    ],
+    [
+     -4739,
+     0.003821238133591103
+    ],
+    [
+     -3944,
+     0.0130667869892841
+    ],
+    [
+     -3635,
+     0.013262235851913365
+    ],
+    [
+     -3481,
+     0.013454983324797772
+    ],
+    [
+     -3377,
+     0.014102127589863771
+    ],
+    [
+     -3276,
+     0.014677773510327523
+    ],
+    [
+     -3224,
+     0.014677960192327524
+    ],
+    [
+     -3172,
+     0.014911070192327524
+    ],
+    [
+     -3050,
+     0.1334767124328638
+    ],
+    [
+     -2992,
+     0.1335885702423644
+    ],
+    [
+     -2966,
+     2.428897626563265
+    ],
+    [
+     -2866,
+     2.4320127292608107
+    ],
+    [
+     -2814,
+     2.433554054971849
+    ],
+    [
+     -2808,
+     2.4391538591642035
+    ],
+    [
+     -1300,
+     2.4506616356233155
+    ],
+    [
+     -1293,
+     2.450663121682
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/unizen-2024/race_19393223.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block19393223.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block19393223.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block19393223.json",
+    "relay_delivered:agnostic": "site/raw/relay-agnostic/delivered_block19393223.json"
+   }
+  }
+ },
+ "raw_refs": {
+  "traces": "full cache only (not published)",
+  "trace_filter": "full cache only (not published)",
+  "mempool": [
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "etherscan": "full cache only (not published)"
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-pending-attack",
+ "headline": true,
+ "headline_text": "Yoink took 7,800 ADS at block 19393726 (index 0), calling the Unizen proxy with the pending public tx's calldata except the recipient, 1.0 s before the slot; the attacker's tx landed next block and reverted. Net +0.273 ETH (coinbase 0.376, builder refund 0.273).",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "sub_rows": [
+  {
+   "sub": "pending-ads",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-pending-attack",
+   "headline": true,
+   "bot": "Yoink",
+   "bot_tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+   "bot_block": 19393726,
+   "blocks_ahead": 1
+  },
+  {
+   "sub": "pending-usdt",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-pending-attack",
+   "headline": true,
+   "bot": "Yoink",
+   "bot_tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+   "bot_block": 19393223,
+   "blocks_ahead": 1
+  },
+  {
+   "sub": "pending-xi",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-pending-attack",
+   "headline": true,
+   "bot": "Yoink",
+   "bot_tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+   "bot_block": 19393298,
+   "blocks_ahead": 2
+  },
+  {
+   "sub": "half-copies",
+   "verdict": "related-not-frontrun",
+   "race_type": "late-copy",
+   "headline": false,
+   "bot": "Yoink",
+   "bot_tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+   "bot_block": 19393262,
+   "blocks_ahead": -1
+  }
+ ],
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Yoink's tx (block 19393726, index 0) calls the Unizen proxy with the same 23 calldata words as the pending public tx 0x44ca0e6b of 0x13a99ecc except the recipient word. That tx was first seen 23:39:57.990Z (mempool-dumpster, 6 sources), 1.0 s before the slot, and landed one block later (19393727 index 53) and reverted because the victim's ADS was gone.",
+  "headline_note": null,
+  "dataset_rows": [
+   "unizen-2024/pending-ads",
+   "unizen-2024/pending-usdt",
+   "unizen-2024/pending-xi",
+   "unizen-2024/half-copies"
+  ]
+ }
+}

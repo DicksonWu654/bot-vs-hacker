@@ -1,0 +1,2500 @@
+{
+ "question": "Is the DODO 2021 \"Cheetah\" (EOA 0x8a14ce0f via proxy 0xa57bd001), the Earning.Farm 2022 bot (EOA 0x26bce6ec -> contract 0xa69babef, owner wallet 0x56178a0d) and the anonymous-sender profiles \"0xa57 family\" one operator?",
+ "verdict": "YES - one operator (high confidence, not proof of identity). It is a large general MEV/arbitrage operation running a fleet of hundreds of EOAs (wards) through a family of auth-proxy contracts and rotating executors; it is not an exploit-hunter. Cheetah and the EF bot are two EOAs/eras of the same deployment.",
+ "evidence": [
+  {
+   "n": 1,
+   "fact": "0x8641df2d deployed 0xa57bd001 (2019-03-26, tx 0x0d8fc644..) AND 0x95a64fc0 (2022-06-24) which created 0xa69babef (2022-08-15, tx 0x4d373b2c..). 0xa69babef exposes every selector of 0xa57bd001 plus batch-rely/deny and a callback."
+  },
+  {
+   "n": 2,
+   "fact": "Cheetah's DODO tx 0x75d4765d.. (block 12000167): 1,139,456.204396 USDT moved bypass contract 0x910fd17b -> executor 0x3a518964 -> 0x56178a0d. 0x56178a0d is the capital wallet that lent 14,707.09 WETH (got 15,187.10 back) in the Earning.Farm tx 0x1f1aba5b.. (block 15746200).",
+   "refs": [
+    "site/raw/rpc/receipt_0x75d4765d...json",
+    "incidents/earningfarm-2022/incident.json"
+   ]
+  },
+  {
+   "n": 3,
+   "fact": "0x56178a0d itself deployed executor 0x3a518964 (2021-02-16) and EF helper 0x0e113904 (2022-08-22), both through the executor factory 0xf3c9d00c; both share the interface 0x1cff79cd/0x80d6c5a1/0xec556889."
+  },
+  {
+   "n": 4,
+   "fact": "Executor factory 0xf3c9d00c was created by 0x8641df2d in 2019-01. All 30 top executors of 0xa57bd001 (100% of the 458,903 execute() calls in the complete 2019-03..2020-08 scan) came from it, deployed by wards of the proxy (0xc6093fd9, 0x97c54b98, 0xcedb4f8d, 0xef08524e, 0x00e34a4e, 0x9787ffbd, 0xc39eaabe, 0x8641df2d, 0x519b9ef6)."
+  },
+  {
+   "n": 5,
+   "fact": "Ward set: 8641df2d (79 calls) and 0x97c54b98 (200 calls) relied 279 distinct EOAs by 2019-11 (581 rely calls through 2020-08). 568 distinct callers by 2020-08; ~370 of the 378 callers seen in 30 sampled a69babef pages also called 0xa57bd001."
+  },
+  {
+   "n": 6,
+   "fact": "Cheetah EOA 0x8a14ce0f first funded by ward 0xc6093fd9 (2020-05-12, tx 0x2cd7a97c..); EF EOA 0x26bce6ec first funded by ward 0x97c54b98 (2019-11-10). Both are topped up by the same wallet 0x9787ffbd (38x and 145x) and by hub 0x8641df2d. 0x8a14ce0f sent 62,464 txs to 0xa69babef and 0x26bce6ec 166k: both EOAs drive the EF contract."
+  },
+  {
+   "n": 7,
+   "fact": "Migration: 0xa57bd001 traffic stops around 2023-03-13 (last bulk), while every fleet EOA starts calling 0xa69babef on 2022-08-22, a week after its creation (blk 15346875)."
+  },
+  {
+   "n": 8,
+   "fact": "The 0xa57 proxy and the EF contract are NOT the same bytecode (3,135 B vs 11,793 B): \"implementation upgrade\" happens at two levels: (a) executor rotation behind the proxy (30+ delegate targets 2019-2022; see executors), (b) proxy replacement by a larger superset (2022-08)."
+  }
+ ],
+ "caveats": [
+  "Same operator != named identity; no label for the owner of 0x56178a0d/0x8641df2d was sought.",
+  "Etherscan txlist is complete for hubs/EOAs; 0xa57bd001 txlist is complete through block 10.59M (2020-08-04, 459,495 txs) then sampled (1,000 consecutive txs every 250k blocks to block 16.96M, plus the newest 2,000); a69babef sampled every 300k blocks. Counts after 2020-08 are estimates from sample density.",
+  "Slim 0xa57bd001 rows through 2020-08 are in scratch (not saved raw to avoid GBs); raw pages up to block 9.71M and the sample pages are in site/raw/etherscan/w8_*.",
+  "Pre-Aug-2023 = in-block evidence only."
+ ],
+ "contracts": [
+  {
+   "address": "0x76aca078357b6be9f13a0e68bcec91d05b796192",
+   "role": "factory-of-factory",
+   "created": "2019-01-22",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x15193e29d95c1e597f56d6ab7dfff467e30e31b339c7a8a4bffd43cf5bfdcc9e",
+   "runtime_bytes": 4721,
+   "code_sha256_16": "351e9ef63437b821",
+   "selectors": [
+    "0x29710388 address",
+    "0x60c7d295 ",
+    "0x8e1a55fc ",
+    "0xf3701da2 address"
+   ],
+   "note": "First operator deploy (2019-01-22, 4,721 B); selectors 0x29710388/0xf3701da2(address)/0x8e1a55fc; created the executor factory 0xf3c9d00c."
+  },
+  {
+   "address": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6",
+   "role": "executor factory",
+   "created": null,
+   "creator": null,
+   "factory": null,
+   "creation_tx": null,
+   "runtime_bytes": 652,
+   "code_sha256_16": "28af5ba211c87b97",
+   "selectors": [
+    "0x7ed0c3b2 bytes",
+    "0x8bf4515c bytes"
+   ],
+   "note": "deploy(bytes) 0x7ed0c3b2 / 0x8bf4515c. EVERY top executor of proxy a57bd001 (30 checked) and the 2021/2022 executors 0x3a518964 and 0x0e113904 were deployed through it."
+  },
+  {
+   "address": "0xec91d89047e81233bf78c614599c64f179006d9f",
+   "role": "early helper",
+   "created": "2019-03-07",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0xea9706ef2fb9c608b99ea462a1e4c300f617e2ddfec3cd8a6dd7291b92356a7e",
+   "runtime_bytes": 3963,
+   "code_sha256_16": "93cf2c08351725ea",
+   "selectors": [
+    "0x29710388 address",
+    "0x60c7d295 ",
+    "0x8e1a55fc ",
+    "0xf3701da2 address"
+   ],
+   "note": "2019-03-07, same 4-selector family as 0x76aca078."
+  },
+  {
+   "address": "0x31dd6ba1b27992ab0421230df5655d655d990420",
+   "role": "proxy v0",
+   "created": "2019-03-09",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x078c9df324822e64876f7a77a0836828d67131dfd9c950f8f41d1befc094f2e3",
+   "runtime_bytes": 2732,
+   "code_sha256_16": "543f865d9b14d63e",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address,uint256",
+    "0x948f5076 address",
+    "0x9c52a7f1 address,uint256",
+    "0xbf353dbb address"
+   ],
+   "note": "2019-03-09 first auth-proxy: execute(address,bytes) 0x1cff79cd + rely/deny + setCache."
+  },
+  {
+   "address": "0xad9eb619ce1033cc710d9f9806a2330f85875f22",
+   "role": "proxy v0",
+   "created": "2019-03-09",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x90c3d64fea92c86e65b545a82472aee2e3d5d70bedc01155b61b3d68d12f9d05",
+   "runtime_bytes": 1884,
+   "code_sha256_16": "2c041e31081fb0f6",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x948f5076 address",
+    "0x9c52a7f1 address",
+    "0xbf353dbb address"
+   ],
+   "note": "2019-03-09, 1,884 B, same ABI family."
+  },
+  {
+   "address": "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+   "role": "main proxy (\"0xa57\")",
+   "created": "2019-03-26",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x0d8fc644c8178a352cd39aed1c3ae58434e422390c96f182b3fd68c53ec070e2",
+   "runtime_bytes": 3135,
+   "code_sha256_16": "8370ec24bed2e341",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x78e111f6 address,bytes",
+    "0x948f5076 address",
+    "0x9c52a7f1 address",
+    "0xa90e8731 bytes,bytes",
+    "0xbf353dbb address"
+   ],
+   "note": "DSProxy-like with wards: execute(address,bytes) 0x1cff79cd (delegatecall into an executor), executeFFsYo 0x78e111f6, rely/deny/wards, setCache. 459k txs counted exactly through 2020-08; sample-density estimate 1-4 million txs 2019-03 .. 2023-03, sparse to 2026-05."
+  },
+  {
+   "address": "0x9799b475dec92bd99bbdd943013325c36157f383",
+   "role": "proxy",
+   "created": "2019-09-18",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x8c9512e8f0552565aa72e56442522fb034ca6ec320aa8da12276d8d408270ec2",
+   "runtime_bytes": 4286,
+   "code_sha256_16": "d7fd249f328a371c",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x78e111f6 address,bytes",
+    "0x948f5076 address",
+    "0x9c52a7f1 address",
+    "0xa90e8731 bytes,bytes",
+    "0xbf353dbb address"
+   ],
+   "note": "2019-09-18, same ABI as 0xa57."
+  },
+  {
+   "address": "0xfa103c21ea2df71dfb92b0652f8b1d795e51cdef",
+   "role": "proxy / pass-through router",
+   "created": "2020-01-18",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x92bafc9cb4984d9367c4d394a0f900b6b9ce519f03b62029fc61be085e6043ea",
+   "runtime_bytes": 4295,
+   "code_sha256_16": "32be302e20220a5e",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x78e111f6 address,bytes",
+    "0x948f5076 address",
+    "0x9c52a7f1 address",
+    "0xa90e8731 bytes,bytes",
+    "0xbf353dbb address"
+   ],
+   "note": "2020-01-18, same ABI as 0xa57; the DODO-return USDT passed through it (tx 0x6e743db0..); deployer 0x8641df2d sent it ETH 531 times."
+  },
+  {
+   "address": "0x0a051c99a3b05533c07e9ad5c11a0ec7e0f9f326",
+   "role": "other",
+   "created": "2020-05-19",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x28fecdd319b9e024f5f2d7436da4ef99460fdba92399c20dcaa2ad560522b658",
+   "runtime_bytes": 4309,
+   "code_sha256_16": "6bdabb7f03bea900",
+   "selectors": [
+    "0x01a12fd3 address",
+    "0x26782247 ",
+    "0x27a099d8 ",
+    "0x3ccdbb28 address,uint256,address",
+    "0x408ee7fe address",
+    "0x5463a2e4 address",
+    "0x5c53ec59 address[],uint256[]",
+    "0x75829def address",
+    "0x77f50f97 ",
+    "0x7acc8678 address",
+    "0x7c423f54 ",
+    "0x9870d7fe address",
+    "0xa58092b7 address,address",
+    "0xac8a584a address",
+    "0xc57fbf90 address",
+    "0xce56c454 uint256,address",
+    "0xf5db370f uint256[],uint256[]",
+    "0xf851a440 "
+   ],
+   "note": "2020-05-19, different 18-selector ABI (token/approval helper?)."
+  },
+  {
+   "address": "0x031014f655798f56cf1f9bb4dbd6c2f39a76a46e",
+   "role": "other",
+   "created": "2021-03-27",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x48ed1b3052fc725aaf4c61822f23026845f240eca97ed6f93d8978c690cbae84",
+   "runtime_bytes": 2980,
+   "code_sha256_16": "29d58a5d74637eda",
+   "selectors": [
+    "0x07388e83 address,uint256,uint256,uint256[]"
+   ],
+   "note": "2021-03-27, single function 0x07388e83(address,uint256,uint256,uint256[])."
+  },
+  {
+   "address": "0x4cb18386e5d1f34dc6eea834bf3534a970a3f8e7",
+   "role": "proxy (2022)",
+   "created": "2022-02-26",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0xd31c4c86fc33c097737b885091c997b9080182fee2a830d77c6e165272adadd8",
+   "runtime_bytes": 3645,
+   "code_sha256_16": "b2122f037bdba606",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x78e111f6 address,bytes",
+    "0x948f5076 address",
+    "0x97645e37 address[]",
+    "0x9c52a7f1 address",
+    "0xa90e8731 bytes,bytes",
+    "0xbf353dbb address",
+    "0xc9892a5f address[]",
+    "0xfa461e33 uint256,uint256,uint256,uint256,uint256"
+   ],
+   "note": "2022-02-26, ABI = a57 family + extras (12 selectors); driven by EOA 0x26bce6ec 32,684 times."
+  },
+  {
+   "address": "0x95a64fc052fd875a19f9cebbce0aee1faa15bf9a",
+   "role": "proxy factory (2022)",
+   "created": "2022-06-24",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": null,
+   "creation_tx": "0x966ebd02844185bd83cfab450a98bb958c8f2058088696fa5f9e7edd58ddbe78",
+   "runtime_bytes": 2083,
+   "code_sha256_16": "b88a20347f271cb1",
+   "selectors": [
+    "0x2438628c address",
+    "0x61ff715f uint256,bytes",
+    "0x65fae35e address",
+    "0x9c52a7f1 address",
+    "0xbf353dbb address"
+   ],
+   "note": "2022-06-24, 2,083 B, 0x61ff715f(uint256,bytes) + wards; created 0xa69babef."
+  },
+  {
+   "address": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+   "role": "main proxy 2022+ (Earning.Farm bot)",
+   "created": "2022-08-15",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": "0x95a64fc052fd875a19f9cebbce0aee1faa15bf9a",
+   "creation_tx": "0x4d373b2c9b0e9a036c6ffd94b7f28bfe7173e05af64db93d203fef7c442b1eb3",
+   "runtime_bytes": 11793,
+   "code_sha256_16": "c3a11f4273321c22",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x1f6a1eb9 bytes,bytes",
+    "0x60c7d295 ",
+    "0x65fae35e address",
+    "0x78e111f6 address,bytes",
+    "0x948f5076 address",
+    "0x97645e37 address[]",
+    "0x9c52a7f1 address",
+    "0xa90e8731 bytes,bytes",
+    "0xbf353dbb address",
+    "0xc9892a5f address[]",
+    "0xfa461e33 uint256,uint256,uint256,uint256,uint256"
+   ],
+   "note": "ABI superset of 0xa57bd001 (adds batch rely/deny 0x97645e37/0xc9892a5f and 0xfa461e33 callback); 11,793 B. All of the 0xa57 fleet moved here from 2022-08-22."
+  },
+  {
+   "address": "0x3a518964ff40ee733d30749a213d2e5c9ffb2b8c",
+   "role": "executor used by Cheetah 2021",
+   "created": "2021-02-16",
+   "creator": "0x56178a0d5f301baf6cf3e1cd53d9863437345bf9",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6",
+   "creation_tx": "0x8e2a8973b3e80f05f28f5e995f512550040483b3761ed033e893cb099e6a0bab",
+   "runtime_bytes": 4265,
+   "code_sha256_16": "607c04644146cb0b",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x80d6c5a1 (uint96,address,bytes)[],(address,address,uint256,uint256,uint256,uint256,uint256)[]",
+    "0xec556889 "
+   ],
+   "note": "Created 2021-02-16 by 0x56178a0d via factory 0xf3c9d00c. Interface 0x1cff79cd + 0x80d6c5a1 batch-call + 0xec556889. Received the stolen USDT in DODO tx 0x75d4765d and forwarded it to 0x56178a0d."
+  },
+  {
+   "address": "0x0e113904cb1d53cabb324927dffae2f8f6705111",
+   "role": "EF helper 2022",
+   "created": "2022-08-22",
+   "creator": "0x56178a0d5f301baf6cf3e1cd53d9863437345bf9",
+   "factory": "0x11fb858ee4bf594857483bcf86eb825aef1cbf91",
+   "creation_tx": "0x8f00ddca27d318b6f0323eaaf901f25c934b5f03e131c40a5523ee47f349cd29",
+   "runtime_bytes": 4382,
+   "code_sha256_16": "52a00a74b1785b31",
+   "selectors": [
+    "0x1cff79cd address,bytes",
+    "0x80d6c5a1 (uint96,address,bytes)[],(address,address,uint256,uint256,uint256,uint256,uint256)[]",
+    "0xec556889 "
+   ],
+   "note": "Created 2022-08-22 by 0x56178a0d via factory (0x11fb858e..). Same interface as 0x3a518964 (0x1cff79cd, 0x80d6c5a1, 0xec556889) - the vault caller in the Earning.Farm tx."
+  }
+ ],
+ "eoas": [
+  {
+   "address": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "role": "HUB deployer / root ward",
+   "note": "Deployed the proxies, the executor factory, 0x95a64fc0 -> 0xa69babef; relied 79 wards on a57bd001. 30.9k txs, mostly 2019-2020.",
+   "txs": 30901,
+   "first_utc": "2019-01-02",
+   "last_utc": "2025-08-29",
+   "by_year": {
+    "2019": 11799,
+    "2020": 18858,
+    "2021": 190,
+    "2022": 19,
+    "2023": 32,
+    "2025": 3
+   },
+   "top_targets": [
+    [
+     "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+     6060
+    ],
+    [
+     "0x7a3370075a54b187d7bd5dcebf0ff2b5552d4f7d",
+     4632
+    ],
+    [
+     "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
+     3608
+    ],
+    [
+     "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     2701
+    ]
+   ],
+   "eth_funders": [
+    [
+     "0x267be1c1d684f78cb4f6a176c4911b741e4ffdc0",
+     19,
+     14090.945
+    ],
+    [
+     "0x56178a0d5f301baf6cf3e1cd53d9863437345bf9",
+     17,
+     4334.6
+    ],
+    [
+     "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+     9,
+     3091.5
+    ],
+    [
+     "0xc2f61a6eeec48d686901d325cde9233b81c793f3",
+     3,
+     3000.0
+    ],
+    [
+     "0x72e3139c285fafe4bd2fc98c9a547ddbbdbce0d3",
+     1,
+     2000.0
+    ],
+    [
+     "0xc3c4a7437e48e2b4b0487067f4257a33ae65bf3b",
+     1,
+     1800.0
+    ]
+   ],
+   "eth_out_to": [
+    [
+     "0xfa103c21ea2df71dfb92b0652f8b1d795e51cdef",
+     531,
+     429060.084
+    ],
+    [
+     "0x7a3370075a54b187d7bd5dcebf0ff2b5552d4f7d",
+     2159,
+     234184.138
+    ],
+    [
+     "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+     411,
+     228457.064
+    ],
+    [
+     "0xd850d5a96c4bf296ee4368349dafc15bfc45b88b",
+     46,
+     17667.588
+    ],
+    [
+     "0xc2f61a6eeec48d686901d325cde9233b81c793f3",
+     15,
+     11032.494
+    ]
+   ]
+  },
+  {
+   "address": "0x56178a0d5f301baf6cf3e1cd53d9863437345bf9",
+   "role": "HUB capital/owner wallet",
+   "note": "Receives Cheetah USDT (DODO 2021), lent 14,707 WETH to EF helper (2022), deployed executors 0x3a518964 / 0x0e113904, funds 8641df2d. Itself an arb EOA with 185k txs.",
+   "txs": 185586,
+   "first_utc": "2019-01-02",
+   "last_utc": "2026-08-07",
+   "by_year": {
+    "2019": 109745,
+    "2020": 37834,
+    "2021": 16590,
+    "2022": 18278,
+    "2023": 3111,
+    "2024": 3,
+    "2025": 19,
+    "2026": 6
+   },
+   "top_targets": [
+    [
+     "0x4f833a24e1f95d70f028921e27040ca56e09ab0b",
+     59859
+    ],
+    [
+     "0x080bf510fcbf18b91105470639e9561022937712",
+     55017
+    ],
+    [
+     "0x61935cbdd02287b511119ddb11aeb42f1593b7ef",
+     27200
+    ],
+    [
+     "0x39f024d621367c044bace2bf0fb15fb3612ecb92",
+     12000
+    ]
+   ],
+   "eth_funders": [
+    [
+     "0xc2f61a6eeec48d686901d325cde9233b81c793f3",
+     7,
+     9004.0
+    ],
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     51,
+     1982.932
+    ],
+    [
+     "0x73952f60df25c4389e6afcfa4ebbdfa093e54b73",
+     1,
+     19.158
+    ],
+    [
+     "0xab1d653160cc02fb285dfc4cd3f25aaef643477f",
+     1,
+     7.998
+    ],
+    [
+     "0xb3d069698ee89641c0b564f335addca17acc6a0b",
+     1,
+     7.998
+    ],
+    [
+     "0xc6a64a43f9531c499688cb7575af45266660b82a",
+     1,
+     6.809
+    ]
+   ],
+   "eth_out_to": [
+    [
+     "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+     5647,
+     675639.699
+    ],
+    [
+     "0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5",
+     6134,
+     421980.92
+    ],
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     17,
+     4334.6
+    ],
+    [
+     "0xfa103c21ea2df71dfb92b0652f8b1d795e51cdef",
+     56,
+     4140.717
+    ],
+    [
+     "0x2a0c0dbecc7e4d658f48e01e3fa353f44050c208",
+     99,
+     3019.859
+    ]
+   ]
+  },
+  {
+   "address": "0x97c54b989236aa60d310b70a09578730bfe58294",
+   "role": "ward manager",
+   "note": "Relied 200 wards on a57bd001; deployed executors; funded 0x26bce6ec first (2019-11-10).",
+   "txs": 814,
+   "first_utc": "2019-09-18",
+   "last_utc": "2023-03-10",
+   "by_year": {
+    "2019": 504,
+    "2020": 41,
+    "2021": 177,
+    "2022": 85,
+    "2023": 7
+   },
+   "top_targets": [
+    [
+     "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     408
+    ],
+    [
+     "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6",
+     89
+    ],
+    [
+     "0x97c54b989236aa60d310b70a09578730bfe58294",
+     33
+    ],
+    [
+     "0x9799b475dec92bd99bbdd943013325c36157f383",
+     22
+    ]
+   ],
+   "eth_funders": [
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     3,
+     50.801
+    ],
+    [
+     "0x9787ffbd8ac920317ba43333913419f14489aa5f",
+     4,
+     9.438
+    ]
+   ],
+   "eth_out_to": [
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     1,
+     7.4
+    ],
+    [
+     "0x56178a0d5f301baf6cf3e1cd53d9863437345bf9",
+     1,
+     2.469
+    ],
+    [
+     "0x002010e1aacc7fba0ef5c5114a89b0749e57ec90",
+     3,
+     0.343
+    ],
+    [
+     "0xa865a6977b609c22da739dfb1c35de476be29a37",
+     3,
+     0.318
+    ],
+    [
+     "0x4e398cb73b2e81485d4d9fb5ae1a767b839e368d",
+     3,
+     0.31
+    ]
+   ]
+  },
+  {
+   "address": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "role": "first ward (2019-03-27)",
+   "note": "First caller of a57bd001 (5,419 txs 2019-03..07); deployed early executors; first funded the Cheetah EOA 0x8a14ce0f on 2020-05-12."
+  },
+  {
+   "address": "0x8a14ce0fecbefdcc612f340be3324655718ce1c1",
+   "role": "DODO 2021 \"Cheetah\" EOA",
+   "note": "First funded by 0xc6093fd9 (2020-05-12). 2,320 txs to a57bd001, then 63,041 to a69babef (through 2025-12-21).",
+   "txs": 67134,
+   "first_utc": "2020-05-12",
+   "last_utc": "2025-12-21",
+   "by_year": {
+    "2020": 642,
+    "2021": 1179,
+    "2022": 4085,
+    "2023": 32,
+    "2024": 127,
+    "2025": 61069
+   },
+   "top_targets": [
+    [
+     "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     63041
+    ],
+    [
+     "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     2320
+    ],
+    [
+     "0x8a14ce0fecbefdcc612f340be3324655718ce1c1",
+     1727
+    ]
+   ],
+   "eth_funders": [
+    [
+     "0x9787ffbd8ac920317ba43333913419f14489aa5f",
+     38,
+     402.65
+    ],
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     2,
+     0.53
+    ],
+    [
+     "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+     1,
+     0.4
+    ],
+    [
+     "0xce60034266da1f53aa2a10580bf07e60114dedf5",
+     5,
+     0.0
+    ]
+   ],
+   "eth_out_to": [
+    [
+     "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     62464,
+     4.188
+    ],
+    [
+     "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     886,
+     0.0
+    ]
+   ]
+  },
+  {
+   "address": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+   "role": "Earning.Farm 2022 EOA",
+   "note": "First funded by 0x97c54b98 (2019-11-10). 60,055 txs to a57bd001 (2019-11..2023-03-13), 173,954 to a69babef (2022-08-22..2025-12-24), 32,684 to 0x4cb18386.",
+   "txs": 299729,
+   "first_utc": "2019-11-10",
+   "last_utc": "2025-12-24",
+   "by_year": {
+    "2019": 94,
+    "2020": 1774,
+    "2021": 23222,
+    "2022": 120768,
+    "2023": 39742,
+    "2024": 64258,
+    "2025": 49871
+   },
+   "top_targets": [
+    [
+     "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     173954
+    ],
+    [
+     "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     60055
+    ],
+    [
+     "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+     32793
+    ],
+    [
+     "0x4cb18386e5d1f34dc6eea834bf3534a970a3f8e7",
+     32684
+    ]
+   ],
+   "eth_funders": [
+    [
+     "0x9787ffbd8ac920317ba43333913419f14489aa5f",
+     145,
+     1607.984
+    ],
+    [
+     "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+     34,
+     41.896
+    ],
+    [
+     "0x816e4a1589e363720c15c54dfd2efd16f6377070",
+     35,
+     17.078
+    ],
+    [
+     "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+     4,
+     16.062
+    ],
+    [
+     "0x97c54b989236aa60d310b70a09578730bfe58294",
+     1,
+     0.2
+    ]
+   ],
+   "eth_out_to": [
+    [
+     "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     166354,
+     22.847
+    ],
+    [
+     "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     34761,
+     0.0
+    ],
+    [
+     "0x4cb18386e5d1f34dc6eea834bf3534a970a3f8e7",
+     25541,
+     0.0
+    ]
+   ]
+  },
+  {
+   "address": "0x9787ffbd8ac920317ba43333913419f14489aa5f",
+   "role": "recurring funder",
+   "note": "Ward since 2019-08; funds both 0x8a14ce0f (38x, 402 ETH) and 0x26bce6ec (145x, 1,608 ETH); still topping up a69babef in 2026-07."
+  },
+  {
+   "address": "0x267be1c1d684f78cb4f6a176c4911b741e4ffdc0",
+   "role": "upstream capital funder",
+   "note": "Sent 8641df2d 14,091 ETH over 19 txs."
+  }
+ ],
+ "proxy_0xa57bd001": {
+  "created": "2019-03-26T block 7445835 by 0x8641df2d",
+  "first_call": "2019-03-27",
+  "last_tx": {
+   "time": "2026-05-07T11:14:11Z",
+   "tx": "0x5f2e65f4e735c82d0a3186c1eb55e16461e1b84f7886ab5eec39c851118d907c",
+   "note": "plain ETH transfer; last execute() ~2023-03"
+  },
+  "complete_scan_through_block": 10591282,
+  "txs_in_complete_part": 459495,
+  "calls_per_month_complete_part": {
+   "2019-03": 69,
+   "2019-04": 743,
+   "2019-05": 3025,
+   "2019-06": 2621,
+   "2019-07": 2687,
+   "2019-08": 14450,
+   "2019-09": 17878,
+   "2019-10": 14783,
+   "2019-11": 30353,
+   "2019-12": 30088,
+   "2020-01": 47046,
+   "2020-02": 69814,
+   "2020-03": 85637,
+   "2020-04": 58435,
+   "2020-05": 42274,
+   "2020-06": 21766,
+   "2020-07": 16176,
+   "2020-08": 1650
+  },
+  "distinct_callers_complete_part": 568,
+  "sample_pages": [
+   {
+    "start_block": 9710085,
+    "date": "2020-03-20",
+    "txs": 1000,
+    "span_days": 0.164,
+    "est_txs_per_day": 6082,
+    "distinct_callers": 213,
+    "top_execute_target": [
+     [
+      "0xd3285238634137be3050be07cc97cb591725d37f",
+      477
+     ],
+     [
+      "0xba79abfe63e5697e8741945b3391c5dbf309f19a",
+      310
+     ]
+    ],
+    "failed": 15
+   },
+   {
+    "start_block": 9960096,
+    "date": "2020-04-28",
+    "txs": 1000,
+    "span_days": 0.611,
+    "est_txs_per_day": 1636,
+    "distinct_callers": 150,
+    "top_execute_target": [
+     [
+      "0x50b881ceafece2034b899205fbbd7bafc0c0d230",
+      749
+     ],
+     [
+      "0xba79abfe63e5697e8741945b3391c5dbf309f19a",
+      251
+     ]
+    ],
+    "failed": 19
+   },
+   {
+    "start_block": 10210223,
+    "date": "2020-06-06",
+    "txs": 1000,
+    "span_days": 2.453,
+    "est_txs_per_day": 408,
+    "distinct_callers": 70,
+    "top_execute_target": [
+     [
+      "0xba79abfe63e5697e8741945b3391c5dbf309f19a",
+      737
+     ],
+     [
+      "0x50b881ceafece2034b899205fbbd7bafc0c0d230",
+      263
+     ]
+    ],
+    "failed": 4
+   },
+   {
+    "start_block": 10460135,
+    "date": "2020-07-14",
+    "txs": 1000,
+    "span_days": 3.607,
+    "est_txs_per_day": 277,
+    "distinct_callers": 91,
+    "top_execute_target": [
+     [
+      "0xba79abfe63e5697e8741945b3391c5dbf309f19a",
+      828
+     ],
+     [
+      "0x18e6d4dbaabb8ab05209f0144b2889eff4608e53",
+      172
+     ]
+    ],
+    "failed": 6
+   },
+   {
+    "start_block": 10710086,
+    "date": "2020-08-22",
+    "txs": 1000,
+    "span_days": 1.217,
+    "est_txs_per_day": 822,
+    "distinct_callers": 130,
+    "top_execute_target": [
+     [
+      "0x6bfa0368d7b396caf51d226c5e3bbc57e7f83b47",
+      821
+     ],
+     [
+      "0xfc0872208b9d3322575120bd88f57a67c93ea0e9",
+      80
+     ]
+    ],
+    "failed": 10
+   },
+   {
+    "start_block": 10960093,
+    "date": "2020-09-29",
+    "txs": 1000,
+    "span_days": 1.512,
+    "est_txs_per_day": 661,
+    "distinct_callers": 166,
+    "top_execute_target": [
+     [
+      "0x728258295b1ccbc61d72c4e86c5b44345ac790ce",
+      941
+     ],
+     [
+      "0xaecd99c4b73a06f22925212cc2c02288e3d1922d",
+      47
+     ]
+    ],
+    "failed": 30
+   },
+   {
+    "start_block": 11210085,
+    "date": "2020-11-07",
+    "txs": 1000,
+    "span_days": 0.193,
+    "est_txs_per_day": 5184,
+    "distinct_callers": 108,
+    "top_execute_target": [
+     [
+      "0xb8764906a51d7db201d42b140f8c95fe8c0d2da2",
+      935
+     ],
+     [
+      "0xa7dab0af04559f73ccd2560d9ba3cfff281ce1d3",
+      56
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 11460101,
+    "date": "2020-12-15",
+    "txs": 1000,
+    "span_days": 0.722,
+    "est_txs_per_day": 1386,
+    "distinct_callers": 63,
+    "top_execute_target": [
+     [
+      "0xb8764906a51d7db201d42b140f8c95fe8c0d2da2",
+      983
+     ],
+     [
+      "0x87e3fdc9ccf9ee2e6ca9215a9e836d857fbdc704",
+      12
+     ]
+    ],
+    "failed": 2
+   },
+   {
+    "start_block": 11710100,
+    "date": "2021-01-23",
+    "txs": 1000,
+    "span_days": 0.402,
+    "est_txs_per_day": 2485,
+    "distinct_callers": 76,
+    "top_execute_target": [
+     [
+      "0xb8764906a51d7db201d42b140f8c95fe8c0d2da2",
+      910
+     ],
+     [
+      "0xa21789b1b2422590a944f5a31cb5c14fa32a9bd1",
+      90
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 11960090,
+    "date": "2021-03-02",
+    "txs": 1000,
+    "span_days": 0.544,
+    "est_txs_per_day": 1840,
+    "distinct_callers": 85,
+    "top_execute_target": [
+     [
+      "0xd91ba38504a62f9c6a57cdf2ba91298a3694b231",
+      870
+     ],
+     [
+      "0xa21789b1b2422590a944f5a31cb5c14fa32a9bd1",
+      130
+     ]
+    ],
+    "failed": 1
+   },
+   {
+    "start_block": 12210087,
+    "date": "2021-04-10",
+    "txs": 1000,
+    "span_days": 0.391,
+    "est_txs_per_day": 2557,
+    "distinct_callers": 84,
+    "top_execute_target": [
+     [
+      "0x8737513acbc9eaf4dc2d0f42667e7fb53f459601",
+      937
+     ],
+     [
+      "0x461744ef13370b90b98af8448af2d7eecbc53617",
+      59
+     ]
+    ],
+    "failed": 1
+   },
+   {
+    "start_block": 12460085,
+    "date": "2021-05-18",
+    "txs": 1000,
+    "span_days": 0.106,
+    "est_txs_per_day": 9392,
+    "distinct_callers": 84,
+    "top_execute_target": [
+     [
+      "0x204b4d8bf3c4c45c9058cc7515774f40290e48a5",
+      842
+     ],
+     [
+      "0x461744ef13370b90b98af8448af2d7eecbc53617",
+      77
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 12710085,
+    "date": "2021-06-26",
+    "txs": 1000,
+    "span_days": 0.039,
+    "est_txs_per_day": 25661,
+    "distinct_callers": 162,
+    "top_execute_target": [
+     [
+      "0x957bc1d2ef326c03dc991418ae7afb4985e7fab2",
+      471
+     ],
+     [
+      "0xf130c3bb8c55ef4290e352b66a95bb52623f760e",
+      254
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 12960085,
+    "date": "2021-08-04",
+    "txs": 1000,
+    "span_days": 0.145,
+    "est_txs_per_day": 6894,
+    "distinct_callers": 112,
+    "top_execute_target": [
+     [
+      "0x957bc1d2ef326c03dc991418ae7afb4985e7fab2",
+      495
+     ],
+     [
+      "0xf130c3bb8c55ef4290e352b66a95bb52623f760e",
+      160
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 13210089,
+    "date": "2021-09-12",
+    "txs": 1000,
+    "span_days": 0.261,
+    "est_txs_per_day": 3832,
+    "distinct_callers": 98,
+    "top_execute_target": [
+     [
+      "0xaa2ec16d77cfc057fb9c516282fef9da9de1e987",
+      385
+     ],
+     [
+      "0xf424018c3d4473e014c1def44171772059f2d720",
+      355
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 13460089,
+    "date": "2021-10-21",
+    "txs": 1000,
+    "span_days": 0.129,
+    "est_txs_per_day": 7758,
+    "distinct_callers": 154,
+    "top_execute_target": [
+     [
+      "0xaa2ec16d77cfc057fb9c516282fef9da9de1e987",
+      409
+     ],
+     [
+      "0xf424018c3d4473e014c1def44171772059f2d720",
+      386
+     ]
+    ],
+    "failed": 10
+   },
+   {
+    "start_block": 13710100,
+    "date": "2021-11-29",
+    "txs": 1000,
+    "span_days": 0.41,
+    "est_txs_per_day": 2441,
+    "distinct_callers": 80,
+    "top_execute_target": [
+     [
+      "0x92c4ab9881fc5f506fdf174c20db7d3299804c98",
+      309
+     ],
+     [
+      "0xf424018c3d4473e014c1def44171772059f2d720",
+      229
+     ]
+    ],
+    "failed": 15
+   },
+   {
+    "start_block": 13960087,
+    "date": "2022-01-07",
+    "txs": 1000,
+    "span_days": 0.532,
+    "est_txs_per_day": 1879,
+    "distinct_callers": 84,
+    "top_execute_target": [
+     [
+      "0x7edb18abd07c3560d067e9cba09c6e1c1e3e2777",
+      438
+     ],
+     [
+      "0x92c4ab9881fc5f506fdf174c20db7d3299804c98",
+      272
+     ]
+    ],
+    "failed": 14
+   },
+   {
+    "start_block": 14210098,
+    "date": "2022-02-15",
+    "txs": 1000,
+    "span_days": 0.511,
+    "est_txs_per_day": 1958,
+    "distinct_callers": 20,
+    "top_execute_target": [
+     [
+      "0x97a02cb4da1a96aa2b2c67515d65cada964e14a2",
+      383
+     ],
+     [
+      "0x1de9fb358eb768fc81c7f27f4c6c8c5df2de0ad7",
+      295
+     ]
+    ],
+    "failed": 123
+   },
+   {
+    "start_block": 14460087,
+    "date": "2022-03-26",
+    "txs": 1000,
+    "span_days": 0.536,
+    "est_txs_per_day": 1866,
+    "distinct_callers": 26,
+    "top_execute_target": [
+     [
+      "0x1de9fb358eb768fc81c7f27f4c6c8c5df2de0ad7",
+      832
+     ],
+     [
+      "0xacd2d15fbd497d130bc784ca7157c668f32fe4ad",
+      75
+     ]
+    ],
+    "failed": 0
+   },
+   {
+    "start_block": 14710085,
+    "date": "2022-05-04",
+    "txs": 1000,
+    "span_days": 0.406,
+    "est_txs_per_day": 2462,
+    "distinct_callers": 57,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      636
+     ],
+     [
+      "0x9abb44a332fe94b6d91582c002115818dc97d7fd",
+      121
+     ]
+    ],
+    "failed": 71
+   },
+   {
+    "start_block": 14960086,
+    "date": "2022-06-14",
+    "txs": 1000,
+    "span_days": 0.136,
+    "est_txs_per_day": 7358,
+    "distinct_callers": 87,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      616
+     ],
+     [
+      "0x9abb44a332fe94b6d91582c002115818dc97d7fd",
+      127
+     ]
+    ],
+    "failed": 123
+   },
+   {
+    "start_block": 15210085,
+    "date": "2022-07-25",
+    "txs": 1000,
+    "span_days": 0.153,
+    "est_txs_per_day": 6540,
+    "distinct_callers": 51,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      647
+     ],
+     [
+      "0xe55d3bd60f030da50253dce6e215b6bfd65e8643",
+      134
+     ]
+    ],
+    "failed": 133
+   },
+   {
+    "start_block": 15460089,
+    "date": "2022-09-02",
+    "txs": 1000,
+    "span_days": 0.508,
+    "est_txs_per_day": 1968,
+    "distinct_callers": 68,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      573
+     ],
+     [
+      "0x9cebfb6449fd8afa9eb6568f7d74bb23a79c4bd9",
+      100
+     ]
+    ],
+    "failed": 149
+   },
+   {
+    "start_block": 15710087,
+    "date": "2022-10-09",
+    "txs": 1000,
+    "span_days": 1.382,
+    "est_txs_per_day": 724,
+    "distinct_callers": 44,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      516
+     ],
+     [
+      "0x7721a4a6fe4f1a133d4e3845ee7a5b60f5ac499c",
+      170
+     ]
+    ],
+    "failed": 178
+   },
+   {
+    "start_block": 15960085,
+    "date": "2022-11-13",
+    "txs": 1000,
+    "span_days": 0.496,
+    "est_txs_per_day": 2017,
+    "distinct_callers": 63,
+    "top_execute_target": [
+     [
+      "0xa034c1f0246d728cb0f2376d5968ca53d6c8d30f",
+      321
+     ],
+     [
+      "0x9cebfb6449fd8afa9eb6568f7d74bb23a79c4bd9",
+      244
+     ]
+    ],
+    "failed": 113
+   },
+   {
+    "start_block": 16210101,
+    "date": "2022-12-18",
+    "txs": 1000,
+    "span_days": 0.351,
+    "est_txs_per_day": 2848,
+    "distinct_callers": 43,
+    "top_execute_target": [
+     [
+      "0x4cf47f6a7a8a85a595d2eba7a5965df85f17b608",
+      663
+     ],
+     [
+      "0x37520f2236e9a1386df0530367b85a75c5b4c3f0",
+      141
+     ]
+    ],
+    "failed": 26
+   },
+   {
+    "start_block": 16460096,
+    "date": "2023-01-22",
+    "txs": 1000,
+    "span_days": 0.429,
+    "est_txs_per_day": 2332,
+    "distinct_callers": 38,
+    "top_execute_target": [
+     [
+      "0x4cf47f6a7a8a85a595d2eba7a5965df85f17b608",
+      608
+     ],
+     [
+      "0x37deb98d7fcac41e581d4b3c8f23d35b1f024746",
+      147
+     ]
+    ],
+    "failed": 2
+   },
+   {
+    "start_block": 16710144,
+    "date": "2023-02-26",
+    "txs": 1000,
+    "span_days": 2.404,
+    "est_txs_per_day": 416,
+    "distinct_callers": 40,
+    "top_execute_target": [
+     [
+      "0x4cf47f6a7a8a85a595d2eba7a5965df85f17b608",
+      463
+     ],
+     [
+      "0x37520f2236e9a1386df0530367b85a75c5b4c3f0",
+      382
+     ]
+    ],
+    "failed": 9
+   },
+   {
+    "start_block": 18128117,
+    "date": "2023-09-13",
+    "txs": 504,
+    "span_days": 966.846,
+    "est_txs_per_day": 1,
+    "distinct_callers": 5,
+    "top_execute_target": [],
+    "failed": 1
+   }
+  ],
+  "callers_complete_part_top": [
+   [
+    "0xf8c972d9bdb49a8979f99188d6f1968fc20531c1",
+    40825,
+    "2019-11-19",
+    "2020-07-23",
+    158
+   ],
+   [
+    "0xd33c0674da79517322e601326cfee113e8e0629d",
+    40822,
+    "2019-11-19",
+    "2020-07-23",
+    169
+   ],
+   [
+    "0x662b1cef7995f2a0c21a57e7b94c72507f859f52",
+    16227,
+    "2019-08-15",
+    "2019-12-23",
+    15
+   ],
+   [
+    "0x080d92b3422db6a1a4ebe7e20ed55469edbe6f98",
+    16220,
+    "2019-08-15",
+    "2019-12-23",
+    36
+   ],
+   [
+    "0x807284e9e343b5ff2137cba48d28ee7e1c45bf60",
+    5916,
+    "2019-06-03",
+    "2019-09-26",
+    402
+   ],
+   [
+    "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+    5419,
+    "2019-03-27",
+    "2019-07-29",
+    0
+   ],
+   [
+    "0x5da1cece5b51b6259fbba37bb3fcbcc278b20100",
+    3174,
+    "2019-11-19",
+    "2020-08-03",
+    45
+   ],
+   [
+    "0x94c19d2716081d7d669e49770bc662f857eaeb14",
+    3172,
+    "2019-11-19",
+    "2020-08-03",
+    50
+   ],
+   [
+    "0x871b1f4feebfd5a851c0def9494002f0920ce963",
+    3171,
+    "2019-11-19",
+    "2020-08-03",
+    55
+   ],
+   [
+    "0x53fa7bcf86f19332a27f1d02fc9a823bb18f2d7c",
+    3170,
+    "2019-11-19",
+    "2020-08-03",
+    50
+   ],
+   [
+    "0x643bff8b097c6bb6ed0eba21111331f466276203",
+    3169,
+    "2019-11-19",
+    "2020-08-03",
+    63
+   ],
+   [
+    "0xd38639e7c79f69c9ed6bb42b846097fe5285bc0b",
+    3169,
+    "2019-11-19",
+    "2020-08-03",
+    42
+   ],
+   [
+    "0x89060e4cb5fd8180fa8c85009d34915c1817ae3b",
+    3169,
+    "2019-11-19",
+    "2020-08-03",
+    47
+   ],
+   [
+    "0x3e0a32eeb0aec4fd7b907b623812c29282b9568b",
+    3166,
+    "2019-11-19",
+    "2020-08-03",
+    58
+   ],
+   [
+    "0xa51bb43675d774f928591d7174aa9ed84c915b56",
+    3165,
+    "2019-11-19",
+    "2020-08-03",
+    30
+   ],
+   [
+    "0xbb871fe3409d09c3aced982638f141ca09f9786d",
+    3163,
+    "2019-11-19",
+    "2020-08-03",
+    57
+   ],
+   [
+    "0xc9a7f4c3b95d39fc5b2e8ca10cde6f0154fac5fb",
+    3162,
+    "2019-11-19",
+    "2020-08-03",
+    60
+   ],
+   [
+    "0x4eddaacc82c85864c5c72aa6863ed9c46db35c03",
+    3162,
+    "2019-11-19",
+    "2020-08-03",
+    50
+   ],
+   [
+    "0x60f6a7ab3e7267ebec46d7f665e5ab5a825ea2e7",
+    3160,
+    "2019-11-19",
+    "2020-08-03",
+    70
+   ],
+   [
+    "0x1128bbdfd335422c7b54565ed6a3d0c4be235caa",
+    3158,
+    "2019-11-19",
+    "2020-08-03",
+    57
+   ],
+   [
+    "0x55f97b0c59c282e1143a1c1cd3b51de1bf15cf05",
+    3158,
+    "2019-11-19",
+    "2020-08-03",
+    44
+   ],
+   [
+    "0xed07f5925cf0e9c4c6a80659644fe5e716f7b1af",
+    3158,
+    "2019-11-19",
+    "2020-08-04",
+    83
+   ],
+   [
+    "0xce6d19aee677b10f387a81cab7f0c86a26bcb732",
+    3156,
+    "2019-11-19",
+    "2020-08-03",
+    73
+   ],
+   [
+    "0x549d7ffc1b602191f42fde8d9ead445fb3d756f2",
+    3156,
+    "2019-11-19",
+    "2020-08-03",
+    56
+   ],
+   [
+    "0xb5d398b92e0a3f676d2610f0d88e9e9aab5098d6",
+    3155,
+    "2019-11-19",
+    "2020-08-03",
+    42
+   ],
+   [
+    "0xb21cb508c5665e5a42bc96648afd8047353c9009",
+    3154,
+    "2019-11-19",
+    "2020-08-03",
+    66
+   ],
+   [
+    "0xbda0da02d3cbe02fd0249bf4f7b08c5a2084c8c9",
+    3154,
+    "2019-11-19",
+    "2020-08-03",
+    50
+   ],
+   [
+    "0x872a77b9e4a2f4503db5b7bc01e0fb573038406c",
+    3153,
+    "2019-11-19",
+    "2020-08-04",
+    76
+   ],
+   [
+    "0x8a7754216aca8f67a018dcf63e8b5d57686eda7e",
+    3152,
+    "2019-11-19",
+    "2020-08-03",
+    51
+   ],
+   [
+    "0x391d7f01a206e37758f61fbba6f63ef2f4980d26",
+    3151,
+    "2019-11-19",
+    "2020-08-03",
+    58
+   ],
+   [
+    "0x2d84cd9f57f148f2bf1ce5d52e6f1fb57877ce2d",
+    3148,
+    "2019-11-19",
+    "2020-08-04",
+    53
+   ],
+   [
+    "0xe3b1b8e7af5fbc104ea6d15ed37b7607056b06b3",
+    3146,
+    "2019-11-19",
+    "2020-08-03",
+    54
+   ],
+   [
+    "0x0529922239eeb99937a7f995c89bf7786962a149",
+    3141,
+    "2019-11-19",
+    "2020-08-03",
+    48
+   ],
+   [
+    "0xdc20343703b3f68a291b09ca4e128c4b4882abfc",
+    3132,
+    "2019-11-19",
+    "2020-08-03",
+    62
+   ],
+   [
+    "0x80a70c00a1a77438bc5fbaea841d474582bc0848",
+    1744,
+    "2019-11-13",
+    "2020-06-25",
+    41
+   ],
+   [
+    "0x2a882b1b801c65cc5de6c0ad306d12ae04d4f2f8",
+    1657,
+    "2019-11-11",
+    "2020-07-25",
+    28
+   ],
+   [
+    "0x72aa4640c61639b8df7f135355995a75d295b9f9",
+    1400,
+    "2019-11-13",
+    "2020-07-23",
+    39
+   ],
+   [
+    "0x7f63e88c8a1c65d1a25ac02c8d37645b96f691b2",
+    1364,
+    "2019-11-11",
+    "2020-08-04",
+    44
+   ],
+   [
+    "0xd6f9f050049d34782e934e40b946be2f70184d89",
+    1357,
+    "2019-11-11",
+    "2020-08-04",
+    29
+   ],
+   [
+    "0xac221503406190103b8cb7d9393ae66d9c9af6a3",
+    1338,
+    "2019-11-11",
+    "2020-08-04",
+    43
+   ]
+  ],
+  "ward_rely_calls": {
+   "0x8641df2d": 79,
+   "0x97c54b98": 200,
+   "distinct_wards_by_2019-11": 279
+  }
+ },
+ "proxy_0xa69babef": {
+  "created": "2022-08-15 via factory 0x95a64fc0",
+  "first_call": "2022-08-22",
+  "last_execute": "2025-12-24 (0x26bce6ec)",
+  "last_tx": {
+   "time": "2026-07-30T00:15:59Z",
+   "tx": "0x0e5db9e55509245b22b46f85c3fbb48f9cc8d0ad8476645638ea821661a9caf3",
+   "note": "plain ETH top-up by 0x9787ffbd"
+  },
+  "sample_pages": [
+   {
+    "start_block": 15346875,
+    "date": "2022-08-15",
+    "txs": 1000,
+    "span_days": 7.182,
+    "distinct_callers": 46
+   },
+   {
+    "start_block": 15646000,
+    "date": "2022-09-30",
+    "txs": 1000,
+    "span_days": 0.102,
+    "distinct_callers": 75
+   },
+   {
+    "start_block": 15946003,
+    "date": "2022-11-11",
+    "txs": 1000,
+    "span_days": 0.184,
+    "distinct_callers": 55
+   },
+   {
+    "start_block": 16246012,
+    "date": "2022-12-23",
+    "txs": 1000,
+    "span_days": 0.866,
+    "distinct_callers": 54
+   },
+   {
+    "start_block": 16546001,
+    "date": "2023-02-03",
+    "txs": 1000,
+    "span_days": 0.445,
+    "distinct_callers": 37
+   },
+   {
+    "start_block": 16846000,
+    "date": "2023-03-17",
+    "txs": 1000,
+    "span_days": 0.152,
+    "distinct_callers": 44
+   },
+   {
+    "start_block": 17146027,
+    "date": "2023-04-28",
+    "txs": 1000,
+    "span_days": 1.345,
+    "distinct_callers": 18
+   },
+   {
+    "start_block": 17446003,
+    "date": "2023-06-09",
+    "txs": 1000,
+    "span_days": 0.192,
+    "distinct_callers": 74
+   },
+   {
+    "start_block": 17746003,
+    "date": "2023-07-22",
+    "txs": 1000,
+    "span_days": 0.875,
+    "distinct_callers": 47
+   },
+   {
+    "start_block": 18046007,
+    "date": "2023-09-02",
+    "txs": 1000,
+    "span_days": 0.474,
+    "distinct_callers": 15
+   },
+   {
+    "start_block": 18346000,
+    "date": "2023-10-14",
+    "txs": 1000,
+    "span_days": 0.353,
+    "distinct_callers": 13
+   },
+   {
+    "start_block": 18646004,
+    "date": "2023-11-25",
+    "txs": 1000,
+    "span_days": 0.436,
+    "distinct_callers": 24
+   },
+   {
+    "start_block": 18946004,
+    "date": "2024-01-06",
+    "txs": 1000,
+    "span_days": 0.088,
+    "distinct_callers": 75
+   },
+   {
+    "start_block": 19246003,
+    "date": "2024-02-17",
+    "txs": 1000,
+    "span_days": 0.308,
+    "distinct_callers": 35
+   },
+   {
+    "start_block": 19546000,
+    "date": "2024-03-30",
+    "txs": 1000,
+    "span_days": 0.404,
+    "distinct_callers": 38
+   },
+   {
+    "start_block": 19846002,
+    "date": "2024-05-11",
+    "txs": 1000,
+    "span_days": 0.297,
+    "distinct_callers": 51
+   },
+   {
+    "start_block": 20146002,
+    "date": "2024-06-22",
+    "txs": 1000,
+    "span_days": 0.304,
+    "distinct_callers": 30
+   },
+   {
+    "start_block": 20446000,
+    "date": "2024-08-03",
+    "txs": 1000,
+    "span_days": 0.174,
+    "distinct_callers": 50
+   },
+   {
+    "start_block": 20746002,
+    "date": "2024-09-14",
+    "txs": 1000,
+    "span_days": 0.215,
+    "distinct_callers": 39
+   },
+   {
+    "start_block": 21046002,
+    "date": "2024-10-25",
+    "txs": 1000,
+    "span_days": 0.241,
+    "distinct_callers": 61
+   },
+   {
+    "start_block": 21346000,
+    "date": "2024-12-06",
+    "txs": 1000,
+    "span_days": 0.297,
+    "distinct_callers": 50
+   },
+   {
+    "start_block": 21646000,
+    "date": "2025-01-17",
+    "txs": 1000,
+    "span_days": 0.262,
+    "distinct_callers": 105
+   },
+   {
+    "start_block": 21946000,
+    "date": "2025-02-28",
+    "txs": 1000,
+    "span_days": 0.084,
+    "distinct_callers": 166
+   },
+   {
+    "start_block": 22246001,
+    "date": "2025-04-11",
+    "txs": 1000,
+    "span_days": 0.093,
+    "distinct_callers": 147
+   },
+   {
+    "start_block": 22546003,
+    "date": "2025-05-23",
+    "txs": 1000,
+    "span_days": 0.101,
+    "distinct_callers": 126
+   },
+   {
+    "start_block": 22846010,
+    "date": "2025-07-04",
+    "txs": 1000,
+    "span_days": 0.152,
+    "distinct_callers": 159
+   },
+   {
+    "start_block": 23146001,
+    "date": "2025-08-15",
+    "txs": 1000,
+    "span_days": 0.064,
+    "distinct_callers": 149
+   },
+   {
+    "start_block": 23446007,
+    "date": "2025-09-26",
+    "txs": 1000,
+    "span_days": 0.066,
+    "distinct_callers": 137
+   },
+   {
+    "start_block": 23746000,
+    "date": "2025-11-07",
+    "txs": 1000,
+    "span_days": 0.074,
+    "distinct_callers": 138
+   },
+   {
+    "start_block": 24046004,
+    "date": "2025-12-19",
+    "txs": 1000,
+    "span_days": 0.323,
+    "distinct_callers": 206
+   },
+   {
+    "start_block": 24355462,
+    "date": "2026-01-31",
+    "txs": 13,
+    "span_days": 179.407,
+    "distinct_callers": 6
+   }
+  ],
+  "distinct_callers_in_samples": 378,
+  "callers_shared_with_0xa57bd001": 369,
+  "top_callers_in_samples": [
+   [
+    "0x042523db4f3effc33d2742022b2490258494f8b3",
+    1535,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xff82bf5238637b7e5e345888bab9cd99f5ebe331",
+    1511,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x4603180bbb8221157880afaa84638e0fc467738d",
+    1506,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x36a454aef52938c8637cd4689b2980c1cfd43389",
+    1454,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xa5a13f62ce1113838e0d9b4559b8caf5f76463c0",
+    1387,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x431b5a84acc1297eda88259f300262f1bc3a74f3",
+    1387,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x9aab3f81604c683a1a0d14019fbfe15bef7aa1ee",
+    1296,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x93f635372008b7c5d770aaa6ff313454c8dc498c",
+    1267,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x60b86af869f23aeb552fb7f3cabd11b829f6ab2f",
+    1243,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x065e3dbafcb2c26a978720f9eb4bce6ad9d644a1",
+    1181,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x43e4715ae093a4c86b5ecddb52216c4f879e9672",
+    1155,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x1c8f6a5f009e051cab9c3851ca2da2c936b2775a",
+    1078,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x6046945c5b5ef5933b8e73a98a6ad7bf3e031df7",
+    1074,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+    1071,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x0cac3d1a887206e0f6169222c4504301a8b4b993",
+    1045,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xeca2e2d894d19778939bd4dfc34d2a3c45e96456",
+    1026,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xbbad96336943a36e3e292d973b3382dd0ba4d1ef",
+    931,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x76e40d0a69fd81826b5eb7d18145626d46eafdef",
+    930,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xfb9779477e5b4834bf2bc02dd29b97b344d0f700",
+    841,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xfa1d4ce9f0423bf353795ba85b47c3bb46e9a69f",
+    701,
+    "2022-09-30",
+    "2025-12-19"
+   ],
+   [
+    "0xfc23b61db3a1dce083e82da5a2ccfd91a2211f7c",
+    688,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x76dd32063b2899a59f6e15dbc474a160cc922751",
+    189,
+    "2022-08-22",
+    "2025-12-23"
+   ],
+   [
+    "0x56f03dbc2d16f4a252a7176e1fc3f05b53c6aad5",
+    183,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0xd68fe83d3834bf35c6e1aa8a9d81c56249a61881",
+    179,
+    "2022-08-22",
+    "2025-12-24"
+   ],
+   [
+    "0x64bbde373e909501de1309231336761adeaa07d5",
+    177,
+    "2022-08-22",
+    "2025-12-24"
+   ]
+  ]
+ },
+ "executors_of_0xa57bd001_top30": [
+  {
+   "executor": "0xba79abfe63e5697e8741945b3391c5dbf309f19a",
+   "first": "2019-08-15",
+   "last_in_window": "2020-08-04",
+   "calls": 160756,
+   "failed": 2533,
+   "created": "2019-03-09",
+   "creator": "0x8641df2d7c730a8a24db86693fc39f7a74dd4e9d",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x2812bc7c99d157f9735192078841e96336bbd708",
+   "first": "2019-08-15",
+   "last_in_window": "2020-04-14",
+   "calls": 88930,
+   "failed": 299,
+   "created": "2019-03-10",
+   "creator": "0xc6e8c0df0811f9507726961781f126935155edd7",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x50b881ceafece2034b899205fbbd7bafc0c0d230",
+   "first": "2020-03-27",
+   "last_in_window": "2020-06-28",
+   "calls": 60338,
+   "failed": 2148,
+   "created": "2020-03-26",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xff57ac1c537eb19e7adcf5dc4c80f137abe0f1fd",
+   "first": "2019-12-26",
+   "last_in_window": "2020-02-25",
+   "calls": 58673,
+   "failed": 2116,
+   "created": "2019-12-26",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xd3285238634137be3050be07cc97cb591725d37f",
+   "first": "2020-02-25",
+   "last_in_window": "2020-03-27",
+   "calls": 50186,
+   "failed": 1109,
+   "created": "2020-02-24",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x0fb5444920077df7e4a9ceff980f6f85cb8c9780",
+   "first": "2019-09-26",
+   "last_in_window": "2019-12-15",
+   "calls": 9120,
+   "failed": 368,
+   "created": "2019-09-26",
+   "creator": "0xcedb4f8d7310098965c54daef342ef6f5a5ed9dc",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x18e6d4dbaabb8ab05209f0144b2889eff4608e53",
+   "first": "2020-06-28",
+   "last_in_window": "2020-08-04",
+   "calls": 8018,
+   "failed": 117,
+   "created": "2020-06-28",
+   "creator": "0x97c54b989236aa60d310b70a09578730bfe58294",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x22755471efd1eb5a9d7b3835fe64b3c298149aa6",
+   "first": "2019-12-10",
+   "last_in_window": "2019-12-26",
+   "calls": 7947,
+   "failed": 115,
+   "created": "2019-12-03",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x83d96a3a5745ea2fd80918602c30be6a9da6eed0",
+   "first": "2019-05-22",
+   "last_in_window": "2019-08-30",
+   "calls": 5864,
+   "failed": 81,
+   "created": "2019-05-22",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xca93b73a5f0d86d353f0ec33df47e29f209b7f37",
+   "first": "2019-03-27",
+   "last_in_window": "2019-05-22",
+   "calls": 2067,
+   "failed": 0,
+   "created": "2019-03-27",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x4b54f7c2f0805b65d3e962a99ac2e8f20b80f373",
+   "first": "2019-09-05",
+   "last_in_window": "2019-09-26",
+   "calls": 1308,
+   "failed": 336,
+   "created": "2019-09-05",
+   "creator": "0xef08524e80c7da486c27c113cf14ab4d66b67d47",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xac469a9815a01d4280c8e201d748801920155ea9",
+   "first": "2019-05-05",
+   "last_in_window": "2019-07-30",
+   "calls": 950,
+   "failed": 0,
+   "created": "2019-05-05",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xeffe90721f315b4415e18e737d24b38ac00d9866",
+   "first": "2019-05-04",
+   "last_in_window": "2019-07-30",
+   "calls": 894,
+   "failed": 0,
+   "created": "2019-05-04",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x01c6b1a32811d32402662c13662e9b440de307f4",
+   "first": "2020-05-10",
+   "last_in_window": "2020-08-02",
+   "calls": 882,
+   "failed": 2,
+   "created": "2020-05-04",
+   "creator": "0x97c54b989236aa60d310b70a09578730bfe58294",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xb5609a95660d2964381b9c243b062d9c500ab646",
+   "first": "2019-07-30",
+   "last_in_window": "2019-09-10",
+   "calls": 548,
+   "failed": 12,
+   "created": "2019-07-30",
+   "creator": "0xcedb4f8d7310098965c54daef342ef6f5a5ed9dc",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x3800aa75720ec73f32b83f501a98815bbc2c3e51",
+   "first": "2020-03-09",
+   "last_in_window": "2020-04-30",
+   "calls": 467,
+   "failed": 260,
+   "created": "2020-03-09",
+   "creator": "0x97c54b989236aa60d310b70a09578730bfe58294",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xd000a63aa91b994f23a919087f73066584dc2634",
+   "first": "2020-02-06",
+   "last_in_window": "2020-02-27",
+   "calls": 417,
+   "failed": 365,
+   "created": "2020-01-24",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xbb50176005dc79a62997259daff866a96966b15d",
+   "first": "2019-04-11",
+   "last_in_window": "2019-07-28",
+   "calls": 412,
+   "failed": 0,
+   "created": "2019-04-11",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xd095a450e853e7ea99b16bbfda18aa382e506781",
+   "first": "2019-07-31",
+   "last_in_window": "2019-09-05",
+   "calls": 206,
+   "failed": 0,
+   "created": "2019-07-30",
+   "creator": "0x00e34a4e68e7d08b237e84adf8ac729cc6e32953",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x7f1a338b9093732e4b835dabf6452d4d779e9ed1",
+   "first": "2019-11-14",
+   "last_in_window": "2020-05-10",
+   "calls": 204,
+   "failed": 0,
+   "created": "2019-10-16",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x74f4aeff3b747a10005ce656b6736cf4214700a6",
+   "first": "2019-07-30",
+   "last_in_window": "2019-09-05",
+   "calls": 203,
+   "failed": 0,
+   "created": "2019-07-30",
+   "creator": "0xef08524e80c7da486c27c113cf14ab4d66b67d47",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x23f57cf361854007f68485565a10d80dec741b78",
+   "first": "2019-12-26",
+   "last_in_window": "2019-12-26",
+   "calls": 190,
+   "failed": 0,
+   "created": "2019-12-25",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x32c07e6a0f6a7debbe8bb1ab00bde7ac0c370a23",
+   "first": "2020-05-04",
+   "last_in_window": "2020-05-04",
+   "calls": 126,
+   "failed": 0,
+   "created": "2020-04-29",
+   "creator": "0x519b9ef68923d219296a4fc78f0aff420d9a3bb4",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x2818920a48cf687d257979e2de45ba5c3ce2a374",
+   "first": "2019-08-15",
+   "last_in_window": "2019-11-22",
+   "calls": 84,
+   "failed": 40,
+   "created": "2019-03-27",
+   "creator": "0x9787ffbd8ac920317ba43333913419f14489aa5f",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xfe80acc2b925cf3757f9d378e9ef6563bdc6cc46",
+   "first": "2019-08-01",
+   "last_in_window": "2019-09-03",
+   "calls": 71,
+   "failed": 0,
+   "created": "2019-07-30",
+   "creator": "0xc39eaabe06198f3cbd089c4ae91227bfc304e70e",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xc3278b333325edfcc9a369e6da15921c8f5859c0",
+   "first": "2020-02-28",
+   "last_in_window": "2020-03-09",
+   "calls": 39,
+   "failed": 31,
+   "created": "2020-02-27",
+   "creator": "0x97c54b989236aa60d310b70a09578730bfe58294",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x31b23ee037227f29d14a552634dc196b4de88285",
+   "first": "2019-04-10",
+   "last_in_window": "2019-04-10",
+   "calls": 1,
+   "failed": 0,
+   "created": "2019-04-10",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0xe8643fe1f03209a4668de2a0b8e5ce21775323a4",
+   "first": "2019-04-10",
+   "last_in_window": "2019-04-10",
+   "calls": 1,
+   "failed": 0,
+   "created": "2019-04-10",
+   "creator": "0xc6093fd9cc143f9f058938868b2df2daf9a91d28",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  },
+  {
+   "executor": "0x5eb8be4d8b943c00d873127e0bfc4bc895c88a51",
+   "first": "2019-09-05",
+   "last_in_window": "2019-09-05",
+   "calls": 1,
+   "failed": 0,
+   "created": "2019-09-05",
+   "creator": "0x00e34a4e68e7d08b237e84adf8ac729cc6e32953",
+   "factory": "0xf3c9d00c06e6ceef470510ed599bd30569a2ddc6"
+  }
+ ],
+ "incidents": {
+  "confirmed_replays": [
+   {
+    "incident": "dodo-v2-2021",
+    "date": "2021-03-08",
+    "eoa": "0x8a14ce0f",
+    "proxy": "0xa57bd001",
+    "txs": [
+     "0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f",
+     "0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211"
+    ],
+    "level": "confirmed-onchain (calldata byte-identical to attacker's pending withdraw calls; in-block evidence only)",
+    "take": "1,139,456.204 USDT + 133,548.94 wCRES",
+    "coinbase_paid_eth": 0,
+    "outcome": "RETURNED (USDT leg): see returns"
+   },
+   {
+    "incident": "earningfarm-2022",
+    "date": "2022-10-14",
+    "eoa": "0x26bce6ec",
+    "proxy": "0xa69babef",
+    "txs": [
+     "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1"
+    ],
+    "level": "confirmed-onchain (flashloan/deposit calldata identical, third flash loan drains 480.1 ETH; block 15746200 idx 0)",
+    "take": "480.108 ETH",
+    "coinbase_paid_eth": 18.717,
+    "outcome": "KEPT as far as found"
+   }
+  ],
+  "w2_scan_family_txs_near_exploits": {
+   "note": "research/chain-scan (394 DHL attack txs, blocks B-2..B+1) traced 98 txs by the family contracts (79 via 0xa69babef, 15 via 0xa57bd001, others 4cb18386/fa103c21/9799b475). NONE has an argument-level replay (all flagged no_argument_match = post-hack arb/ordinary flow) except EFVault 2022-10-14 (and 2023-02-24 shows two a69babef txs one block before the DHL attack: score -1). Large coinbase payers listed below are probably post-hack arbitrage, not captures.",
+   "n_rows": 98,
+   "rows_with_coinbase_ge_0.5_eth": [
+    {
+     "exploit": "OnyxProtocol",
+     "date": "20231101",
+     "exploit_block": 18476513,
+     "exploit_tx": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
+     "tx": "0x2b4d2dccf2029acc63b3d7022376132516b76efd3db8a09c37db10a4abff7e27",
+     "block": 18476514,
+     "index": 0,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0x0cac3d1a887206e0f6169222c4504301a8b4b993",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 27.1132,
+     "prio": 0.0,
+     "score": 2,
+     "calls_to_victims": 6
+    },
+    {
+     "exploit": "NomadBridge",
+     "date": "20220802",
+     "exploit_block": 15259101,
+     "exploit_tx": "0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460",
+     "tx": "0xfff02d5797ae4d5737dc86b36f8ab30737d4a0f5febef2a221664c6641d5d35d",
+     "block": 15259102,
+     "index": 1,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0xa5a13f62ce1113838e0d9b4559b8caf5f76463c0",
+     "to": "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf",
+     "cb_eth": 15.3359,
+     "prio": 0.0,
+     "score": 2,
+     "calls_to_victims": 3
+    },
+    {
+     "exploit": "MIMSpell2",
+     "date": "20240130",
+     "exploit_block": 19118660,
+     "exploit_tx": "0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2",
+     "tx": "0xb01766d03270bd2d8100bd43c3b60fd007c5d8a9b228b399c685a8858ca171ac",
+     "block": 19118661,
+     "index": 0,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0x76e40d0a69fd81826b5eb7d18145626d46eafdef",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 11.578,
+     "prio": 0.0,
+     "score": 2,
+     "calls_to_victims": 4
+    },
+    {
+     "exploit": "OnyxProtocol",
+     "date": "20231101",
+     "exploit_block": 18476513,
+     "exploit_tx": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
+     "tx": "0x2357d303d3916c39c701a26a533c79b6965d4a0cc1cb4b60e9edced1c432c9fd",
+     "block": 18476514,
+     "index": 1,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0x042523db4f3effc33d2742022b2490258494f8b3",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 5.67,
+     "prio": 0.0,
+     "score": 0,
+     "calls_to_victims": 3
+    },
+    {
+     "exploit": "UwuLend_First",
+     "date": "20240610",
+     "exploit_block": 20061319,
+     "exploit_tx": "0x242a0fb4fde9de0dc2fd42e8db743cbc197ffa2bf6a036ba0bba303df296408b",
+     "tx": "0x1c5ad10e7442d18e7ce0d43bb9579db90b4d70b1253713e517ddbbbcf922f122",
+     "block": 20061320,
+     "index": 0,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0x9aab3f81604c683a1a0d14019fbfe15bef7aa1ee",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 4.0314,
+     "prio": 0.0,
+     "score": 2,
+     "calls_to_victims": 4
+    },
+    {
+     "exploit": "OnyxProtocol",
+     "date": "20231101",
+     "exploit_block": 18476513,
+     "exploit_tx": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
+     "tx": "0xe1483cc61e4e97ac374edc8c52d8cc74b2bc0b0f799c9dbd8a62b6a38143232c",
+     "block": 18476514,
+     "index": 4,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0xbbad96336943a36e3e292d973b3382dd0ba4d1ef",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 0.813,
+     "prio": 0.0,
+     "score": 2,
+     "calls_to_victims": 6
+    },
+    {
+     "exploit": "OnyxProtocol",
+     "date": "20231101",
+     "exploit_block": 18476513,
+     "exploit_tx": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
+     "tx": "0x7eacf6a2130d129b86f566a3d6bca8b619e60e7e035023942c9fcea6bed81f2e",
+     "block": 18476514,
+     "index": 3,
+     "rel": "next_block",
+     "status": "success",
+     "from": "0x93f635372008b7c5d770aaa6ff313454c8dc498c",
+     "to": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+     "cb_eth": 0.7964,
+     "prio": 0.0,
+     "score": 0,
+     "calls_to_victims": 3
+    }
+   ],
+   "all_rows_file": "research/lineages/a57_w2_rows.json"
+  },
+  "not_covered": "No full-history exploit-replay sweep of the millions of proxy txs was possible (no per-tx traces); only the chain scan +-2-block windows around 394 DHL attack txs and the two known incidents. Absence of other replays is therefore \"not found\", not \"none\"."
+ },
+ "returns_vs_keeps": {
+  "dodo_2021": {
+   "result": "returned",
+   "evidence": "tokentx: 1,139,456.204396 USDT sent 56178a0d -> 0xfa103c21 -> DODO pool 0x95c4f5b83aa70810d4f142d58e5f7242bd891cb0 in tx 0x6e743db045f3738b24c6dedc90bae62c6429f2f7fe8a086394b05a68b8f5867a (block 12004002, 2021-03-09 11:18 UTC; the stolen amount to the wei, 14.3 h after the take); the pool paid it out to 0x96627558c6.. at 16:34 (tx 0x7a694d3624..). The Block reported \"Individual A\" returned ~1.14M USDT + 411 ETH (https://www.theblock.co/post/97734/dodo-dex-exploit-bug-attack). The 411 ETH leg and the 133,548.94 wCRES leg were not located on-chain.",
+   "raw": [
+    "site/raw/etherscan/w8_95c4_tokentx_1200.json",
+    "site/raw/etherscan/w8_fa103_tokentx_12004002.json"
+   ]
+  },
+  "earningfarm_2022": {
+   "result": "kept (no return found)",
+   "evidence": "capital wallet got 15,187.097 WETH back vs 14,707.089 borrowed (+480.008); 18.717 ETH paid to builder; no transfer to the vault or any public statement found (incidents/earningfarm-2022)."
+  },
+  "pattern": "The operator returned only where it was publicly asked and the owner could be identified (DODO had two recoverers, a whitehat go-between); no return evidence in the EF case. Not a consistent \"returns hack funds\" policy."
+ }
+}

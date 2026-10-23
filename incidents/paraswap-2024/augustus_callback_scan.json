@@ -1,0 +1,125 @@
+{
+ "method": "trace_filter(toAddress=Augustus V6 0x00000000fdac7708d0d360bddc1bc7d097f47439) over blocks 19426044-19482000; kept calls with selector 0xfa461e33 that have no other Augustus call as ancestor in the same tx (legitimate pool callbacks always sit under an Augustus swap)",
+ "blocks": [
+  19426044,
+  19482000
+ ],
+ "hits": [
+  {
+   "block": 19470561,
+   "pos": 0,
+   "hash": "0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60",
+   "from": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "ta": [
+    0
+   ],
+   "err": null
+  },
+  {
+   "block": 19473885,
+   "pos": 198,
+   "hash": "0x83f11ad653a9cdee52e54db2365947c61dd054af250f7fcf52240967eea4095a",
+   "from": "0x0000000000958ec6667eb97e2f64f6909073e6b7",
+   "ta": [
+    4
+   ],
+   "err": null
+  },
+  {
+   "block": 19474225,
+   "pos": 277,
+   "hash": "0x893fc9c3b9d4837f5afa950784ade06c4d82343883acce933e13dc2a932c58e6",
+   "from": "0x0000000000958ec6667eb97e2f64f6909073e6b7",
+   "ta": [
+    1,
+    3
+   ],
+   "err": null
+  },
+  {
+   "block": 19474732,
+   "pos": 23,
+   "hash": "0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe",
+   "from": "0x8c036aa7ef5b58922f72f9d9cfd70c9d18add40e",
+   "ta": [],
+   "err": null
+  },
+  {
+   "block": 19475538,
+   "pos": 14,
+   "hash": "0xfb3ec9ba69c0d7cd79a763167409f740c8a45af02a1dd4a947f39834a04ecb06",
+   "from": "0xd4c6e2ea89b2562b581d9e4c8b55e544761b871e",
+   "ta": [
+    3,
+    4
+   ],
+   "err": null
+  },
+  {
+   "block": 19475708,
+   "pos": 45,
+   "hash": "0x9104735d148856507a797abeb4493b20ca79da9da0949c7ad49d6f056b4e69d9",
+   "from": "0xf4493183544eefcc84133f8931ad3087f9fe2612",
+   "ta": [
+    3,
+    4
+   ],
+   "err": null
+  },
+  {
+   "block": 19476151,
+   "pos": 3,
+   "hash": "0x904099bdaf93097c24d91fdb75bf607c9125ec4c8794056bed9f5aeb11b2b6dd",
+   "from": "0x3142937f779c69c849d36a6f75dc4043e4584e85",
+   "ta": [
+    3,
+    4
+   ],
+   "err": null
+  },
+  {
+   "block": 19476172,
+   "pos": 154,
+   "hash": "0x4a8b982b21bf908670105a94cec5691bf1117a523e954b4e756341f155ac4a3b",
+   "from": "0x0000000000958ec6667eb97e2f64f6909073e6b7",
+   "ta": [
+    1,
+    3
+   ],
+   "err": null
+  },
+  {
+   "block": 19476756,
+   "pos": 18,
+   "hash": "0x9e1a6ab36846bf417a6117be1d0bb84299fdf41073557d6cbdb5934c551b0d78",
+   "from": "0x0000000000958ec6667eb97e2f64f6909073e6b7",
+   "ta": [
+    1,
+    2
+   ],
+   "err": null
+  },
+  {
+   "block": 19479351,
+   "pos": 0,
+   "hash": "0x1e73c4205822c28a5cb85fa354771bb4a72eb1778b68932e7ab7ba9559db09ec",
+   "from": "0xea00caa5aa7bd3ee03e2d6f06e614632734f5f1e",
+   "ta": [
+    3,
+    4
+   ],
+   "err": null
+  },
+  {
+   "block": 19480813,
+   "pos": 22,
+   "hash": "0xd5a616b599bcf2497257b5c3e76a7cfec7747e167d8f045c9654b51e7e32d1a7",
+   "from": "0x0000000000958ec6667eb97e2f64f6909073e6b7",
+   "ta": [
+    1,
+    5
+   ],
+   "err": null
+  }
+ ]
+}

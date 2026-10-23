@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="When an exploit is in flight, the fastest bots on Ethereum copy it, pay the block builder to go first and take the money. 19 races, 2021 to 2026, rebuilt from relay bids, mempool archives and traces.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/">
+<meta property="og:title" content="The Bot Beat the Hacker">
+<meta property="og:description" content="19 races where an MEV bot got to a live exploit before the hacker, rebuilt second by second from on-chain evidence.">
+<meta property="og:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-cover.png">
+<title>The Bot Beat the Hacker</title>
+<meta name="description" content="Automated searchers watched for crypto exploits, copied them and landed first. A data-journalism reconstruction of the races, from the mempool to the builder auction to the block.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main id="main">
+  <section class="hero" aria-labelledby="h1">
+    <canvas id="forest" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="herogrid">
+        <div>
+          <p class="kicker">The dark forest, 2021 to 2026</p>
+          <h1 id="h1">The bot beat the hacker.</h1>
+          <p class="dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
+        </div>
+        <figure class="slotfig" id="hookfig" style="margin:0"></figure>
+      </div>
+      <div class="prose hook" id="makina" aria-live="off">
+        <p id="hook">Loading the first race&hellip;</p>
+      </div>
+
+      <div class="stats" id="stats" role="list"></div>
+      <p class="statnote" id="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#table">the table below</a>, with a link to the saved source behind every value.</p>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="famous" aria-labelledby="famous-h">
+    <h2 id="famous-h">Hacks you may have heard of</h2>
+    <div class="prose"><p>Some of the best-known incidents where a bot got to the money first. Each card opens the race replay.</p></div>
+    <ul class="famous" id="famlist"></ul>
+  </section>
+
+  <section class="sec wrap" id="story">
+    <h2>What a race looks like</h2>
+    <div class="prose">
+      <p>An attacker sends a transaction that drains a contract. Before that transaction lands, it exists in three places at once: in the public mempool, if it was sent there; in the builder auction that runs inside every twelve-second slot; and, once the slot is won, in the block.</p>
+      <p>A bot that spots the attack can copy it, swap in its own address, and bid for the block. The winning bid is the only thing the proposer sees. Everything else in this piece is reconstructed from saved responses: relay bid streams, mempool archives, blocks and traces. Pick any race below and replay it.</p>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="table" aria-labelledby="table-h">
+    <h2 id="table-h">Every race, side by side</h2>
+    <div class="prose"><p>Sort by any column. Each row opens a replay. The small <a class="raw" href="methods.html#raw">raw</a> tags open the saved response behind a number.</p></div>
+    <div class="tools">
+      <span id="filt-l">Show</span>
+      <div class="seg" role="group" aria-labelledby="filt-l">
+        <button type="button" id="f-head" aria-pressed="true">Bot beat the hacker</button>
+        <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
+      </div>
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="tblwrap"><table class="cmp" id="cmp"></table></div>
+    <p class="tblnote" id="tblnote"></p>
+  </section>
+
+  <section class="sec wrap" id="types" aria-labelledby="types-h">
+    <h2 id="types-h">Seven kinds of race</h2>
+    <div class="prose"><p>Not every bot-and-attacker pair is a race the bot won, and some are not races at all. The headline count only includes the first two kinds, and only when the evidence is confirmed on chain.</p></div>
+    <div class="types" id="typelist"></div>
+  </section>
+
+  <section class="sec wrap" id="lineages" aria-labelledby="lin-h">
+    <h2 id="lin-h">Two bot lineages</h2>
+    <div class="prose"><p>Two of the bots in these races have long public histories. Both lineages were traced from Etherscan histories and the race blocks; no mempool data is involved.</p></div>
+    <div class="lins" id="linlist"></div>
+  </section>
+
+  <section class="sec wrap" id="said" aria-labelledby="said-h">
+    <h2 id="said-h">What the bot said, on chain</h2>
+    <div class="prose"><p id="said-intro">Yoink&rsquo;s wallet has sent and received plain-text messages as transaction input data. A few of them, quoted exactly.</p></div>
+    <div class="msgs" id="msglist"></div>
+    <p class="tblnote" id="msgnote"></p>
+  </section>
+
+  <section class="sec wrap" aria-labelledby="more-h">
+    <h2 id="more-h">Then go deeper</h2>
+    <div class="pair">
+      <a class="tz" href="explainer.html"><h3>How front-running bots work</h3><p>Eight steps from a hidden exploit to a block, with a reverse-engineered bot (Yoink) as the worked example: the calldata interpreter, address substitution, the profit guard and the per-mille bribe.</p></a>
+      <a class="tz" href="evolution.html"><h3>Has the dark forest evolved?</h3><p id="evo-teaser">Attackers went private. The charts show how much, and what it did to the bots' window.</p></a>
+    </div>
+  </section>
+</main>
+<script src="assets/common.js"></script>
+<script src="assets/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+{
+ "slug": "mintswap-2024",
+ "name": "MintSwap vMINT/ETH pool: sell-path pricing bug (swapExactTokensForETH uses getAmountIn)",
+ "date": "2024-04-01",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "race_type": "bot-was-first-exploiter",
+ "headline": false,
+ "era": "mature-pbs-2024-26",
+ "verdict_reason": "No separate attacker exists. The 'attack' txs the MintSwap team cites (0xd2337efb, 0x29edec50) are Yoink's own, landing at index 0 of blocks 19563164/19563165. Etherscan's complete transfer history of the pool shows no vMINT sold into it before Yoink's tx (the sell path was never called by anyone, pre-exploit the pool saw the LP deposit, 8 successful buys (6 users, 2 small arb buys) and 2 reverted user buys), and no other actor sold into it until after Yoink: 2 small sells by another searcher in blocks 19563191/19563193 (late copy, 0.78 ETH). The only third-party tx Yoink beat is an innocent user's still-pending 5,991 vMINT sell (public mempool, first seen 19:49:25.637, 9.4 s before the block), which reverted afterwards; Yoink's tx is a different construction (314x the amount, min-out 1 wei, own recipient), so it is not a replay, and whether that sighting triggered the bot is unproven (its follow-up sells had no trigger). Yoink's txs are private (absent from mempool-dumpster); Unknown != none for a private attacker tx, but none was found on chain.",
+ "protocol_loss_usd": 476000,
+ "protocol_loss_basis": "reported by the MintSwap team's on-chain message ('67.85 ETH (~$238,000) + 4,446,673 vMINT (~$238,000)'); independent check: the pool held 69.54 ETH + 3,817,624 vMINT at block 19563163 and 0.056 ETH + 3,507 vMINT at 19563194",
+ "attacker": {
+  "eoas": [],
+  "contracts": [],
+  "deploy_tx": null,
+  "funding_tx": null,
+  "txs": [],
+  "none_reason": "no separate attacker found; see verdict_reason"
+ },
+ "pool": {
+  "address": "0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde",
+  "implementation": "0x13a3efac2e1feb4dddeced77a4910fcbf914ce76",
+  "factory": "0x9c7ddb3672b90881f95553f7ea4d0034846e8411",
+  "token": "0xd7b2c1a7f3c67fb0ea57a7ef29bc1f18d7be3195",
+  "created_tx": "0xcef01834b1985db09e576242238798fcc909981812086de05a7be4c3b1785408",
+  "created_block": 19560840,
+  "created_utc": "2024-04-01T12:00:59Z",
+  "balances": {
+   "19560840": {
+    "eth": 66.4,
+    "vmint": 3997707.0
+   },
+   "19563163": {
+    "eth": 69.54171965506144,
+    "vmint": 3817623.6687508617
+   },
+   "19563164": {
+    "eth": 1.6818247617673083,
+    "vmint": 5700204.206712037
+   },
+   "19563165": {
+    "eth": 7.665746956085366,
+    "vmint": 1253530.5070849082
+   },
+   "19563194": {
+    "eth": 0.05643129357006873,
+    "vmint": 3507.4929674191867
+   }
+  },
+  "bug_source": "https://etherscan.io/address/0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde#code (verified; impl 0x13a3efac...)",
+  "second_pool_not_drained": "0xdb177ca4c1d4610e54770727a0213fa9e9eb302d"
+ },
+ "bots": [
+  {
+   "label": "Yoink (gen2 contract)",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "txs": [
+    "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+    "0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620",
+    "0x45685ad9bd5da6d6a51b42c4b1010cd7a79a9be72429cdffc57a609b577d9bd5",
+    "0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df",
+    "0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3",
+    "0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06"
+   ],
+   "followon_txs_touching_vmint_pair": [
+    "0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5",
+    "0x2b9b60ad71ae9a88ba26822762a68fd6167d8da11a39bfc701f07270226d64ce",
+    "0xa5392605b2c8f4a6453ca4f76b47328536e4ec46660aacdd6f8cd71d10682e67",
+    "0x99fb754087149366cc0eb34ff61db47839725efc08c5073f4c491c114a36d67d"
+   ],
+   "captured": {
+    "token": "ETH",
+    "amount": 101.798227,
+    "usd": null,
+    "basis": "sum of est. gross (coinbase / (msg.value/1000), bot analysis rule) over 10 txs minus 110.796 ETH coinbase minus gas plus 101.729 ETH builder refunds; Yoink's own message says 101.8 ETH"
+   },
+   "coinbase_paid_eth": 110.795998443,
+   "coinbase_paid_pool_txs_eth": 90.797453903,
+   "priority_fee_gwei": 0.0,
+   "builder_refund_to_bot_eth": 101.728581546,
+   "replay_evidence": "None needed: there is no other attacker. The first call to the pool's sell path anywhere is Yoink's tx 0xd2337efb (block 19563164 index 0); see pool_history.json. Its relation to the pending user sell 0x2bca4d61 is in pending_user_call_diff.json (same function, different args; trigger unproven).",
+   "notes": "Method (public trace): flash-loan USDC (Balancer) -> Uniswap V3 USDC/USDT -> buy 1.88M vMINT on the Uniswap V2 vMINT/USDT pair -> sell it to the MintSwap pool (67.86 ETH out) -> ETH->USDC on Uniswap V3 -> repay; follow-up txs buy vMINT back from the emptied pool for 5.98 ETH (4.45M vMINT) and sell it on V2. Bug (from the verified source, MintSwapPool 0x13a3efac): swapExactTokensForETH prices the sale with getAmountIn(amount1, reserve0=ETH, reserve1=tokens) instead of getAmountOut, so ETH out = reserveETH*amount1*1000/((reserveToken-amount1)*997), unbounded as amount1 approaches the pool's token balance."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "arb searcher EOA 0x1a56abf4 via contract 0x4ab12e7c (Etherscan method 'mmmmMEV()'; project note: the Ronin ETH-leg searcher, not Yoink)",
+   "role": "pre-existing arbitrageur of the pool vs the V2 pair, and a late sell-path user after Yoink",
+   "before_yoink": [
+    "0xf8540c26aec860331c51e7b1325c6aee9531e4dbdb942443ce285dd6ed99bb35",
+    "0x546aeaa2f2aab1cf5ea50e30f894194be3c57450e1ddb513d2883bdce9ab6bcf"
+   ],
+   "after_yoink": [
+    "0x8bcd5e46a2b863b9fa4013e890c05975d82dcd118d93e1b1be38a1fc2018959e",
+    "0x83700a441df4ca27c1edc04f98be728622f41be5f9b1423cb60636c5ae4d2029",
+    "0xb9397586e868086665fd031b3d75caaa1e63fce3c7b807257af96cedeae2633f",
+    "0xf217f4ef3167b64fd4f0ae14994b1a9be68fdcf2181c7c61aa2e4e37b1401980",
+    "0xe40ab8eae1c9e8de22acbb32747757ab21d53d8d0ff25d6a51e8653100ab93d9",
+    "0x7afc906a1db4ca20686974ffe032bfe31288f8ecaf24b7f98223e1293d63a42c",
+    "0xa5a0403fd61a7dce3c684781bb9f016afd072bfeb2b9810e0f154d07fbb55caf",
+    "0xd966fcde71bea2cc9111dc87740c8928414acd8fb4d0d74d1df4e482ccc2ab8b",
+    "0xbd023773a6b70ab7a9a34b0c323487c868a96a85fec2a873ad1f8323118f9365",
+    "0x2311999fad882f7dd8b8aeead9d12e012cd7a10263b194260f0b01c951bb6b10",
+    "0x30da4c5d6f4cc641a5f2c1158a0dd80bc5e03b8bcc7ef14437b9974407e1df5c"
+   ],
+   "detail": "2 txs at 18:30:47 and 18:34:35 (blocks 19562775, 19562794) buy vMINT from the pool for 2.135 and 0.807 ETH and sell it on the V2 pair (net +0.125, +0.017 ETH): buy side only, no sell-path call. 11 txs in blocks 19563166-19563194 (all after Yoink's first tx, interleaved with Yoink's later txs) arb the displaced price; the txs in 19563191 and 19563193 sell 19,319 and 5,288 vMINT into the pool for 0.619 and 0.161 ETH (late use of the same bug, ~0.8 ETH). Their txs are private (not in the mempool archive) except a 19:37:12 owner call to 0x4ab12e7c.",
+   "classification": "late-copy of the sell path, small (0.78 ETH out of the pool)"
+  },
+  {
+   "label": "pending user sell 0x7a61c7d3 (innocent user)",
+   "tx": "0x2bca4d6150d1c8e852229215dd92a75e2d39b7b41281872e77458c0d266e2ba0",
+   "role": "collateral: public-mempool sell of 5,991.78 vMINT, first seen 9.4 s before Yoink's block; reverted with MintSwap: SLIPPAGE_REACHED in block 19563166 index 356 after the pool had been drained"
+  },
+  {
+   "label": "LP 0x908d3a91 (second pool 0xdb177ca4)",
+   "tx": "0x8e9c4093b8aded44d8e3a0713b217196f61e2966d247b3aae8a24e392d862996",
+   "role": "withdrew 30.917 ETH from the factory's third pool at block 19563212 (19:59:11, 10 min after Yoink's first tx); that pool (31 ETH, same implementation) was never drained"
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Yoink returned to the LP",
+   "tx": "0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c",
+   "block": 19568582,
+   "time_utc": "2024-04-02T14:03:47Z",
+   "amount_eth": 91.62,
+   "to": "0x5b033ca6ff0465b8857dbf03c9c9d17026eeed00",
+   "note": "owner withdrawTo from the Yoink contract to LP 0x5b03 (the address that deposited 66.4 ETH + 3,997,707 vMINT), as agreed in the on-chain thread; 90% of Yoink's stated 101.8 ETH profit (the MintSwap team's offer was a 10% bounty)"
+  },
+  {
+   "what": "builder refunds to Yoink contract",
+   "tx": [
+    "0xe4656e3bef3f6fde6c7c2bdeb4cb059b11580a056e5d696e485795f8b2565109",
+    "0xf71cc430dfc086fda6d5402bf0b71df01b8db7976ae73b0aa1a5c9a15ee59764",
+    "0x78bb9156f749bad533b4fc83221fa7152f8f0203f99e622bd1a1617f2490ac43",
+    "0xa86b996fb319349eb4f8481e797359e96bed6abcbe495e36c320f9552713bdff",
+    "0x704db8a14453fe24f46fad5b868f36b6703d7780ced33aec27293409a485670f",
+    "0x4108e4e3349c177f13214a78206727897909ba04e1f832ff2c1c6e63e43211a7"
+   ],
+   "amount_eth": 101.728581546,
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "note": "builder 'I can haz block?' (0x229b8325) pays this back at the end of each of the 6 blocks"
+  },
+  {
+   "what": "proposer payments",
+   "tx": [
+    "0x5fc95e8dc308d9ef03ddc5a9cab59436697223e921d79b3227bb29f1be54b288",
+    "0xc271c9b775410989ffcb1c00276af36ce029da5b89a4c2aa7de9ddac484e79c2",
+    "0x7fe3d7368f617417be6bda4c259ee9cf31bf38b7fca741081638eabb214fc996",
+    "0xc08fb24d055fcb7005e6e711d6068af9b20604be195a468dc792ca8223e92981",
+    "0x3043f53b352e5994a965f908331e95155a1edfed45f1ac8ee721b7c47343ba3f",
+    "0xa96425f6ce136d1019ecb5e8349476243fda0be4a8455996e415a19b37456b3d"
+   ],
+   "amount_eth": 9.204295643,
+   "to": "the six proposers' fee recipients",
+   "note": "this is the '~9 ETH sent to validators' in Yoink's message; coinbase 110.80 ETH minus refunds 101.73 = 9.07 ETH net; the builder keeps the 0.14 ETH difference"
+  },
+  {
+   "what": "kept by Yoink (bounty)",
+   "amount_eth": 10.178,
+   "note": "bot_net estimate minus 91.62 returned; using Yoink's own 101.8 it is 10.18 ETH = the 10% bounty the team offered"
+  }
+ ],
+ "yoink_txs": [
+  {
+   "hash": "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+   "block": 19563164,
+   "index": 0,
+   "kind": "router",
+   "role": "sell vMINT into pool (sell-path bug), flash-loan funded",
+   "msg_value_permille": 999,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 31.444320284,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 67.859894893294,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 1,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 14.369375446997,
+   "gas_used": 398723,
+   "gas_cost_eth": 0.012537573716597332,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 14.383759,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20.json",
+    "block": "site/raw/rpc/block_19563164.json",
+    "receipt": "site/raw/rpc/receipt_0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20.json"
+   }
+  },
+  {
+   "hash": "0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620",
+   "block": 19563165,
+   "index": 0,
+   "kind": "router",
+   "role": "buy vMINT from the emptied pool, sell on Uniswap V2",
+   "msg_value_permille": 999,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 28.173800986,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 5.983922194318,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 1,
+   "coinbase_paid_eth": 54.507170914678,
+   "gas_used": 370678,
+   "gas_cost_eth": 0.010443408201888507,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 54.561733,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620.json",
+    "block": "site/raw/rpc/block_19563165.json",
+    "receipt": "site/raw/rpc/receipt_0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620.json"
+   }
+  },
+  {
+   "hash": "0x45685ad9bd5da6d6a51b42c4b1010cd7a79a9be72429cdffc57a609b577d9bd5",
+   "block": 19563183,
+   "index": 0,
+   "kind": "router",
+   "role": "sell vMINT into pool again (ETH added by other arbs)",
+   "msg_value_permille": 998,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 31.82311168,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 12.897153516377,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 1,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 6.152378098601,
+   "gas_used": 224492,
+   "gas_cost_eth": 0.00714403398726656,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 6.164708,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x45685ad9bd5da6d6a51b42c4b1010cd7a79a9be72429cdffc57a609b577d9bd5.json",
+    "block": "site/raw/rpc/block_19563183.json",
+    "receipt": "site/raw/rpc/receipt_0x45685ad9bd5da6d6a51b42c4b1010cd7a79a9be72429cdffc57a609b577d9bd5.json"
+   }
+  },
+  {
+   "hash": "0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df",
+   "block": 19563184,
+   "index": 0,
+   "kind": "router",
+   "role": "buy vMINT back from pool",
+   "msg_value_permille": 999,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 28.661190641,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 1.445676463568,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 1,
+   "coinbase_paid_eth": 13.228011413409,
+   "gas_used": 223539,
+   "gas_cost_eth": 0.006406893894698499,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 13.241253,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df.json",
+    "block": "site/raw/rpc/block_19563184.json",
+    "receipt": "site/raw/rpc/receipt_0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df.json"
+   }
+  },
+  {
+   "hash": "0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3",
+   "block": 19563189,
+   "index": 0,
+   "kind": "router",
+   "role": "sell vMINT into pool again",
+   "msg_value_permille": 991,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 30.493400849,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 1.786485981877,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 1,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 0.818398018058,
+   "gas_used": 225464,
+   "gas_cost_eth": 0.006875164129018936,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 0.82583,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3.json",
+    "block": "site/raw/rpc/block_19563189.json",
+    "receipt": "site/raw/rpc/receipt_0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3.json"
+   }
+  },
+  {
+   "hash": "0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06",
+   "block": 19563190,
+   "index": 0,
+   "kind": "router",
+   "role": "buy vMINT back from pool",
+   "msg_value_permille": 996,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 26.811734358,
+   "touches_mintswap_pool": true,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 0.5,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 1,
+   "coinbase_paid_eth": 1.722120011651,
+   "gas_used": 214857,
+   "gas_cost_eth": 0.005760688808956806,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 1.729036,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06.json",
+    "block": "site/raw/rpc/block_19563190.json",
+    "receipt": "site/raw/rpc/receipt_0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06.json"
+   }
+  },
+  {
+   "hash": "0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5",
+   "block": 19563164,
+   "index": 12,
+   "kind": "pair-only",
+   "role": "same-block Yoink tx touching the vMINT/USDT V2 pair but not the MintSwap pool",
+   "msg_value_permille": 997,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 31.444320284,
+   "touches_mintswap_pool": false,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 12.517047037936,
+   "gas_used": 1103109,
+   "gas_cost_eth": 0.03468651270416295,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 12.554711,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5.json",
+    "block": "site/raw/rpc/block_19563164.json",
+    "receipt": "site/raw/rpc/receipt_0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5.json"
+   }
+  },
+  {
+   "hash": "0x2b9b60ad71ae9a88ba26822762a68fd6167d8da11a39bfc701f07270226d64ce",
+   "block": 19563165,
+   "index": 23,
+   "kind": "pair-only",
+   "role": "same-block Yoink tx touching the vMINT/USDT V2 pair but not the MintSwap pool",
+   "msg_value_permille": 997,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 28.173800986,
+   "touches_mintswap_pool": false,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 7.310152770455,
+   "gas_used": 535950,
+   "gas_cost_eth": 0.0150997486384467,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 7.332149,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x2b9b60ad71ae9a88ba26822762a68fd6167d8da11a39bfc701f07270226d64ce.json",
+    "block": "site/raw/rpc/block_19563165.json",
+    "receipt": "site/raw/rpc/receipt_0x2b9b60ad71ae9a88ba26822762a68fd6167d8da11a39bfc701f07270226d64ce.json"
+   }
+  },
+  {
+   "hash": "0xa5392605b2c8f4a6453ca4f76b47328536e4ec46660aacdd6f8cd71d10682e67",
+   "block": 19563183,
+   "index": 45,
+   "kind": "pair-only",
+   "role": "same-block Yoink tx touching the vMINT/USDT V2 pair but not the MintSwap pool",
+   "msg_value_permille": 926,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 31.82311168,
+   "touches_mintswap_pool": false,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 0.144543473583,
+   "gas_used": 361602,
+   "gas_cost_eth": 0.01150730082971136,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 0.156094,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0xa5392605b2c8f4a6453ca4f76b47328536e4ec46660aacdd6f8cd71d10682e67.json",
+    "block": "site/raw/rpc/block_19563183.json",
+    "receipt": "site/raw/rpc/receipt_0xa5392605b2c8f4a6453ca4f76b47328536e4ec46660aacdd6f8cd71d10682e67.json"
+   }
+  },
+  {
+   "hash": "0x99fb754087149366cc0eb34ff61db47839725efc08c5073f4c491c114a36d67d",
+   "block": 19563184,
+   "index": 23,
+   "kind": "pair-only",
+   "role": "same-block Yoink tx touching the vMINT/USDT V2 pair but not the MintSwap pool",
+   "msg_value_permille": 756,
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "priority_fee_gwei": 0.0,
+   "gas_price_gwei": 28.661190641,
+   "touches_mintswap_pool": false,
+   "touches_vmint_pair": true,
+   "pool_eth_out": 0.0,
+   "pool_eth_in": 0.0,
+   "pool_sell_calls": 0,
+   "pool_buy_calls": 0,
+   "coinbase_paid_eth": 0.026801257512,
+   "gas_used": 300712,
+   "gas_cost_eth": 0.008618763960036392,
+   "priority_fee_paid_eth": 0.0,
+   "est_gross_profit_eth_w4_rule": 0.035451,
+   "raw": {
+    "trace": "site/raw/rpc/trace_0x99fb754087149366cc0eb34ff61db47839725efc08c5073f4c491c114a36d67d.json",
+    "block": "site/raw/rpc/block_19563184.json",
+    "receipt": "site/raw/rpc/receipt_0x99fb754087149366cc0eb34ff61db47839725efc08c5073f4c491c114a36d67d.json"
+   }
+  }
+ ],
+ "per_block": [
+  {
+   "block": 19563164,
+   "timestamp_utc": "2024-04-01T19:49:35Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 26.886422484933,
+   "builder_refund_to_yoink_contract_eth": 25.23152393413663,
+   "builder_refund_tx": "0xe4656e3bef3f6fde6c7c2bdeb4cb059b11580a056e5d696e485795f8b2565109",
+   "refund_index": 13,
+   "proposer_payment_eth": 1.689800263513141,
+   "proposer_payment_tx": "0x5fc95e8dc308d9ef03ddc5a9cab59436697223e921d79b3227bb29f1be54b288",
+   "proposer_payment_to": "0xc4356af40cc379b15925fc8c21e52c00f474e8e9",
+   "proposer_payment_index": 14,
+   "raw": "site/raw/rpc/block_19563164.json"
+  },
+  {
+   "block": 19563165,
+   "timestamp_utc": "2024-04-01T19:49:47Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 61.817323685133,
+   "builder_refund_to_yoink_contract_eth": 56.06558456160145,
+   "builder_refund_tx": "0xf71cc430dfc086fda6d5402bf0b71df01b8db7976ae73b0aa1a5c9a15ee59764",
+   "refund_index": 24,
+   "proposer_payment_eth": 5.758955728325493,
+   "proposer_payment_tx": "0xc271c9b775410989ffcb1c00276af36ce029da5b89a4c2aa7de9ddac484e79c2",
+   "proposer_payment_to": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+   "proposer_payment_index": 25,
+   "raw": "site/raw/rpc/block_19563165.json"
+  },
+  {
+   "block": 19563183,
+   "timestamp_utc": "2024-04-01T19:53:23Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 6.296921572184,
+   "builder_refund_to_yoink_contract_eth": 5.876116575054855,
+   "builder_refund_tx": "0x78bb9156f749bad533b4fc83221fa7152f8f0203f99e622bd1a1617f2490ac43",
+   "refund_index": 46,
+   "proposer_payment_eth": 0.4667083777930432,
+   "proposer_payment_tx": "0x7fe3d7368f617417be6bda4c259ee9cf31bf38b7fca741081638eabb214fc996",
+   "proposer_payment_to": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+   "proposer_payment_index": 47,
+   "raw": "site/raw/rpc/block_19563183.json"
+  },
+  {
+   "block": 19563184,
+   "timestamp_utc": "2024-04-01T19:53:35Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 13.254812670921,
+   "builder_refund_to_yoink_contract_eth": 12.245104805248044,
+   "builder_refund_tx": "0xa86b996fb319349eb4f8481e797359e96bed6abcbe495e36c320f9552713bdff",
+   "refund_index": 24,
+   "proposer_payment_eth": 1.0494394129813784,
+   "proposer_payment_tx": "0xc08fb24d055fcb7005e6e711d6068af9b20604be195a468dc792ca8223e92981",
+   "proposer_payment_to": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+   "proposer_payment_index": 25,
+   "raw": "site/raw/rpc/block_19563184.json"
+  },
+  {
+   "block": 19563189,
+   "timestamp_utc": "2024-04-01T19:54:35Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 0.818398018058,
+   "builder_refund_to_yoink_contract_eth": 0.7342378778799495,
+   "builder_refund_tx": "0x704db8a14453fe24f46fad5b868f36b6703d7780ced33aec27293409a485670f",
+   "refund_index": 7,
+   "proposer_payment_eth": 0.08414583962270117,
+   "proposer_payment_tx": "0x3043f53b352e5994a965f908331e95155a1edfed45f1ac8ee721b7c47343ba3f",
+   "proposer_payment_to": "0x816172fa0500844a0df2fdd4a9a8c3d326bbe6dd",
+   "proposer_payment_index": 8,
+   "raw": "site/raw/rpc/block_19563189.json"
+  },
+  {
+   "block": 19563190,
+   "timestamp_utc": "2024-04-01T19:54:47Z",
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "extra_data": "I can haz block?",
+   "yoink_coinbase_paid_eth": 1.722120011651,
+   "builder_refund_to_yoink_contract_eth": 1.576013791942357,
+   "builder_refund_tx": "0x4108e4e3349c177f13214a78206727897909ba04e1f832ff2c1c6e63e43211a7",
+   "refund_index": 28,
+   "proposer_payment_eth": 0.1552460210259341,
+   "proposer_payment_tx": "0xa96425f6ce136d1019ecb5e8349476243fda0be4a8455996e415a19b37456b3d",
+   "proposer_payment_to": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+   "proposer_payment_index": 29,
+   "raw": "site/raw/rpc/block_19563190.json"
+  }
+ ],
+ "totals": {
+  "n_txs": 10,
+  "n_pool_txs": 6,
+  "pool_eth_out": 82.543534392,
+  "pool_eth_in": 7.929598658,
+  "pool_eth_net_to_yoink": 74.613935734,
+  "coinbase_paid_all": 110.795998443,
+  "coinbase_paid_pool_txs": 90.797453903,
+  "gas_cost_all": 0.119080089,
+  "priority_fee_paid_all": 0,
+  "est_gross_all": 110.984724,
+  "est_gross_pool_txs": 90.906319,
+  "builder_refunds_to_yoink": 101.728581546,
+  "proposer_payments": 9.204295643,
+  "net_paid_to_validators_side": 9.067416897,
+  "bot_net_est": 101.798227,
+  "note": "est_gross = coinbase / (msg.value/1000) from the bot analysis bribe rule (research/bot-re/analysis.md); the sum of builder refunds (101.73 ETH) and of proposer payments (9.20 ETH) reconcile with Yoink's own message: 'profit looks to have been 101.8 Eth ... roughly 9 Eth was sent to validators'."
+ },
+ "trigger_candidate": {
+  "tx": "0x2bca4d6150d1c8e852229215dd92a75e2d39b7b41281872e77458c0d266e2ba0",
+  "first_seen_utc": "2024-04-01T19:49:25.637000+00:00",
+  "sources": [
+   "bloxroute",
+   "chainbound",
+   "eden",
+   "local",
+   "mempoolguru"
+  ],
+  "status": "unproven",
+  "detail_file": "incidents/mintswap-2024/pending_user_call_diff.json"
+ },
+ "mempool": {
+  "archive": "mempool-dumpster 2024-04-01 (csv + sourcelog)",
+  "yoink_txs_seen": false,
+  "note": "None of Yoink's 10 txs is in the archive (private bundles). The archive does contain the pool's pre-exploit buys, the LP deposit, and the user's pending sell 0x2bca4d61 (5 sources within 140 ms). Nothing in the archive calls the pool's sell path before Yoink's block other than that user tx."
+ },
+ "auction": {
+  "block": 19563164,
+  "slot": 8764746,
+  "slot_start_utc_ms": 1712000975000,
+  "relays_answered": [
+   "flashbots",
+   "ultrasound",
+   "agnostic"
+  ],
+  "n_bids": 9,
+  "n_builders": 4,
+  "bids_per_relay": {
+   "flashbots": 9
+  },
+  "first_bid_ms_rel_slot": -5690,
+  "last_bid_ms_rel_slot": -2779,
+  "winning_bid_eth": 1.6898002635131413,
+  "winning_builder": "I can haz block?",
+  "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+  "winning_relays": [
+   "agnostic",
+   "flashbots",
+   "ultrasound"
+  ],
+  "winning_first_submission_ms_rel_slot": -2779,
+  "winning_last_submission_ms_rel_slot": -2779,
+  "runner_up_eth": 1.6898002592176884,
+  "runner_up_builder": "I can haz block?",
+  "runner_up_ms_rel_slot": -2832,
+  "runner_up_other_builder_eth": 1.5613335888525555,
+  "runner_up_other_builder": "Flashbots",
+  "runner_up_other_builder_ms_rel_slot": -3861,
+  "n_higher_bids_after_winner": 0,
+  "max_bid_eth": 1.6898002635131413,
+  "proposer_paid_eth": 1.6898002635131413,
+  "proposer_payment_tx": "0x5fc95e8dc308d9ef03ddc5a9cab59436697223e921d79b3227bb29f1be54b288",
+  "bot_tx_in_winning_block": true,
+  "bid_data_note": null,
+  "raw_refs": {
+   "race_file": "incidents/mintswap-2024/race_19563164.json",
+   "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block19563164.json",
+   "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block19563164.json",
+   "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block19563164.json",
+   "relay_delivered:agnostic": "site/raw/relay-agnostic/delivered_block19563164.json"
+  },
+  "_missing_raw": [],
+  "escalation": [
+   [
+    -5690,
+    0.03704321612737129
+   ],
+   [
+    -5202,
+    0.0372222714903649
+   ],
+   [
+    -4931,
+    0.0378294155412872
+   ],
+   [
+    -4639,
+    0.04271507126280009
+   ],
+   [
+    -4540,
+    0.043145322506913615
+   ],
+   [
+    -4099,
+    0.04336239740691362
+   ],
+   [
+    -3861,
+    1.5613335888525555
+   ],
+   [
+    -2832,
+    1.6898002592176884
+   ],
+   [
+    -2779,
+    1.6898002635131413
+   ]
+  ],
+  "other_blocks": {
+   "19563165": {
+    "block": 19563165,
+    "slot": 8764747,
+    "n_bids": 13,
+    "n_builders": 5,
+    "first_bid_ms_rel_slot": -7804,
+    "last_bid_ms_rel_slot": -2839,
+    "winning_bid_eth": 5.758955728325493,
+    "winning_builder": "I can haz block?",
+    "runner_up_other_builder": "Flashbots",
+    "runner_up_other_builder_eth": 5.198558164031952,
+    "proposer_paid_eth": 5.758955728325493,
+    "proposer_payment_tx": "0xc271c9b775410989ffcb1c00276af36ce029da5b89a4c2aa7de9ddac484e79c2"
+   },
+   "19563183": {
+    "block": 19563183,
+    "slot": 8764765,
+    "n_bids": 15,
+    "n_builders": 4,
+    "first_bid_ms_rel_slot": -7775,
+    "last_bid_ms_rel_slot": -2784,
+    "winning_bid_eth": 0.4667083777930432,
+    "winning_builder": "I can haz block?",
+    "runner_up_other_builder": "Flashbots",
+    "runner_up_other_builder_eth": 0.40803809979804273,
+    "proposer_paid_eth": 0.4667083777930432,
+    "proposer_payment_tx": "0x7fe3d7368f617417be6bda4c259ee9cf31bf38b7fca741081638eabb214fc996"
+   }
+  },
+  "builder_refund": "In every block the winning builder 'I can haz block?' (0x229b8325) pays back most of Yoink's coinbase transfers to Yoink's contract with a tx near the end of the block (about 91.8% overall; table in yoink_mintswap_txs.json); the rest goes to the proposer.",
+  "auction_note": "Block 19563164: 9 Flashbots-relay bids (other relays hold no bids that old); six EigenPhi/other bids at 0.037-0.043 ETH until the Flashbots builder jumps to 1.5613 ETH at -3861 ms (19:49:31.1), 'I can haz block?' wins with 1.6898 ETH at -2779 ms. Same pattern in 19563165 (5.759 ETH) and 19563183 (0.4667 ETH)."
+ },
+ "messages": {
+  "team_notice": {
+   "tx": "0xfe5020429a451908be819ee7b3dc833115cc32e902e759ea6a8bdc4d8110d5c0",
+   "block": 19563822,
+   "time_utc": "2024-04-01T22:01:59Z",
+   "from": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "text": "Hi, we are reaching out to you about a vulnerability you exploited on MintSwap\n\nFUNDS DRAINED---\n67.85 ETH (~$238,000)\n4,446,673 vMINT (~$238,000)\n\nTotal : ~$4,75000 (all converted in ETH)\n, https://etherscan.io/tx/0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20\nhttps://etherscan.io/tx/0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620\n\n ... our protocol get hacked, we are offering 10% as bounty, return remaining funds directly to 0x8b1dcb843c5d9465726baec345200b541b777562"
+  },
+  "yoink_verify_ask": {
+   "tx": "0xa6ee1306de2451c3fc3665dd95ff0c5791bb901984e667e51c19438af70c8965",
+   "block": 19564369,
+   "time_utc": "2024-04-01T23:52:11Z",
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "text": "Please verify the contract on Etherscan and explain the bug so that I can confirm it was indeed an exploit. Will then return funds."
+  },
+  "team_bug_explained": {
+   "tx": "0x5b90649d3a00f17ecd49ad3ac572fca7a41388c96f0fff9452762fc2e90d24ac",
+   "block": 19564722,
+   "time_utc": "2024-04-02T01:03:35Z",
+   "from": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "text": "Thanks for your response,\n\ni have verified contract code : https://etherscan.io/address/0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde#code\n\nThese was bug in validating slippage for swapExactETHForTokens method:\nBUG in checking slippage---\namount0 = getAmountIn(amount1, reserve0, reserve1);\nrequire(amount0min <= amount0, 'MintSwap: SLIPPAGE_REACHED');\n\nIt should be this---\namount0 = getAmountOut(amount1, reserve1_, reserve0_);\nrequire(amount1min <= amount1, 'MintSwap: SLIPPAGE_REACHED');\n\nIt would be great if you could now return funds to 0x8b1dcb843c5d9465726baec345200b541b777562"
+  },
+  "yoink_profit_offer": {
+   "tx": "0x89af126f81e8cfcc7026da0ff5c203338444fdeff8bb54284ea38af3b18a1055",
+   "block": 19565414,
+   "time_utc": "2024-04-02T03:23:11Z",
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "text": "My profit looks to have been 101.8 Eth. In addition, roughly 9 Eth was sent to validators in order to land those txs. You'll need to contact them to get that part of the funds back. Appreciate the offer of a bounty, will then be returning 91.62 Eth. Would prefer to return funds to the liquidity provider 0x5b03. Is this acceptable?"
+  },
+  "team_accepts_lp": {
+   "tx": "0xfa9ca31cf92d130eab2c864a08308849e41b4f7941a2d41c3d1346f2046e9ceb",
+   "block": 19565925,
+   "time_utc": "2024-04-02T05:06:11Z",
+   "from": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "text": "Yes,  that will be fine you can send directly to 0x5b03, Thanks"
+  },
+  "team_waiting": {
+   "tx": "0x704b79655829ba35f0f8478b2176cc5c9a579bfbfe288b1077f75e8662f585a2",
+   "block": 19568722,
+   "time_utc": "2024-04-02T14:32:23Z",
+   "from": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "text": "waiting for funds"
+  },
+  "yoink_already_sent": {
+   "tx": "0x07473e4c9cfddd270f2d2e153072afbe73b37771fef08a59e8d1f1cfae1bba9a",
+   "block": 19569047,
+   "time_utc": "2024-04-02T15:38:35Z",
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x8b1dcb843c5d9465726baec345200b541b777562",
+   "text": "Already sent. https://etherscan.io/tx/0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c"
+  }
+ },
+ "sources": [
+  "https://etherscan.io/tx/0xfe5020429a451908be819ee7b3dc833115cc32e902e759ea6a8bdc4d8110d5c0",
+  "https://etherscan.io/tx/0x89af126f81e8cfcc7026da0ff5c203338444fdeff8bb54284ea38af3b18a1055",
+  "https://etherscan.io/tx/0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c",
+  "https://etherscan.io/address/0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde",
+  "https://etherscan.io/tx/0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+  "https://etherscan.io/tx/0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620",
+  "research/lineages/yoink_more_incidents.json (MintSwap entry)",
+  "research/lineages/yoink_messages.json",
+  "DeFiHackLabs clone (site/raw/defihacklabs_clone/repo, HEAD 23c7bd83): no MintSwap/vMINT entry"
+ ],
+ "defihacklabs": "No MintSwap entry (grep for mintswap/vMINT/0xd8d5b0775a99/0x4ab12e7c in the clone returns nothing; src/test/2024-04 lists 25 incidents, none is MintSwap). Yoink's contract 0x6980a47b appears only in the Paraswap, TIME, DeFiPlaza and Erc20transfer entries.",
+ "raw_refs": {
+  "pool_history": "incidents/mintswap-2024/pool_history.json",
+  "etherscan_pool": [
+   "site/raw/etherscan/txlist_0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde.json",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "traces": {
+   "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20": "site/raw/rpc/trace_0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20.json",
+   "0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620": "site/raw/rpc/trace_0x29edec50fbaf213f26b69b97daf8182067f2f292b4123225b0713ed24af0b620.json",
+   "0x45685ad9bd5da6d6a51b42c4b1010cd7a79a9be72429cdffc57a609b577d9bd5": "full cache only (not published)",
+   "0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df": "site/raw/rpc/trace_0x18e3b5e39f3af4040422316f5eb9d3ebec49f19bf3a0516184e737d3dba496df.json",
+   "0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3": "site/raw/rpc/trace_0xa6aeb74dcefe4da4660309cdd7d796fe379e2b839e93fb819770dabe6d7c8fb3.json",
+   "0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06": "site/raw/rpc/trace_0x41a7e2b2900c1e0561454f67443df509b06b6be6ba6774c32a6e8cb03b08ab06.json",
+   "0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5": "site/raw/rpc/trace_0xd257eed0a1467c9297ed9f2cd9df7b7f382ae04d4d66cb643bb48cebef6117f5.json",
+   "0x2b9b60ad71ae9a88ba26822762a68fd6167d8da11a39bfc701f07270226d64ce": "full cache only (not published)",
+   "0xa5392605b2c8f4a6453ca4f76b47328536e4ec46660aacdd6f8cd71d10682e67": "full cache only (not published)",
+   "0x99fb754087149366cc0eb34ff61db47839725efc08c5073f4c491c114a36d67d": "full cache only (not published)"
+  },
+  "blocks": {
+   "19563164": "site/raw/rpc/block_19563164.json",
+   "19563165": "site/raw/rpc/block_19563165.json",
+   "19563183": "site/raw/rpc/block_19563183.json",
+   "19563184": "full cache only (not published)",
+   "19563189": "full cache only (not published)",
+   "19563190": "full cache only (not published)"
+  },
+  "races": {
+   "19563164": "incidents/mintswap-2024/race_19563164.json",
+   "19563165": "incidents/mintswap-2024/race_19563165.json",
+   "19563183": "incidents/mintswap-2024/race_19563183.json"
+  },
+  "return_trace": "site/raw/rpc/trace_0x1d3c141c4606fa1083fae092d2a2b92a3edca998d940f4ac2e5cbeb6e292a35c.json",
+  "mempool": [
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ]
+ },
+ "verdict_original": "related-not-frontrun",
+ "headline_text": "Yoink was the first to exploit MintSwap's vMINT/ETH sell-path pricing bug (swapExactTokensForETH used getAmountIn): 6 pool txs in 6 blocks, about 101.8 ETH net after 110.8 ETH of builder bribes; it returned 91.62 ETH to the LP, keeping a 10% bounty.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  "verdict_reason": "The txs the MintSwap team calls the hack are Yoink's own (index 0 of blocks 19563164/65); the pool's full transfer history shows Yoink's tx is the first sell-path call ever, so there is no attacker tx to beat or replay. The only third-party tx it pre-empted is an innocent user's pending 5,991 vMINT sell (public mempool 9.4 s earlier, reverted afterwards), which Yoink's different-shaped call does not replay; whether it triggered the bot is unproven. A second searcher made two small sells (0.78 ETH) only after Yoink.",
+  "headline_note": null,
+  "dataset_rows": [
+   "mintswap-2024"
+  ]
+ }
+}

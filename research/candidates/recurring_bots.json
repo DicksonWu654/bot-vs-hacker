@@ -1,0 +1,107 @@
+[
+ {
+  "bot": "Yoink",
+  "eoa": "0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A",
+  "contracts": [
+   "0xD050E0A4838D74769228B49dFf97241b4Ef3805d (Jul 2023)",
+   "0x6980a47beE930a4584B09Ee79eBe46484FbDBDD0 (Dec 2023 - Oct 2024)",
+   "0x80bf7db69556d9521c03461978b8fc731dbbd4e4 (Mar 2025 - Oct 2026)"
+  ],
+  "incidents": [
+   "transitswap-eth-yoink-2022-10 (on-chain message, first known)",
+   "dfx-2022-11 (low)",
+   "conic-2023-07",
+   "time-erc2771-2023-12",
+   "paraswap-2024-03",
+   "defiplaza-2024-07",
+   "ronin-2024-08 (USDC leg)",
+   "erc20transfer-2024-10",
+   "alkimiya-2025-03",
+   "wayfinder-kaito-2025-04",
+   "kelp-rseth-2026-09",
+   "uncx-vesting-2026-10"
+  ],
+  "behaviour": "Position-0 txs, pays most proceeds to the block builder, public emails/on-chain messages offering 90/10 returns ([email redacted]); returned in Conic, DeFiPlaza, Ronin; kept in Kelp rsETH (as of reports).",
+  "re_target": "RECOMMENDED primary non-c0ffeebabe reverse-engineering target (10-12 incidents across 4 years, 3 contract generations, no owner-rule conflict)"
+ },
+ {
+  "bot": "c0ffeebabe.eth",
+  "eoa": "0xC0ffeEBABE5D496B2DDE509f9fa189C25cF29671",
+  "contracts": [
+   "0x7c28E0977F72c5D08D5e1Ac7D52a34db378282B3",
+   "0x3aa228a80f50763045bdfc45012da124bd0a6809",
+   "0xE08D97e151473A848C3d9CA3f323Cb720472D015"
+  ],
+  "incidents": [
+   "curve-msETH-2023-07",
+   "curve-crveth-2023-07",
+   "erc20tokenbank-2023-05",
+   "sushi-routeprocessor2-2023-04 (bribe)",
+   "wiselending-2023-10",
+   "swarm-markets-2024-02",
+   "blueberry-2024-02",
+   "morpho-frontend-2025-04",
+   "anyswap-weth-permit-2025-07",
+   "drl-vault-2025-11",
+   "securedfi-2026-09",
+   "uncx-vesting-2026-10",
+   "bifi-2026-10"
+  ],
+  "behaviour": "PUBLIC ACTIONS ONLY. Publication policy: not a reverse-engineering target.",
+  "re_target": "NO (publication policy)"
+ },
+ {
+  "bot": "0xa57 family (unverified)",
+  "eoa": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+  "contracts": [
+   "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf (2019-2020)",
+   "0xa69babef1ca67a37ffaf7a485dfff3382056e78c (executeFFsYo, 2022-2025+)"
+  ],
+  "incidents": [
+   "earningfarm-2022-10"
+  ],
+  "behaviour": "Long-lived generic MEV operator (984 of last 1000 txs through block 24080425 hit 0xa69babef). Other exploit races not yet found.",
+  "re_target": "Possible second target if more incidents are found"
+ },
+ {
+  "bot": "SHOCO frontrunner",
+  "eoa": "0xE71AcA93C0E0721F8250D2d0e4F883AA1C020361",
+  "contracts": [
+   "0x000000000000660deF84E69995117c0176bA446E (shared by several EOAs, so likely a commercial/shared bot)"
+  ],
+  "incidents": [
+   "shoco-2023-01"
+  ],
+  "behaviour": "Also deployed a contract with the same Etherscan-decoded deploy selector as Yoink ('atInversebrah...'); weak hint of a shared deployer tool, NOT evidence of the same operator.",
+  "re_target": "low priority"
+ },
+ {
+  "bot": "BSC frontrunner cluster",
+  "eoa": "0x7cb74265e3e2d2b707122bf45aea66137c6c8891",
+  "contracts": [
+   "0x15ffd1d02b3918c9e56f75e30d23786d3ef2b5bc",
+   "0x9180981034364f683ea25bcce0cff5e03a595bef"
+  ],
+  "incidents": [
+   "ais-bsc-2023-11",
+   "BFCToken 2023-09 (listed as attacker)",
+   "LaEeb 2023-10 (listed as attacker)"
+  ],
+  "behaviour": "BSC public-mempool gas wars.",
+  "re_target": "BSC only"
+ },
+ {
+  "bot": "BlockSec whitehat ops",
+  "eoa": "0x811929c3c17dd598172f8078a48540fa23f44b05 (Saddle rescue), 0x0000003502aa61A5f1B1fDaDFF2cf947DfDa526e (ParaSpace, per Etherscan label)",
+  "contracts": [],
+  "incidents": [
+   "saddle-2022-04",
+   "paraspace-2023-03",
+   "transitswap-babyswap-bsc-2022-10 (hacked back the bot)",
+   "sushi-routeprocessor2-2023-04 (100 ETH rescue)",
+   "multichain-anyswap-2022-01"
+  ],
+  "behaviour": "Security-firm attack-frontrunning, funds returned to victims",
+  "re_target": "no (a service, not a searcher)"
+ }
+]

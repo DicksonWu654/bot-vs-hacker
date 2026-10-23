@@ -1,0 +1,1540 @@
+{
+ "generated": "2026-10-22T09:46:49Z",
+ "rule": "Single source of truth for the incident dataset harmonization decisions (verdict, race_type, headline).\n\nONE verdict rule (applied to every row, see data/harmonize_log.json for each change):\n  confirmed-onchain    on-chain evidence that the bot tx replays/adapts another actor's tx, or uses that actor's own on-chain setup\n                       (deployed contract / prepare()), AND the bot is first (earlier block; same block earlier index; or before\n                       the other actor's call ever landed). A replay of the attacker's DEPLOYED code that reproduces the bot's\n                       victim calls is one evidence method in deploy-window cases. The c0ffeebabe.eth rows publish transaction ordering, funds and statements only.\n  related-not-frontrun bot tx is related to the incident but is not first: post-failure replay/rescue, late copy, or the bot was\n                       itself the first exploiter (no other actor's tx to beat).\n  rejected             sub-race where no racer exists or the claim fails.\n  reported             postmortem/press claim only, not verified on-chain.\nHeadline (\"the bot beat the hacker\") = verdict confirmed-onchain AND race_type in {beat-pending-attack, deploy-window-copy}, excluding Euler because operator identity is unresolved.\n`no-race` is an added race_type value used only for rejected sub-races where nobody raced the attacker.",
+ "decisions": [
+  "BiFi: related-not-frontrun -> confirmed-onchain / deploy-window-copy (same rule as Makina; see RULES['bifi-2026'])",
+  "Curve: one row per sub-race; pETH, msETH, CRV-ETH-wave2 confirmed; alETH, CRV-ETH-wave1 rejected (no-race)",
+  "Sushi RP2: Yoink pre-empted Trust's whitehat rescue -> beat-whitehat-or-user (not headline)",
+  "Ronin: bots copied users' pending withdrawals -> beat-whitehat-or-user (not headline), 3 rows",
+  "UNCX: split into Yoink X front-run (confirmed, beat-pending-attack) and ZC copiers (related-not-frontrun, late-copy)",
+  "blocks_ahead := attacker_block - bot.block (positive = bot earlier); brief wording was 'bot block - attacker block'",
+  "added race_type value 'no-race' for rejected sub-races with no racer",
+  "fate.returned_pct is kept and set equal to fate.returned_pct_of_gross for every row (it was already returned_total_eth / gross_loot_eth; the old name hid the denominator). Values identical except the two corrected rows (Paraswap null -> 67.179, Blueberry 95.373 -> 95.399).",
+  "added fate.returned_pct_of_gross, returned_pct_of_bot_net, returned_by_builder_or_proposer_eth, returned_by_bot_side_eth, victim_loss_eth (+victim_loss_basis), returned_pct_of_victim_loss, returned_pct_note; every one has a raw_refs entry (data/rawref_audit.json fields_without_raw_ref is empty)",
+  "Paraswap: return_status none-found -> partial; 4.342 ETH returned (see returns_schema.OVERRIDES and harmonize_log.json -> returns_schema.sweep); fact-check 2026-10-21 had flagged it",
+  "Blueberry: builder residue 0.11996 ETH added to returned_by_builder_eth; returned_total_eth 436.50685 -> 436.626810481",
+  "DeFi Plaza: no value change; 10.464% of gross and 98.66% of bot net are both published, with the chain re-derivation in returned_pct_note"
+ ],
+ "gapfill_phase_c": {
+  "phase": "C (coverage gap survey + gap-fill), 2026-10-21",
+  "survey": "research/launch-gap/gap_survey.json / gap_survey.txt",
+  "decisions": [
+   "Gap-fill added 9 incidents / 16 rows (taopad-2024, unizen-2024 x4, mintswap-2024, conic-2023 x2, punk-2021, metapool-2025, neemo-2025, peapods-2025 x3, alkemi-2026 x2) with verdict/race_type from scripts/dataset/gapfill_rules/*.json",
+   "Headline rule unchanged: Neemo (deploy-window-copy, confirmed, medium) counts as headline by the Makina/BiFi rule; its caveat (no thief drain tx exists to race) is kept in headline_note",
+   "bot-was-first-exploiter rows get blocks_ahead = null (first_attacker_tx_blocks_after_bot holds the gap): Meta Pool's first attacker tx landed 249 blocks after Yoink with nothing pending, so it is not a lead over a pending tx",
+   "EFLeverVault (2022-10, DeFiHackLabs) is the same incident as earningfarm-2022: no new slug; new facts folded into incidents/earningfarm-2022 (counterfactual replay of the attacker's reverted tx = the bot's 480.108 ETH, MevRefund/Supremacy_CA text, date 2022-10-14) and its extract/evidence_notes",
+   "Peapods 07-09-followup is rejected/no-race (not a bot-vs-attacker race); the rule file value wins over the extract placeholder; 'no-race' added to the check_extract.py enum",
+   "Survey disagreements resolved by incident files: DODO (survey said bot-first-exploiter; attacker's reverted tx at idx 176 of block 12000022 is proven) and EarningFarm (survey compared to the attacker's later successful retry; the race is the reverted same-block tx 0x4be393b9 idx 7) keep confirmed-onchain / beat-pending-attack"
+  ],
+  "not_added": [
+   {
+    "id": "eflevervault-2022",
+    "why": "duplicate of earningfarm-2022"
+   },
+   {
+    "id": "usm-2026-08 / balancer-v1-bpools-2026-08 / set-protocol-2026-10 / sasha-yoink-nextblock-2024-10",
+    "why": "survey: bot replays hours or one block after the attacker landed (late-copy / post-attack-replay); not verified on chain here, listed in followups.txt"
+   },
+   {
+    "id": "eip7702-staked-32eth-unstake-frontrun-2025-09",
+    "why": "original sender unknown; skipped unless a clear hacker race"
+   }
+  ],
+  "new_rows": [
+   {
+    "slug": "alkemi-2026",
+    "sub": "wbtc-yoink",
+    "date_utc": "2026-03-10T12:50:59Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "post-failure-replay",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+    "bot_block": 24627181,
+    "reason": "Alkemi Earn's self-liquidation bug (BlockSec) was used on two pools. The 'attack tx' DeFiHackLabs lists (0xa17001eb, block 24626979, +43.45395 ETH, ETH vault) is not what Yoink touched. Yoink's tx 0x7acef470 (block 24627181 idx 0) hits the WBTC pool and contains the same 16 state-changing Alkemi calls (+2 withdraws) as the deploy+attack tx 0x726bd90c of EOA 0x46c403e3, which was mined one block earlier (24627180 idx 226) and reverted out of gas at its 14,974,454 gas limit. A fork replay of that tx at 30M gas succeeds and pays the attacker exactly the 29,884,523 sat WBTC Yoink swapped. So Yoink retried a failed, already-mined tx; nothing of that actor's was pending. The on-chain complainant 0x8366d87b ('Why did you leak my attack transaction to yoink?', block 24627239) is a third party: its program differs (0 shared calls), its attack tx landed in 24627185 after Yoink's and found the pool empty. A traceCall of its tx on the pre-Yoink state would have taken the whole 29,980,756 sat, so Yoink did take what it was about to drain, but the leak itself is neither shown nor refuted (none of the 15 relevant txs is in mempool-dumpster although 55-63% of other txs in those blocks are). Yoink paid 10.2256 ETH coinbase (999 per mille), builder refunded 9.19 ETH, net about 9.20 ETH, no return found."
+   },
+   {
+    "slug": "alkemi-2026",
+    "sub": "eth-vault-copiers",
+    "date_utc": "2026-03-10T12:25:23Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "late-copy",
+    "headline": false,
+    "bot": "anon searcher (0x4c452e82)",
+    "bot_tx": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+    "bot_block": 24627055,
+    "reason": "The DHL-listed attacker 0x0ed1c01b deployed (idx 2) and attacked (idx 3) in the same block 24626979 and took 43.45395 ETH from the ETH vault; BlockSec confirms the tx and the self-liquidation root cause (~$89K). All seven later txs running the same call sequence landed after it (24626980 x2 with nothing gained, 0.7173 ETH of leftovers taken at 24627055, then 24627182, 24627185 and a reverted one at 24627423). No bot was ahead of the attacker and Yoink is not among them; no c0ffeebabe tx touches the Alkemi proxy in blocks 24600000-24650000."
+   },
+   {
+    "slug": "conic-2023",
+    "sub": "crvusd-pool",
+    "date_utc": "2023-07-21T19:01:47Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "late-copy",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+    "bot_block": 17743471,
+    "reason": "Yoink gen1 (bot 0xd050e0a4) replays the Conic crvUSD-pool attacker's sandwich in ten consecutive blocks 17743471-17743480 (idx 0, once idx 4). Call-by-call diff against the attacker's tx 0x37acd17a: same Balancer flash loan (12M USDC/80,000 WETH/9M USDT), same crvUSD create_loan(80,000 WETH, 93M, 10), same Curve swap and Conic deposit/withdraw sequence with identical round-number sizes; state-derived sizes differ ~0.1%. But the attacker's tx already landed at 17743470 idx 4 and succeeded (+11.56 ETH), so the first copy is one block AFTER it and nothing of the attacker's was pending (his next tx is 22 blocks later). Yoink took 125.82 ETH gross / 90.34 net (matches its on-chain message to <1e-5 ETH) against the attacker's 13.58 ETH, and returned 81.307 ETH (90.0% of net) to conicfinance.eth, keeping the 10% bounty. Not post-hack arbitrage of an imbalance (the earlier note) and not a front-run: a late copy."
+   },
+   {
+    "slug": "conic-2023",
+    "sub": "eth-pool",
+    "date_utc": "2023-07-21T10:35:11Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "post-failure-replay",
+    "headline": false,
+    "bot": "anon clone exploiter (not a known bot)",
+    "bot_tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+    "bot_block": 17740955,
+    "reason": "ETH omnipool read-only reentrancy. The first attacker 0x10db234e deployed 0xdac434f8 (block 17740893) and its attack tx 0x97a8315e (17740901 idx 4) reverted out of gas. 51 blocks (~10 min) later 0x8d67db0b deployed a clone: creation code identical except one 20-byte beneficiary address (offset 1370 of 21,970 bytes), identical attack calldata (0x52558bb0; 19700/240/3000/180) and a 29.5M instead of 27.64M gas limit, and took 1,724.175 ETH at idx 0 of 17740955. The original had nothing pending (two txs ever), so the clone replays after a failed attempt rather than beating a pending one. The operator is an anonymous exploiter (BlockSec label 'LadyPepe Token Exploiter' per Rekt), not a returning bot; funds were not returned. Clone operator assumed distinct from the first attacker (a same-operator second wallet is not excluded)."
+   },
+   {
+    "slug": "metapool-2025",
+    "sub": null,
+    "date_utc": "2025-06-17T06:18:59Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "bot-was-first-exploiter",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9",
+    "bot_block": 22722394,
+    "reason": "Yoink's tx 0x4f43fc6d (block 22722394, index 0, 06:18:59Z) is the first use of the mpETH mint-without-deposit bug (all 381 earlier mpETH mint events are fee or staking mints). The attacker cluster's first exploit tx is a test run 50 min later (0x691c8070, block 22722643, EOA 0xd08559ce) and the main flash-loan tx (0x57ee419a, block 22722911) 1 h 44 min later; the main-tx EOA held 0.0008 ETH until the test proceeds arrived, and none of the attacker's txs is in the public mempool archive. Nothing of the attacker's was pending, so Yoink neither front-ran nor replayed anyone: the press 'Yoink front-ran the attacker' is loose wording. The attacker's txs share the call grammar (mint with 0 ETH, pool swap, V3 leg, optional flash-funded depositETH) but no contract or calldata with Yoink's. Yoink returned its net 45.79 ETH to the Meta Pool admin EOA and got a 5 ETH reward; the 28.9 unbacked mpETH it swept to its vault was not returned. c0ffeebabe.eth made a small late copy one block after the attacker's main tx."
+   },
+   {
+    "slug": "mintswap-2024",
+    "sub": null,
+    "date_utc": "2024-04-01T19:49:35Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "bot-was-first-exploiter",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+    "bot_block": 19563164,
+    "reason": "The txs the MintSwap team calls the hack are Yoink's own (index 0 of blocks 19563164/65); the pool's full transfer history shows Yoink's tx is the first sell-path call ever, so there is no attacker tx to beat or replay. The only third-party tx it pre-empted is an innocent user's pending 5,991 vMINT sell (public mempool 9.4 s earlier, reverted afterwards), which Yoink's different-shaped call does not replay; whether it triggered the bot is unproven. A second searcher made two small sells (0.78 ETH) only after Yoink."
+   },
+   {
+    "slug": "neemo-2025",
+    "sub": null,
+    "date_utc": "2025-07-05T21:03:35Z",
+    "verdict": "confirmed-onchain",
+    "race_type": "deploy-window-copy",
+    "headline": true,
+    "bot": "anon bot 0xb750 (executor 0x1a61249f)",
+    "bot_tx": "0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2",
+    "bot_block": 22855569,
+    "reason": "A key thief's proxy upgrade (tx 0xcd4a637d, block 22855568 idx 130) installed an implementation with an unprotected drain function 0x03b79c24(address). An anonymous bot (EOA 0xb750e316, executor 0x1a61249f; A local-fork replay of the thief's own 03b79c24 call matches the bot's victim-side call sequence (6 calls, only the recipient argument differs). The bot paid 0.0207 ETH gas, no coinbase transfer, no builder refund, and returned 91.634 ETH (80.0%) to Neemo on 2025-07-14 after the project's on-chain 20% bounty offer. Neither the upgrade nor the bot tx is in mempool-dumpster (private flow or missed), so the bot's reaction time is unmeasured."
+   },
+   {
+    "slug": "peapods-2025",
+    "sub": "second-attempt",
+    "date_utc": "2025-07-08T10:56:23Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "post-failure-replay",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32",
+    "bot_block": 22874010,
+    "reason": "Press (Phalcon/BlockSec via Quadriga, Peapods' thank-you message) says Yoink front-ran the attacker's second attempt. On chain the attacker (EOA 0x277da2d1) succeeded on pair 1 at block 22873986 idx 4 (+78.19 ETH), then tried the USDC pair 0xca1154bb in blocks 22874007/08/09 (txs 0xdc774417, 0x505db202, 0xa03582cc); each pair-2 leg reverted inside the attacker's try/catch. Yoink's tx 0xff8e9226 (block 22874010 idx 0, 12 s after the last attempt) has the same 42 state-changing calls (role-normalised similarity 1.0, same 10M USDC Morpho loan, same swap sizes) and its borrow passed, taking 174,258.31 USDC (11.4944 ETH to coinbase, no builder refund). No attacker tx is shown pending: the attempts had already landed, the attacker's calldata on the pre-Yoink state still reverts (debug_traceCall), and none of either side's txs is in the mempool archive. Yoink adapted and completed a failed, already-mined attack; it did not pre-empt anything we can show. Yoink returned 126,891.81 USDC (90% after recouping 33,267 USDC for its stated 11.95 ETH bribe)."
+   },
+   {
+    "slug": "peapods-2025",
+    "sub": "07-09-followup",
+    "date_utc": "2025-07-09T18:09:23Z",
+    "verdict": "rejected",
+    "race_type": "no-race",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0xd685d0741cf257493c8d804a0daca45f48284ffac1bf749f63326699781ffd6e",
+    "bot_block": 22883324,
+    "reason": "Yoink-message lead dated 2025-07-09. Block 22883324 (2025-07-09T18:09:23Z, 18.6 ETH bid) holds 36 Yoink txs (idx 1-4 pay 1.5-8.6 ETH to the coinbase), but none touches any of 102 Peapods-specific addresses (pairs, vaults, pods, LeverageManager, team-admin call targets, July trace addresses minus common infrastructure); the sampled tx's calls are USDC/USDT/PYUSD pool operations. There is no Peapods attacker or user tx to race or copy on that date. The Peapods incident is 2025-07-08 (block 22874010) and its return was agreed 2025-07-10."
+   },
+   {
+    "slug": "peapods-2025",
+    "sub": "oct-leftover",
+    "date_utc": "2025-10-09T12:29:23Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "bot-was-first-exploiter",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0xe00aea94c4f9374f1a005a9f5832f0d36b3e8cd1f6f5407ee6cb629461ecbbde",
+    "bot_block": 23540182,
+    "reason": "2025-10-09: a user's removeLeverage tx 0x60b2c65c (block 23540172 idx 1) left 8,957.748779 USDC in the Peapods LeverageManager 0x4e6ef371. Yoink's tx 0xe00aea94 (block 23540182 idx 0, ~2 min / 10 blocks later) swept it via a different LeverageManager function (not a replay of the user's calldata): gross 1.8066 ETH, 1.8048 ETH to coinbase, 1.5725 ETH builder refund, net 1.5736 ETH. Peapods messaged Yoink (tx 0x0a5694d3) and Yoink returned 1.416285 ETH (tx 0xcd6d475f, block 23541758) = 90% of net, 'minus 10% bounty'. No attacker exists and nothing was pending: Yoink was the first and only sweeper. A separate 39,452 USDC leftover (block 23540670) was swept by 0x095308cb, not Yoink, and is not part of this row."
+   },
+   {
+    "slug": "punk-2021",
+    "sub": null,
+    "date_utc": "2021-08-10T06:54:58Z",
+    "verdict": "confirmed-onchain",
+    "race_type": "beat-pending-attack",
+    "headline": true,
+    "bot": "anonymous white-hat front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff)",
+    "bot_tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+    "bot_block": 12995895,
+    "reason": "A front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff) landed tx 0x597d11c0 at index 50 of block 12995895 (43.33 gwei effective), two slots ahead of the Punk Protocol attacker's tx 0x7604c7dd at index 52 (40.00 gwei, maxFee-capped), and replayed the attacker's call tree: the same 9 victim calls on the USDC, USDT and DAI CompoundModel pools in the same order (initialize, invest, withdrawToForge) with identical initialize() arguments except the new forge, which is the bot's own contract. The bot's USDC transfer still pays the attacker's EOA 0x1d5a5640, an address present only in the attacker's tx. The attacker's tx still succeeded but withdrew dust (0.03 of each token); an anvil replay shows the attacker alone would have taken all $8.95M, attacker-first makes the bot's tx revert. The bot took $5.95M (USDT+DAI), returned $4.95M, kept a $1M DAI finder's fee, and mis-sent $3.0M USDC to the attacker. Ordering was a plain gas-price auction (no coinbase payment, no bundle pattern); no 2021 mempool archive, so in-block evidence only."
+   },
+   {
+    "slug": "taopad-2024",
+    "sub": null,
+    "date_utc": "2024-02-14T13:27:35Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "post-failure-replay",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+    "bot_block": 19226503,
+    "reason": "Counterparty is the TaoPad project's own operator wallet, not a hacker. Its tx 0xced2c7fa (block 19226482, index 0, public mempool, 13:23:12Z) reverted out of gas; Yoink's tx 0x5853b7a0 (block 19226503, index 0, 13:27:35Z, private) replays the same victim-protocol calls 21 blocks / 252 s later with a higher gas limit, nets 26.32 ETH and returns it to taopad.eth the next day. Nothing was pending in between and no other tx called the vulnerable function, so Yoink did not beat anything: it succeeded where the operator's tx had already failed."
+   },
+   {
+    "slug": "unizen-2024",
+    "sub": "pending-ads",
+    "date_utc": "2024-03-08T23:39:59Z",
+    "verdict": "confirmed-onchain",
+    "race_type": "beat-pending-attack",
+    "headline": true,
+    "bot": "Yoink",
+    "bot_tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+    "bot_block": 19393726,
+    "reason": "Yoink's tx (block 19393726, index 0) calls the Unizen proxy with the same 23 calldata words as the pending public tx 0x44ca0e6b of 0x13a99ecc except the recipient word. That tx was first seen 23:39:57.990Z (mempool-dumpster, 6 sources), 1.0 s before the slot, and landed one block later (19393727 index 53) and reverted because the victim's ADS was gone."
+   },
+   {
+    "slug": "unizen-2024",
+    "sub": "pending-usdt",
+    "date_utc": "2024-03-08T21:52:59Z",
+    "verdict": "confirmed-onchain",
+    "race_type": "beat-pending-attack",
+    "headline": true,
+    "bot": "Yoink",
+    "bot_tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+    "bot_block": 19393223,
+    "reason": "Attacker 0x4e2ce48f's pending creation tx 0xba300ca5 (public 21:52:55.749Z, 3.25 s before the slot) pulls from five wallets; Yoink's tx at 19393223 index 0 makes the same-shape proxy calls (same victims and info block, different recipient and amount tail) for the two wallets still holding USDT (13,565.69 USDT). The pending tx landed at 19393224 and pulled 0 everywhere. Adapted rather than byte-copied."
+   },
+   {
+    "slug": "unizen-2024",
+    "sub": "pending-xi",
+    "date_utc": "2024-03-08T22:10:23Z",
+    "verdict": "confirmed-onchain",
+    "race_type": "beat-pending-attack",
+    "headline": true,
+    "bot": "Yoink",
+    "bot_tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+    "bot_block": 19393298,
+    "reason": "Attacker 0x2ad8aed8 pulled exactly half of wallet 0xd04b7023's XI at 19393297 and its second-half tx (nonce 17) with identical calldata bar the recipient landed at 19393300 index 62 and reverted; Yoink's copy took the other half at 19393298 index 0. Whether nonce 17 was already pending is inferred from consecutive nonces, not measured (neither tx is in the mempool archive), and Yoink's call equally matches the landed first half."
+   },
+   {
+    "slug": "unizen-2024",
+    "sub": "half-copies",
+    "date_utc": "2024-03-08T22:02:23Z",
+    "verdict": "related-not-frontrun",
+    "race_type": "late-copy",
+    "headline": false,
+    "bot": "Yoink",
+    "bot_tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+    "bot_block": 19393262,
+    "reason": "Four Yoink txs (19393262, 19393264, 19393342, 19393363, all index 0) pull the same wallet, token and amount as an attacker 0x2ad8aed8 tx that had already landed 1-2 blocks earlier, calldata identical except the recipient. The attacker took exactly 50% each time, leaving the other half. None of the attacker txs was seen pending."
+   }
+  ],
+  "before": {
+   "rows": 27,
+   "incidents": 20,
+   "headline_rows": 15,
+   "headline_incidents": 13
+  },
+  "after": {
+   "rows": 43,
+   "incidents": 29,
+   "headline_rows": 19,
+   "headline_incidents": 15
+  }
+ },
+ "per_incident": [
+  {
+   "slug": "alkemi-2026",
+   "incident_json": "incidents/alkemi-2026/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "wbtc-yoink",
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "Alkemi Earn's self-liquidation bug (BlockSec) was used on two pools. The 'attack tx' DeFiHackLabs lists (0xa17001eb, block 24626979, +43.45395 ETH, ETH vault) is not what Yoink touched. Yoink's tx 0x7acef470 (block 24627181 idx 0) hits the WBTC pool and contains the same 16 state-changing Alkemi calls (+2 withdraws) as the deploy+attack tx 0x726bd90c of EOA 0x46c403e3, which was mined one block earlier (24627180 idx 226) and reverted out of gas at its 14,974,454 gas limit. A fork replay of that tx at 30M gas succeeds and pays the attacker exactly the 29,884,523 sat WBTC Yoink swapped. So Yoink retried a failed, already-mined tx; nothing of that actor's was pending. The on-chain complainant 0x8366d87b ('Why did you leak my attack transaction to yoink?', block 24627239) is a third party: its program differs (0 shared calls), its attack tx landed in 24627185 after Yoink's and found the pool empty. A traceCall of its tx on the pre-Yoink state would have taken the whole 29,980,756 sat, so Yoink did take what it was about to drain, but the leak itself is neither shown nor refuted (none of the 15 relevant txs is in mempool-dumpster although 55-63% of other txs in those blocks are). Yoink paid 10.2256 ETH coinbase (999 per mille), builder refunded 9.19 ETH, net about 9.20 ETH, no return found."
+    },
+    {
+     "sub": "eth-vault-copiers",
+     "verdict": "related-not-frontrun",
+     "race_type": "late-copy",
+     "headline": false,
+     "reason": "The DHL-listed attacker 0x0ed1c01b deployed (idx 2) and attacked (idx 3) in the same block 24626979 and took 43.45395 ETH from the ETH vault; BlockSec confirms the tx and the self-liquidation root cause (~$89K). All seven later txs running the same call sequence landed after it (24626980 x2 with nothing gained, 0.7173 ETH of leftovers taken at 24627055, then 24627182, 24627185 and a reverted one at 24627423). No bot was ahead of the attacker and Yoink is not among them; no c0ffeebabe tx touches the Alkemi proxy in blocks 24600000-24650000."
+    }
+   ]
+  },
+  {
+   "slug": "alkimiya-2025",
+   "incident_json": "incidents/alkimiya-2025/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Yoink landed at idx 0 of 22146340 with the attacker's 7 SilicaPools calls (+ the attacker's own index contract); the attacker's tx landed one block later and reverted."
+    }
+   ]
+  },
+  {
+   "slug": "balancer-2025",
+   "incident_json": "incidents/balancer-2025/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "post-failure-replay"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "Every replay (Bitfinding whitehat 23717398; copiers) landed AFTER the attacker's tx 23717397 on the same pool: post-inclusion rescue of residual balances, not pre-emption."
+    }
+   ]
+  },
+  {
+   "slug": "bifi-2026",
+   "incident_json": "incidents/bifi-2026/incident.json",
+   "changes": [
+    {
+     "field": "verdict",
+     "old": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+     "new": "confirmed-onchain"
+    },
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "deploy-window-copy"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "deploy-window-copy",
+     "headline": true,
+     "reason": "The attacker deployed a purpose-built contract in block 26210255 and never called it. The next block contains c0ffeebabe.eth at position 1, with the market funds removed and 0.9868 ETH paid to the builder. Classification retains the recorded deploy-window result; only transaction, block, position and funds are published."
+    }
+   ]
+  },
+  {
+   "slug": "blueberry-2024",
+   "incident_json": "incidents/blueberry-2024/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "c0ffeebabe.eth landed at position 0 of block 19287289. The attacker transaction was public from 02:22:09.219 UTC, landed in block 19287290 and received nothing."
+    }
+   ]
+  },
+  {
+   "slug": "conic-2023",
+   "incident_json": "incidents/conic-2023/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "crvusd-pool",
+     "verdict": "related-not-frontrun",
+     "race_type": "late-copy",
+     "headline": false,
+     "reason": "Yoink gen1 (bot 0xd050e0a4) replays the Conic crvUSD-pool attacker's sandwich in ten consecutive blocks 17743471-17743480 (idx 0, once idx 4). Call-by-call diff against the attacker's tx 0x37acd17a: same Balancer flash loan (12M USDC/80,000 WETH/9M USDT), same crvUSD create_loan(80,000 WETH, 93M, 10), same Curve swap and Conic deposit/withdraw sequence with identical round-number sizes; state-derived sizes differ ~0.1%. But the attacker's tx already landed at 17743470 idx 4 and succeeded (+11.56 ETH), so the first copy is one block AFTER it and nothing of the attacker's was pending (his next tx is 22 blocks later). Yoink took 125.82 ETH gross / 90.34 net (matches its on-chain message to <1e-5 ETH) against the attacker's 13.58 ETH, and returned 81.307 ETH (90.0% of net) to conicfinance.eth, keeping the 10% bounty. Not post-hack arbitrage of an imbalance (the earlier note) and not a front-run: a late copy."
+    },
+    {
+     "sub": "eth-pool",
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "ETH omnipool read-only reentrancy. The first attacker 0x10db234e deployed 0xdac434f8 (block 17740893) and its attack tx 0x97a8315e (17740901 idx 4) reverted out of gas. 51 blocks (~10 min) later 0x8d67db0b deployed a clone: creation code identical except one 20-byte beneficiary address (offset 1370 of 21,970 bytes), identical attack calldata (0x52558bb0; 19700/240/3000/180) and a 29.5M instead of 27.64M gas limit, and took 1,724.175 ETH at idx 0 of 17740955. The original had nothing pending (two txs ever), so the clone replays after a failed attempt rather than beating a pending one. The operator is an anonymous exploiter (BlockSec label 'LadyPepe Token Exploiter' per Rekt), not a returning bot; funds were not returned. Clone operator assumed distinct from the first attacker (a same-operator second wallet is not excluded)."
+    }
+   ]
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "incident_json": "incidents/curve-vyper-2023/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "pETH",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "0x6ec21d18 at idx 0 of 17806056 ran a byte-copy (20 bytes differ) of the attacker's CREATE initcode; the real attacker's tx at idx 91 reverted."
+    },
+    {
+     "sub": "msETH",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "c0ffeebabe idx 0 of 17806550 lands before that actor's contract deploy (idx 10, same block); the attacker's attack call two blocks later found the pool empty (top-level success, net zero)."
+    },
+    {
+     "sub": "CRV-ETH-wave2",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "c0ffeebabe idx 7 of 17808683 lands before that actor's contract deploy (idx 13, same block); go() (17808686) reverted at the exchange. Curve's deployer wrote on-chain that the front-run tx was a hack of the CRV/ETH pool."
+    },
+    {
+     "sub": "alETH",
+     "verdict": "rejected",
+     "race_type": "no-race",
+     "headline": false,
+     "reason": "No racer in the alETH window; sub-race rejected."
+    },
+    {
+     "sub": "CRV-ETH-wave1",
+     "verdict": "rejected",
+     "race_type": "no-race",
+     "headline": false,
+     "reason": "No racer in CRV/ETH phase 1; sub-race rejected."
+    }
+   ]
+  },
+  {
+   "slug": "defiplaza-2024",
+   "incident_json": "incidents/defiplaza-2024/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Yoink idx 0 of 20240539 replays the attacker's 25 DeFi Plaza calls byte for byte while the attacker's still-pending run() landed in 20240540 and reverted."
+    }
+   ]
+  },
+  {
+   "slug": "dodo-v2-2021",
+   "incident_json": "incidents/dodo-v2-2021/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Antelope's init() calldata is byte-identical to the attacker's; bot idx 4 (243 gwei) vs attacker idx 176 (132 gwei) in 12000022; the attacker's tx reverted."
+    }
+   ]
+  },
+  {
+   "slug": "earningfarm-2022",
+   "incident_json": "incidents/earningfarm-2022/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Bot idx 0 of 15746200 makes byte-identical flashLoan/deposit calldata to the attacker's idx 7 in the same block; the attacker's tx reverted."
+    }
+   ]
+  },
+  {
+   "slug": "euler-copybot-2023",
+   "incident_json": "incidents/euler-copybot-2023/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "deploy-window-copy"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "deploy-window-copy",
+     "headline": false,
+     "reason": "The copier deployed a bytecode copy (4x20 bytes differ) one block after the attacker's deploy and ran the DAI-market entry point 17 blocks before the hacker's first call; it captured nothing (proceeds went to the hard-coded attacker wallet)."
+    }
+   ]
+  },
+  {
+   "slug": "kelp-rseth-2026",
+   "incident_json": "incidents/kelp-rseth-2026/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "deploy-window-copy"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "deploy-window-copy",
+     "headline": true,
+     "reason": "Yoink called the attacker's own prepared executor one block after prepare(); eth_call shows it reverts before prepare() and succeeds after; the attacker's finishing tx never landed."
+    }
+   ]
+  },
+  {
+   "slug": "makina-2026",
+   "incident_json": "incidents/makina-2026/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "deploy-window-copy"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "deploy-window-copy",
+     "headline": true,
+     "reason": "Searcher tx at idx 0 of the block after the attacker's contract deploy; local replay of the attacker's deployed F1() matches the bot's protocol call sequence 98.6%; the attacker's call never landed."
+    }
+   ]
+  },
+  {
+   "slug": "metapool-2025",
+   "incident_json": "incidents/metapool-2025/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "bot-was-first-exploiter",
+     "headline": false,
+     "reason": "Yoink's tx 0x4f43fc6d (block 22722394, index 0, 06:18:59Z) is the first use of the mpETH mint-without-deposit bug (all 381 earlier mpETH mint events are fee or staking mints). The attacker cluster's first exploit tx is a test run 50 min later (0x691c8070, block 22722643, EOA 0xd08559ce) and the main flash-loan tx (0x57ee419a, block 22722911) 1 h 44 min later; the main-tx EOA held 0.0008 ETH until the test proceeds arrived, and none of the attacker's txs is in the public mempool archive. Nothing of the attacker's was pending, so Yoink neither front-ran nor replayed anyone: the press 'Yoink front-ran the attacker' is loose wording. The attacker's txs share the call grammar (mint with 0 ETH, pool swap, V3 leg, optional flash-funded depositETH) but no contract or calldata with Yoink's. Yoink returned its net 45.79 ETH to the Meta Pool admin EOA and got a 5 ETH reward; the 28.9 unbacked mpETH it swept to its vault was not returned. c0ffeebabe.eth made a small late copy one block after the attacker's main tx."
+    }
+   ]
+  },
+  {
+   "slug": "mintswap-2024",
+   "incident_json": "incidents/mintswap-2024/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "bot-was-first-exploiter",
+     "headline": false,
+     "reason": "The txs the MintSwap team calls the hack are Yoink's own (index 0 of blocks 19563164/65); the pool's full transfer history shows Yoink's tx is the first sell-path call ever, so there is no attacker tx to beat or replay. The only third-party tx it pre-empted is an innocent user's pending 5,991 vMINT sell (public mempool 9.4 s earlier, reverted afterwards), which Yoink's different-shaped call does not replay; whether it triggered the bot is unproven. A second searcher made two small sells (0.78 ETH) only after Yoink."
+    }
+   ]
+  },
+  {
+   "slug": "neemo-2025",
+   "incident_json": "incidents/neemo-2025/incident.json",
+   "changes": [
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "deploy-window-copy",
+     "headline": true,
+     "reason": "A key thief's proxy upgrade (tx 0xcd4a637d, block 22855568 idx 130) installed an implementation with an unprotected drain function 0x03b79c24(address). An anonymous bot (EOA 0xb750e316, executor 0x1a61249f; A local-fork replay of the thief's own 03b79c24 call matches the bot's victim-side call sequence (6 calls, only the recipient argument differs). The bot paid 0.0207 ETH gas, no coinbase transfer, no builder refund, and returned 91.634 ETH (80.0%) to Neemo on 2025-07-14 after the project's on-chain 20% bounty offer. Neither the upgrade nor the bot tx is in mempool-dumpster (private flow or missed), so the bot's reaction time is unmeasured."
+    }
+   ]
+  },
+  {
+   "slug": "paraswap-2024",
+   "incident_json": "incidents/paraswap-2024/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "bot-was-first-exploiter"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "bot-was-first-exploiter",
+     "headline": false,
+     "reason": "Yoink's tx is the first call of this kind on chain (trace_filter over 55k blocks); no hacker tx exists to beat."
+    }
+   ]
+  },
+  {
+   "slug": "peapods-2025",
+   "incident_json": "incidents/peapods-2025/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "second-attempt",
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "Press (Phalcon/BlockSec via Quadriga, Peapods' thank-you message) says Yoink front-ran the attacker's second attempt. On chain the attacker (EOA 0x277da2d1) succeeded on pair 1 at block 22873986 idx 4 (+78.19 ETH), then tried the USDC pair 0xca1154bb in blocks 22874007/08/09 (txs 0xdc774417, 0x505db202, 0xa03582cc); each pair-2 leg reverted inside the attacker's try/catch. Yoink's tx 0xff8e9226 (block 22874010 idx 0, 12 s after the last attempt) has the same 42 state-changing calls (role-normalised similarity 1.0, same 10M USDC Morpho loan, same swap sizes) and its borrow passed, taking 174,258.31 USDC (11.4944 ETH to coinbase, no builder refund). No attacker tx is shown pending: the attempts had already landed, the attacker's calldata on the pre-Yoink state still reverts (debug_traceCall), and none of either side's txs is in the mempool archive. Yoink adapted and completed a failed, already-mined attack; it did not pre-empt anything we can show. Yoink returned 126,891.81 USDC (90% after recouping 33,267 USDC for its stated 11.95 ETH bribe)."
+    },
+    {
+     "sub": "07-09-followup",
+     "verdict": "rejected",
+     "race_type": "no-race",
+     "headline": false,
+     "reason": "Yoink-message lead dated 2025-07-09. Block 22883324 (2025-07-09T18:09:23Z, 18.6 ETH bid) holds 36 Yoink txs (idx 1-4 pay 1.5-8.6 ETH to the coinbase), but none touches any of 102 Peapods-specific addresses (pairs, vaults, pods, LeverageManager, team-admin call targets, July trace addresses minus common infrastructure); the sampled tx's calls are USDC/USDT/PYUSD pool operations. There is no Peapods attacker or user tx to race or copy on that date. The Peapods incident is 2025-07-08 (block 22874010) and its return was agreed 2025-07-10."
+    },
+    {
+     "sub": "oct-leftover",
+     "verdict": "related-not-frontrun",
+     "race_type": "bot-was-first-exploiter",
+     "headline": false,
+     "reason": "2025-10-09: a user's removeLeverage tx 0x60b2c65c (block 23540172 idx 1) left 8,957.748779 USDC in the Peapods LeverageManager 0x4e6ef371. Yoink's tx 0xe00aea94 (block 23540182 idx 0, ~2 min / 10 blocks later) swept it via a different LeverageManager function (not a replay of the user's calldata): gross 1.8066 ETH, 1.8048 ETH to coinbase, 1.5725 ETH builder refund, net 1.5736 ETH. Peapods messaged Yoink (tx 0x0a5694d3) and Yoink returned 1.416285 ETH (tx 0xcd6d475f, block 23541758) = 90% of net, 'minus 10% bounty'. No attacker exists and nothing was pending: Yoink was the first and only sweeper. A separate 39,452 USDC leftover (block 23540670) was swept by 0x095308cb, not Yoink, and is not part of this row."
+    }
+   ]
+  },
+  {
+   "slug": "punk-2021",
+   "incident_json": "incidents/punk-2021/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "A front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff) landed tx 0x597d11c0 at index 50 of block 12995895 (43.33 gwei effective), two slots ahead of the Punk Protocol attacker's tx 0x7604c7dd at index 52 (40.00 gwei, maxFee-capped), and replayed the attacker's call tree: the same 9 victim calls on the USDC, USDT and DAI CompoundModel pools in the same order (initialize, invest, withdrawToForge) with identical initialize() arguments except the new forge, which is the bot's own contract. The bot's USDC transfer still pays the attacker's EOA 0x1d5a5640, an address present only in the attacker's tx. The attacker's tx still succeeded but withdrew dust (0.03 of each token); an anvil replay shows the attacker alone would have taken all $8.95M, attacker-first makes the bot's tx revert. The bot took $5.95M (USDT+DAI), returned $4.95M, kept a $1M DAI finder's fee, and mis-sent $3.0M USDC to the attacker. Ordering was a plain gas-price auction (no coinbase payment, no bundle pattern); no 2021 mempool archive, so in-block evidence only."
+    }
+   ]
+  },
+  {
+   "slug": "ronin-2024",
+   "incident_json": "incidents/ronin-2024/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-whitehat-or-user"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "eth-leg",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-whitehat-or-user",
+     "headline": false,
+     "reason": "Bot copied a legitimate user's pending withdrawal (2 of 76 calldata words changed) and landed first; there is no hostile attacker (bots were the exploiters, then returned)."
+    },
+    {
+     "sub": "racer3",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-whitehat-or-user",
+     "headline": false,
+     "reason": "Bot copied a user's pending withdrawal (1 word changed) and landed first; no hostile attacker."
+    },
+    {
+     "sub": "yoink-usdc",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-whitehat-or-user",
+     "headline": false,
+     "reason": "Yoink copied a user's pending USDC withdrawal and landed first via its builder; no hostile attacker."
+    }
+   ]
+  },
+  {
+   "slug": "saddle-2022",
+   "incident_json": "incidents/saddle-2022/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "post-failure-replay"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "BlockSec's rescue replayed the attacker's reverted attempt 2 two blocks AFTER it was mined; no attacker tx was pending at 14684434."
+    }
+   ]
+  },
+  {
+   "slug": "securedfinance-2026",
+   "incident_json": "incidents/securedfinance-2026/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "post-failure-replay"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "Bot completed the attack 4 blocks (48 s) after the attacker's public tx was mined and had failed out of gas."
+    }
+   ]
+  },
+  {
+   "slug": "shoco-2023",
+   "incident_json": "incidents/shoco-2023/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Bot idx 0 vs attacker idx 15 in the same block; the same victim calls adapted (not byte-copied); bot gain equals the attacker's counterfactual gain to the wei; the attacker's tx reverted."
+    }
+   ]
+  },
+  {
+   "slug": "sushi-rp2-2023",
+   "incident_json": "incidents/sushi-rp2-2023/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-whitehat-or-user"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-whitehat-or-user",
+     "headline": false,
+     "reason": "Yoink's pull in 17007838 pre-empted white hat Trust's still-pending rescue (max fee below that block's base fee); route bytes identical except the fake-pool address. There is no hostile attacker."
+    }
+   ]
+  },
+  {
+   "slug": "taopad-2024",
+   "incident_json": "incidents/taopad-2024/incident.json",
+   "changes": [],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "post-failure-replay",
+     "headline": false,
+     "reason": "Counterparty is the TaoPad project's own operator wallet, not a hacker. Its tx 0xced2c7fa (block 19226482, index 0, public mempool, 13:23:12Z) reverted out of gas; Yoink's tx 0x5853b7a0 (block 19226503, index 0, 13:27:35Z, private) replays the same victim-protocol calls 21 blocks / 252 s later with a higher gas limit, nets 26.32 ETH and returns it to taopad.eth the next day. Nothing was pending in between and no other tx called the vulnerable function, so Yoink did not beat anything: it succeeded where the operator's tx had already failed."
+    }
+   ]
+  },
+  {
+   "slug": "time-2023",
+   "incident_json": "incidents/time-2023/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "bot-was-first-exploiter"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": false
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "related-not-frontrun",
+     "race_type": "bot-was-first-exploiter",
+     "headline": false,
+     "reason": "The tx called 'the attack' is Yoink's own; no separate attacker tx exists to diff against."
+    }
+   ]
+  },
+  {
+   "slug": "transitswap-2022",
+   "incident_json": "incidents/transitswap-2022/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": null,
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Yoink idx 24 (3.000000002 gwei) replays the attacker's last pending tx (idx 43, reverted) with 21/21 router calls identical bar the recipient. It did not front-run the attacker's 8 earlier successful txs."
+    }
+   ]
+  },
+  {
+   "slug": "uncx-2026",
+   "incident_json": "incidents/uncx-2026/incident.json",
+   "changes": [
+    {
+     "field": "verdict",
+     "old": "confirmed-onchain (Yoink front-run of the attacker's X-token drain); ZC copiers incl. c0ffeebabe = related-not-frontrun (post-hack copy of an already-landed attacker leg)",
+     "new": "confirmed-onchain"
+    },
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "yoink-X",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Yoink idx 0 of 26191920 makes the same 26 X-token calls as the attacker, whose identical call set landed one block later and reverted."
+    },
+    {
+     "sub": "zc-copiers",
+     "verdict": "related-not-frontrun",
+     "race_type": "late-copy",
+     "headline": false,
+     "reason": "ZC copiers (incl. c0ffeebabe at 26191995) landed 248 blocks after the attacker's ZC drain at 26191745."
+    }
+   ]
+  },
+  {
+   "slug": "unizen-2024",
+   "incident_json": "incidents/unizen-2024/incident.json",
+   "changes": [
+    {
+     "field": "race_type",
+     "old": null,
+     "new": "beat-pending-attack"
+    },
+    {
+     "field": "headline",
+     "old": null,
+     "new": true
+    }
+   ],
+   "semantic_change": null,
+   "rows": [
+    {
+     "sub": "pending-ads",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Yoink's tx (block 19393726, index 0) calls the Unizen proxy with the same 23 calldata words as the pending public tx 0x44ca0e6b of 0x13a99ecc except the recipient word. That tx was first seen 23:39:57.990Z (mempool-dumpster, 6 sources), 1.0 s before the slot, and landed one block later (19393727 index 53) and reverted because the victim's ADS was gone."
+    },
+    {
+     "sub": "pending-usdt",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Attacker 0x4e2ce48f's pending creation tx 0xba300ca5 (public 21:52:55.749Z, 3.25 s before the slot) pulls from five wallets; Yoink's tx at 19393223 index 0 makes the same-shape proxy calls (same victims and info block, different recipient and amount tail) for the two wallets still holding USDT (13,565.69 USDT). The pending tx landed at 19393224 and pulled 0 everywhere. Adapted rather than byte-copied."
+    },
+    {
+     "sub": "pending-xi",
+     "verdict": "confirmed-onchain",
+     "race_type": "beat-pending-attack",
+     "headline": true,
+     "reason": "Attacker 0x2ad8aed8 pulled exactly half of wallet 0xd04b7023's XI at 19393297 and its second-half tx (nonce 17) with identical calldata bar the recipient landed at 19393300 index 62 and reverted; Yoink's copy took the other half at 19393298 index 0. Whether nonce 17 was already pending is inferred from consecutive nonces, not measured (neither tx is in the mempool archive), and Yoink's call equally matches the landed first half."
+    },
+    {
+     "sub": "half-copies",
+     "verdict": "related-not-frontrun",
+     "race_type": "late-copy",
+     "headline": false,
+     "reason": "Four Yoink txs (19393262, 19393264, 19393342, 19393363, all index 0) pull the same wallet, token and amount as an attacker 0x2ad8aed8 tx that had already landed 1-2 blocks earlier, calldata identical except the recipient. The attacker took exactly 50% each time, leaving the other half. None of the attacker txs was seen pending."
+    }
+   ]
+  }
+ ],
+ "per_row": [
+  {
+   "slug": "alkemi-2026",
+   "sub": "wbtc-yoink",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "alkemi-2026",
+   "sub": "eth-vault-copiers",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "late-copy",
+   "race_type": "late-copy",
+   "headline": false
+  },
+  {
+   "slug": "alkimiya-2025",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "balancer-2025",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "bifi-2026",
+   "sub": null,
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "deploy-window-copy",
+   "race_type": "deploy-window-copy",
+   "headline": true
+  },
+  {
+   "slug": "blueberry-2024",
+   "sub": null,
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "conic-2023",
+   "sub": "crvusd-pool",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "late-copy",
+   "race_type": "late-copy",
+   "headline": false
+  },
+  {
+   "slug": "conic-2023",
+   "sub": "eth-pool",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "sub": "pETH",
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "sub": "msETH",
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "sub": "CRV-ETH-wave2",
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "sub": "alETH",
+   "orig_verdict": "rejected",
+   "verdict": "rejected",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "no-race",
+   "headline": false
+  },
+  {
+   "slug": "curve-vyper-2023",
+   "sub": "CRV-ETH-wave1",
+   "orig_verdict": "rejected",
+   "verdict": "rejected",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "no-race",
+   "headline": false
+  },
+  {
+   "slug": "defiplaza-2024",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "dodo-v2-2021",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "earningfarm-2022",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "euler-copybot-2023",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "deploy-window-copy",
+   "race_type": "deploy-window-copy",
+   "headline": false
+  },
+  {
+   "slug": "kelp-rseth-2026",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "deploy-window-copy",
+   "race_type": "deploy-window-copy",
+   "headline": true
+  },
+  {
+   "slug": "makina-2026",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "deploy-window-copy",
+   "race_type": "deploy-window-copy",
+   "headline": true
+  },
+  {
+   "slug": "metapool-2025",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  {
+   "slug": "mintswap-2024",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  {
+   "slug": "neemo-2025",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "deploy-window-copy",
+   "race_type": "deploy-window-copy",
+   "headline": true
+  },
+  {
+   "slug": "paraswap-2024",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  {
+   "slug": "peapods-2025",
+   "sub": "second-attempt",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "peapods-2025",
+   "sub": "07-09-followup",
+   "orig_verdict": "rejected",
+   "verdict": "rejected",
+   "race_type_proposed": "late-copy",
+   "race_type": "no-race",
+   "headline": false
+  },
+  {
+   "slug": "peapods-2025",
+   "sub": "oct-leftover",
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  {
+   "slug": "punk-2021",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "ronin-2024",
+   "sub": "eth-leg",
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-whitehat-or-user",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false
+  },
+  {
+   "slug": "ronin-2024",
+   "sub": "racer3",
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-whitehat-or-user",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false
+  },
+  {
+   "slug": "ronin-2024",
+   "sub": "yoink-usdc",
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-whitehat-or-user",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false
+  },
+  {
+   "slug": "saddle-2022",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "securedfinance-2026",
+   "sub": null,
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "shoco-2023",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "sushi-rp2-2023",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-whitehat-or-user",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false
+  },
+  {
+   "slug": "taopad-2024",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "post-failure-replay",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  {
+   "slug": "time-2023",
+   "sub": null,
+   "orig_verdict": "related-not-frontrun",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "bot-was-first-exploiter",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  {
+   "slug": "transitswap-2022",
+   "sub": null,
+   "orig_verdict": "confirmed-onchain",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "uncx-2026",
+   "sub": "yoink-X",
+   "orig_verdict": "confirmed-onchain (Yoink front-run of the attacker's X-token drain)",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "uncx-2026",
+   "sub": "zc-copiers",
+   "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "late-copy",
+   "race_type": "late-copy",
+   "headline": false
+  },
+  {
+   "slug": "unizen-2024",
+   "sub": "pending-ads",
+   "orig_verdict": "confirmed-onchain (Yoink beat a still-pending public attacker tx; calldata identical except recipient)",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "unizen-2024",
+   "sub": "pending-usdt",
+   "orig_verdict": "confirmed-onchain (Yoink adapted a pending public attacker tx: 2 of its 5 victim calls)",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "unizen-2024",
+   "sub": "pending-xi",
+   "orig_verdict": "confirmed-onchain (weak: Yoink pre-empted the attacker's identical second-half tx; pending-ness inferred)",
+   "verdict": "confirmed-onchain",
+   "race_type_proposed": "beat-pending-attack",
+   "race_type": "beat-pending-attack",
+   "headline": true
+  },
+  {
+   "slug": "unizen-2024",
+   "sub": "half-copies",
+   "orig_verdict": "related-not-frontrun (late copies of landed attacker txs)",
+   "verdict": "related-not-frontrun",
+   "race_type_proposed": "late-copy",
+   "race_type": "late-copy",
+   "headline": false
+  }
+ ],
+ "returns_schema": {
+  "doc": "Explicit return denominators for data/incidents.json `fate` (added 2026-10-21 after the paper fact-check).\n\nWhy: `fate.returned_pct` was always returned_total_eth / gross_loot_eth, but \"gross\" (everything the bot tx took from the\nvictim, before the bribe) and \"the bot's net\" (after the coinbase payment +/- builder refund) tell different stories\n(DeFi Plaza: 10.5% of gross, 98.7% of the bot's net). Every row now carries both, plus the builder/proposer pass-through\nand a victim-loss denominator. All values are ETH-equivalents already present in the row (loot / fate fields); the only\nnew chain facts are the corrections in OVERRIDES below.\n\nNew `fate` fields (all computed in apply(); null when a figure is unknown, never 0 for \"unknown\"):\n  returned_by_builder_or_proposer_eth  alias of returned_by_builder_eth: ETH a builder / proposer-side recipient passed to the\n                                       victim (Blueberry builder -> multisig; Makina builder -> 0xbed -> Safe). null when none seen.\n  returned_by_bot_side_eth             returned_total_eth - builder part: what the row's own actors (bot; for Sushi RP2 also the\n                                       whitehats) got back to the victim, net of any bounty they sent back or kept out of the return.\n  returned_pct_of_gross                returned_total_eth / loot.gross_loot_eth * 100. Equals the legacy `returned_pct` (kept, identical).\n  returned_pct_of_bot_net              returned_by_bot_side_eth / loot.bot_net_eth * 100 (bot_net = gross - coinbase - gas + builder\n                                       refund). null where the net is ~0 or excludes the main proceeds (see returned_pct_of_bot_net_note).\n  victim_loss_eth, victim_loss_basis   ETH-equivalent the victim lost to this tx; equals gross_loot_eth wherever gross is measured at\n                                       the victim side (most rows), overridden where it is not.\n  returned_pct_of_victim_loss          returned_total_eth / victim_loss_eth * 100.\n  returned_pct_note                    caveat on the figures of the row (token legs, scope, >100%).",
+  "legacy_alias": "fate.returned_pct == fate.returned_pct_of_gross (identical for all rows)",
+  "before_values_replaced": {
+   "paraswap-2024": {
+    "return_status": "none-found",
+    "returned_total_eth": null,
+    "returned_pct": null,
+    "kept_by_bot_eth": 4.349856326462
+   },
+   "blueberry-2024": {
+    "return_status": "partial",
+    "returned_by_builder_eth": 366.50685,
+    "returned_total_eth": 436.50685,
+    "returned_pct": 95.373
+   }
+  },
+  "sweep": [
+   {
+    "row": "paraswap-2024",
+    "kind": "fixed (data wrong)",
+    "finding": "fate said none-found. Chain: tx 0xa1b1ea5033611603f6e8e5ce5d566ad6b9ad1cd69476e37091c0d90c56c04f90 (block 19508275, 2024-03-25T01:33:35Z, idx 0x60) sent 4.342 ETH from Yoink's EOA 0xfde0d157 to 0x66E90d840D7C4F3473E25dD8ca361747058c6Db0, the address Paraswap named in its on-chain message 0xcaa2422853fd14f5645d762729b6edc41ebdac2dce988123d1b91d98eab37e0f (2024-03-24T23:00:59Z) and the Safe Velora's help-centre article names as holding its white-hat operation's funds. Paraswap later asked for the other ~2.12 ETH (0xbd43d2de) and Yoink declined (0x3d3e7cfe); no further transfer found to 2024-05-24. The earlier search had looked at the approving wallet's inbound traces, not Paraswap's named address.",
+    "after": {
+     "return_status": "partial",
+     "returned_total_eth": 4.342,
+     "returned_pct_of_gross": 67.179,
+     "returned_pct_of_bot_net": 99.819,
+     "returned_pct_of_victim_loss": 67.179
+    }
+   },
+   {
+    "row": "blueberry-2024",
+    "kind": "fixed (small omission)",
+    "finding": "incidents/blueberry-2024/incident.json funds_fate lists a second builder-side return, 0.11996 ETH from the fee recipient 0x25b71878 to the multisig in block 19289339 (tx 0x111102a2, verified on chain), which the dataset omitted; with it the builder returned 366.6268 ETH (Blueberry's own X post reports about 366.6 ETH returned to the multisig).",
+    "after": {
+     "returned_by_builder_eth": 366.626810481,
+     "returned_total_eth": 436.626810481,
+     "returned_pct_of_gross": 95.399
+    }
+   },
+   {
+    "row": "defiplaza-2024",
+    "kind": "re-derived, data was right; prose conflated denominators",
+    "finding": "Chain re-derivation: pool loss 73.39 ETH (15 tokens, DefiLlama 13:15 prices, ETH $2954.6); Yoink paid 66.318 ETH to the coinbase, got 4.761 ETH back, bot_net 7.78 ETH (the contract's ETH balance fell 13.364 ETH over block 20240539 = -18.129 + 4.761). Four vault -> DeFi Plaza deployer transfers (19:42-19:47 UTC, receipts saved) = $22,689 = 7.679 ETH. So 10.46% of gross (the pool loss) and 98.66% of Yoink's net are BOTH correct; no ETH was returned, and the 62.54 ETH the builder paid the proposer (Lido vault) is not a return.",
+    "after": {
+     "returned_pct_of_gross": 10.464,
+     "returned_pct_of_bot_net": 98.657,
+     "returned_pct_of_victim_loss": 10.464
+    }
+   },
+   {
+    "row": "uncx-2026/yoink-X",
+    "kind": "caveat added",
+    "finding": "returned_pct 99.548 compares the 8.10335 ETH returned with the 8.14 ETH ETH-side gross while the real net is mostly 102.14M X tokens; token leg 82.14M returned = 80.42%. Share of bot net set to null."
+   },
+   {
+    "row": "blueberry-2024",
+    "kind": "caveat added",
+    "finding": "share of bot-tx net is not meaningful (net 0.0464 ETH vs 70 ETH sent from other funds); set to null."
+   },
+   {
+    "row": "ronin-2024/eth-leg + yoink-usdc",
+    "kind": "checked, unchanged",
+    "finding": "returned_by_bot_eth (4,001 / 800) is what the bot contract sent; returned_total_eth (3,992.097 / 792.456) is what reached Ronin's Safe; pct uses the latter."
+   },
+   {
+    "row": "alkimiya-2025",
+    "kind": "checked, unchanged",
+    "finding": "returned_total_eth 42.0 is net of the 6.3287 ETH that came back to Yoink; 82.54% of gross, 86.90% of bot net (paper: 87%)."
+   },
+   {
+    "row": "makina-2026",
+    "kind": "checked, unchanged",
+    "finding": "70.87% of gross is entirely builder-chain (0xbed2) money; the bot returned nothing of its own 0.13 ETH net (0.0% of bot net)."
+   },
+   {
+    "row": "sushi-rp2-2023",
+    "kind": "checked, unchanged",
+    "finding": "875 ETH = Trust 90 + BlockSec 100 + 685 via the Sushi multisig (c0ffeebabe 305.3 + Yoink 380); incident-wide scope, not pooled; no builder or proposer return found. kept_by_bot_eth (4.80) is c0ffeebabe.eth's own arithmetic remainder, not an incident-wide figure, which is the one consistency_check exception."
+   },
+   {
+    "row": "dodo-v2-2021",
+    "kind": "checked, unchanged",
+    "finding": "Antelope row has no ETH-priced gross, so no percentages; Cheetah's USDT return (1,139,456 USDT, tx 0x6e743db0) is verified in the fact-check but belongs to another bot."
+   },
+   {
+    "row": "paper section 7.1 table",
+    "kind": "checked",
+    "finding": "all coinbase / proposer / refund / pass-through numbers match the dataset except Kelp 'Builder kept or forwarded 5.09': dataset coinbase 18.9312 - proposer 13.8630 = 5.07 (5.09 = swap proceeds 18.9502 - 13.8630)."
+   }
+  ],
+  "consistency_check_exceptions": [
+   [
+    "peapods-2025/second-attempt",
+    "kept_by_bot_eth 4.4977981980052295 + bot-side return 45.5903 != bot_net 51.1102"
+   ],
+   [
+    "sushi-rp2-2023/None",
+    "kept_by_bot_eth 4.801019279006994 + bot-side return 875.0000 != bot_net 993.0195"
+   ],
+   [
+    "unizen-2024/pending-ads",
+    "status returned/partial without ETH figure"
+   ],
+   [
+    "unizen-2024/pending-usdt",
+    "status returned/partial without ETH figure"
+   ],
+   [
+    "unizen-2024/pending-xi",
+    "status returned/partial without ETH figure"
+   ],
+   [
+    "unizen-2024/half-copies",
+    "status returned/partial without ETH figure"
+   ]
+  ],
+  "stats_block": "data/headline_stats.json -> loot.returns"
+ }
+}

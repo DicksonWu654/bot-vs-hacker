@@ -1,0 +1,514 @@
+{
+ "schema": "bvh-incident/1",
+ "slug": "neemo-2025",
+ "name": "Neemo Finance StakingManagerL1 proxy: open drain function planted by a key-compromise upgrade, taken by a bot one block later (2025-07-05)",
+ "date": "2025-07-05",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_qualifier": "upgrade-window copy: the bot used the attacker's own on-chain setup (the malicious implementation) in the very next block; no attacker call to the drain function exists on-chain, so 'beat a pending attacker tx' cannot be shown (strength medium).",
+ "race_type": "deploy-window-copy",
+ "verdict_reason": [
+  "(1) Attacker: the proxy's owner/admin key (EOA 0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d, funded 2025-05-23 by 0x067cbde2, the address that created and upgraded the same proxy in Feb 2025; it made 3 upgradeToAndCall calls on the proxy that day) was used on 2025-07-05 to CREATE implementation 0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc (block 22855567 idx 107, 0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486) and call upgradeToAndCall on the proxy 0x54cd23460df45559fd5feeaada7ba25f89c13525 (block 22855568 idx 130, 0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373). The new implementation equals the previous one plus exactly three new selectors (incidents/neemo-2025/impl_diff.json); 0x03b79c24(address to) has no msg.sender check and moves the proxy's entire weETH balance to `to`.",
+  "(2) Bot: EOA 0xb750e3165de458eae09904cc7fad099632860b0f (sender of ~700 routine txs to its executor 0x1a61249f6f4f9813c55aa3b02c69438607272ed3 since 2024-06-30) sent tx 0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2 at block 22855569 position 0, 12 s (one block) after the upgrade block, 150 gwei priority fee against a 0.28 gwei base fee (next highest priority fee in the block 20 gwei). Its call tree enters the proxy with 0x03b79c24(<its own executor>), receives 106.929468 weETH, swaps it to 114.534060 WETH on the weETH/WETH Uniswap V3 pool and unwraps to the bot EOA.",
+  "(3) Call diff: the bot's victim-side call subtree (6 calls) is identical to the same function called by the key-holder EOA on a local anvil fork at block 22855568; only the recipient argument differs (38 hex chars) - incidents/neemo-2025/call_diff.json. The bot's exact calldata replayed on the fork reproduces the mainnet gas (137,752).",
+  "(4) Limits: the key holder never called 0x03b79c24 on-chain from any address (trace_filter of every call to the proxy over blocks 22855560-22862000, then the Etherscan tx list to 2026-10-21: only the upgrade, the bot, and three later calls). So there is no attacker drain tx, pending or reverted, to compare against. That the attacker meant to call it is inferred from the function being theirs and from the Neemo/Defimon account; the attacker's own post-upgrade calls were different selectors (0x53474b2c at block 22855612, 0x97e44edc at 22855836). Neither the upgrade tx nor the bot tx is in mempool-dumpster although 52-58%% of the txs in their blocks are; both are private flow (or missed)."
+ ],
+ "era": "2024-26 (mature PBS / private flow)",
+ "protocol_loss_usd": {
+  "value": null,
+  "basis": "not priced in saved data; the bot's haul was 114.534 ETH (106.929 weETH), returned 91.634 ETH; Neemo's message cites 176.57 ETH sent to the key-holder's collection address 0x4ec65e4d (12.27 + 160.9 + 3.4 ETH, each leg on-chain)",
+  "source": "web-neemo/defimon_1475.html; etherscan txlist 0x4ec65e4d"
+ },
+ "protocol_loss_eth": null,
+ "attacker": {
+  "eoas": [
+   "0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d"
+  ],
+  "contracts": [
+   "0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc (malicious implementation, unverified, 35,326-hex-char runtime)"
+  ],
+  "deploy_tx": "0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486",
+  "upgrade_tx": "0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373",
+  "funding_tx": {
+   "hash": "0xed547ad6bc8cf8797ac940e3ae393fae7c2af236a9ee690010d1f86684ed3b51",
+   "block": 22544239,
+   "from": "0x067cbde24a3d3cbd11ca62b7b490a1291b2e1d39",
+   "value_eth": 0.023576595488242112,
+   "source": "0x067cbde2 (it created and upgraded the same proxy on 2025-02-05); 0x7e9b11d0 therefore looks like the project's own admin key, consistent with the 'private key was stolen' statement in the Defimon post. Not Tornado-funded."
+  },
+  "txs": [
+   {
+    "hash": "0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486",
+    "block": 22855567,
+    "index": 107,
+    "status": "success",
+    "role": "CREATE implementation 0xbc4b1d58 (time 2025-07-05T21:03:11Z)"
+   },
+   {
+    "hash": "0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373",
+    "block": 22855568,
+    "index": 130,
+    "status": "success",
+    "role": "proxy.upgradeToAndCall(0xbc4b1d58, 0x) (time 2025-07-05T21:03:23Z)"
+   },
+   {
+    "hash": "0xc8c2c1e8513604fa4a26d05a99dac0e4d5db32d7e6e23c386ddded2c64bcca27",
+    "block": 22855612,
+    "index": 158,
+    "status": "success",
+    "role": "calls new selector 0x53474b2c() (writes one constant; gas 31,402; 8.6 min after the bot drain)"
+   },
+   {
+    "hash": "0x6d5a765f8583b05134fcd588426e99b585ba045970f4b78ae7e19a7aafc5be0d",
+    "block": 22855836,
+    "index": 123,
+    "status": "success",
+    "role": "calls new selector 0x97e44edc(attacker) (Chainlink CCIP send paid from the proxy's WETH dust; not a weETH drain)"
+   },
+   {
+    "hash": "0x58661caf2a70c4ddfa9393574b8d3e26aab579031de2373cbb0ffbc6b8c5a4ae",
+    "block": 22856007,
+    "index": 146,
+    "status": "success",
+    "role": "EOA sends 12.27 ETH to collection address 0x4ec65e4d"
+   }
+  ],
+  "attack_tx": null,
+  "attack_tx_note": "No call to the drain selector 0x03b79c24 by the key holder exists on-chain (successful, reverted or otherwise). Calls to the proxy in blocks 22855560-22862000 (trace_filter): upgrade, bot drain, 0x53474b2c, 0x97e44edc. Later calls to the proxy up to 2026-10-21 (Etherscan): 0x97e44edc by 0x67a28887 (2026-07-17) and 0x03b79c24 by 0x8c8aaebd (2026-09-28, moved 0 weETH).",
+  "attacker_realized_profit": "176.57 ETH reached the collection address 0x4ec65e4d (12.27 from the key-holder EOA at block 22856007; 160.9 + 3.4 from 0x198b2c4e at blocks 22856468 / 22856567) and 176.4 ETH was then sent in 0.1-10 ETH steps to Tornado Cash Router 0xd90e2f92. The ETH reached the key holder / 0x198b2c4e from 0x5c7bcd6e (a proxy whose implementation Etherscan names Ethereum_SpokePool) and from a second unlabelled contract 0x00000011f84b9aa4, i.e. apparently by a bridge from another chain; the origin of those funds was not traced (it is NOT the weETH the bot took).",
+  "local_fork_replay": {
+   "what": "anvil fork of https://eth.drpc.org at block 22855568, five scenarios (attacker EOA calls 03b79c24; unrelated address calls it; bot's exact calldata; attacker's real selector sequence 53474b2c, 97e44edc, 03b79c24; attacker call after the bot). Nothing broadcast.",
+   "file": "incidents/neemo-2025/attacker_replay_local_fork.json",
+   "script": "incidents/neemo-2025/scripts/replay_local_fork.py"
+  }
+ },
+ "bots": [
+  {
+   "label": "anon bot 0xb750 (executor 0x1a61249f)",
+   "eoa": "0xb750e3165de458eae09904cc7fad099632860b0f",
+   "contract": "0x1a61249f6f4f9813c55aa3b02c69438607272ed3",
+   "txs": [
+    {
+     "hash": "0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2",
+     "block": 22855569,
+     "index": 0,
+     "status": "success",
+     "time_utc": "2025-07-05T21:03:35Z"
+    }
+   ],
+   "captured": {
+    "token": "weETH 0xcd5fe23c...",
+    "amount": 106.92946809727046,
+    "usd": null,
+    "eth_received": 114.53405989088202
+   },
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_gwei": 150.0,
+   "priority_fee_paid_eth": 0.0206628,
+   "gas_cost_total_eth": 0.020701264,
+   "replay_evidence": "Victim-side call subtree identical to the attacker-EOA replay of 0x03b79c24 on a local fork except the recipient argument; mainnet trace site/raw/rpc/trace_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+   "not_c0ffeebabe": true,
+   "notes": "Not c0ffeebabe.eth and not Yoink. Its first funding (2024-06-30, 0.00158 ETH) came from 0x4838b106..., the fee recipient of Titan-built blocks (block headers saved for 22855567/8). Listed as the 'attacker' by DeFiHackLabs-style trackers (unverified_54cd_exp, tx 0xa57ec56a) - it is the bot, not the key thief. No on-chain link found between the bot and the key-holder or collection address; the bot told Neemo on-chain that it does not know 0x4ec65e4d. Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "late probe 0x67a28887",
+   "tx": "0x328f5632e52c40f1e0b217c44538b7b3e82e4bef4ae0cfe7fa37709d64532898",
+   "block": 25552501,
+   "time_utc": "2026-07-17T12:47:11Z",
+   "note": "calls 0x97e44edc(self) 12 months later; CCIP send from the proxy's WETH dust; no weETH involved"
+  },
+  {
+   "label": "late probe 0x8c8aaebd",
+   "tx": "0x46195e3b3e21aac803f1a255eec4d6d7a206a426247983145ab1db42d6ded6e1",
+   "block": 26075558,
+   "time_utc": "2026-09-28T11:09:11Z",
+   "note": "calls 0x03b79c24(self) 14 months later; transfer of 0 weETH (nothing left)"
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Neemo offered a 20% bounty / 80% return on-chain to the bot EOA (3 txs) and the address of its wallet",
+   "tx": [
+    "0x1d75316b056095fb7584bfa84fdf6fe1388cf076d71470d39a9a652d996655a6",
+    "0x5d2b0846e643969742a176411f8047aa6cd777cb174065b3cebb0801a909db72",
+    "0xcd07f5769fb937541613bfa0a92b10060f2c8e074fdfc0bfae071a71907095e7"
+   ],
+   "amount": null,
+   "to": "0xb750e3165de458eae09904cc7fad099632860b0f"
+  },
+  {
+   "what": "bot test return",
+   "tx": "0x9fce819f59a0e61d1b8571aaa1a4fb06bd037ae8f1263b0de4fe7cbccc17db23",
+   "amount_eth": 1.0,
+   "to": "0x1671e4e1e610d4c5e693fc83f567a9f802287212",
+   "time_utc": "2025-07-14T12:48:11Z"
+  },
+  {
+   "what": "bot main return",
+   "tx": "0x0aede3f295d97291f22589b7dc71e783ee8ae6cc816f55c698376ee4c5362de9",
+   "amount_eth": 90.634,
+   "to": "0x1671e4e1e610d4c5e693fc83f567a9f802287212",
+   "time_utc": "2025-07-14T12:49:35Z"
+  },
+  {
+   "what": "bot kept (20% bounty)",
+   "tx": null,
+   "amount_eth": 22.90006,
+   "to": "0xb750e3165de458eae09904cc7fad099632860b0f"
+  }
+ ],
+ "messages": [
+  {
+   "tx": "0xe95ba4cb65ecaf7f7cd9e1820987aeb5e51fbc493d734a9de56ada5986480ea8",
+   "from": "0xdf902f5c5ecac2c387dfc122fa415eb07356b9d8",
+   "to": "0xb750e3165de458eae09904cc7fad099632860b0f",
+   "time_utc": "2025-07-14T14:11:11Z",
+   "gist": "funds received - thank you; asks about 176.57 ETH sent to 0x4ec65e4d and for clarification of the bot's earlier statement 'no involvement ... automated software scanning the blockchain' (that earlier statement is not an on-chain tx from the bot EOA; likely email)"
+  },
+  {
+   "tx": "0x02078e3c9a0f72f88d30ddcf2e266b63cde1d04eb0e0fa951b2927b045f74213",
+   "from": "0xdf902f5c5ecac2c387dfc122fa415eb07356b9d8",
+   "to": "0x4ec65e4dbe6e53ee4938aef2b173b38763d3bc2b",
+   "time_utc": "2025-07-14T14:08:59Z",
+   "gist": "the same text sent to the collection address (the Defimon post 1475 shows this copy)"
+  },
+  {
+   "tx": "0xc2511fb4e918c5c5d62789b389a775ac6175d8f86371f38a03077055a4511555",
+   "from": "0xb750e3165de458eae09904cc7fad099632860b0f",
+   "to": "0xdf902f5c5ecac2c387dfc122fa415eb07356b9d8",
+   "time_utc": "2025-07-14T20:56:23Z",
+   "gist": "'the contract was upgraded in this transaction using the compromised private key ... new implementation lacked any access control which would allow anyone to withdraw the funds. The bot picked up on this and executed a withdraw a block later'; says it does not know who 0x4ec65e4d is"
+  },
+  {
+   "tx": "0xdd4d03b68e05daaab8558847aed0d5d359ec87084a43ea9ad7a66f260530165d",
+   "from": "0xb750e3165de458eae09904cc7fad099632860b0f",
+   "to": "0xdf902f5c5ecac2c387dfc122fa415eb07356b9d8",
+   "time_utc": "2025-07-14T21:05:35Z",
+   "gist": "repeats that it does not know who 0x4ec65e4d is"
+  }
+ ],
+ "sources": [
+  "[contact redacted]",
+  "[contact redacted]",
+  "https://medium.com/@neemo_fi/neemo-post-mortem-report-76ff2bacb0b8 (HTTP 403, not read)"
+ ],
+ "raw_refs": {
+  "bot_tx": "site/raw/rpc/tx_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+  "bot_trace": "site/raw/rpc/trace_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+  "bot_receipt": "site/raw/rpc/rcpt_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+  "upgrade_tx": "site/raw/rpc/tx_0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373.json",
+  "upgrade_trace": "site/raw/rpc/trace_0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373.json",
+  "impl_deploy_tx": "site/raw/rpc/tx_0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486.json",
+  "impl_code": "site/raw/rpc/code_0xbc4b1d58_22855568.json",
+  "old_impl_code": "site/raw/rpc/code_0x9b1f0379_22855567.json",
+  "defimon_1475": "site/raw/web-neemo/defimon_1475.html",
+  "defimon_1476": "site/raw/web-neemo/defimon_1476.html",
+  "tracefilter": "site/raw/rpc/tracefilter_to_0x54cd23460df45559fd5feeaada7ba25f89c13525_22855560_22856500.json"
+ },
+ "auction": {
+  "block": 22855569,
+  "slot": 12077116,
+  "slot_start_utc_ms": 1751749415000,
+  "relays_answered": [
+   "flashbots",
+   "ultrasound",
+   "titan"
+  ],
+  "n_bids": 807,
+  "n_builders": 44,
+  "bids_per_relay": {
+   "flashbots": 307,
+   "titan": 500
+  },
+  "first_bid_ms_rel_slot": -9263,
+  "last_bid_ms_rel_slot": 2497,
+  "winning_bid_eth": 0.03420914120349999,
+  "winning_builder": "BuilderNet",
+  "winning_builder_pubkey": "0x852b0070e2522fcb06dcb159fabcdc7a4b5e1221cc2a56b083577cce03e50afe1b699c5a1111eb3bb1b8684aa90a8333",
+  "winning_relays": [
+   "ultrasound"
+  ],
+  "winning_first_submission_ms_rel_slot": null,
+  "winning_last_submission_ms_rel_slot": null,
+  "runner_up_eth": null,
+  "runner_up_builder": null,
+  "runner_up_ms_rel_slot": null,
+  "runner_up_other_builder_eth": null,
+  "runner_up_other_builder": null,
+  "runner_up_other_builder_ms_rel_slot": null,
+  "n_higher_bids_after_winner": 0,
+  "max_bid_eth": 0.034724024318496645,
+  "proposer_paid_eth": 0.03420914120349999,
+  "proposer_payment_tx": "0x9b37d84d1fa4cab8c9d12809c1fd5140fae85f6270d7f5346631e9f27cf76fd3",
+  "bot_tx_in_winning_block": true,
+  "escalation": [
+   [
+    -9263,
+    9.6435008957e-08
+   ],
+   [
+    -8505,
+    6.1003189759497e-05
+   ],
+   [
+    -8423,
+    9.612318183322e-05
+   ],
+   [
+    -8415,
+    0.000166829544939278
+   ],
+   [
+    -8176,
+    0.000413530619896252
+   ],
+   [
+    -8038,
+    0.000450027967152022
+   ],
+   [
+    -7670,
+    0.000553290185245815
+   ],
+   [
+    -7546,
+    0.000627393303940483
+   ],
+   [
+    -7308,
+    0.000746089871026608
+   ],
+   [
+    -6290,
+    0.000932814154195317
+   ],
+   [
+    -6241,
+    0.000994280734195317
+   ],
+   [
+    -5207,
+    0.002576418024413928
+   ],
+   [
+    -4304,
+    0.002815598831047928
+   ],
+   [
+    -1929,
+    0.004287420229659067
+   ],
+   [
+    -1825,
+    0.004331856739952908
+   ],
+   [
+    -1622,
+    0.004471443161871273
+   ],
+   [
+    -1476,
+    0.004548449576950554
+   ],
+   [
+    -1426,
+    0.004651484941880366
+   ],
+   [
+    -1376,
+    0.004695015319964837
+   ],
+   [
+    -1363,
+    0.005454103742223624
+   ],
+   [
+    -1128,
+    0.005530339547968587
+   ],
+   [
+    -1017,
+    0.006173905713135966
+   ],
+   [
+    -978,
+    0.006209921817996968
+   ],
+   [
+    -820,
+    0.006504560972084319
+   ],
+   [
+    -806,
+    0.0100590885451092
+   ],
+   [
+    -617,
+    0.011027483696194452
+   ],
+   [
+    -566,
+    0.011114457044362805
+   ],
+   [
+    -553,
+    0.013204868489953928
+   ],
+   [
+    -491,
+    0.014436604542825804
+   ],
+   [
+    -352,
+    0.015847714743403355
+   ],
+   [
+    -332,
+    0.016700543337609203
+   ],
+   [
+    -217,
+    0.01700231138147833
+   ],
+   [
+    -153,
+    0.018495667277984382
+   ],
+   [
+    -120,
+    0.018942084430100967
+   ],
+   [
+    35,
+    0.01900628710437896
+   ],
+   [
+    71,
+    0.019889269707827045
+   ],
+   [
+    86,
+    0.020926741517600215
+   ],
+   [
+    126,
+    0.020994812946774997
+   ],
+   [
+    178,
+    0.022339502121887924
+   ],
+   [
+    228,
+    0.023526737840790183
+   ],
+   [
+    236,
+    0.023752245988080168
+   ],
+   [
+    239,
+    0.02509072312406074
+   ],
+   [
+    247,
+    0.02607363170366914
+   ],
+   [
+    256,
+    0.026316598679667583
+   ],
+   [
+    261,
+    0.02718387122466741
+   ],
+   [
+    275,
+    0.0282350859509697
+   ],
+   [
+    280,
+    0.028498610857183936
+   ],
+   [
+    289,
+    0.029127845637496198
+   ],
+   [
+    297,
+    0.029331983902045233
+   ],
+   [
+    501,
+    0.02986139023538493
+   ],
+   [
+    509,
+    0.030222825437547507
+   ],
+   [
+    529,
+    0.03198479243003458
+   ],
+   [
+    782,
+    0.032709418647588535
+   ],
+   [
+    838,
+    0.03317963212630728
+   ],
+   [
+    858,
+    0.03336625276532926
+   ],
+   [
+    905,
+    0.03386090588599456
+   ],
+   [
+    1079,
+    0.033918502721271046
+   ],
+   [
+    1105,
+    0.03396059031077874
+   ],
+   [
+    1189,
+    0.034429883695388665
+   ],
+   [
+    1455,
+    0.034724024318496645
+   ]
+  ],
+  "bid_data_note": null,
+  "raw_refs": {
+   "race_file": "incidents/neemo-2025/race_22855569.json",
+   "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block22855569.json",
+   "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block22855569.json",
+   "relay_bids:titan": "site/raw/relay-titan/bids_block22855569.json"
+  },
+  "_missing_raw": [],
+  "note": "Flashbots + Titan answered (Titan list capped at 500 bids); the winning block was delivered by Ultra Sound (bids not retained), so the winning submission time and the bot tx arrival time are unknown. Winning builder BuilderNet, proposer paid 0.03421 ETH; the bot priority fee 0.02066 ETH equals 60% of it."
+ },
+ "verdict_original": "confirmed-onchain",
+ "headline": true,
+ "headline_text": "A bot called the open drain function (0x03b79c24) that a key thief's proxy upgrade had added, one block (12 s) later, before the thief ever used it: 114.53 ETH of weETH for 0.02 ETH in fees. It returned 91.634 ETH (80%) to Neemo nine days later.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": "deploy-window-copy",
+   "headline": null
+  },
+  "verdict_reason": "A key thief's proxy upgrade (tx 0xcd4a637d, block 22855568 idx 130) installed an implementation with an unprotected drain function 0x03b79c24(address). An anonymous bot (EOA 0xb750e316, executor 0x1a61249f; A local-fork replay of the thief's own 03b79c24 call matches the bot's victim-side call sequence (6 calls, only the recipient argument differs). The bot paid 0.0207 ETH gas, no coinbase transfer, no builder refund, and returned 91.634 ETH (80.0%) to Neemo on 2025-07-14 after the project's on-chain 20% bounty offer. Neither the upgrade nor the bot tx is in mempool-dumpster (private flow or missed), so the bot's reaction time is unmeasured.",
+  "headline_note": "Counts as deploy-window-copy because the bot used the thief's own on-chain setup (the malicious implementation) before the thief's call, but no thief drain tx exists to race against: the thief's later calls were other selectors. Treat as headline with this caveat, or demote if the project wants a hard 'pending attacker tx' proof.",
+  "dataset_rows": [
+   "neemo-2025"
+  ]
+ }
+}

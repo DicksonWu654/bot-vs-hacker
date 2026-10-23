@@ -1,0 +1,148 @@
+[
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "mempool",
+  "detail": "No attacker/forwarder/TIME/pool/Yoink-contract tx in mempool-dumpster for 2023-12-06 (csv+sourcelog). Yoink tx is private.",
+  "raw_ref": "full cache only (not published)"
+ },
+ {
+  "t_utc_ms": 1701904310395,
+  "t_utc": "2023-12-06T23:11:50.395Z",
+  "kind": "bid",
+  "actor": "f1b.io",
+  "detail": "first bid on Flashbots relay: 0.0013 ETH, 26 tx (baseline)",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904315971,
+  "t_utc": "2023-12-06T23:11:55.971Z",
+  "kind": "bid",
+  "actor": "payload.de",
+  "detail": "0.2659 ETH, 92 tx (highest baseline before the jump)",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904316058,
+  "t_utc": "2023-12-06T23:11:56.058Z",
+  "kind": "bid",
+  "actor": "Flashbots builder",
+  "detail": "4.953 ETH, 80 tx - first bid carrying the ~4.92 ETH Yoink coinbase payment (value jump from 0.27 ETH)",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904316148,
+  "t_utc": "2023-12-06T23:11:56.148Z",
+  "kind": "bid",
+  "actor": "I can haz block?",
+  "detail": "3.5978 ETH, 13 tx",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904316637,
+  "t_utc": "2023-12-06T23:11:56.637Z",
+  "kind": "bid",
+  "actor": "I can haz block?",
+  "detail": "8.3307 ETH, 13 tx: highest bid of the auction, not delivered",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904318845,
+  "t_utc": "2023-12-06T23:11:58.845Z",
+  "kind": "bid",
+  "actor": "Flashbots builder",
+  "detail": "WINNING submission: 5.001116 ETH, 133 tx (block hash 0x129d29f4...), contains Yoink tx at index 0",
+  "raw_ref": "site/raw/relay-flashbots/bids_block18730463.json"
+ },
+ {
+  "t_utc_ms": 1701904319000,
+  "t_utc": "2023-12-06T23:11:59.000Z",
+  "kind": "block",
+  "actor": "proposer 0x891b91ed...",
+  "detail": "block 18730463 (slot 7923358) timestamp 2023-12-06 23:11:59 UTC",
+  "raw_ref": "site/raw/rpc/block_18730463_nofull.json",
+  "block": 18730463
+ },
+ {
+  "t_utc_ms": 1701904319000,
+  "t_utc": "2023-12-06T23:11:59.000Z",
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "index 0: approve, wrap 5 ETH, buy TIME, forwarder.execute -> TIME.multicall(burn) spoofing pool, sync, sell TIME; 94.5135 WETH out; 4.9232 ETH to coinbase; msg.value 55",
+  "tx": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+  "raw_ref": "site/raw/rpc/trace_0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6.json",
+  "block": 18730463
+ },
+ {
+  "t_utc_ms": 1701904319000,
+  "t_utc": "2023-12-06T23:11:59.000Z",
+  "kind": "tx",
+  "actor": "Flashbots builder 0xdafea492...",
+  "detail": "index 132: proposer payment 5.001116 ETH to 0x66698822...",
+  "tx": "0x6e13d1fabdaf27923010839f25910cd245eeca8599024fa221fca996748dce88",
+  "block": 18730463,
+  "raw_ref": "site/raw/rpc/block_18730463.json"
+ },
+ {
+  "t_utc_ms": 1701922907000,
+  "t_utc": "2023-12-07T04:21:47.000Z",
+  "kind": "tx",
+  "actor": "0x0000000000000f25... (other bot)",
+  "detail": "block 18732002 index 123: same forwarder trick with transfer() instead of burn(); 0.2743 WETH; private (not in mempool-dumpster 2023-12-07)",
+  "tx": "0x1911be7020af964e35abfe5a94c9f2a232cc017532c1c14a1dea57c6ac011af3",
+  "raw_ref": "site/raw/rpc/trace_0x1911be7020af964e35abfe5a94c9f2a232cc017532c1c14a1dea57c6ac011af3.json",
+  "block": 18732002,
+  "raw_refs": [
+   "site/raw/etherscan/time2023_pool_tokentx_b.json"
+  ]
+ },
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "OpenZeppelin",
+  "detail": "OpenZeppelin public disclosure of the ERC2771Context+Multicall bug, published 2023-12-07 (disclosure received from thirdweb 2023-12-04); the Yoink tx landed on 2023-12-06, the day before",
+  "raw_ref": "site/raw/web-p2/openzeppelin_erc2771_disclosure.html"
+ },
+ {
+  "t_utc_ms": 1702326155000,
+  "t_utc": "2023-12-11T20:22:35.000Z",
+  "kind": "deploy",
+  "actor": "Yoink EOA",
+  "detail": "deploys 0x7bac4a2e... (block 18765314)",
+  "tx": "0x8e0a4d9d67859270a49f58e5a99096fb33b5302b4f948160328df4afcc94054a",
+  "raw_ref": "site/raw/etherscan/time_claim_7bac_txlist.json",
+  "block": 18765314
+ },
+ {
+  "t_utc_ms": 1702326755000,
+  "t_utc": "2023-12-11T20:32:35.000Z",
+  "kind": "fund",
+  "actor": "Yoink EOA",
+  "detail": "sends 84.1 ETH to 0x7bac4a2e... (block 18765364)",
+  "tx": "0xbfcf25531feb6d06af2628ddedee29bbbef2668fdbe296aca7f4215422ec4ba2",
+  "raw_ref": "site/raw/etherscan/time_claim_7bac_txlist.json",
+  "block": 18765364
+ },
+ {
+  "t_utc_ms": 1702327247000,
+  "t_utc": "2023-12-11T20:40:47.000Z",
+  "kind": "message",
+  "actor": "Yoink EOA",
+  "detail": "tx to TIME token with text \"If you're a TIME token holder, you may be able to recover funds from the recent hack here: https://etherscan.io/address/0x7bac4a2e... Use the Contract/Write Contract tabs on Etherscan to claim.\" - reverted",
+  "tx": "0xbd3eb26447f850cd44f1e66daafaad096c83b207acb725999625c7f463f38a80",
+  "raw_ref": "site/raw/rpc/receipt_0xbd3eb26447f850cd44f1e66daafaad096c83b207acb725999625c7f463f38a80.json",
+  "block": 18765404
+ },
+ {
+  "t_utc_ms": 1705085087000,
+  "t_utc": "2024-01-12T18:44:47.000Z",
+  "kind": "return",
+  "actor": "0x7bac4a2e... -> Yoink EOA",
+  "detail": "owner call 0x9890220b; escrow sends all 84.1 ETH back to Yoink EOA; balance had been constant at 84.1 ETH since funding",
+  "tx": "0x487f7c96d538c32741e4eb4ec62cb8a2d8c207d707b1a7d10241373c72528d7b",
+  "raw_ref": "site/raw/rpc/trace_0x487f7c96d538c32741e4eb4ec62cb8a2d8c207d707b1a7d10241373c72528d7b.json",
+  "block": 18992687
+ }
+]

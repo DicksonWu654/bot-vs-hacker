@@ -1,0 +1,988 @@
+[
+ {
+  "slug": "uncx-2026",
+  "sub": "yoink-X",
+  "name": "UNCX Smart Token Vesting V2 - Yoink vs the attacker's X-token drain (Ethereum)",
+  "date_utc": "2026-10-14T16:24:59Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain (Yoink front-run of the attacker's X-token drain)",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "Yoink's tx at block 26191920 position 0 makes the same lock/withdraw victim calls on token X as the attacker's own tx, which landed one block later (26191921) and reverted ('play failed') because X was already taken. That the attacker's tx was pending when Yoink built is inferred (private flow, no mempool record), not shown.",
+  "one_liner": "Yoink's tx took the X-token drain in block 26191920 (pos 0); the attacker's identical call set landed one block later and reverted. Yoink's wallet later returned 8.10335 ETH and 82,143,476.36 X, keeping exactly 20,000,000 X.",
+  "attacker": {
+   "eoa": "0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3",
+   "eoas": [
+    "0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3"
+   ],
+   "contracts": [
+    "0x6cebdf095172b355121b93962017975c4601f26c",
+    "0xf6d072254eb8a9b06e0ba21221b498332c1bc35e",
+    "0xc6471f377870bb058b99eb7bab690c3f801aa7b9"
+   ],
+   "funding": "EOA 0x6d2afff4 (not identified as a mixer)",
+   "funding_tx": "0x52fe1a5aa857a3e6f6f0c12f559019da382c294238601b967a74b03c01c5b93b",
+   "deploy_tx": "0x477c8060aa22478b436d6120ffe5954775cb02974acd09d7c52ae1500b73d4d9",
+   "deploy_block": 26191446,
+   "attack_txs": [
+    {
+     "hash": "0x352065378c4a41b77e5b6a1e5b5616cd2886c3e1a2c87ed3db8e5ddddc23823d",
+     "block": 26191745,
+     "index": 1,
+     "status": "success",
+     "role": "first/original drain (EDGEN, ZC, LO0P, PAAL, pepecoin); the ZC leg is what the ZC copiers replay later"
+    },
+    {
+     "hash": "0x8a9cd4d5eab00f904b3ca6c024236f8b039e96615e48c325877f073db63f5669",
+     "block": 26191787,
+     "index": 0,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0x61d69eac21be96e5d2337181b8f4a8c90e5b0690ec9755e4cc1fefdfdb030bfa",
+     "block": 26191867,
+     "index": 0,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0xd99620373176ab6bdde6d723ec487448fedbf4f5272bce9105f1270576f74287",
+     "block": 26191903,
+     "index": 2,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0xfd6f57ec11b40faea66f42b48e044c173408b0570e706f5ad6286177808da7cc",
+     "block": 26191921,
+     "index": 3,
+     "status": "reverted",
+     "role": "attacker's own X-token drain; reverted 'play failed' one block after Yoink took X"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0xbf7e5182694d0703051951520c176135dac63d772b328468ce783b37dd7a8a7c",
+   "block": 26191920,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-10-14 (901,612 txs) but neither Yoink's tx nor any attacker tx (1745, 787, 867, 903, 921) is in it (race files mempool.txs[hash].seen=false): all private flow or missed. Unknown != none.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "The attacker's X tx (0xfd6f57ec..., block 26191921 pos 3, priority 9.70 gwei) has no mempool first-seen, so the claim that it was pending when Yoink built block 26191920 is an inference from the one-block-later landing and identical call set, not a measurement."
+  },
+  "attacker_block": 26191921,
+  "attacker_block_note": "Block in which the attacker's racing X-token tx landed and reverted ('play failed'): one block AFTER the bot (26191920). The attacker's first drain (ZC etc.) landed earlier at block 26191745 and is the other sub-race's reference.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 26191921,
+   "tx": "0xfd6f57ec11b40faea66f42b48e044c173408b0570e706f5ad6286177808da7cc"
+  },
+  "auction": {
+   "block": 26191920,
+   "slot": 15430923,
+   "slot_start_utc_ms": 1791995099000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "bloxroute-regulated",
+    "agnostic",
+    "titan"
+   ],
+   "n_bids": 3393,
+   "n_builders": 50,
+   "bids_per_relay": {
+    "flashbots": 116,
+    "ultrasound": 1048,
+    "bloxroute-regulated": 1397,
+    "agnostic": 547,
+    "titan": 285
+   },
+   "first_bid_ms_rel_slot": -7971,
+   "last_bid_ms_rel_slot": 13649,
+   "winning_bid_eth": 0.8415892579983483,
+   "winning_builder": "builder.ultrasound.money",
+   "winning_builder_pubkey": "0x8330662d8e0ae9a2f3e6d4e7067ab2bd7d383d5b1e3915c35a7c5a72e7becc00cb0c217b8c8a1465e3bb8ba09c9528a7",
+   "winning_relays": [
+    "titan",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.8418664579983482,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -7971,
+     0.000567169045923459
+    ],
+    [
+     -7963,
+     0.004413713308996385
+    ],
+    [
+     -7953,
+     0.03556716904592346
+    ],
+    [
+     -7845,
+     0.03562942904592346
+    ],
+    [
+     -7577,
+     0.03582220705958052
+    ],
+    [
+     -7346,
+     0.03582400612279815
+    ],
+    [
+     -7334,
+     0.03583032894908431
+    ],
+    [
+     -7198,
+     0.035832878035302315
+    ],
+    [
+     -7128,
+     0.03585752204297047
+    ],
+    [
+     -6994,
+     0.03586435038839647
+    ],
+    [
+     -6955,
+     0.03587718071765647
+    ],
+    [
+     -6784,
+     0.03598428071765647
+    ],
+    [
+     -6751,
+     0.03599288169328447
+    ],
+    [
+     -6734,
+     0.03603131098841476
+    ],
+    [
+     -6730,
+     0.03604822992661557
+    ],
+    [
+     -6394,
+     0.03605095919705389
+    ],
+    [
+     -6331,
+     0.036072017197053885
+    ],
+    [
+     -6283,
+     0.03612411819705389
+    ],
+    [
+     -6218,
+     0.03615227919705389
+    ],
+    [
+     -6190,
+     0.03621547619705389
+    ],
+    [
+     -6120,
+     0.036261585197053886
+    ],
+    [
+     -6063,
+     0.036336448767053886
+    ],
+    [
+     -6005,
+     0.03639965776705389
+    ],
+    [
+     -5989,
+     0.03646286676705389
+    ],
+    [
+     -5988,
+     0.03656786676705389
+    ],
+    [
+     -5859,
+     0.03657017095883161
+    ],
+    [
+     -5508,
+     0.03657213748803961
+    ],
+    [
+     -5419,
+     0.036578965833465614
+    ],
+    [
+     -4965,
+     0.03660122040135448
+    ],
+    [
+     -4787,
+     0.03670612665135448
+    ],
+    [
+     -4769,
+     0.03670935955265555
+    ],
+    [
+     -4758,
+     0.03675135955265555
+    ],
+    [
+     -4501,
+     0.036767023768247906
+    ],
+    [
+     -4215,
+     0.03679273866824791
+    ],
+    [
+     -4191,
+     0.036831013168247904
+    ],
+    [
+     -3936,
+     0.036834510368247905
+    ],
+    [
+     -3789,
+     0.036843111343875905
+    ],
+    [
+     -3704,
+     0.0368456934688759
+    ],
+    [
+     -3321,
+     0.03693408842217734
+    ],
+    [
+     -3253,
+     0.03702630642217734
+    ],
+    [
+     -3155,
+     0.037029452112368334
+    ],
+    [
+     -3116,
+     0.03703532824286634
+    ],
+    [
+     -3014,
+     0.03704741601843548
+    ],
+    [
+     -2914,
+     0.03724019403847882
+    ],
+    [
+     -982,
+     0.11800128351483194
+    ],
+    [
+     749,
+     0.11813264839896041
+    ],
+    [
+     750,
+     0.11833991072505241
+    ],
+    [
+     750,
+     0.19830627938487644
+    ],
+    [
+     751,
+     0.19862540105711948
+    ],
+    [
+     751,
+     0.27788908424314473
+    ],
+    [
+     752,
+     0.3566661756052672
+    ],
+    [
+     752,
+     0.43440374236401275
+    ],
+    [
+     753,
+     0.5116116071075117
+    ],
+    [
+     753,
+     0.5877424049177064
+    ],
+    [
+     754,
+     0.5879012473244098
+    ],
+    [
+     754,
+     0.7380533467856192
+    ],
+    [
+     755,
+     0.7681734348772149
+    ],
+    [
+     755,
+     0.8120277707876686
+    ],
+    [
+     756,
+     0.8122164701177066
+    ],
+    [
+     765,
+     0.8418664579983482
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/uncx-2026/race_26191920.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block26191920.json",
+    "relay_bids:ultrasound": "site/raw/relay-ultrasound/bids_block26191920.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block26191920.json",
+    "relay_bids:bloxroute-regulated": "site/raw/relay-bloxroute-regulated/bids_block26191920.json",
+    "relay_bids:agnostic": "site/raw/relay-agnostic/bids_block26191920.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block26191920.json",
+    "relay_delivered:titan": "site/raw/relay-titan/delivered_block26191920.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "Winner builder.ultrasound.money 0.841589 ETH. The helper's winning-hash submission fields are null here because the Titan/Ultra Sound bid lists omit the winning hash; a by-hash query of the Titan relay (site/raw/relay-titan/bids_byhash_26191920.json) shows it first submitted at +785 ms of the slot. The block's txs paid the builder fee recipient 8.1374 ETH in total (Yoink's coinbase transfer alone 8.1320 ETH) against a 0.8416 ETH payment to the proposer (tx idx 139): the builder kept the difference. Record bids sat in the 0.0x ETH range until a 0.118 ETH bid at -982 ms, then climbed to ~0.84 ETH from +749 ms (auction.escalation). The highest bid seen (0.8419 ETH, builder.ultrasound.money, +765 ms, 140 txs) was for a different block hash and was not delivered."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 8.140107395,
+   "gross_loot_method": "ETH-side proceeds of the Yoink tx: WETH Transfer log from the V2 pair into Yoink's contract (9.490107395 WETH) minus 1.35 ETH of lock fees sent as value with the 27 0x0c558e44 calls into the vesting contract (trace). Excludes the X tokens swept to the vault.",
+   "captured_native": {
+    "amount": "102143476.362922687",
+    "unit": "X",
+    "desc": "X (9 decimals, 0x140007c6...) swept from Yoink's contract to its vault 0xc70f00cd, plus the ETH-side proceeds in gross_loot_eth"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 8.131967287,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 0.004101935,
+   "loot_note": "Bot tx only. ETH side: gross 8.140107 ETH (= coinbase / 0.999), coinbase 8.131967 ETH (99.90% of gross) to builder.ultrasound.money's fee recipient, gas 0.004038 ETH, net 0.004102 ETH. The tx also moved 102143476.362922687 X to the vault. No builder->Yoink transfer in the block."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 8.10335,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 8.10335,
+   "returned_to": "0x32f0eb068fd804195629a2cbee30a7e9ce58c4cb (proxy contract, identity not verified)",
+   "returned_desc": "Yoink's vault 0xc70f00cd returned 8.10335 ETH (tx 0x07614e32, block 26205561, 2026-10-16T14:01:35Z) and 82143476.362922687 X (tx 0xf0ae2cd7, block 26205564, 2026-10-16T14:02:11Z) to 0x32f0eb06, i.e. about two days after the attack, keeping exactly 20000000 X of the 102143476.362922687 X it had swept (19.58%). returned_total_eth counts only the ETH; the X are not priced here.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "exactly 20000000 X (19.58% of the swept X) retained by the Yoink vault; no public statement of a bounty agreement found, so this is the retained amount, not a confirmed bounty",
+   "kept_by_bot_eth": null,
+   "returned_txs": [
+    {
+     "tx": "0x07614e32f26762ef90d3010f8f4460302a6689ab4444c62015fb04cb2edc02d2",
+     "eth": 8.10335,
+     "note": "Yoink vault -> 0x32f0eb06, ETH",
+     "block": 26205561,
+     "time_utc": "2026-10-16T14:01:35Z"
+    },
+    {
+     "tx": "0xf0ae2cd77698882e35437500891907327765f4e36f33c7dcd88683be7c757301",
+     "eth": null,
+     "note": "Yoink vault -> 0x32f0eb06, 82143476.362922687 X tokens (not ETH-priced)",
+     "block": 26205564,
+     "time_utc": "2026-10-16T14:02:11Z"
+    }
+   ],
+   "public_statement": "UNCX report (Phemex, Odaily, 2026-10-17): \"a white-hat hacker returned 82,143,476 X tokens and 23.8682 ETH\" (single combined figure for all actors). Our on-chain sum: 8.10335 ETH (Yoink vault, Ethereum) + 15.764813 ETH (c0ffeebabe EOA, Base) = 23.868163 ETH; matches numerically, attribution to two actors is ours, not the report's.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_26191920.json",
+   "bot.position": "site/raw/rpc/block_26191920.json",
+   "attacker_block": "site/raw/rpc/block_26191921.json",
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/receipts_26191920.json",
+    "site/raw/rpc/trace_block_26191920.json"
+   ],
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_26191920.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_26191920.json",
+    "site/raw/rpc/block_26191920.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_26191920.json",
+    "site/raw/rpc/trace_block_26191920.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/receipts_26191920.json",
+    "site/raw/rpc/trace_block_26191920.json"
+   ],
+   "fate.returned_by_bot_eth": "site/raw/rpc/tx_0x07614e32f26762ef90d3010f8f4460302a6689ab4444c62015fb04cb2edc02d2.json",
+   "fate.returned_total_eth": "site/raw/rpc/tx_0x07614e32f26762ef90d3010f8f4460302a6689ab4444c62015fb04cb2edc02d2.json",
+   "fate.return_x_tx": [
+    "full cache only (not published)",
+    "site/raw/rpc/receipt_0xf0ae2cd77698882e35437500891907327765f4e36f33c7dcd88683be7c757301.json"
+   ],
+   "fate.return_times": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "attacker_x_tx_trace": "site/raw/rpc/trace_block_26191921.json",
+   "uncx_report_phemex": "full cache only (not published)",
+   "uncx_report_odaily": "site/raw/web-w4/uncx2026_odaily_525326.html"
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "attacker's X tx and Yoink's tx are not in mempool-dumpster 2026-10-14"
+   },
+   {
+    "field": "fate.bounty_kept_eth",
+    "why": "retained asset is 20,000,000 X (no ETH valuation taken)"
+   }
+  ],
+  "discrepancies": [
+   "incident.json says the attacker's X tx had '82 victim calls all reverted'; the saved trace shows the tx root reverted with 'play failed' (status 0) and only 1 of the 82 sub-calls into the vesting contract carry their own error flag (the rest roll back with the tx).",
+   "Yoink net ETH: gross 8.140107 - coinbase 8.131967 - gas 0.004038 = 0.004102 ETH, yet the vault later returned 8.10335 ETH: the returned ETH exceeds the tx's net ETH, so it came from vault balance (source not examined)."
+  ],
+  "evidence_notes": [
+   "Victim-call diff (saved block traces site/raw/rpc/trace_block_26191920.json idx 0 vs site/raw/rpc/trace_block_26191921.json idx 3): the attacker's X tx makes 26 lock calls (0x0c558e44) and Yoink makes 27; for the 26 lock calls compared pairwise, calldata differs only in word 2 (recipient), word 8 and word 11 (block-timestamp-derived time args); all other words, including the per-call amount, are identical (differing words per call: {2: 26, 8: 26, 11: 26}).",
+   "Yoink victim calls by selector: {'0x0c558e44': 27, '0x37bdc99b': 27, '0xfc48422c': 26, '0x40e58ee5': 26} (value 0.05 ETH per lock = 1.35 ETH). Attacker X tx victim calls: {'0xd9eb5947': 26, '0x0c558e44': 26, '0x37bdc99b': 26, '0xfc48422c': 2, '0x40e58ee5': 2}; it reverted 'play failed' at block 26191921 pos 3 after paying 0.1199 ETH in priority fees (9.70 gwei).",
+   "Ordering: Yoink block 26191920 pos 0 (16:24:59Z) vs attacker X tx block 26191921 pos 3 (16:25:11Z): bot one block earlier. No mempool record of either tx.",
+   "Returns: ETH tx 0x07614e32 (block 26205561) and X tx 0xf0ae2cd7 (block 26205564) from Yoink's vault to 0x32f0eb06; 20,000,000 X retained exactly."
+  ],
+  "incident_dir": "incidents/uncx-2026"
+ },
+ {
+  "slug": "uncx-2026",
+  "sub": "zc-copiers",
+  "name": "UNCX Smart Token Vesting V2 - ZC-token copiers (copycat 1 and c0ffeebabe.eth), 248-250 blocks after the attacker's ZC drain",
+  "date_utc": "2026-10-14T16:39:59Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "late-copy",
+  "race_type_reason": "The attacker ZC transaction landed in block 26191745; subsequent transactions landed in blocks 26191993 (+248) and 26191995 (+250), so they did not precede it.",
+  "one_liner": "The attacker's ZC transaction landed in block 26191745; other transactions followed in blocks 26191993 and 26191995. c0ffeebabe.eth landed at position 0 of 26191995 and later returned 15.764813 ETH on Base.",
+  "attacker": {
+   "eoa": "0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3",
+   "eoas": [
+    "0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3"
+   ],
+   "contracts": [
+    "0x6cebdf095172b355121b93962017975c4601f26c",
+    "0xf6d072254eb8a9b06e0ba21221b498332c1bc35e",
+    "0xc6471f377870bb058b99eb7bab690c3f801aa7b9"
+   ],
+   "funding": "EOA 0x6d2afff4 (not identified as a mixer)",
+   "funding_tx": "0x52fe1a5aa857a3e6f6f0c12f559019da382c294238601b967a74b03c01c5b93b",
+   "deploy_tx": "0x477c8060aa22478b436d6120ffe5954775cb02974acd09d7c52ae1500b73d4d9",
+   "deploy_block": 26191446,
+   "attack_txs": [
+    {
+     "hash": "0x352065378c4a41b77e5b6a1e5b5616cd2886c3e1a2c87ed3db8e5ddddc23823d",
+     "block": 26191745,
+     "index": 1,
+     "status": "success",
+     "role": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+    },
+    {
+     "hash": "0x8a9cd4d5eab00f904b3ca6c024236f8b039e96615e48c325877f073db63f5669",
+     "block": 26191787,
+     "index": 0,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0x61d69eac21be96e5d2337181b8f4a8c90e5b0690ec9755e4cc1fefdfdb030bfa",
+     "block": 26191867,
+     "index": 0,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0xd99620373176ab6bdde6d723ec487448fedbf4f5272bce9105f1270576f74287",
+     "block": 26191903,
+     "index": 2,
+     "status": "reverted",
+     "role": "retry on uPEG, reverted 'play failed'"
+    },
+    {
+     "hash": "0xfd6f57ec11b40faea66f42b48e044c173408b0570e706f5ad6286177808da7cc",
+     "block": 26191921,
+     "index": 3,
+     "status": "reverted",
+     "role": "attacker's own X-token drain; reverted 'play failed' one block after Yoink took X"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0xe08d97e151473a848c3d9ca3f323cb720472d015",
+   "tx": "0xf57b7dbfdb24aa811012bbdc4e70c1027c7b2cca6b5d776881a44f488afc6bae",
+   "block": 26191995,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "ZC copycat 1",
+    "eoa": "0x053d984eab3240cdf7c53b8b7846159f8146e99b",
+    "contract": "0x4a78cf73fd86e961d825937466b937b8b82207a8",
+    "tx": "0x55b34cd6e8da7e6cfafb91f746c1ae0425b97a29a54c61dbc40d69d0eb9d72fc",
+    "block": 26191993,
+    "position": 3,
+    "status": "success",
+    "role": "Later transaction in block 26191993 at position 3; after the incident transaction."
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-10-14 but none of the attacker's txs, copycat 1's tx or c0ffeebabe's tx is in it (race files mempool.txs[hash].seen=false): private flow or missed. Unknown != none.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "The copied attacker ZC drain (0x35206537..., block 26191745) had already been mined ~50 minutes (250 blocks) before c0ffeebabe's tx; there is no pending-tx trigger. No mempool record exists for any of these txs."
+  },
+  "attacker_block": 26191745,
+  "attacker_block_note": "The attacker's ZC (plus EDGEN/LO0P/PAAL/pepecoin) drain tx 0x35206537 landed and succeeded at block 26191745 pos 1; ZC copycat 1 followed 248 blocks later and c0ffeebabe 250 blocks later (late copy).",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 26191745,
+   "tx": "0x352065378c4a41b77e5b6a1e5b5616cd2886c3e1a2c87ed3db8e5ddddc23823d"
+  },
+  "auction": {
+   "block": 26191995,
+   "slot": 15430998,
+   "slot_start_utc_ms": 1791995999000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "bloxroute-regulated",
+    "agnostic",
+    "aestus",
+    "titan"
+   ],
+   "n_bids": 2879,
+   "n_builders": 49,
+   "bids_per_relay": {
+    "flashbots": 86,
+    "ultrasound": 670,
+    "bloxroute-regulated": 1101,
+    "agnostic": 155,
+    "aestus": 470,
+    "titan": 397
+   },
+   "first_bid_ms_rel_slot": -10846,
+   "last_bid_ms_rel_slot": 1545,
+   "winning_bid_eth": 0.03973771065602867,
+   "winning_builder": "builder.ultrasound.money",
+   "winning_builder_pubkey": "0xa73f9853fcccb73f888def9d332b54393a642d4b562b9a9cb13eb95938fc4616d2c5b2e6df382255e7016775328860f6",
+   "winning_relays": [
+    "titan",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 944,
+   "winning_last_submission_ms_rel_slot": 944,
+   "runner_up_eth": 0.039194240215153026,
+   "runner_up_builder": "builder.ultrasound.money",
+   "runner_up_ms_rel_slot": 939,
+   "runner_up_other_builder_eth": 0.03902788395275937,
+   "runner_up_other_builder": "Titan (titanbuilder.xyz)",
+   "runner_up_other_builder_ms_rel_slot": 942,
+   "n_higher_bids_after_winner": 7,
+   "max_bid_eth": 0.040269231819144824,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10846,
+     0.000759137227680426
+    ],
+    [
+     -10150,
+     0.000854449219235221
+    ],
+    [
+     -9068,
+     0.004543106981010365
+    ],
+    [
+     -8522,
+     0.006512077972706196
+    ],
+    [
+     -7970,
+     0.006610634974821317
+    ],
+    [
+     -7947,
+     0.00977371536712488
+    ],
+    [
+     -7938,
+     0.00993225736712488
+    ],
+    [
+     -7007,
+     0.010111404494222752
+    ],
+    [
+     -6815,
+     0.010135823471523
+    ],
+    [
+     -6766,
+     0.01016208874051006
+    ],
+    [
+     -6644,
+     0.010209956404615582
+    ],
+    [
+     -6551,
+     0.011031526014423976
+    ],
+    [
+     -6503,
+     0.011134118539423976
+    ],
+    [
+     -6493,
+     0.011216736539423976
+    ],
+    [
+     -6440,
+     0.011237738639423976
+    ],
+    [
+     -6422,
+     0.011258007089423976
+    ],
+    [
+     -6404,
+     0.011303894096723976
+    ],
+    [
+     -6220,
+     0.011386722089423975
+    ],
+    [
+     -6100,
+     0.01149298094525776
+    ],
+    [
+     -5691,
+     0.011604528457378008
+    ],
+    [
+     -5133,
+     0.011637959592572727
+    ],
+    [
+     -5055,
+     0.011747171589439226
+    ],
+    [
+     -4623,
+     0.013154386067290249
+    ],
+    [
+     -1994,
+     0.013342798358764415
+    ],
+    [
+     -965,
+     0.01445420274751008
+    ],
+    [
+     -964,
+     0.014561359844132081
+    ],
+    [
+     -963,
+     0.015654759755120547
+    ],
+    [
+     -962,
+     0.01574991128166645
+    ],
+    [
+     -961,
+     0.01683142567827957
+    ],
+    [
+     -960,
+     0.016914810545593878
+    ],
+    [
+     -959,
+     0.01798467594956773
+    ],
+    [
+     -957,
+     0.019114976540457247
+    ],
+    [
+     -955,
+     0.01917552589914978
+    ],
+    [
+     -955,
+     0.02022278414958807
+    ],
+    [
+     -953,
+     0.02130854638729719
+    ],
+    [
+     -951,
+     0.022372701956475897
+    ],
+    [
+     -949,
+     0.023415680829827944
+    ],
+    [
+     -947,
+     0.024437904423600287
+    ],
+    [
+     -945,
+     0.025439785767856563
+    ],
+    [
+     929,
+     0.027140797077142703
+    ],
+    [
+     930,
+     0.02766912266378868
+    ],
+    [
+     930,
+     0.028111258415797553
+    ],
+    [
+     930,
+     0.02863431087890967
+    ],
+    [
+     931,
+     0.029077129878157058
+    ],
+    [
+     931,
+     0.029166832180871908
+    ],
+    [
+     931,
+     0.029589837079546853
+    ],
+    [
+     932,
+     0.03105935862616543
+    ],
+    [
+     933,
+     0.031992102477469246
+    ],
+    [
+     934,
+     0.032919777473205736
+    ],
+    [
+     935,
+     0.03382843468543923
+    ],
+    [
+     936,
+     0.034735577432102836
+    ],
+    [
+     936,
+     0.034794
+    ],
+    [
+     937,
+     0.03563831623429943
+    ],
+    [
+     937,
+     0.036581746375709295
+    ],
+    [
+     938,
+     0.037406778173922454
+    ],
+    [
+     938,
+     0.03746755872273869
+    ],
+    [
+     939,
+     0.039194240215153026
+    ],
+    [
+     944,
+     0.03973771065602867
+    ],
+    [
+     963,
+     0.03987675446387998
+    ],
+    [
+     1031,
+     0.040269231819144824
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/uncx-2026/race_26191995.json",
+    "relay_bids:flashbots": "full cache only (not published)",
+    "relay_bids:ultrasound": "full cache only (not published)",
+    "relay_delivered:ultrasound": "full cache only (not published)",
+    "relay_bids:bloxroute-regulated": "full cache only (not published)",
+    "relay_bids:agnostic": "full cache only (not published)",
+    "relay_bids:aestus": "full cache only (not published)",
+    "relay_bids:titan": "full cache only (not published)",
+    "relay_delivered:titan": "full cache only (not published)"
+   },
+   "_missing_raw": [],
+   "auction_note": "Winner builder.ultrasound.money 0.039738 ETH (first submitted +944 ms); the block's txs paid the builder fee recipient 0.1278 ETH in total, of which the bot's coinbase transfer was 0.116363 ETH. Bids jumped from ~0.0252 ETH to ~0.0399 ETH at about +900 ms (auction.escalation)."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": null,
+   "gross_loot_method": "not ETH-denominated at tx level: the tx's ZC proceeds are swapped on-chain through several pools; the swap routing was deliberately not decomposed (publication policy: tx-level public facts only for c0ffeebabe)",
+   "captured_native": {
+    "amount": "327690.00",
+    "unit": "ZC",
+    "desc": "net ZC token flow out of the vesting contract in the tx (3961764.79 out, 3634074.78 back, from Transfer logs); later converted on-chain"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.116362702,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": null,
+   "loot_note": "Bot tx only (copycat 1 not included). No builder->bot transfer in the block. Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": 15.764813,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 15.764813,
+   "returned_to": "0xfafdcd6b9bac508fbdb98e87bdf3715b14305faf (Base EOA, no code; identity not established)",
+   "returned_desc": "c0ffeebabe's EOA sent 15.764813 ETH on Base (tx 0x7ed6c60c, Base block 52641191, 2026-10-15T13:42:09Z) to 0xfafdcd6b9bac508fbdb98e87bdf3715b14305faf, about 21 hours after the Ethereum tx. Cross-chain: the amount is not attributable to the Ethereum ZC tx alone (see discrepancies). Sum with Yoink's 8.10335 ETH = 23.868163 ETH equals the 23.8682 ETH in UNCX's report.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [
+    {
+     "tx": "0x7ed6c60ca8b53e259c1d327a03d6e3242ba88a9c2b98f8ccb3ebca9ff60d37ca",
+     "eth": 15.764813,
+     "note": "Base mainnet (chain id 8453) ETH transfer from c0ffeebabe's EOA; cross-chain return",
+     "block": 52641191,
+     "time_utc": "2026-10-15T13:42:09Z",
+     "chain": "base"
+    }
+   ],
+   "public_statement": "UNCX report (Phemex, Odaily, 2026-10-17): \"a white-hat hacker returned 82,143,476 X tokens and 23.8682 ETH\" (single combined figure for all actors). Our on-chain sum: 8.10335 ETH (Yoink vault, Ethereum) + 15.764813 ETH (c0ffeebabe EOA, Base) = 23.868163 ETH; matches numerically, attribution to two actors is ours, not the report's.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_26191995.json",
+   "bot.position": "site/raw/rpc/block_26191995.json",
+   "attacker_block": "site/raw/rpc/block_26191745.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_26191995.json",
+   "loot.priority_fee_paid_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/block_26191995.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_26191995.json",
+    "site/raw/rpc/trace_block_26191995.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/rpc-base/base_tx_0x7ed6c60ca8b53e259c1d327a03d6e3242ba88a9c2b98f8ccb3ebca9ff60d37ca.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": "site/raw/rpc-base/base_tx_0x7ed6c60ca8b53e259c1d327a03d6e3242ba88a9c2b98f8ccb3ebca9ff60d37ca.json",
+   "fate.return_recipient_code": "full cache only (not published)",
+   "fate.return_time": "full cache only (not published)",
+   "copycat1_tx_block": "site/raw/rpc/block_26191993.json",
+   "bot_tx_receipt": "full cache only (not published)",
+   "uncx_report_phemex": "full cache only (not published)",
+   "uncx_report_odaily": "site/raw/web-w4/uncx2026_odaily_525326.html"
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.gross_loot_eth",
+    "why": "ZC proceeds are not ETH-denominated at tx level; swap routing intentionally not decomposed"
+   },
+   {
+    "field": "loot.bot_net_eth",
+    "why": "same as gross_loot_eth"
+   },
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "no tx of this sub-race is in mempool-dumpster 2026-10-14"
+   }
+  ],
+  "discrepancies": [
+   "return of 15.764813 ETH on Base is 135x the 0.116 ETH coinbase payment of this one Ethereum tx; ZC proceeds are not ETH-denominated in this tx, so how much of the return derives from this tx versus other-chain activity is not determined (other chains not analysed).",
+   "initial incident notes says copy came '248 blocks later': true for ZC copycat 1 (26191993 - 26191745 = 248); c0ffeebabe's tx is 250 blocks after the attacker's ZC drain (26191995 - 26191745)."
+  ],
+  "evidence_notes": [
+   "The attacker ZC transaction landed in block 26191745; subsequent transactions landed in blocks 26191993 (+248) and 26191995 (+250), so they did not precede it.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/uncx-2026"
+ }
+]

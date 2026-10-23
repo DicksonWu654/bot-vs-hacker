@@ -1,0 +1,174 @@
+[
+ {
+  "t_utc_ms": 1705571831000,
+  "t_utc": "2024-01-18T09:57:11.000Z",
+  "kind": "fund",
+  "actor": "0x1f381f47...",
+  "detail": "1.7383 ETH to attacker EOA 0x0512ac94... (earliest tx of the EOA; funder not traced)",
+  "tx": "0x4e5f8906803327eddbe34d559f49d2378d124a35f8be2f620650375e3ce7c858",
+  "raw_ref": "site/raw/etherscan/bb_attacker_eoa_txlist.json",
+  "block": 19033000
+ },
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "Blueberry (reported)",
+  "detail": "Blueberry Foundation tweet of 2024-02-23: \"The vulnerability was due to the incorrect handling of decimals by the lending contract\". The Medium post-mortem (2-22-24-exploit-post-mortem) is behind a Cloudflare challenge (HTTP 403) and could not be saved, so the time borrowing was enabled and the oracle details it gives are not stated here",
+  "raw_ref": "site/raw/web-blueberry/web3isgoinggreat_blueberry.html"
+ },
+ {
+  "t_utc_ms": 1708654582769,
+  "t_utc": "2024-02-23T02:16:22.769Z",
+  "kind": "mempool_seen",
+  "actor": "attacker EOA",
+  "detail": "deploy tx first seen (bloXroute first; 5 sources)",
+  "tx": "0x8e7b711ebca73ba583478cd7a55b0496fdfd9222f8b7d0245baee51816aee155",
+  "raw_ref": "full cache only (not published)",
+  "raw_refs": [
+   "full cache only (not published)"
+  ]
+ },
+ {
+  "t_utc_ms": 1708654691000,
+  "t_utc": "2024-02-23T02:18:11.000Z",
+  "kind": "block",
+  "actor": "builder beaverbuild.org",
+  "detail": "attacker contract 0x70b96d02... deployed in block 19287269 (index 78)",
+  "tx": "0x8e7b711ebca73ba583478cd7a55b0496fdfd9222f8b7d0245baee51816aee155",
+  "raw_ref": "site/raw/rpc/block_19287269.json",
+  "block": 19287269
+ },
+ {
+  "t_utc_ms": 1708654929219,
+  "t_utc": "2024-02-23T02:22:09.219Z",
+  "kind": "mempool_seen",
+  "actor": "attacker EOA",
+  "detail": "attack tx first seen: Chainbound 02:22:09.219, local .225, bloXroute .227, Eden .233, mempoolguru .373, apool .409 (public mempool; max priority fee 0.034 gwei)",
+  "tx": "0xb6748899565cff6c01190f507ea83a7d2efdfba13e119fd0f487f74ce899d25f",
+  "raw_ref": "full cache only (not published)",
+  "raw_refs": [
+   "full cache only (not published)"
+  ]
+ },
+ {
+  "t_utc_ms": 1708654929264,
+  "t_utc": "2024-02-23T02:22:09.264Z",
+  "kind": "bid",
+  "actor": "I can haz block?",
+  "detail": "10.1066 ETH, 3 tx",
+  "raw_ref": "site/raw/relay-flashbots/bids_block19287289.json"
+ },
+ {
+  "t_utc_ms": 1708654929485,
+  "t_utc": "2024-02-23T02:22:09.485Z",
+  "kind": "bid",
+  "actor": "Ty For The Block",
+  "detail": "22.9912 ETH, 3 tx",
+  "raw_ref": "site/raw/relay-flashbots/bids_block19287289.json"
+ },
+ {
+  "t_utc_ms": 1708654930413,
+  "t_utc": "2024-02-23T02:22:10.413Z",
+  "kind": "bid",
+  "actor": "Ty For The Block",
+  "detail": "91.0383 ETH, 3 tx - WINNING block (3 tx: bot tx + 2 payouts)",
+  "raw_ref": "site/raw/relay-flashbots/bids_block19287289.json"
+ },
+ {
+  "t_utc_ms": 1708654931000,
+  "t_utc": "2024-02-23T02:22:11.000Z",
+  "kind": "block",
+  "actor": "proposer 0x8c7dcd58...",
+  "detail": "block 19287289 (slot 8485909), 02:22:11 UTC, fee recipient 0x25b71878 (extra_data \"Ty For The Block\"), 3 txs",
+  "raw_ref": "site/raw/rpc/block_19287289_full.json",
+  "block": 19287289
+ },
+ {
+  "t_utc_ms": 1708654931000,
+  "t_utc": "2024-02-23T02:22:11.000Z",
+  "kind": "tx",
+  "actor": "c0ffeebabe.eth",
+  "detail": "index 0: c0ffeebabe.eth's tx takes the markets' cash, worth 457.6846 ETH; 457.5473 ETH coinbase transfer",
+  "tx": "0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4",
+  "raw_ref": "full cache only (not published)",
+  "block": 19287289,
+  "raw_refs": [
+   "site/raw/rpc/block_19287289_nofull.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1708654931000,
+  "t_utc": "2024-02-23T02:22:11.000Z",
+  "kind": "return",
+  "actor": "builder 0x25b71878",
+  "detail": "index 1: 366.5068 ETH to Blueberry multisig 0x1a5b8ca2...",
+  "tx": "0x0accfec96617d0cd3680403d564d9b956dbf5e662000fd7398f501b06015cce5",
+  "block": 19287289,
+  "raw_ref": "site/raw/etherscan/bb_builder_25b71878_txlist.json"
+ },
+ {
+  "t_utc_ms": 1708654931000,
+  "t_utc": "2024-02-23T02:22:11.000Z",
+  "kind": "tx",
+  "actor": "builder 0x25b71878",
+  "detail": "index 2: 91.0383 ETH proposer payment to 0x25b9eb08...",
+  "tx": "0x6b6231c19ffde66d5a8810f06a61ce79d201c039a8460dba1b802fd76b3d3853",
+  "block": 19287289,
+  "raw_ref": "site/raw/etherscan/bb_builder_25b71878_txlist.json"
+ },
+ {
+  "t_utc_ms": 1708654943000,
+  "t_utc": "2024-02-23T02:22:23.000Z",
+  "kind": "tx",
+  "actor": "attacker EOA",
+  "detail": "block 19287290 (slot +1, builder rsync-builder.xyz) index 218: attack tx succeeds, receives 0 OHM / 0 USDC / 0 WBTC",
+  "tx": "0xb6748899565cff6c01190f507ea83a7d2efdfba13e119fd0f487f74ce899d25f",
+  "raw_ref": "site/raw/rpc/block_19287290.json",
+  "block": 19287290
+ },
+ {
+  "t_utc_ms": 1708659669350,
+  "t_utc": "2024-02-23T03:41:09.350Z",
+  "kind": "mempool_seen",
+  "actor": "c0ffeebabe EOA",
+  "detail": "70 ETH transfer to the Blueberry multisig first seen (public)",
+  "tx": "0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434",
+  "raw_ref": "full cache only (not published)",
+  "raw_refs": [
+   "full cache only (not published)",
+   "site/raw/rpc/tx_0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1708659671000,
+  "t_utc": "2024-02-23T03:41:11.000Z",
+  "kind": "return",
+  "actor": "c0ffeebabe EOA",
+  "detail": "70 ETH lands in multisig (block 19287679)",
+  "tx": "0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434",
+  "block": 19287679,
+  "raw_ref": "site/raw/rpc/tx_0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434.json"
+ },
+ {
+  "t_utc_ms": 1708679783000,
+  "t_utc": "2024-02-23T09:16:23.000Z",
+  "kind": "return",
+  "actor": "builder 0x25b71878",
+  "detail": "0.11996 ETH to multisig (block 19289339)",
+  "tx": "0x111102a20a2007b1461c8206d544b4cee8c1702a6aadf584c5355b0fb3052091",
+  "block": 19289339,
+  "raw_ref": "site/raw/rpc/tx_0x111102a20a2007b1461c8206d544b4cee8c1702a6aadf584c5355b0fb3052091.json"
+ },
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "Blueberry Foundation (reported)",
+  "detail": "tweet: \"All of the drained funds were front run by @ coffeebabe_eth ... and are now safe in the Blueberry multisig, less the validator payment.\" (Blueberry Foundation, 2024-02-23; embedded in the saved news article)",
+  "raw_ref": "site/raw/web-blueberry/cryptonews_blueberry.html",
+  "raw_refs": [
+   "site/raw/web-blueberry/cointelegraph_blueberry.html"
+  ]
+ }
+]

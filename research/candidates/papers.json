@@ -1,0 +1,172 @@
+[
+ {
+  "title": "The Blockchain Imitation Game (Ape)",
+  "authors": "Kaihua Qin, Stefanos Chaliasos, Liyi Zhou, Benjamin Livshits, Dawn Song, Arthur Gervais",
+  "year": 2023,
+  "venue": "USENIX Security 2023 / arXiv 2303.17877",
+  "url": "https://arxiv.org/abs/2303.17877",
+  "dataset_of_bot_copies": "partial",
+  "named_incidents": "Popsicle Finance attack (Ape would earn 20.25M USD): 0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc; Auctus ACOWriter 0x2e7d7e7a6eb157b98974c8687fbd848d0158d37edc1302ea08ee5ddb376befea and BMIZapper 0xe12ae015c8023bbe6405662a3ddf5e8e106e7f6255e905b7312dcf65b27d755c (possible vulns). Window: ETH blocks 12936340-15253305, BSC blocks 9643812-20045094 (2021-08-01 to 2022-07-31).",
+  "notes": "Ape found 17 blackhat and 12 self-proclaimed whitehat txs across 13 known DeFi attacks on Ethereum (73.74M USD); 10 of 12 whitehat txs appear to have been sent privately to miners. 22 attacks / 40 txs on BSC (22.39M USD). Simulation of imitation, not an observed-bot-copy list; per-incident table not extracted (only first 100k chars of ar5iv read)."
+ },
+ {
+  "title": "BACKRUNNER: Mitigating Smart Contract Attacks in the Real World",
+  "authors": "Chaofan Shou, Yuanyu Ke, Qi Su, Doudou Lu, Jacob Chia, Yupeng Yang, Wenke Lee, Or Dadosh, Assaf Eli, David Benchimol, Daniel Tong, Dex Chen, Zoey Tan, Koushik Sen",
+  "year": 2024,
+  "venue": "arXiv 2409.06213",
+  "url": "https://arxiv.org/abs/2409.06213",
+  "dataset_of_bot_copies": "yes (best lead)",
+  "named_incidents": "Table I lists 54 attacks (2023-01 to 2024-05, 158 attack txs, from Phalcon/BlockSec incident list) incl. Curve 2023-07-30, TransitFi 2023-12-19, BarleyFi 2024-01-28, Hope.money 2023-10-18, SafeMoon 2023-03-28, EarningFarm, Sushiswap, HundredFi, EulerFi, WiseLending, Dexible, Kyberswap, Radiant, Seneca, Bot 0x8c2d, Bot 0x05f0 etc. No tx hashes extracted.",
+  "notes": "Only 18 of 158 attack txs were intercepted by attack-frontrunning bots (<$31.5M rescued, 8.7% of loss); only 17/158 visible in public mempool pre-inclusion. Authors ran their own frontrunning bot 6+ months; BSC honeypot Sept 2023 ($3K) drew 6+ bots, 189 bids from 10 to 60,000 gwei. Says BlockSec runs an attack-frontrunning bot (>$15M rescued since 2022). Says data is public but no URL seen in first 100k chars; check paper tail/GitHub for per-tx list of the 18 intercepted txs."
+ },
+ {
+  "title": "Surviving in Dark Forest: Towards Evading the Attacks from Front-Running Bots in Application Layer (EVScope)",
+  "authors": "Zuchao Ma, Muhui Jiang, Feng Luo, Xiapu Luo, Yajin Zhou",
+  "year": 2025,
+  "venue": "USENIX Security 2025",
+  "url": "https://www.usenix.org/conference/usenixsecurity25/presentation/ma-zuchao",
+  "dataset_of_bot_copies": "no (evasion strategies; 71 attack txs that evaded bots + 6.76M arbitrage txs)",
+  "named_incidents": "none named on abstract page",
+  "notes": "Identifies 32 evasion strategies (access control, profit control, execution split, obfuscation). Full PDF + appendix may enumerate attacks; not read."
+ },
+ {
+  "title": "Frontrunner Jones and the Raiders of the Dark Forest: An Empirical Study of Frontrunning on the Ethereum Blockchain",
+  "authors": "Christof Ferreira Torres, Ramiro Camino, Radu State",
+  "year": 2021,
+  "venue": "USENIX Security 2021 / arXiv 2102.03347",
+  "url": "https://arxiv.org/abs/2102.03347",
+  "dataset_of_bot_copies": "no (generic DEX frontrunning; 199,725 attacks, 18.41M USD, blocks 0-11.3M)",
+  "named_incidents": "none",
+  "notes": "Background only; not about exploit copying."
+ },
+ {
+  "title": "Ethereum is a Dark Forest",
+  "authors": "Dan Robinson, Georgios Konstantopoulos (Paradigm)",
+  "year": 2020,
+  "venue": "Paradigm blog 2020-08-28",
+  "url": "https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "whitehat rescue (~$12k) sniped; frontrunner sweep tx 0xcc7f752e990b32befa1e0c82b036b3753ec3d876b336007cd568983dca0af497 (hash from WebFetch summary)",
+  "notes": "Origin of the term generalized frontrunner; copy-with-address-replacement behaviour."
+ },
+ {
+  "title": "Escaping the Dark Forest",
+  "authors": "samczsun",
+  "year": 2020,
+  "venue": "blog 2020-09-23",
+  "url": "https://samczsun.com/escaping-the-dark-forest/",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "Lien Finance ~25,000 ETH rescue via SparkPool private endpoint; rescue tx 0xe99ccb0b21854b65a2fa283638ab9ef01962b61c3310b596b4597bf22b911a43",
+  "notes": "Says an earlier attempt 'lost to front-runners' without detail."
+ },
+ {
+  "title": "FrontDef (attack-mimic frontrunning defense)",
+  "authors": "not captured",
+  "year": 2023,
+  "venue": "IEEE Xplore document 10237028",
+  "url": "https://ieeexplore.ieee.org/document/10237028",
+  "dataset_of_bot_copies": "benchmark of 24 cases incl. 21 historical attacks on Ethereum/BSC (list not seen)",
+  "named_incidents": "unknown",
+  "notes": "Seen only via search snippet; follow up for benchmark list."
+ },
+ {
+  "title": "LookAhead: Preventing DeFi Attacks via Unveiling Adversarial Contracts",
+  "authors": "not captured",
+  "year": 2024,
+  "venue": "arXiv 2401.07261",
+  "url": "https://arxiv.org/html/2401.07261v6",
+  "dataset_of_bot_copies": "unknown",
+  "named_incidents": "Conic Finance example",
+  "notes": "Discusses transaction-based IPS that frontrun adversarial txs; references prior art."
+ },
+ {
+  "title": "Combatting Front-Running in Smart Contracts: Attack Mining, Benchmark Construction and Vulnerability Detector Evaluation",
+  "authors": "Li, Cheung et al. (full author list not captured)",
+  "year": 2023,
+  "venue": "IEEE TSE / ASE 2023 journal-first; arXiv 2212.12110",
+  "url": "https://ar5iv.labs.arxiv.org/html/2212.12110",
+  "dataset_of_bot_copies": "no (513 real-world front-running attacks / 235 contracts; generic, not exploit copying)",
+  "named_incidents": "unknown",
+  "notes": "Benchmark of vulnerable code, not bot-copied exploits."
+ },
+ {
+  "title": "Hunting in the Dark Forest: A Pre-trained Model for On-chain Attack Transaction Detection in Web3",
+  "authors": "Zhiying Wu, Jiajing Wu, Hui Zhang, Zibin Zheng, Weiqiang Wang",
+  "year": 2025,
+  "venue": "WWW 2025",
+  "url": "https://chatpaper.com/de/paper/130086",
+  "dataset_of_bot_copies": "unknown (attack tx detection)",
+  "named_incidents": "unknown",
+  "notes": "Aggregator page only."
+ },
+ {
+  "title": "An Empirical Study on Ethereum Private Transactions and the Security Implications",
+  "authors": "not captured",
+  "year": 2022,
+  "venue": "arXiv 2208.02858",
+  "url": "https://arxiv.org/pdf/2208.02858",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "none",
+  "notes": "Context: private tx usage affects how often public-mempool copy is possible."
+ },
+ {
+  "title": "SoK: Decentralized Finance (DeFi) Attacks",
+  "authors": "not captured",
+  "year": 2022,
+  "venue": "arXiv 2208.13035",
+  "url": "https://arxiv.org/pdf/2208.13035",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "taxonomy incl. transaction/strategy replay",
+  "notes": "Taxonomy only."
+ },
+ {
+  "title": "SoK: MEV Countermeasures: Theory and Practice",
+  "authors": "not captured",
+  "year": 2022,
+  "venue": "arXiv 2212.05111",
+  "url": "https://arxiv.org/pdf/2212.05111",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "none",
+  "notes": "Surveys MEV; not about exploit copying."
+ },
+ {
+  "title": "Demystifying DeFi MEV Activities in Flashbots Bundle",
+  "authors": "not captured",
+  "year": 2023,
+  "venue": "ACM CCS 2023 / arXiv 2312.01091",
+  "url": "https://arxiv.org/pdf/2312.01091",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "none",
+  "notes": "Context for bundles/private flow."
+ },
+ {
+  "title": "Sandwiched and Silent: ... private transaction routing",
+  "authors": "not captured",
+  "year": 2025,
+  "venue": "arXiv 2512.17602",
+  "url": "https://arxiv.org/abs/2512.17602",
+  "dataset_of_bot_copies": "no",
+  "named_incidents": "none",
+  "notes": "Cited by CryptoSlate; context only."
+ },
+ {
+  "title": "TxRay (LLM agent rebuilding live attacks from a seed tx)",
+  "authors": "not captured",
+  "year": 2026,
+  "venue": "arXiv 2602.01317",
+  "url": "https://arxiv.org/pdf/2602.01317",
+  "dataset_of_bot_copies": "no (reproduces 105/114 DeFiHackLabs incidents)",
+  "named_incidents": "DeFiHackLabs",
+  "notes": "Postmortem tool; adjacent."
+ },
+ {
+  "title": "Not verified in this session (searches exhausted)",
+  "authors": "n/a",
+  "year": null,
+  "venue": "n/a",
+  "url": "n/a",
+  "dataset_of_bot_copies": "n/a",
+  "named_incidents": "n/a",
+  "notes": "Titles from the brief that I did NOT locate: 'Demystifying Exploitable Bugs in Smart Contracts' (surfaced no matching result), Flash Boys 2.0 (Daian et al.), Quantifying Blockchain Extractable Value (Qin et al.), any paper literally titled around 'copycat/attack replay' bots. No academic paper with a dataset of bots copying real exploits besides BackRunner (18 intercepted txs) and Ape (imitation simulation)."
+ }
+]

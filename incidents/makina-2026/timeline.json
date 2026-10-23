@@ -1,0 +1,364 @@
+{
+ "slug": "makina-2026",
+ "note": "t_utc_ms for bids is the Flashbots relay receive clock; all other times are block timestamps (12 s resolution) unless precision says otherwise. Attacker call tx absent, so no attacker \"tx\" event exists. Events stamped 03:40:35.000 at block 24273362 carry the block (= slot start) timestamp; the winning block was actually submitted at +974 ms and delivered after that.",
+ "events": [
+  {
+   "t_utc_ms": 1768877951000,
+   "t_utc": "2026-01-20T02:59:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "fund",
+   "actor": "Tornado Cash 0.1 ETH pool -> 0x27bbb53d",
+   "detail": "Tornado withdrawal 0.0979835 ETH (relayer 0xc4941549)",
+   "tx": "0xa94884d60729ef9fcfa5da272001c2c1649c7bddc270e98faeb18dc9eff7a377",
+   "block": 24273156,
+   "raw_ref": "site/raw/etherscan/txlistinternal_0x27bbb53d632ab883343e1b4cda1b3b3599b494ce_0_99999999.json"
+  },
+  {
+   "t_utc_ms": 1768878407000,
+   "t_utc": "2026-01-20T03:06:47.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "fund",
+   "actor": "0x27bbb53d -> attacker EOA 0x2f934b0f",
+   "detail": "0.09798 ETH funding (attacker EOA nonce 0, first activity)",
+   "tx": "0x4c365dce0c1d34305099cea75d4acdd3968a4380cdfeb2f8da0b1c1682d97213",
+   "block": 24273194,
+   "index": 274,
+   "raw_ref": "site/raw/etherscan/txlist_all_0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc.json"
+  },
+  {
+   "t_utc_ms": 1768879367000,
+   "t_utc": "2026-01-20T03:22:47.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "deploy",
+   "actor": "attacker EOA 0x2f934b0f",
+   "detail": "CREATE 282 B helper 0xd5e8ac95 (isOwner: tx.origin == attacker EOA) at nonce 0",
+   "tx": "0x5ed8d56804e39181fe30b217ca23e740f9bb40185fde6aed6f375e81068f38a9",
+   "block": 24273273,
+   "index": 74,
+   "raw_ref": "site/raw/rpc/tx_0x5ed8d56804e39181fe30b217ca23e740f9bb40185fde6aed6f375e81068f38a9.json"
+  },
+  {
+   "t_utc_ms": 1768880423000,
+   "t_utc": "2026-01-20T03:40:23.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "deploy",
+   "actor": "attacker EOA 0x2f934b0f",
+   "detail": "CREATE 15,128 B attack contract 0x2c19b916 (entry F1()) at nonce 1; block 24273361 builder Titan; first-seen unknown (tx not in mempool-dumpster)",
+   "tx": "0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39",
+   "block": 24273361,
+   "index": 86,
+   "raw_ref": "site/raw/rpc/trace_0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39.json",
+   "raw_refs": [
+    "site/raw/rpc/eth_getTransactionByHash_0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39.json"
+   ]
+  },
+  {
+   "t_utc_ms": null,
+   "t_utc": null,
+   "precision": "unknown",
+   "kind": "mempool_seen",
+   "actor": "-",
+   "detail": "UNKNOWN: no mempool-dumpster row for the attacker deploy tx, any 0x2f93 tx, any tx to 0x2c19b916, or the copy tx (sourcelogs end 2025-07-14; csv has 1.30M txs for the day). Attacker call F1() (nonce 2) never mined.",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1768880433574,
+   "t_utc": "2026-01-20T03:40:33.574Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "Ty For The Block via flashbots relay",
+   "detail": "first bid >1 ETH on slot (normal block value ~0.001-0.007 ETH): bot bundle reaches builders: 3.108 ETH, 49 tx, t_rel_slot=-1426 ms, hash 0xca565146dc",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880433597,
+   "t_utc": "2026-01-20T03:40:33.597Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "snailbuilder.sh via flashbots relay",
+   "detail": "first bid >1 ETH from this builder: 5.041 ETH, 2 tx, t_rel_slot=-1403 ms, hash 0x968345f9d9",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880434563,
+   "t_utc": "2026-01-20T03:40:34.563Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "Builder+ www.btcs.com/builder via flashbots relay",
+   "detail": "first bid >1 ETH from this builder: 18.114 ETH, 146 tx, t_rel_slot=-437 ms, hash 0xd7ff0dd338",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880434611,
+   "t_utc": "2026-01-20T03:40:34.611Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "✨ Quasar (quasar.win) ✨ via flashbots relay",
+   "detail": "first bid >1 ETH from this builder: 23.098 ETH, 175 tx, t_rel_slot=-389 ms, hash 0x6486e1443e",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435000,
+   "t_utc": "2026-01-20T03:40:35.000Z",
+   "precision": "block timestamp",
+   "kind": "block",
+   "actor": "proposer / Ultra Sound relay",
+   "detail": "Slot 13504701 starts; block 24273362 timestamp 03:40:35 UTC; builder fee recipient 0xa6c248384c...; extraData 0x75",
+   "block": 24273362,
+   "raw_ref": "site/raw/rpc/block_24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435000,
+   "t_utc": "2026-01-20T03:40:35.000Z",
+   "precision": "block timestamp",
+   "kind": "tx",
+   "actor": "MEV searcher 0x935bfb49 (EIP-7702 self-call)",
+   "detail": "Copy of the attack at position 0: flash loans 160,590,920.349812 (Morpho) + 119,409,079.650188 (Aave) USDC, 2 rounds of MIM-3CRV/Caliber accounting manipulation + DUSD/USDC pool trades, WETH.withdraw 1299.18 ETH, coinbase transfer 1299.0499 ETH, keeps 0.1299 ETH; priority fee 1 wei",
+   "tx": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+   "block": 24273362,
+   "index": 0,
+   "raw_ref": "site/raw/rpc/trace_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+   "raw_refs": [
+    "site/raw/rpc/block_24273362.json",
+    "site/raw/rpc/receipt_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json"
+   ],
+   "derived": [
+    {
+     "shown": "0.1299 ETH",
+     "how": "WETH.withdraw 1299.18 ETH minus the coinbase transfer 1299.0499 ETH minus gas (gas used 4,709,593 x 34,304,731 wei)",
+     "expr": "(w-c-gu*gp)/1e18",
+     "ops": {
+      "w": {
+       "int": 1299179984426144193670
+      },
+      "c": {
+       "int": 1299049904387642286412
+      },
+      "gu": {
+       "int": 4709593
+      },
+      "gp": {
+       "int": 34304731
+      }
+     }
+    }
+   ]
+  },
+  {
+   "t_utc_ms": 1768880435000,
+   "t_utc": "2026-01-20T03:40:35.000Z",
+   "precision": "block timestamp",
+   "kind": "tx",
+   "actor": "builder fee recipient 0xa6c248384c",
+   "detail": "Pays 276.3227 ETH (= winning bid) to proposer fee recipient 0x573db3 (Rocket Pool node distributor); last tx of the block",
+   "tx": "0xc244aecf26d9f800179984d8bc747e2ab543f505d6da99bfbc0e098e302dbbb5",
+   "block": 24273362,
+   "index": 104,
+   "raw_ref": "site/raw/rpc/tx_0xc244aecf26d9f800179984d8bc747e2ab543f505d6da99bfbc0e098e302dbbb5.json"
+  },
+  {
+   "t_utc_ms": 1768880435000,
+   "t_utc": "2026-01-20T03:40:35.000Z",
+   "precision": "reported",
+   "kind": "message",
+   "actor": "Makina (reported, post-mortem)",
+   "detail": "03:40:35 Hypernative alert; team aware 04:26; SEAL911 war-room 04:28 (reported, not verified on-chain)",
+   "raw_ref": "site/raw/web-makina/makina_postmortem.html"
+  },
+  {
+   "t_utc_ms": 1768880435054,
+   "t_utc": "2026-01-20T03:40:35.054Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "0x75 via flashbots relay",
+   "detail": "first bid >1 ETH from this builder: 74.301 ETH, 100 tx, t_rel_slot=54 ms, hash 0x73978c27b5",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435095,
+   "t_utc": "2026-01-20T03:40:35.095Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "0x75 via flashbots relay",
+   "detail": "first bid >100 ETH from this builder: 110.627 ETH, 100 tx, t_rel_slot=95 ms, hash 0x2a816223a7",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435128,
+   "t_utc": "2026-01-20T03:40:35.128Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "✨ Quasar (quasar.win) ✨ via flashbots relay",
+   "detail": "first bid >100 ETH from this builder: 110.627 ETH, 227 tx, t_rel_slot=128 ms, hash 0x93fb35040d",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435184,
+   "t_utc": "2026-01-20T03:40:35.184Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "Ty For The Block via flashbots relay",
+   "detail": "first bid >100 ETH from this builder: 108.560 ETH, 49 tx, t_rel_slot=184 ms, hash 0xb99879d153",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435202,
+   "t_utc": "2026-01-20T03:40:35.202Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "snailbuilder.sh via flashbots relay",
+   "detail": "first bid >100 ETH from this builder: 113.560 ETH, 2 tx, t_rel_slot=202 ms, hash 0x7452ceefad",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880435974,
+   "t_utc": "2026-01-20T03:40:35.974Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "0x75 via flashbots relay",
+   "detail": "WINNING bid (0x75 builder; block hash 0x3361a14f...; delivered by Ultra Sound): 276.323 ETH, 105 tx, t_rel_slot=974 ms, hash 0x3361a14f82",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768880436353,
+   "t_utc": "2026-01-20T03:40:36.353Z",
+   "precision": "ms (relay receive clock)",
+   "kind": "bid",
+   "actor": "0x75 via flashbots relay",
+   "detail": "highest bid of the slot (too late; not delivered): 324.357 ETH, 106 tx, t_rel_slot=1353 ms, hash 0x985f3fa716",
+   "block": 24273362,
+   "raw_ref": "site/raw/relay-flashbots/bids_block24273362.json"
+  },
+  {
+   "t_utc_ms": 1768881107000,
+   "t_utc": "2026-01-20T03:51:47.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "return",
+   "actor": "builder fee recipient 0xa6c2 -> treasury 0xbed26250",
+   "detail": "1023.0 ETH (round number) sent from builder to 0xbed (post-mortem: \"the MEV builder\")",
+   "tx": "0x14d2725f4cac331740b053ae49176cec780b556e4aacc3a9f70d77644e97a2a7",
+   "block": 24273418,
+   "index": 278,
+   "raw_ref": "site/raw/rpc/tx_0x14d2725f4cac331740b053ae49176cec780b556e4aacc3a9f70d77644e97a2a7.json",
+   "raw_refs": [
+    "site/raw/web-makina/makina_postmortem.html"
+   ]
+  },
+  {
+   "t_utc_ms": 1768901171000,
+   "t_utc": "2026-01-20T09:26:11.000Z",
+   "precision": "block timestamp",
+   "kind": "message",
+   "actor": "Makina team EOA 0xc558839d (sender of Makina on-chain messages per post-mortem) -> builder 0xa6c2",
+   "detail": "On-chain message: Safe Harbor offer, 10% bounty (102.3 ETH), return 920.7 ETH to Makina Safe 0x62244C74, 24 h",
+   "tx": "0xfe12d36617e2d1d6ab43716159ad7737606837fe9ea0cb781054f6f3c4fea52f",
+   "block": 24275079,
+   "index": 259,
+   "raw_ref": "site/raw/rpc/tx_0xfe12d36617e2d1d6ab43716159ad7737606837fe9ea0cb781054f6f3c4fea52f.json",
+   "raw_refs": [
+    "site/raw/web-makina/makina_postmortem.html"
+   ]
+  },
+  {
+   "t_utc_ms": 1768901291000,
+   "t_utc": "2026-01-20T09:28:11.000Z",
+   "precision": "block timestamp",
+   "kind": "message",
+   "actor": "0xc558839d -> 0xbed26250",
+   "detail": "Same message to treasury 0xbed",
+   "tx": "0xc5c5898eaf8c9ac7bee2c28eb971e8c5fee51c9ecdaf48b42c3357186c0235bf",
+   "block": 24275089,
+   "index": 441,
+   "raw_ref": "site/raw/rpc/tx_0xc5c5898eaf8c9ac7bee2c28eb971e8c5fee51c9ecdaf48b42c3357186c0235bf.json"
+  },
+  {
+   "t_utc_ms": 1768907315000,
+   "t_utc": "2026-01-20T11:08:35.000Z",
+   "precision": "block timestamp",
+   "kind": "message",
+   "actor": "0xc558839d -> 0x3b6fc5cc (validator-side account; it later claimed the distributor funds at tx 0xd0c1836e...)",
+   "detail": "Message about the 276.322 ETH on validator 0x573db3: up to 27.632 ETH bounty",
+   "tx": "0xacffb5e680946cf0e7872271d465e8fa777f364a2027d5363efbcf70ff673177",
+   "block": 24275590,
+   "index": 329,
+   "raw_ref": "site/raw/web-makina/makina_postmortem.html",
+   "raw_refs": [
+    "site/raw/rpc/tx_0xacffb5e680946cf0e7872271d465e8fa777f364a2027d5363efbcf70ff673177.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1768924091000,
+   "t_utc": "2026-01-20T15:48:11.000Z",
+   "precision": "block timestamp",
+   "kind": "message",
+   "actor": "Yoink bot EOA 0xfde0d157 -> 0xbed",
+   "detail": "\"Msg me on blockScan, no need to be shipping large chunks of hacks off to validators ...\"",
+   "tx": "0xb4b66692bae0e754e650db24464742ab3daa83bdb4953285587da464bc6a0221",
+   "block": 24276985,
+   "index": 126,
+   "raw_ref": "site/raw/rpc/tx_0xb4b66692bae0e754e650db24464742ab3daa83bdb4953285587da464bc6a0221.json"
+  },
+  {
+   "t_utc_ms": 1769009303000,
+   "t_utc": "2026-01-21T15:28:23.000Z",
+   "precision": "block timestamp",
+   "kind": "message",
+   "actor": "0xbed -> Makina Safe 0x62244C74",
+   "detail": "0 ETH test transaction (an earlier 0-value tx 0x2c2f1f8a... at block 24284055 is flagged isError=1)",
+   "tx": "0xef4db5a82f6cfb7349b072b4e957cb236b7e21185589404d2953a4052bdea4cb",
+   "block": 24284062,
+   "index": 223,
+   "raw_ref": "site/raw/etherscan/txlist_0xbed26250db2097318386f540fd546acedf7bde25_24000000_25000000.json"
+  },
+  {
+   "t_utc_ms": 1769087711000,
+   "t_utc": "2026-01-22T13:15:11.000Z",
+   "precision": "block timestamp",
+   "kind": "return",
+   "actor": "0xbed26250 -> Makina Safe 0x62244C74",
+   "detail": "RETURN 920.7 ETH (1023 less 10% Safe Harbor bounty of 102.3 ETH)",
+   "tx": "0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44",
+   "block": 24290556,
+   "index": 297,
+   "raw_ref": "site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json",
+   "raw_refs": [
+    "site/raw/rpc/tx_0xfe12d36617e2d1d6ab43716159ad7737606837fe9ea0cb781054f6f3c4fea52f.json",
+    "site/raw/etherscan/txlist_0xbed26250db2097318386f540fd546acedf7bde25_24000000_25000000.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1769093051000,
+   "t_utc": "2026-01-22T14:44:11.000Z",
+   "precision": "block timestamp",
+   "kind": "return",
+   "actor": "Makina Safe -> Recovery Safe 0xc22f7346",
+   "detail": "Recovered ETH moved to dedicated Recovery Safe (Safe tx)",
+   "tx": "0x52aabbeebb45d9eea8b7117b19a6f92300bfa1300cbd07b2a1087122eaec5b60",
+   "block": 24290999,
+   "index": 421,
+   "raw_ref": "site/raw/rpc/tx_0x52aabbeebb45d9eea8b7117b19a6f92300bfa1300cbd07b2a1087122eaec5b60.json"
+  },
+  {
+   "t_utc_ms": 1769176223000,
+   "t_utc": "2026-01-23T13:50:23.000Z",
+   "precision": "block timestamp",
+   "kind": "return",
+   "actor": "Rocket Pool node operator -> Recovery Safe",
+   "detail": "157.1 ETH returned from the validator share (of 276.32 ETH)",
+   "tx": "0x4e25dd868ff245424d3df25b835b68bff38df8ae0e38a071bf96022413704dd0",
+   "block": 24297892,
+   "index": 120,
+   "raw_ref": "site/raw/web-makina/makina_postmortem.html"
+  }
+ ]
+}

@@ -1,0 +1,207 @@
+{
+ "slug": "time-2023",
+ "name": "TIME token ERC2771+Multicall address spoofing (thirdweb forwarder)",
+ "date": "2023-12-06",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "verdict_reason": "No separate attacker transaction exists. Every call into the TIME token via multicall/forwarder in blocks 18700000-18740000 (trace_filter) is either Yoink tx 0xecdd111a... (block 18730463, position 0, 2023-12-06 23:11:59 UTC) or a later copy by a different bot (0x1911be70..., block 18732002, ~5 h later, different calldata, 0.27 WETH). Nothing touching the forwarder/TIME/pool/Yoink contract is in the mempool-dumpster for 2023-12-06 (csv + sourcelog). The tx DeFiHackLabs, CertiK (84.59 ETH) and SharkTeam analyse as \"the attack\" IS Yoink's tx: 84.59 ETH = 94.513 WETH out - 5 WETH in - 4.923 ETH builder bribe. Yoink was the first mover, not a replay of a hacker. Unknown != none: a private attacker tx that never landed would be invisible.",
+ "era": "post-merge (mempool-dumpster covered; sourcelog present)",
+ "protocol_loss_usd": {
+  "reported": 188000,
+  "note": "CertiK ~$188K / 84.6 ETH; SlowMist ~$190K. On-chain: Uniswap V2 TIME/WETH LPs lost 89.513 WETH net (94.513 out, 5 in)."
+ },
+ "attacker": {
+  "eoas": [],
+  "contracts": [],
+  "deploy_tx": null,
+  "funding_tx": null,
+  "note": "No distinct attacker found. The party labelled \"attacker\" by DeFiHackLabs is Yoink (EOA 0xfde0d157..., contract 0x6980a47b...).",
+  "txs": [
+   {
+    "hash": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+    "block": 18730463,
+    "index": 0,
+    "status": 1,
+    "first_seen_ms": null,
+    "note": "Yoink tx (private: not in mempool-dumpster); listed so that the incident is complete",
+    "is_bot": true
+   }
+  ]
+ },
+ "bots": [
+  {
+   "label": "Yoink (first mover, not a replay)",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "txs": [
+    "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6"
+   ],
+   "captured": {
+    "token": "WETH/ETH",
+    "amount": "94.51346258704683 WETH out of TIME/WETH V2 pool 0x760dc1e0..., 5.0 WETH in (net 89.51346258704683); after builder bribe 84.59022214475925 ETH",
+    "usd": null
+   },
+   "coinbase_paid_eth": 4.923240442287576,
+   "priority_fee_gwei": 0.0,
+   "msg_value_wei": 55,
+   "bribe_rule_check": "msg.value 55 < 1000 -> per-mille of profit: 89.51346258704683 * 55/1000 = 4.923240442287576 ETH (exact), per research/bot-re/analysis.md",
+   "replay_evidence": "bot analysis grammar decode (scripts/bot_re/decode_script.py, ok=True, x=17796049396425000 wei = min profit 0.0178 ETH, f=0, no stores): [CALL TIME.approve(router,max)] [CALL_VALUE WETH.deposit 5 ETH] [CALL UniV2Router.swapExactTokensForTokensSupportingFeeOnTransferTokens (WETH->TIME)] [CALL Forwarder 0xc82bbe41.execute(req,sig) len 644: req.from=0xa16a5f37..., req.to=TIME, data=multicall([burn(62,227,259,510e18)] + pool address appended)] [CALL pool.sync()] [CALL Router swap TIME->WETH] [UNWRAP]. This is Yoink's own construction, NOT adapted from an attacker tx: there is no earlier attacker call to diff against.",
+   "notes": "Tx is private (mempool-dumpster has no record). Builder = Flashbots (coinbase 0xdafea492...), no builder refund to Yoink in the block (unlike Ronin/Paraswap). Pool-spoofed burn removed 62,227,259,510 TIME from the pool (Transfer pool->0x0)."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "later copy by a different bot",
+   "eoa": "0x0000000000000f25a072efa232d8efc0b5ce2436",
+   "contract": "0x000000000000c35e4364deffa9059dbadaefd4f8",
+   "tx": "0x1911be7020af964e35abfe5a94c9f2a232cc017532c1c14a1dea57c6ac011af3",
+   "block": 18732002,
+   "index": 123,
+   "time_utc": "2023-12-07T04:21:47Z",
+   "status": 1,
+   "captured": "0.274347030894486574 WETH (pool already drained)",
+   "evidence": "Same forwarder 0xc82bbe41 execute -> TIME multicall -> spoofed pool sender, but req.from differs (0xdaa64b0c... vs 0xa16a5f37...), inner call is transfer() not burn(), tx is a Uniswap Universal-Router-style call (0x3593564c), not the Yoink grammar. Forwarder-call word diff in incidents/time-2023/forwarder_call_diff.json. Independent re-use of the public idea ~5 h after Yoink; not in mempool-dumpster 2023-12-07."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "coinbase bribe to Flashbots builder",
+   "tx": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+   "amount_eth": 4.923240442287576,
+   "to": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5"
+  },
+  {
+   "what": "proposer payment (block 18730463 total bid)",
+   "tx": "0x6e13d1fabdaf27923010839f25910cd245eeca8599024fa221fca996748dce88",
+   "amount_eth": 5.001116058717716,
+   "to": "0x66698822Cf1f153AE76f973A5932a42E36244F02"
+  },
+  {
+   "what": "Yoink net profit kept in bot contract",
+   "tx": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+   "amount_eth": 84.59022214475925,
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0"
+  },
+  {
+   "what": "\"recovery\" escrow: Yoink EOA deploys contract 0x7bac4a2e... (Yoink-grammar dispatcher, 16 KB)",
+   "tx": "0x8e0a4d9d67859270a49f58e5a99096fb33b5302b4f948160328df4afcc94054a",
+   "amount_eth": 0,
+   "to": "0x7bac4a2ede0779a1f79a5fefe4fe271b37304e24",
+   "time_utc": "2023-12-11T20:22:35Z"
+  },
+  {
+   "what": "Yoink EOA funds escrow with 84.1 ETH",
+   "tx": "0xbfcf25531feb6d06af2628ddedee29bbbef2668fdbe296aca7f4215422ec4ba2",
+   "amount_eth": 84.1,
+   "to": "0x7bac4a2ede0779a1f79a5fefe4fe271b37304e24",
+   "time_utc": "2023-12-11T20:32:35Z"
+  },
+  {
+   "what": "on-chain notice to TIME holders (\"you may be able to recover funds from the recent hack here: [contract address]\"), sent as calldata to the TIME token; REVERTED (status 0) so it is only visible in the tx input",
+   "tx": "0xbd3eb26447f850cd44f1e66daafaad096c83b207acb725999625c7f463f38a80",
+   "amount_eth": 0,
+   "to": "0x4b0e9a7da8bab813efae92a6651019b8bd6c0a29",
+   "time_utc": "2023-12-11T20:40:47Z"
+  },
+  {
+   "what": "escrow balance stays exactly 84.1 ETH at blocks 18765364, 18790000, 18900000 (no payouts); Yoink EOA calls owner function 0x9890220b and the contract sends all 84.1 ETH back to the Yoink EOA",
+   "tx": "0x487f7c96d538c32741e4eb4ec62cb8a2d8c207d707b1a7d10241373c72528d7b",
+   "amount_eth": 84.1,
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "time_utc": "2024-01-12T18:44:47Z"
+  }
+ ],
+ "auction": {
+  "relays_answered": {
+   "flashbots": {
+    "bids": 295,
+    "delivered": 1
+   },
+   "others": "ultrasound/bloxroute-regulated/agnostic/aestus/titan/ethgas/btcs answered with 0 bids (retention); bloxroute-max-profit, ethical, eden, manifold retired"
+  },
+  "n_bids": 295,
+  "n_builders": 39,
+  "first_bid_rel_slot_ms": -8605,
+  "last_bid_rel_slot_ms": 880,
+  "slot": 7923358,
+  "slot_start_utc": "2023-12-06T23:11:59.000Z",
+  "value_escalation": "Baseline bids 0.001-0.28 ETH from -8.6 s to -3.0 s. At t=-2942 ms (2023-12-06T23:11:56.058Z) the Flashbots builder bids 4.953 ETH (80 tx); within 1 s ~8 builders (payload.de, rsync, beaverbuild, Titan, geth-builder) bid 4.7-4.98 ETH: the 4.92 ETH Yoink coinbase payment is in every top bid (contents of losing bids not public; inferred from value level only, label inferred). \"I can haz block?\" bids 3.60 ETH (13 tx, -2852 ms) then 8.33 ETH (13 tx, -2363 ms; again 14 tx -1318 ms).",
+  "winner": {
+   "builder": "Flashbots",
+   "builder_pubkey": "0x81babeec8c9f2bb9c329fd8a3b176032fe0ab5f3b92a3f44d4575a231c7bd9c31d10b6328ef68ed1e8c02a3dbc8e80f9",
+   "value_eth": 5.001116058717717,
+   "submitted_rel_slot_ms": -155,
+   "block_hash": "0x129d29f468d4b5b0846b7c3cf47ec33e6cfc1bd489f8647e09bba45d4c84ed29",
+   "contains_bot_tx": true,
+   "proposer_fee_recipient": "0x66698822Cf1f153AE76f973A5932a42E36244F02",
+   "proposer_payment_tx": "0x6e13d1fabdaf27923010839f25910cd245eeca8599024fa221fca996748dce88"
+  },
+  "highest_bid_not_delivered": {
+   "value_eth": 8.33071059101514,
+   "builder": "I can haz block?",
+   "rel_slot_ms": [
+    -2363,
+    -1318
+   ],
+   "num_tx": [
+    13,
+    14
+   ],
+   "note": "Higher than the delivered 5.0011 ETH block; relay data does not say why it lost (rejected at simulation or filtered; unknown)."
+  },
+  "runner_up_below_winner": "Flashbots/Titan late bids 5.002-5.006 ETH arrive AFTER the winning submission (t>+139 ms) - too late for the proposer.",
+  "proposer_payment_eth": 5.001116058717716,
+  "builder_refund_to_bot": null,
+  "builder_refund_note": "none in this block (the Flashbots builder keeps 4.923 of Yoink's 4.923+fees; no tx from 0xdafea492 to Yoink)",
+  "bot_tx_public_mempool": false,
+  "bot_tx_note": "Yoink tx absent from csv and sourcelog of 2023-12-06: private order flow",
+  "raw": "incidents/time-2023/race_18730463.json"
+ },
+ "sources": [
+  "https://explorer.phalcon.xyz/tx/eth/0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+  "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2023-12/TIME_exp.sol",
+  "https://blog.openzeppelin.com/arbitrary-address-spoofing-vulnerability-erc2771context-multicall-public-disclosure",
+  "https://www.certik.com/blog/time",
+  "https://beosin.com/resources/unveiling-the-ethereum-time-contract-hack-exploiting-erc2771-protocol-vulnerabilities-for%C2%A0profit",
+  "https://medium.com/@Triathon/how-hackers-exploit-erc2771-to-attack-ethereums-time-contract-d515239ed582"
+ ],
+ "raw_refs": {
+  "yoink_tx": "site/raw/rpc/tx_0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6.json",
+  "yoink_receipt": "site/raw/rpc/receipt_0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6.json",
+  "yoink_trace": "site/raw/rpc/trace_0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6.json",
+  "copy_tx_trace": "site/raw/rpc/trace_0x1911be7020af964e35abfe5a94c9f2a232cc017532c1c14a1dea57c6ac011af3.json",
+  "withdraw_trace": "site/raw/rpc/trace_0x487f7c96d538c32741e4eb4ec62cb8a2d8c207d707b1a7d10241373c72528d7b.json",
+  "race": "incidents/time-2023/race_18730463.json",
+  "race_copy": "incidents/time-2023/race_18732002.json",
+  "yoink_decoded_ops": "incidents/time-2023/yoink_decoded_ops.json",
+  "forwarder_call_diff": "incidents/time-2023/forwarder_call_diff.json",
+  "mempool_day": "full cache only (not published)",
+  "mempool_sourcelog": "full cache only (not published)",
+  "mempool_day_copy": "full cache only (not published)",
+  "time_token_calls_trace_filter": "full cache only (not published)",
+  "pool_tokentx": "site/raw/etherscan/time2023_pool_tokentx_b.json",
+  "forwarder_txlist": "site/raw/etherscan/time2023_fw_all.json",
+  "forwarder_txlist_page2": "site/raw/etherscan/time2023_fw_after_18780465.json",
+  "yoink_txlist_dec6_7": "site/raw/etherscan/time_yoink_txlist_dec6.json",
+  "escrow_txlist_early": "site/raw/etherscan/time_claim_7bac_txlist.json",
+  "escrow_balance_samples": "full cache only (not published)",
+  "message_tx_receipt": "site/raw/rpc/receipt_0xbd3eb26447f850cd44f1e66daafaad096c83b207acb725999625c7f463f38a80.json"
+ },
+ "verdict_original": "related-not-frontrun",
+ "race_type": "bot-was-first-exploiter",
+ "headline": false,
+ "headline_text": "Yoink was the first to exploit TIME's thirdweb forwarder bug, taking 89.5 ETH gross (84.6 ETH after a 4.92 ETH builder tip) from the TIME/WETH pool in one transaction absent from the archive; its later 84.1 ETH 'recovery' escrow paid out nothing and Yoink withdrew it back.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "The tx called 'the attack' is Yoink's own; no separate attacker tx exists to diff against.",
+  "headline_note": null,
+  "dataset_rows": [
+   "time-2023"
+  ]
+ }
+}

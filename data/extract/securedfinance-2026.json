@@ -1,0 +1,456 @@
+[
+ {
+  "slug": "securedfinance-2026",
+  "name": "Secured Finance (Secured.Fi lending market) exploit, c0ffeebabe.eth WBTC rescue",
+  "date_utc": "2026-09-05T22:43:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The transaction landed four blocks and 48 seconds after the attacker transaction failed.",
+  "one_liner": "The attacker's public tx ran out of gas and reverted at block 25914188; 48 s later c0ffeebabe.eth's tx (block 25914192, pos 0) completed the extraction, ended with 28.85 ETH, and paid 28.84 ETH to the builder.",
+  "attacker": {
+   "eoa": "0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305",
+   "eoas": [
+    "0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305"
+   ],
+   "contracts": [
+    "0x4402232f6cade999776c1dec3303a4689d356044"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0xa57371e466bccfb65f8d5edf8fa4aa15b4f0ce305757af2b6d9d4a87b65a1753",
+   "deploy_tx": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+   "deploy_block": 25914186,
+   "attack_txs": [
+    {
+     "hash": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+     "block": 25914186,
+     "index": 65,
+     "status": "success",
+     "role": "CREATE2 deploy of attack contract 0x4402232f (public mempool first seen 22:41:54.507Z)"
+    },
+    {
+     "hash": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777",
+     "block": 25914188,
+     "index": 76,
+     "status": "reverted",
+     "role": "attack tx (public mempool); out of gas inside the Balancer WBTC flash-loan callback; gas used 12717983 of limit 13118277"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0xe08d97e151473a848c3d9ca3f323cb720472d015",
+   "tx": "0xcd6159860783d8d481cc4bf4dceddc88acdca6bb08f6445525b2904cfd75b1da",
+   "block": 25914192,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "anon later searcher (0xf601d764)",
+    "eoa": "0xf601d7646c2db4940f0b1909b4835ed7279c5aed",
+    "contract": "0xa2233b751a27f0cd7cf58935798ae303b269a882 (called via factory 0x9cb7a294cd1b0df5a1d335e713aa0c7f8f8dd5f1)",
+    "tx": "0xf3627506a6d7d70ac993722539706e86aa442f69e8200149ba36f11e9eeafcb5",
+    "block": 25914405,
+    "position": 0,
+    "status": "success",
+    "role": "Later transaction in block 25914405 at position 0; after the incident transaction."
+   }
+  ],
+  "evidence_level_mempool": "measured",
+  "mempool_note": "mempool-dumpster covers 2026-09-05 (no source log for 2026-09, so no per-source attribution). The attacker's attack tx was first seen at 2026-09-05T22:42:20.456Z and included at 22:42:23Z in block 25914188 (inclusion delay 2544 ms); its deploy tx was first seen 22:41:54.507Z. c0ffeebabe's tx and the second searcher's tx are not in the dump (private flow or missed).",
+  "trigger": {
+   "kind": null,
+   "tx": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777",
+   "first_seen_utc_ms": 1788648140456,
+   "first_seen_utc": "2026-09-05T22:42:20.456Z",
+   "sources": null,
+   "note": "kind is null on purpose: the first-seen above is the ATTACKER's public tx, but the bot did not react to it as a pending tx. The attacker's tx was mined and failed (block 25914188, 22:42:23Z) before the bot's block 25914192 (22:43:11Z): the bot landed 48.0 s after the attacker's block time and 50.5 s after the tx was first seen, with no attacker tx pending in between (attacker's next tx is at 23:25). The bot's tx is not in the mempool dump, so its own first-seen/bid time is unknown. The timestamp is recorded only to document the gap, not as a trigger."
+  },
+  "attacker_block": 25914188,
+  "attacker_block_note": "Block in which the attacker's tx 0x5d4e4fa9 (idx 76) landed and REVERTED (out of gas); built locally by the proposer without a relay (extraData reth/v2.2.0). The bot is 4 blocks later, so blocks_ahead is negative: the bot is after, not before, the attacker.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 25914188,
+   "tx": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777"
+  },
+  "auction": {
+   "block": 25914192,
+   "slot": 15152014,
+   "slot_start_utc_ms": 1788648191000,
+   "relays_answered": [
+    "flashbots",
+    "bloxroute-regulated",
+    "agnostic",
+    "aestus",
+    "titan"
+   ],
+   "n_bids": 5947,
+   "n_builders": 47,
+   "bids_per_relay": {
+    "flashbots": 90,
+    "bloxroute-regulated": 4408,
+    "agnostic": 572,
+    "aestus": 485,
+    "titan": 392
+   },
+   "first_bid_ms_rel_slot": -10010,
+   "last_bid_ms_rel_slot": 14854,
+   "winning_bid_eth": 1.278613875829206,
+   "winning_builder": "builder.ultrasound.money",
+   "winning_builder_pubkey": "0x8330662d8e0ae9a2f3e6d4e7067ab2bd7d383d5b1e3915c35a7c5a72e7becc00cb0c217b8c8a1465e3bb8ba09c9528a7",
+   "winning_relays": [
+    "titan"
+   ],
+   "winning_first_submission_ms_rel_slot": 1159,
+   "winning_last_submission_ms_rel_slot": 1159,
+   "runner_up_eth": 1.2789731192594622,
+   "runner_up_builder": "builder.ultrasound.money",
+   "runner_up_ms_rel_slot": 805,
+   "runner_up_other_builder_eth": 1.0007103772132409,
+   "runner_up_other_builder": "Titan (titanbuilder.xyz)",
+   "runner_up_other_builder_ms_rel_slot": 782,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 1.2789731192594622,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10010,
+     1e-09
+    ],
+    [
+     -7868,
+     0.001479972113466878
+    ],
+    [
+     -7611,
+     0.00148027502052118
+    ],
+    [
+     -7398,
+     0.001480662019042455
+    ],
+    [
+     -7190,
+     0.001489217378881481
+    ],
+    [
+     -6820,
+     0.001489251935977481
+    ],
+    [
+     -6795,
+     0.001494604231977481
+    ],
+    [
+     -6761,
+     0.001494847424408697
+    ],
+    [
+     -6678,
+     0.001497937438359789
+    ],
+    [
+     -6428,
+     0.001652458366751789
+    ],
+    [
+     -6333,
+     0.001704172366751789
+    ],
+    [
+     -6179,
+     0.001720414235662834
+    ],
+    [
+     -6106,
+     0.002015351186766834
+    ],
+    [
+     -5791,
+     0.002081050562366834
+    ],
+    [
+     -5665,
+     0.002186793521060518
+    ],
+    [
+     -5445,
+     0.002278999387110518
+    ],
+    [
+     -5307,
+     0.002279100472164518
+    ],
+    [
+     -5291,
+     0.002283723238214518
+    ],
+    [
+     -5228,
+     0.002289217286291518
+    ],
+    [
+     -5004,
+     0.002307778994291518
+    ],
+    [
+     -4988,
+     0.002327851498004698
+    ],
+    [
+     -4812,
+     0.002420069498004698
+    ],
+    [
+     -4704,
+     0.002456380787168863
+    ],
+    [
+     -4344,
+     0.002456547381538927
+    ],
+    [
+     -3934,
+     0.002456950450815679
+    ],
+    [
+     -3842,
+     0.002457262905158261
+    ],
+    [
+     -3780,
+     0.002457288959048711
+    ],
+    [
+     -3571,
+     0.002528402694346702
+    ],
+    [
+     -3386,
+     0.002543419314614475
+    ],
+    [
+     -3199,
+     0.002543456114614475
+    ],
+    [
+     -3180,
+     0.002543539810989797
+    ],
+    [
+     -2665,
+     0.002543583544520525
+    ],
+    [
+     -2656,
+     0.002545742401892524
+    ],
+    [
+     -2468,
+     0.002587742401892524
+    ],
+    [
+     -2450,
+     0.002730438401892524
+    ],
+    [
+     -2218,
+     0.002730691237892524
+    ],
+    [
+     -2024,
+     0.002736087292997524
+    ],
+    [
+     -1943,
+     0.012502195459690488
+    ],
+    [
+     -1797,
+     0.012502220104116064
+    ],
+    [
+     -1770,
+     0.012502241696196535
+    ],
+    [
+     -1703,
+     0.012502261798160308
+    ],
+    [
+     -1516,
+     0.012685341162497036
+    ],
+    [
+     -1502,
+     0.012685868915831887
+    ],
+    [
+     -1469,
+     0.012685963157497036
+    ],
+    [
+     -1426,
+     0.012691305252050988
+    ],
+    [
+     -1405,
+     0.012758271958077431
+    ],
+    [
+     -1275,
+     0.012758326541232148
+    ],
+    [
+     -1271,
+     0.01275902811441384
+    ],
+    [
+     -1228,
+     0.012759152481249696
+    ],
+    [
+     -1071,
+     0.012764494575803647
+    ],
+    [
+     -993,
+     0.015051680747749416
+    ],
+    [
+     -761,
+     0.02966645330720428
+    ],
+    [
+     -691,
+     0.02966676321615043
+    ],
+    [
+     -676,
+     0.31777866922706516
+    ],
+    [
+     393,
+     0.9986199486426299
+    ],
+    [
+     403,
+     1.2769456835913888
+    ],
+    [
+     539,
+     1.276948799725763
+    ],
+    [
+     634,
+     1.2769489173741817
+    ],
+    [
+     710,
+     1.2771056699749883
+    ],
+    [
+     805,
+     1.2789731192594622
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/securedfinance-2026/race_25914192.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block25914192.json",
+    "relay_bids:bloxroute-regulated": "site/raw/relay-bloxroute-regulated/bids_block25914192.json",
+    "relay_bids:agnostic": "site/raw/relay-agnostic/bids_block25914192.json",
+    "relay_bids:aestus": "site/raw/relay-aestus/bids_block25914192.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block25914192.json",
+    "relay_delivered:titan": "site/raw/relay-titan/delivered_block25914192.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "Block 25914192 was built by builder.ultrasound.money (fee recipient 0x6c42...); the record-bid curve stayed below 1 ETH (last such record 0.998620 ETH at 393 ms, builder BuilderNet) until a 1.27695 ETH bid at +403 ms; the delivered block (via Titan) paid the proposer 1.278614 ETH (payment tx idx 152). The block's txs paid the builder fee recipient 28.840846 ETH in total, so the builder kept ~27.5622 ETH = 95.6% of the bot's 28.837211 ETH coinbase payment (no builder->bot refund tx in the block). Ultra Sound's own bid API returned nothing for this block, so its bids are not visible. The attacker's block 25914188 was built locally by the proposer (extraData reth/v2.2.0/linux): no relay auction exists for it."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 28.848750215,
+   "gross_loot_method": "WETH Transfer log from the Uniswap V3 WBTC/WETH pool 0x4585fe77... into the bot's contract in the bot tx receipt (28.848750215 WETH for 0.89899003 WBTC; ETH-equivalent 1:1). The 0.91 WBTC Balancer flash loan is repaid in the tx.",
+   "captured_native": {
+    "amount": "0.89899003",
+    "unit": "WBTC",
+    "desc": "WBTC withdrawn from the token vault beyond the 0.91 WBTC flash loan, sold in the same tx for 28.848750 WETH"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 28.837210715,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 0.011034371,
+   "loot_note": "Bot tx only. bot_net = WETH proceeds 28.848750 - coinbase 28.837211 - gas 0.000505 ETH, before any later return. Press figure for the whole incident is ~$104k (not used). No builder->bot transfer in block 25914192."
+  },
+  "fate": {
+   "return_status": "none",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 0.0,
+   "returned_to": null,
+   "returned_desc": "No return found: the WBTC was sold to ETH inside the same tx; incident.json found no transfer back to the protocol in the block or in the bot EOA/contract internal-tx lists, and no public statement from the protocol. Press (TechFlow/KuCoin) calls c0ffeebabe a 'white-hat MEV bot' (not verified on-chain). Unknown != none.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [],
+   "public_statement": "Press only: TechFlow/KuCoin describe c0ffeebabe as a white-hat MEV bot; no statement from Secured Finance found.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_25914192.json",
+   "bot.position": "site/raw/rpc/block_25914192.json",
+   "attacker_block": "site/raw/rpc/block_25914188.json",
+   "trigger.first_seen_utc_ms": [
+    "full cache only (not published)",
+    "site/raw/mempool-dumpster/2026-09-05_summary.txt",
+    "incidents/securedfinance-2026/race_25914188.json"
+   ],
+   "loot.gross_loot_eth": "site/raw/rpc/receipts_25914192.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_25914192.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_25914192.json",
+    "site/raw/rpc/block_25914192.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_25914192.json",
+    "site/raw/rpc/trace_block_25914192.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/receipts_25914192.json",
+    "site/raw/rpc/trace_block_25914192.json"
+   ],
+   "attacker_tx_receipt": "site/raw/rpc/receipts_25914188.json",
+   "mempool_lookup": "full cache only (not published)",
+   "second_searcher_block": "site/raw/rpc/block_25914405.json"
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.sources",
+    "why": "mempool-dumpster has no source log for 2026-09; per-source first-seen unavailable"
+   },
+   {
+    "field": "fate.*",
+    "why": "no return found"
+   }
+  ],
+  "discrepancies": [
+   "incident.json bot_kept_eth 0.011539500086156205 is gross proceeds minus coinbase only; net of the tx's gas cost (0.000505 ETH) the bot kept 0.011034 ETH (bot_net_eth).",
+   "incident.json says the ultrasound builder jumped from ~6e-5 ETH to 1.27695 ETH at +403 ms; the all-builder record-bid curve (race_25914192.json bid_summary) also has builder.ultrasound.money at 0.3178 ETH at -676 ms and BuilderNet at 0.9986 ETH at +393 ms before the 1.27695 ETH bid, so the +403 ms bid is the first >=1 ETH record, not a jump from ~0.",
+   "date: initial incident notes/TechFlow said 2026-09-07; chain timestamps are 2026-09-05 (incident.json date_note); the row uses the block timestamp."
+  ],
+  "evidence_notes": [
+   "The transaction landed four blocks and 48 seconds after the attacker transaction failed.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/securedfinance-2026"
+ }
+]

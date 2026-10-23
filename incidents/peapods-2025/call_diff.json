@@ -1,0 +1,343 @@
+{
+ "schema": "bvh-calldiff/1",
+ "what": "Peapods pair 2 (Fraxlend-style USDC pair 0xca1154bb): Yoink tx0 of block 22874010 vs the attacker's own pair-2 attempts in blocks 22874007-22874009. State-changing victim-protocol calls inside the Morpho flash-loan callback, approvals excluded, addresses replaced by role names in order of first appearance.",
+ "yoink": {
+  "tx": "0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32",
+  "block": 22874010,
+  "index": 0,
+  "bot_contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+  "n_state_changing_calls": 42,
+  "role_sequence": [
+   "T0.UniV3.swap",
+   "WETH.transfer",
+   "BOT.UniV3.swapCallback",
+   "USDC.transfer",
+   "T1.Curve.exchange",
+   "WETH.transferFrom",
+   "T2.transfer",
+   "T3.pod.bond",
+   "T2.transferFrom",
+   "T3.transfer",
+   "T4.pod.addLiquidityV2",
+   "T3.transferFrom",
+   "T5.UniV2Router.swapSupportingFee",
+   "T3.transferFrom",
+   "T6.UniV2.swap",
+   "T7.transfer",
+   "T8.?3694313d",
+   "T7.transfer",
+   "T7.ERC4626.deposit",
+   "USDC.transferFrom",
+   "T9.vault.?3c367282",
+   "T9.vault.?61325e18",
+   "USDC.transferFrom",
+   "T7.transfer",
+   "T3.transfer",
+   "T6.UniV2.mint",
+   "T10.stake",
+   "T8.?d6460b4b",
+   "T3.0xbb463027",
+   "T6.transferFrom",
+   "T11.ERC4626.deposit",
+   "T10.transferFrom",
+   "T8.?d6460b4b",
+   "T3.0xbb463027",
+   "T8.?d6460b4b",
+   "T3.0xbb463027",
+   "T7.transfer",
+   "T7.pair.borrowAsset",
+   "T11.transferFrom",
+   "T9.vault.?f556d889",
+   "USDC.transfer",
+   "USDC.transfer"
+  ],
+  "key_args": {
+   "morpho_flashloan_usdc_units": 10000000000000,
+   "morpho_flashloan_status": "ok",
+   "uniV3_swap_amountSpecified_usdc_units": 174271006022,
+   "uniV3_swap_status": "ok",
+   "curve_exchange_dx_wei": 67867704393611504748,
+   "curve_exchange_status": "ok",
+   "fraxlend_deposit_usdc_units": 167536605211,
+   "fraxlend_deposit_status": "ok",
+   "borrowAsset_borrowAmount_usdc_units": 516065925046,
+   "borrowAsset_borrowAmount_status": "ok",
+   "borrowAsset_collateralAmount_wei": 3041559694027605,
+   "borrowAsset_collateralAmount_status": "ok"
+  }
+ },
+ "attacker_attempts": {
+  "22874007": {
+   "attacker_tx": "0xdc77441724cbdda85ae9b3ae9f34d82307a12ea1e728750411dd4e35679f7f62",
+   "n_state_changing_calls_attacker": 42,
+   "n_state_changing_calls_yoink": 42,
+   "sequence_identical_after_role_normalisation": true,
+   "similarity_ratio": 1.0,
+   "attacker_reverts_at": [
+    "T7.pair.borrowAsset"
+   ],
+   "opcodes": [],
+   "key_args": {
+    "morpho_flashloan_usdc_units": 10000000000000,
+    "morpho_flashloan_status": "reverted",
+    "uniV3_swap_amountSpecified_usdc_units": 174271006022,
+    "uniV3_swap_status": "ok",
+    "curve_exchange_dx_wei": 67867704393611504748,
+    "curve_exchange_status": "ok",
+    "fraxlend_deposit_usdc_units": 167512677867,
+    "fraxlend_deposit_status": "ok",
+    "borrowAsset_borrowAmount_usdc_units": 516041997721,
+    "borrowAsset_borrowAmount_status": "reverted",
+    "borrowAsset_collateralAmount_wei": 3041125335767407,
+    "borrowAsset_collateralAmount_status": "reverted"
+   }
+  },
+  "22874008": {
+   "attacker_tx": "0x505db20226ec0eaa3d20e2972cbb14772ffe8da9669349684042c82b33f7f9ed",
+   "n_state_changing_calls_attacker": 42,
+   "n_state_changing_calls_yoink": 42,
+   "sequence_identical_after_role_normalisation": true,
+   "similarity_ratio": 1.0,
+   "attacker_reverts_at": [
+    "T7.pair.borrowAsset"
+   ],
+   "opcodes": [],
+   "key_args": {
+    "morpho_flashloan_usdc_units": 10000000000000,
+    "morpho_flashloan_status": "reverted",
+    "uniV3_swap_amountSpecified_usdc_units": 174271006022,
+    "uniV3_swap_status": "ok",
+    "curve_exchange_dx_wei": 67867704393611504748,
+    "curve_exchange_status": "ok",
+    "fraxlend_deposit_usdc_units": 167536611964,
+    "fraxlend_deposit_status": "ok",
+    "borrowAsset_borrowAmount_usdc_units": 516065931812,
+    "borrowAsset_borrowAmount_status": "reverted",
+    "borrowAsset_collateralAmount_wei": 3041559838495613,
+    "borrowAsset_collateralAmount_status": "reverted"
+   }
+  },
+  "22874009": {
+   "attacker_tx": "0xa03582cc1b84b1c56ad59d503a54e43e1a599d38d64eb52acfdcf571492fb2f1",
+   "n_state_changing_calls_attacker": 42,
+   "n_state_changing_calls_yoink": 42,
+   "sequence_identical_after_role_normalisation": true,
+   "similarity_ratio": 1.0,
+   "attacker_reverts_at": [
+    "T7.pair.borrowAsset"
+   ],
+   "opcodes": [],
+   "key_args": {
+    "morpho_flashloan_usdc_units": 10000000000000,
+    "morpho_flashloan_status": "reverted",
+    "uniV3_swap_amountSpecified_usdc_units": 174271006022,
+    "uniV3_swap_status": "ok",
+    "curve_exchange_dx_wei": 67867704393611504748,
+    "curve_exchange_status": "ok",
+    "fraxlend_deposit_usdc_units": 167512665618,
+    "fraxlend_deposit_status": "ok",
+    "borrowAsset_borrowAmount_usdc_units": 516041985460,
+    "borrowAsset_borrowAmount_status": "reverted",
+    "borrowAsset_collateralAmount_wei": 3041125091295672,
+    "borrowAsset_collateralAmount_status": "reverted"
+   }
+  }
+ },
+ "attacker_after_yoink": {
+  "22874015": {
+   "tx": "0x12b1dc098f75b661d0b1bc2db71588e0aa95a2e66be742b3abfeec678d86bf7d",
+   "key_args": {
+    "morpho_flashloan_usdc_units": 10000000000000,
+    "morpho_flashloan_status": "reverted",
+    "borrowAsset_borrowAmount_usdc_units": 0,
+    "borrowAsset_borrowAmount_status": "ok",
+    "borrowAsset_collateralAmount_wei": 0,
+    "borrowAsset_collateralAmount_status": "ok"
+   }
+  },
+  "22874016": {
+   "tx": "0x03986527138815646e56082789fd6dd0f20faa7c3abc758abe58a5e9f5a811ad",
+   "key_args": {
+    "morpho_flashloan_usdc_units": 10000000000000,
+    "morpho_flashloan_status": "reverted",
+    "borrowAsset_borrowAmount_usdc_units": 0,
+    "borrowAsset_borrowAmount_status": "ok",
+    "borrowAsset_collateralAmount_wei": 0,
+    "borrowAsset_collateralAmount_status": "ok"
+   }
+  }
+ },
+ "attacker_first_exploit_other_pair": {
+  "tx": "0xeff836fa1ce60f04b94544fa424764101323f1f7c8ab8265b4bd34e9fa84f8db",
+  "note": "block 22873986 idx 4 succeeded on pair 1 (WETH market 0x2e4cbec7 / 0xd1538a9d, 2,000 WETH Morpho loan, +78.186 ETH). Same recipe family (Morpho loan -> pool swap -> Curve -> pod bond -> LP/oracle skew -> pair deposit -> borrowAsset) but different pair, token and sizes; Yoink's tx does not touch pair 1."
+ },
+ "sims": {
+  "22874009": {
+   "raw": "site/raw/rpc/peap_simA_22874009.json",
+   "gas_used": 3316723,
+   "internal_reverts": [
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x69509a41",
+     "error": "execution reverted",
+     "output": "0xed27783c000000000000000000000000000000000000000000000004abd5959925825a78"
+    },
+    {
+     "depth": 2,
+     "to": "0x2e4cbec7f2",
+     "sel": "0xd41ddc96",
+     "error": "execution reverted",
+     "output": "0xed27783c000000000000000000000000000000000000000000000004abd5959925825a78"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0xf0c97534",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000007827ed1562"
+    },
+    {
+     "depth": 2,
+     "to": "0xbbbbbbbbbb",
+     "sel": "0xe0232b42",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000007827ed1562"
+    },
+    {
+     "depth": 3,
+     "to": "0x7212de58f9",
+     "sel": "0x31f57072",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000007827ed1562"
+    },
+    {
+     "depth": 4,
+     "to": "0xca1154bbd6",
+     "sel": "0xe5f13b16",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000007827ed1562"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x73eb7493",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000005126b90a8d"
+    },
+    {
+     "depth": 2,
+     "to": "0xca1154bbd6",
+     "sel": "0xe5f13b16",
+     "error": "execution reverted",
+     "output": "0xed27783c0000000000000000000000000000000000000000000000000000005126b90a8d"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x69509a41",
+     "error": "execution reverted",
+     "output": "0x4e487b710000000000000000000000000000000000000000000000000000000000000012"
+    }
+   ],
+   "meaning": "state after block 22874009 = just BEFORE Yoink's tx: the attacker's calldata still reverts inside borrowAsset on pair 2 (no profit)"
+  },
+  "22874010": {
+   "raw": "site/raw/rpc/peap_simA_22874010.json",
+   "gas_used": 2083559,
+   "internal_reverts": [
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0xf0c97534",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 2,
+     "to": "0xbbbbbbbbbb",
+     "sel": "0xe0232b42",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 3,
+     "to": "0x7212de58f9",
+     "sel": "0x31f57072",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x69509a41",
+     "error": "execution reverted",
+     "output": "0x4e487b710000000000000000000000000000000000000000000000000000000000000012"
+    }
+   ],
+   "meaning": "state after Yoink's block: the same calldata now stops earlier ('zero token'), no pair-2 borrow is attempted"
+  },
+  "22874014": {
+   "raw": "site/raw/rpc/peap_simA_22874014.json",
+   "gas_used": 1364418,
+   "internal_reverts": [
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x73eb7493",
+     "error": "execution reverted",
+     "output": "0xed27783c000000000000000000000000000000000000000000000004abd5c23348886ed4"
+    },
+    {
+     "depth": 2,
+     "to": "0x2e4cbec7f2",
+     "sel": "0xe5f13b16",
+     "error": "execution reverted",
+     "output": "0xed27783c000000000000000000000000000000000000000000000004abd5c23348886ed4"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x69509a41",
+     "error": "execution reverted",
+     "output": "0x4e487b710000000000000000000000000000000000000000000000000000000000000011"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0xf0c97534",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 2,
+     "to": "0xbbbbbbbbbb",
+     "sel": "0xe0232b42",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 3,
+     "to": "0x7212de58f9",
+     "sel": "0x31f57072",
+     "error": "execution reverted",
+     "output": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020"
+    },
+    {
+     "depth": 1,
+     "to": "0x7212de58f9",
+     "sel": "0x69509a41",
+     "error": "execution reverted",
+     "output": "0x4e487b710000000000000000000000000000000000000000000000000000000000000012"
+    }
+   ],
+   "meaning": "state after block 22874014, just before the attacker's 22874015 attempt: 'zero token' again"
+  }
+ },
+ "notes": [
+  "Role-normalised call sequences of the attacker's three pair-2 attempts equal Yoink's call-for-call (approvals excluded; Yoink pre-approves at the top of its tx, the attacker approves inline).",
+  "Same Morpho flashLoan: 10,000,000 USDC (1e13 units) in all four txs. Same UniV3 swap amountSpecified (174,271.006022 USDC) and same Curve exchange dx (67.8677043936115 WETH) in all four.",
+  "The attacker's borrowAsset on pair 2 reverts in every attempt with custom error 0xed27783c(uint256); the error argument is exactly the attempted borrow amount + 1 unit in all six reverted calls (e.g. 516,065,931,813 for a borrow of 516,065,931,812). The error is not decoded from verified source (an amount/limit check, not necessarily solvency), so no claim is made about its cause. The attacker's try/catch swallows it: each outer tx is status 1 with no profit. Yoink's borrowAsset with a near-identical amount passes one block later.",
+  "Borrow sizes differ at the 7th significant digit: attacker 516,041.997721 / 516,065.931812 / 516,041.985460 USDC, Yoink 516,065.925046 USDC (6.766e-3 USDC below the attacker's block-22874008 attempt). Why Yoink's call passes where the attacker's reverts is NOT determined from public data."
+ ]
+}

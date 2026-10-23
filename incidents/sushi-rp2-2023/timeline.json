@@ -1,0 +1,335 @@
+{
+ "slug": "sushi-rp2-2023",
+ "caveat": "in-block evidence only: no mempool archive exists before 2023-08-07; times are block timestamps unless t_utc_ms (relay bid receive time) is given",
+ "events": [
+  {
+   "t_utc": "2023-04-09T02:22:35Z",
+   "kind": "deploy",
+   "actor": "Trust",
+   "detail": "deploys rescue contract 0x9deff363... (in-block evidence only; no mempool archive)",
+   "tx": "0xd6c02be0c5fe1ceab632f146d9e2bbd987299e8be1faf8b19d10a634d2f3826f",
+   "block": 17007776,
+   "raw_ref": "site/raw/etherscan/txlist_0x869238b1_0_17011000.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:25:47Z",
+   "kind": "tx",
+   "actor": "Trust",
+   "detail": "nonce 9 call to own contract",
+   "tx": "0x8db848531cda223f353c523153de2da954b0fb1bb525e51420b4a56899879aa3",
+   "block": 17007791,
+   "raw_ref": "site/raw/etherscan/txlist_0x869238b1_0_17011000.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:34:59Z",
+   "kind": "tx",
+   "actor": "victim",
+   "detail": "last victim tx before the frenzy (swap, receives 246.84 WETH)",
+   "tx": "0xe9fea9ae875599e7a1a1ae98c4b96a8b5dd5ebadc279e9bc15792066e1197f43",
+   "block": 17007837,
+   "raw_ref": "site/raw/rpc/receipt_0xe9fea9ae875599e7a1a1ae98c4b96a8b5dd5ebadc279e9bc15792066e1197f43.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlist_0x31d3243c_17007700_17030000.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:11Z",
+   "kind": "block",
+   "actor": "validator (vanilla geth block, not MEV-Boost)",
+   "detail": "17007838: base fee 18.8779 gwei. Trust's pending tx (maxFee 18.8724) is not includable. Yoink pull #1 at idx 23",
+   "tx": "0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386",
+   "block": 17007838,
+   "raw_ref": "site/raw/rpc/block_17007838.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:11Z",
+   "kind": "tx",
+   "actor": "yoink",
+   "detail": "idx 23 ok: pulls 100.0 WETH; coinbase 0.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00044 ETH, gas 20.878 gwei",
+   "tx": "0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386",
+   "block": 17007838,
+   "raw_ref": "site/raw/rpc/trace_0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17007900.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "block",
+   "actor": "builder0x69",
+   "detail": "17007839: bids on Flashbots relay 574 (first -10037 ms, last 1443 ms rel. slot); loot-jumps [{'t_rel_slot_ms': -9889, 'from_eth': 0.0021, 'to_eth': 15.1031, 'builder': 'Flashbots'}, {'t_rel_slot_ms': -9422, 'from_eth': 15.1031, 'to_eth': 107.1098, 'builder': 'Flashbots'}]; winner builder0x69 107.12989339397099 ETH via ['agnostic']",
+   "block": 17007839,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007839.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 0.002 -> 15.103 ETH at -9889 ms relative to slot start",
+   "t_utc_ms": 1681007713111,
+   "block": 17007839,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007839.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 15.103 -> 107.110 ETH at -9422 ms relative to slot start",
+   "t_utc_ms": 1681007713578,
+   "block": 17007839,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007839.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "tx",
+   "actor": "searcher-719cdb61",
+   "detail": "idx 0 ok: pulls 100.0 WETH; coinbase 91.99619550325059 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00018 ETH, gas 18.872 gwei",
+   "tx": "0xea3480f1f1d1f0b32283f8f282ce16403fe22ede35c0b71a732193e56c5c45e8",
+   "block": 17007839,
+   "raw_ref": "site/raw/rpc/trace_0xea3480f1f1d1f0b32283f8f282ce16403fe22ede35c0b71a732193e56c5c45e8.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17007900.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "tx",
+   "actor": "yoink",
+   "detail": "idx 1 ok: pulls 100.0 WETH; coinbase 10.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00000 ETH, gas 17.993 gwei",
+   "tx": "0x8e28bc58897f35e71b727f3066ae57b4d597014db6778bbf70838347c112e0e1",
+   "block": 17007839,
+   "raw_ref": "site/raw/rpc/trace_0x8e28bc58897f35e71b727f3066ae57b4d597014db6778bbf70838347c112e0e1.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "tx",
+   "actor": "searcher-c9c5b869",
+   "detail": "idx 2 ok: pulls 100.0 WETH; coinbase 5.1 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00026 ETH, gas 19.123 gwei",
+   "tx": "0x542838429f32b49d71264cc1036bb7cfd66824613ba0c437f7ce4269edb58f74",
+   "block": 17007839,
+   "raw_ref": "site/raw/rpc/trace_0x542838429f32b49d71264cc1036bb7cfd66824613ba0c437f7ce4269edb58f74.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17007900.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "tx",
+   "actor": "blocksec-rescue",
+   "detail": "idx 9 ok: pulls 100.0 WETH; coinbase 0.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00289 ETH, gas 30.000 gwei",
+   "tx": "0x3610d3e3f2381c73f4bd128df9be90de87482802f30712dd555619b8bf3462a4",
+   "block": 17007839,
+   "raw_ref": "site/raw/rpc/trace_0x3610d3e3f2381c73f4bd128df9be90de87482802f30712dd555619b8bf3462a4.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_17007839.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:23Z",
+   "kind": "tx",
+   "actor": "trust-whitehat",
+   "detail": "idx 54 ok: pulls 100.0 WETH; coinbase 0.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00015 ETH, gas 18.872 gwei",
+   "tx": "0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9",
+   "block": 17007839,
+   "raw_ref": "site/raw/rpc/trace_0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x9deff363_17007700_17020000.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:35Z",
+   "kind": "block",
+   "actor": "rsync-builder.xyz",
+   "detail": "17007840: bids on Flashbots relay 741 (first -10107 ms, last 3788 ms rel. slot); loot-jumps [{'t_rel_slot_ms': -9944, 'from_eth': 0.003, 'to_eth': 10.0052, 'builder': 'Flashbots'}, {'t_rel_slot_ms': -7311, 'from_eth': 10.0381, 'to_eth': 20.0368, 'builder': 'Flashbots'}]; winner None None ETH via []",
+   "block": 17007840,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007840.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:35Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 0.003 -> 10.005 ETH at -9944 ms relative to slot start",
+   "t_utc_ms": 1681007725056,
+   "block": 17007840,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007840.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:35Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 10.038 -> 20.037 ETH at -7311 ms relative to slot start",
+   "t_utc_ms": 1681007727689,
+   "block": 17007840,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007840.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:35Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe",
+   "detail": "idx 1: c0ffeebabe.eth's transaction received 100 WETH; coinbase transfer 10.0 ETH",
+   "tx": "0xbb9aac794415b2fbe2c947fe37ebb29c75526c150d33dd408ccddbcb52534828",
+   "block": 17007840,
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:35Z",
+   "kind": "tx",
+   "actor": "yoink",
+   "detail": "idx 34 ok: pulls 100.0 WETH; coinbase 0.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00044 ETH, gas 19.840 gwei",
+   "tx": "0x6ac2d60c8f48144f2adb10ab161efdd491a791c6a666c450d4b33c6889fc0925",
+   "block": 17007840,
+   "raw_ref": "site/raw/rpc/trace_0x6ac2d60c8f48144f2adb10ab161efdd491a791c6a666c450d4b33c6889fc0925.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17007900.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:35:59Z",
+   "kind": "block",
+   "actor": "beaverbuild.org",
+   "detail": "17007842: bids on Flashbots relay 331 (first -10561 ms, last 268 ms rel. slot); loot-jumps [{'t_rel_slot_ms': -10092, 'from_eth': 0.0214, 'to_eth': 10.0243, 'builder': 'Flashbots'}, {'t_rel_slot_ms': -8995, 'from_eth': 10.0322, 'to_eth': 688.912, 'builder': 'Flashbots'}]; winner beaverbuild.org 689.0174738301772 ETH via ['agnostic']",
+   "block": 17007842,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007842.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:59Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 0.021 -> 10.024 ETH at -10092 ms relative to slot start",
+   "t_utc_ms": 1681007748908,
+   "block": 17007842,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007842.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:59Z",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "Flashbots-relay record bid jumps: 10.032 -> 688.912 ETH at -8995 ms relative to slot start",
+   "t_utc_ms": 1681007750005,
+   "block": 17007842,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007842.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:59Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe",
+   "detail": "idx 0: c0ffeebabe.eth's transaction received 800 WETH; coinbase transfer 678.88 ETH (BlockSec: 'One bot owned by c0ffeebabe.eth even bribed 678 Eth to the builder in one transaction!')",
+   "tx": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
+   "block": 17007842,
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc": "2023-04-09T02:35:59Z",
+   "kind": "tx",
+   "actor": "yoink",
+   "detail": "idx 1 ok: pulls 100.0 WETH; coinbase 10.0 ETH, direct-to-proposer 0.0 ETH, priority fee 0.00000 ETH, gas 16.629 gwei",
+   "tx": "0x40be81f859227aa952e70fe1f5e8c84feed6aa3c2a4d6bf38125cd6bc222560a",
+   "block": 17007842,
+   "raw_ref": "site/raw/rpc/trace_0x40be81f859227aa952e70fe1f5e8c84feed6aa3c2a4d6bf38125cd6bc222560a.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:38:35Z",
+   "kind": "tx",
+   "actor": "Trust",
+   "detail": "second attempt for 200 WETH reverts (idx 68)",
+   "tx": "0x32a11681780181f8f9eafcc2e35587a334246b8ca1c2a04cfb0e99609cd638b0",
+   "block": 17007855,
+   "raw_ref": "site/raw/rpc/trace_0x32a11681780181f8f9eafcc2e35587a334246b8ca1c2a04cfb0e99609cd638b0.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlist_0x869238b1_0_17011000.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:38:47Z",
+   "kind": "block",
+   "actor": "Flashbots",
+   "detail": "17007856: bids on Flashbots relay 645 (first -9014 ms, last 1657 ms rel. slot); loot-jumps []; winner Flashbots 1.0111768889237418 ETH via ['flashbots']",
+   "block": 17007856,
+   "raw_ref": "site/raw/relay-flashbots/bids_block17007856.json"
+  },
+  {
+   "t_utc": "2023-04-09T02:38:47Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe",
+   "detail": "idx 2: c0ffeebabe.eth's transaction received 100 WETH; no coinbase payment",
+   "tx": "0x11d069cbe4490cc483b1ae2e77c9c79493213347b42a8dec2ded25724e2f1835",
+   "block": 17007856,
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17007900.json"
+   ]
+  },
+  {
+   "t_utc": "2023-04-09T02:56:23Z",
+   "kind": "message",
+   "actor": "victim",
+   "detail": "sends 0.01 ETH to c0ffeebabe.eth with input text: 'would appreciate rescue of over 1800 weth taken from sifuvision.eth'",
+   "tx": "0x54907e8179b13322ae75c2f71203f2757a3d2a42e5640c40422603c1160bce6b",
+   "block": 17007943,
+   "raw_ref": "site/raw/etherscan/txlist_0x31d3243c_17007700_17030000.json"
+  },
+  {
+   "t_utc": "2023-04-09T03:37:59Z",
+   "kind": "return",
+   "actor": "Trust",
+   "detail": "returns 10 WETH to victim",
+   "tx": "0x6fda1a6de9a5a1f6e96572d55a75d2d5517c24d4d1fcebf0a008e6e584d2e585",
+   "block": 17008145,
+   "raw_ref": "site/raw/etherscan/tokentx_0x31d3243c_17007838_17030000.json"
+  },
+  {
+   "t_utc": "2023-04-09T03:40:35Z",
+   "kind": "return",
+   "actor": "Trust",
+   "detail": "returns 80 WETH to victim",
+   "tx": "0xb76b11ae23c4697d8379de5c50e5efcb775036090b0a0f73cd0cf29820770923",
+   "block": 17008158,
+   "raw_ref": "site/raw/etherscan/tokentx_0x31d3243c_17007838_17030000.json"
+  },
+  {
+   "t_utc": "2023-04-09T09:48:11Z",
+   "kind": "return",
+   "actor": "BlockSec",
+   "detail": "100 ETH to victim (funded 64 ETH from rescue EOA at 05:10:47Z)",
+   "tx": "0xe9af60755f17894c6dc95a1c8f2663da1d8daa9a37cbbf04d3e88b349aec19e6",
+   "block": 17009958,
+   "raw_ref": "site/raw/etherscan/txlist_0x00000035_17000000_17020000.json"
+  },
+  {
+   "t_utc": "2023-04-09T13:51:59Z",
+   "kind": "return",
+   "actor": "c0ffeebabe",
+   "detail": "1.0 ETH test transfer to Sushi multisig",
+   "tx": "0x8de62a5549250390567d409bc7cdaf7881eff3c78ac6e1445b84f5868296f1e8",
+   "block": 17011152,
+   "raw_ref": "site/raw/etherscan/txlist_0xc0ffeeba_17007800_17060000.json"
+  },
+  {
+   "t_utc": "2023-04-09T13:54:47Z",
+   "kind": "return",
+   "actor": "c0ffeebabe",
+   "detail": "304.31898 ETH to Sushi multisig",
+   "tx": "0x09f2e3864e35b96af096c4d1b4800de28d7e57059c2a0db384a739ada7c059b6",
+   "block": 17011166,
+   "raw_ref": "site/raw/etherscan/txlist_0xc0ffeeba_17007800_17060000.json"
+  },
+  {
+   "t_utc": "2023-04-10T19:07:59Z",
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "380 ETH to Sushi multisig (first try 17019730 failed)",
+   "tx": "0xbefe5711e7096ce51ab3e6edab757808f34dc58d949f77e74b2131e99f5eb734",
+   "block": 17019747,
+   "raw_ref": "site/raw/etherscan/txlist_0x19b3eb3a_17007838_17200000.json"
+  },
+  {
+   "t_utc": "2023-04-17T15:39:35Z",
+   "kind": "return",
+   "actor": "Sushi multisig",
+   "detail": "685 ETH to victim",
+   "tx": "0x9d729a4903016b8523e060cfc3fc244fa862a169ff346f16b4c7725e843365e6",
+   "block": 17067434,
+   "raw_ref": "site/raw/etherscan/txlistinternal_0x19b3eb3a_17011000_17100000.json"
+  }
+ ]
+}

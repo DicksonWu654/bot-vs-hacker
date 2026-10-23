@@ -1,0 +1,11 @@
+[
+ {
+  "slug": "punk-2021",
+  "sub": null,
+  "verdict": "confirmed-onchain",
+  "race_type": "beat-pending-attack",
+  "why": "A front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff) landed tx 0x597d11c0 at index 50 of block 12995895 (43.33 gwei effective), two slots ahead of the Punk Protocol attacker's tx 0x7604c7dd at index 52 (40.00 gwei, maxFee-capped), and replayed the attacker's call tree: the same 9 victim calls on the USDC, USDT and DAI CompoundModel pools in the same order (initialize, invest, withdrawToForge) with identical initialize() arguments except the new forge, which is the bot's own contract. The bot's USDC transfer still pays the attacker's EOA 0x1d5a5640, an address present only in the attacker's tx. The attacker's tx still succeeded but withdrew dust (0.03 of each token); an anvil replay shows the attacker alone would have taken all $8.95M, attacker-first makes the bot's tx revert. The bot took $5.95M (USDT+DAI), returned $4.95M, kept a $1M DAI finder's fee, and mis-sent $3.0M USDC to the attacker. Ordering was a plain gas-price auction (no coinbase payment, no bundle pattern); no 2021 mempool archive, so in-block evidence only.",
+  "strength": ["high", "Call-tree diff of both traces, receipts' Transfer logs, anvil fork replay of both orders, trace_filter proof that only the deployer, the bot and the attacker ever called initialize() on the pools, the bot's own on-chain messages, return txs, and Punk's incident report (via Wayback) all saved under site/raw/ or incidents/punk-2021/. Unknown: when the bot first saw the attacker's pending tx (no mempool archive before 2023)."],
+  "headline_note": null
+ }
+]

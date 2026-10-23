@@ -1,0 +1,11 @@
+[
+ {
+  "slug": "taopad-2024",
+  "sub": null,
+  "verdict": "related-not-frontrun",
+  "race_type": "post-failure-replay",
+  "why": "Counterparty is the TaoPad project's own operator wallet, not a hacker. Its tx 0xced2c7fa (block 19226482, index 0, public mempool, 13:23:12Z) reverted out of gas; Yoink's tx 0x5853b7a0 (block 19226503, index 0, 13:27:35Z, private) replays the same victim-protocol calls 21 blocks / 252 s later with a higher gas limit, nets 26.32 ETH and returns it to taopad.eth the next day. Nothing was pending in between and no other tx called the vulnerable function, so Yoink did not beat anything: it succeeded where the operator's tx had already failed.",
+  "strength": ["high", "Call-sequence diff of both traces (4 of 9 paired calls byte-identical, rest differ only by deadline/amount-bound/approve), block positions, mempool first-seen of the operator's tx, trace_filter of the vulnerable function over blocks 19226300-19226700, return tx and messages all in saved raw data. Unknown: what triggered Yoink (its tx is private flow)."],
+  "headline_note": null
+ }
+]

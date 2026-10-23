@@ -1,0 +1,455 @@
+[
+ {
+  "slug": "makina-2026",
+  "name": "Makina DUSD/USDC Curve pool exploit (flash-loan share-price manipulation), 2026-01-20",
+  "date_utc": "2026-01-20T03:40:35Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "deploy-window-copy",
+  "race_type_reason": "The attacker deployed its tx.origin-gated attack contract in block 24273361; the EIP-7702 searcher re-implemented the same plan in the next block at position 0, and the attacker's own call was never mined. Confirmed by 77% calldata-byte overlap with the attacker runtime and a 98.6% call-sequence match in a local-fork replay.",
+  "one_liner": "Searcher 0x935b ran the attacker's Makina/Curve plan one block after the attacker deployed its contract, before the attacker ever called it, paid 1,299.05 ETH to the builder, and 920.7 ETH was later returned to Makina's Safe.",
+  "attacker": {
+   "eoa": "0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc",
+   "eoas": [
+    "0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc"
+   ],
+   "contracts": [
+    "0x2c19b916b29e5170f75628d690623dedcafeca4c",
+    "0xd5e8ac959dca7448c5841d6529582e7d347904b0"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0x4c365dce0c1d34305099cea75d4acdd3968a4380cdfeb2f8da0b1c1682d97213",
+   "deploy_tx": "0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39",
+   "deploy_block": 24273361,
+   "attack_txs": [
+    {
+     "hash": "0x5ed8d56804e39181fe30b217ca23e740f9bb40185fde6aed6f375e81068f38a9",
+     "block": 24273273,
+     "index": 74,
+     "status": "success",
+     "role": "CREATE helper 0xd5e8ac95 (tx.origin == attacker EOA check)"
+    },
+    {
+     "hash": "0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39",
+     "block": 24273361,
+     "index": 86,
+     "status": "success",
+     "role": "CREATE attack contract 0x2c19b916 (entry F1()); the F1() call itself never landed"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "anon searcher (EIP-7702 account 0x935b)",
+   "eoa": "0x935bfb495e33f74d2e9735df1da66ace442ede48",
+   "contract": "EIP-7702 delegated account (self-call)",
+   "tx": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+   "block": 24273362,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 1e-09
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-01-20 (csv.zip) but neither the attacker deploy tx nor the bot tx appears in it (race file mempool.txs[bot].seen=false); 99/105 txs of the bot block were seen. Private flow or missed by sources; unknown != none. Sourcelogs end 2025-07-14, so no source attribution.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No first-seen timestamp for the attacker deploy tx (block 24273361 idx 86) or any attacker call: neither is in mempool-dumpster. The deploy block time (03:40:23Z) and bot block time (03:40:35Z) are 12-s block timestamps only; how/when the bot learned the plan is not shown on-chain."
+  },
+  "attacker_block": null,
+  "attacker_block_note": "The attacker's F1() call was never mined (EOA nonce stays 2; contract txlist = creation only). No attacker attack tx exists to compare; the reference is the deploy block.",
+  "attacker_reference": {
+   "kind": "deploy",
+   "block": 24273361,
+   "tx": "0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39"
+  },
+  "auction": {
+   "block": 24273362,
+   "slot": 13504701,
+   "slot_start_utc_ms": 1768880435000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "n_bids": 568,
+   "n_builders": 21,
+   "bids_per_relay": {
+    "flashbots": 568
+   },
+   "first_bid_ms_rel_slot": -7108,
+   "last_bid_ms_rel_slot": 1541,
+   "winning_bid_eth": 276.3227203906329,
+   "winning_builder": "0x75",
+   "winning_builder_pubkey": "0x9589cf28e4c207bae11e3e8fa1be522913d2dcf73726d51226923e830129ccf1824c4a496207548b73328fcae0fd8591",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 974,
+   "winning_last_submission_ms_rel_slot": 974,
+   "runner_up_eth": 265.6077655807054,
+   "runner_up_builder": "0x75",
+   "runner_up_ms_rel_slot": 867,
+   "runner_up_other_builder_eth": 260.31958708762653,
+   "runner_up_other_builder": "✨ Quasar (quasar.win) ✨",
+   "runner_up_other_builder_ms_rel_slot": 881,
+   "n_higher_bids_after_winner": 59,
+   "max_bid_eth": 324.35729033180974,
+   "proposer_paid_eth": 276.3227203906329,
+   "proposer_payment_tx": "0xc244aecf26d9f800179984d8bc747e2ab543f505d6da99bfbc0e098e302dbbb5",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -7108,
+     0.000225723537625001
+    ],
+    [
+     -2589,
+     0.5173402999157671
+    ],
+    [
+     -2406,
+     0.5179202462880289
+    ],
+    [
+     -2307,
+     0.5183515486139683
+    ],
+    [
+     -2255,
+     0.5186030944914648
+    ],
+    [
+     -1956,
+     0.5197927297221437
+    ],
+    [
+     -1911,
+     0.5200699696288003
+    ],
+    [
+     -1850,
+     0.5203027694144907
+    ],
+    [
+     -1500,
+     0.5217502924429515
+    ],
+    [
+     -1426,
+     3.107803357576224
+    ],
+    [
+     -1403,
+     5.040657528486291
+    ],
+    [
+     -1353,
+     13.202248159571065
+    ],
+    [
+     -1055,
+     13.203167221094246
+    ],
+    [
+     -805,
+     13.203931222493894
+    ],
+    [
+     -487,
+     13.204882026914486
+    ],
+    [
+     -437,
+     18.114090840898953
+    ],
+    [
+     -389,
+     23.09803341774159
+    ],
+    [
+     -375,
+     25.507947307096366
+    ],
+    [
+     -359,
+     28.099689011373748
+    ],
+    [
+     -303,
+     35.05732222158393
+    ],
+    [
+     -226,
+     56.36517100648306
+    ],
+    [
+     -202,
+     61.365170995602114
+    ],
+    [
+     -77,
+     68.34253551825739
+    ],
+    [
+     -55,
+     70.73846542375128
+    ],
+    [
+     54,
+     74.3006533006247
+    ],
+    [
+     77,
+     93.40929007281345
+    ],
+    [
+     91,
+     97.6178224354461
+    ],
+    [
+     95,
+     110.62666196849717
+    ],
+    [
+     194,
+     122.95787608219439
+    ],
+    [
+     208,
+     127.60319582290836
+    ],
+    [
+     230,
+     140.70755986415506
+    ],
+    [
+     368,
+     153.61746962905937
+    ],
+    [
+     374,
+     161.40558084833987
+    ],
+    [
+     402,
+     170.15841490571916
+    ],
+    [
+     429,
+     192.92311760623784
+    ],
+    [
+     575,
+     207.59836041177843
+    ],
+    [
+     590,
+     209.39831460185283
+    ],
+    [
+     592,
+     218.8065127070244
+    ],
+    [
+     711,
+     219.07148393073962
+    ],
+    [
+     714,
+     235.4121528992264
+    ],
+    [
+     790,
+     238.03596222717846
+    ],
+    [
+     798,
+     247.92848951824666
+    ],
+    [
+     815,
+     250.5750869193101
+    ],
+    [
+     828,
+     264.12567071708787
+    ],
+    [
+     867,
+     265.6077655807054
+    ],
+    [
+     974,
+     276.3227203906329
+    ],
+    [
+     989,
+     286.49189701801197
+    ],
+    [
+     1092,
+     291.17663709311785
+    ],
+    [
+     1108,
+     292.5049834370801
+    ],
+    [
+     1125,
+     292.91695370527384
+    ],
+    [
+     1128,
+     293.73900956452337
+    ],
+    [
+     1142,
+     294.46765653510386
+    ],
+    [
+     1154,
+     299.43828984106324
+    ],
+    [
+     1201,
+     302.30955869122073
+    ],
+    [
+     1219,
+     307.149579486414
+    ],
+    [
+     1256,
+     317.74792772416345
+    ],
+    [
+     1264,
+     320.9698552741574
+    ],
+    [
+     1289,
+     324.15737354635957
+    ],
+    [
+     1348,
+     324.25733196314826
+    ],
+    [
+     1353,
+     324.35729033180974
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/makina-2026/race_24273362.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block24273362.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block24273362.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 1299.179984426,
+   "gross_loot_method": "sum of WETH.withdraw(uint256) amounts called inside the bot tx call trace (site/raw/rpc/trace_<tx>.json): [1299179984426144193670] wei",
+   "captured_native": {
+    "amount": 1299.179984,
+    "unit": "WETH->ETH",
+    "desc": "WETH unwrapped by the bot tx after the pool/Makina manipulation (flash loans of 280,000,000 USDC repaid inside the tx)"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 1299.049904388,
+   "priority_fee_paid_eth": 4.709593e-12,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": 920.7,
+   "bot_net_eth": 0.129918477,
+   "loot_note": "Figures cover the bot tx only. coinbase_paid = direct transfer to block.coinbase (builder fee recipient 0xa6c2) from the trace; bot_net = gross - coinbase - total gas cost (0.000161561 ETH). builder_refund_to_bot = 0: the bot received no builder refund tx in the block (incident.json; bot balance delta +0.1299 ETH). builder_payout_to_victim = the 920.7 ETH that 0xbed (receiver of the builder's 1,023 ETH forward) sent to Makina's Safe; builder-> proposer was 276.3227 ETH (the winning bid)."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": 920.7,
+   "returned_total_eth": 920.7,
+   "returned_to": "Makina Safe 0x62244c74e1d09b3d86ef7342d354b5d7770bde10",
+   "returned_desc": "Builder fee recipient 0xa6c2 received the 1299.0499 ETH coinbase payment, paid 276.3227 ETH to the proposer (winning bid) and forwarded 1023.0 ETH to 0xbed2 (block 24273418, 2026-01-20T03:51:47Z). Makina sent on-chain messages offering a 10% Safe Harbor bounty to 0xa6c2 and 0xbed2 on 2026-01-20; on 2026-01-22T13:15:11Z (block 24290556) 0xbed2 sent 920.7 ETH to the Makina Safe and kept 102.3 ETH. The searcher kept about 0.13 ETH; no return by the searcher found.",
+   "bounty_kept_eth": 102.3,
+   "bounty_desc": "10% Safe Harbor bounty retained by 0xbed2 (1023.0 x 10% = 102.3 ETH)",
+   "kept_by_bot_eth": 0.129918477,
+   "returned_txs": [
+    {
+     "tx": "0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44",
+     "eth": 920.7,
+     "note": "0xbed2 -> Makina Safe, net of 10% bounty",
+     "block": 24290556,
+     "time_utc": "2026-01-22T13:15:11Z"
+    }
+   ],
+   "public_statement": "Makina post-mortem (2026-02-04): original attacker frontrun by MEV searcher 0x935b at block 24273362; searcher keeps 0.13 ETH, 1299.04 ETH to builder 0xa6c2; 276.32 ETH to proposer, 1023 ETH to 0xbed. https://makinafi.substack.com/p/post-mortem-january-20th-2026-incident",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_24273362.json",
+   "bot.position": "site/raw/rpc/block_24273362.json",
+   "loot.gross_loot_eth": "site/raw/rpc/trace_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_24273362.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_24273362.json",
+    "site/raw/rpc/block_24273362.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_24273362.json",
+    "site/raw/rpc/trace_block_24273362.json"
+   ],
+   "loot.builder_payout_to_victim_eth": [
+    "site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json",
+    "full cache only (not published)"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+    "site/raw/rpc/rcpt_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json"
+   ],
+   "fate.returned_by_builder_eth": "site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json",
+   "fate.returned_total_eth": "site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json",
+   "fate.bounty_kept_eth": [
+    "site/raw/rpc/tx_0x14d2725f4cac331740b053ae49176cec780b556e4aacc3a9f70d77644e97a2a7.json",
+    "site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+    "site/raw/rpc/rcpt_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json"
+   ],
+   "fate.forward_tx_builder_to_0xbed": "site/raw/rpc/tx_0x14d2725f4cac331740b053ae49176cec780b556e4aacc3a9f70d77644e97a2a7.json",
+   "fate.return_tx_timestamp": "site/raw/etherscan/txlist_0xbed26250db2097318386f540fd546acedf7bde25_24000000_25000000.json",
+   "deploy_tx": "site/raw/rpc/tx_0xad945d38ec5dc00f0310b6f22d19da3b8b5063b9f3e7efb38ca6a5cbc6385a39.json",
+   "bot_tx": "site/raw/rpc/tx_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+   "bot_tx_trace": "site/raw/rpc/trace_0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5.json",
+   "postmortem": "site/raw/web-makina/makina_postmortem.html"
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "attacker deploy/call and bot tx are not in mempool-dumpster 2026-01-20; no archive first-seen exists"
+   },
+   {
+    "field": "attacker_block",
+    "why": "attacker call never mined"
+   }
+  ],
+  "discrepancies": [
+   "incident.json says builder->proposer 276.3227 ETH, relay bid 276.32 ETH; consistent (proposer payment tx idx 104 = 276.3227 ETH).",
+   "incident.json bid_summary.n_builders: race file reports 21 distinct builder pubkeys on Flashbots bids vs 10 named in incident.json auction.per_builder (name-grouping)."
+  ],
+  "evidence_notes": [
+   "Bot calldata (16,835 B) shares 4,992 of 6,470 non-zero bytes (77.2%) in >=16-byte windows verbatim with the attacker's deployed runtime 0x2c19b916 (incident.json bots[0].replay_evidence).",
+   "Local-fork replay of the attacker's F1() at block 24273361 (nothing broadcast): non-view protocol call sequence matches the bot tx at ratio 0.9864 (146 vs 148 calls); both take the same 160,590,920.349812 USDC Morpho + 119,409,079.650188 USDC Aave flash loans. Only difference: final USDC->WETH route. Files: incidents/makina-2026/calldiff_attacker_vs_copy.json, incidents/makina-2026/attacker_F1_local_fork_calltrace.json.",
+   "Ordering: attacker contract CREATE in block 24273361 idx 86 (03:40:23Z); bot tx block 24273362 position 0 (03:40:35Z); attacker EOA nonce stays 2 so its call never landed. The contract is tx.origin-gated, so the bot re-implemented the plan rather than calling it.",
+   "Makina post-mortem and PeckShield agree that searcher 0x935b frontran the attacker; the 920.7 ETH return tx is on-chain (site/raw/rpc/tx_0x0d23fea549bf8330cf47fabec75ad12b75cf0ade45cce68785067f2bda326a44.json).",
+   "Not c0ffeebabe; the bot is 0x935bfb49 (EIP-7702 account). Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+  ],
+  "incident_dir": "incidents/makina-2026"
+ }
+]

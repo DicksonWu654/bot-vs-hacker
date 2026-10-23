@@ -1,0 +1,311 @@
+{
+ "generated": "2026-10-21",
+ "question": "Are the three recurring anonymous DHL 'attackers' front-runners replaying someone else's exploit, serial exploiters, or something else?",
+ "verdict_overall": "No confirmed bot-vs-hacker race found for any of the 12 DHL transactions. None of the three is a front-runner of another attacker. 0x7248 = tax-token swap-back extraction template inside a general sandwich/arb searcher. 0xd215 = general MEV bot with an unprotected-function rescue/snipe module (returned ~85-96% of four large hauls after a 1 ETH ownership test). 0x6ce9 = short-lived serial exploiter (human-style, per-target contracts, Tornado in/out) that was itself copied afterwards by Yoink.",
+ "profiles": {
+  "0x7248939f65bdd23aab9eaab1bc4a4f909567486e": {
+   "label": "A: general searcher + taxed-token swap-back template",
+   "class": "automated searcher (not exploiter, not front-runner)",
+   "history": {
+    "first_tx": "2023-07-18 (funded 3.297 ETH by 0x267be1c1d684f78cb4f6a176c4911b741e4ffdc0, 2016-era EOA)",
+    "last_tx": "2026-10-09",
+    "txs": 5189,
+    "failed": 2,
+    "txs_by_year_main_contract": {
+     "2023": 1184,
+     "2024": 2282,
+     "2025": 1083,
+     "2026": 546
+    }
+   },
+   "contracts": {
+    "0x2ecd8f51fa432415fe8f385b8b369f13eff16fcb": "created 2023-08-04; 5,095 calls, selectors 0x022c0d9f (2,727) / 0x406dade3 (2,366): UniV2-style swap grammar, WETH amounts + token addresses in calldata = sandwich/arb contract; ~2,646 ETH gross returned to EOA over life",
+    "0xbdb0bc0941ba81672593cd8b3f9281789f2754d1": "created 2024-01-13 block 18994780; 48 calls (selector 0x3d35e910 + dust value) 2024-02-21..2026-04-22; the contract behind all 3 DHL txs"
+   },
+   "tx_shape": {
+    "priority_fee": "0 gwei tip in 30/30 sampled main-contract txs and 48/48 template txs",
+    "coinbase_bribe": "direct coinbase transfers in 17/30 sampled; 48/48 template txs: 0.0000-0.243 ETH (sum 0.676 ETH of 15.67 ETH profit, i.e. ~4%)",
+    "index": "template: idx0 in 5/48, idx<=3 in 16/48; main contract idx 0 in 647/5095",
+    "visibility": "all 3 DHL txs absent from mempool-dumpster (private order flow)",
+    "reverts": "essentially none (2 failed of 5189): submits only simulated-profitable bundles"
+   },
+   "template_48": {
+    "shape": "V3 pool flash() of a taxed meme token -> V2 router sell x2 -> token contract itself transfers its own tokens into the V2 pair mid-tx (swap-back, seen 48/48) -> buy back via swapTokensForExactTokens -> repay flash -> unwrap WETH -> pay builder -> profit to EOA. 65-76 calls every time.",
+    "distinct_tokens": 46,
+    "total_profit_eth": 15.67,
+    "median_profit_eth": 0.048,
+    "max_profit_eth": 4.948,
+    "dhl_cases": {
+     "DOGGO": "2.718 ETH, cb 0.1064",
+     "PestoToken": "0.504 ETH, cb 0.0240",
+     "HANAToken": "0.108 ETH, cb 0.0041"
+    },
+    "note": "DHL titles ('Logic Flaw', 'Price Manipulation') describe a swap-back sandwich, i.e. 3 of 48 runs of one templated strategy that DHL happened to log"
+   },
+   "incidents": {
+    "DOGGO": {
+     "tx": "0x9e074d70e4f9022cba33c1417a6f6338d8248b67d6141c9a32913ca567d0efca",
+     "block": 20794803,
+     "idx": 3,
+     "v3_pool": "0xea5a12a857e8302d70fcb1123d5f8f57ef7b7d0b",
+     "v2_pair": "0x7eb6d3466600b4857eb60a19e0d2115e65aa815e",
+     "token": "0x240cd7b53d364a208ed41f8ced4965d11f571b7a",
+     "profit_eth": 2.718,
+     "coinbase_eth": 0.1064,
+     "mempool": "not seen",
+     "other_flash_on_pool_pm50k_blocks": "none",
+     "verdict": "rejected (no racing attacker; searcher is the only actor)"
+    },
+    "HANAToken": {
+     "tx": "0xe8cee3450545a865b4a8fffd93938ae93429574dc8e01b02bc6a02f2f4490e4e",
+     "block": 20827437,
+     "idx": 10,
+     "v3_pool": "0xf3cb07a3e57bf69301c3a51d8ac87427c53aa357",
+     "v2_pair": "0xe7b4e528308c84fd6698906b6224615e9e30d236",
+     "token": "0xb3912b20b3abc78c15e85e13ec0bf334fbb924f7",
+     "profit_eth": 0.1083,
+     "coinbase_eth": 0.0041,
+     "mempool": "not seen",
+     "other_flash_on_pool_pm50k_blocks": "none",
+     "note": "DHL date 20240905 is wrong; block 20827437 is 2024-09-25",
+     "verdict": "rejected"
+    },
+    "PestoToken": {
+     "tx": "0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c",
+     "block": 20811949,
+     "idx": 0,
+     "v3_pool": "0x03d93835f5ce4dd7f0eaab019b33050939c722b1",
+     "v2_pair": "0xbc6a213cbb34424670548ef4b3388f5fdbd07992",
+     "token": "0xe81c4a73bfddb1ddadf7d64734061be58d4c0b4c",
+     "profit_eth": 0.5039,
+     "coinbase_eth": 0.024,
+     "mempool": "not seen",
+     "other_flash_on_pool_pm50k_blocks": "none",
+     "verdict": "rejected"
+    }
+   },
+   "conclusion": "Neither front-runner nor exploiter. A private-bundle searcher running one extraction template against taxed meme tokens. Race standard (bot tx replaying someone else's victim calls) is not met for any of the 3."
+  },
+  "0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd": {
+   "label": "B: general MEV bot with unprotected-function rescue/snipe module",
+   "class": "hybrid: MEV searcher + whitehat-style rescuer/sniper (not a front-runner of a hacker in any verified case)",
+   "history": {
+    "first_tx": "2024-01-19 (contract creation; 0.1 ETH from privacy-pool-like contract 0x4025ee6512dbbda97049bcf5aa5d38c54af6be8a)",
+    "last_tx": "2025-01-20",
+    "txs": 8999,
+    "failed": 9,
+    "busiest": "Aug 2024: 3,266 txs",
+    "hash_prefix": "7,832 of 8,999 tx hashes start 0xbeef (vanity-ground hashes)",
+    "eth_returned_to_eoa_by_contract": 437.6,
+    "median_tx_profit_eth": 0.00057
+   },
+   "contracts": {
+    "0xd129d8c12f0e7aa51157d9e6cc3f7ece2dc84ecd": "created 2024-01-19 block 19043584; 8,841 calls all with selector 0xdeadbeef (calldata-encoded program, bytecode not analysed); delegates to victims, DEX pools, Balancer-style flash, keeper-style calls"
+   },
+   "tx_shape": {
+    "routine": "random sample of 40: 0 at idx0, 0 coinbase payments, median tip ~0.15 gwei (public-mempool-style arb/keeper calls)",
+    "big_hits": "top 40 by profit: idx0 in 11, direct coinbase pay in 5, median tip 13.6 gwei, p90 150 gwei, priority fee up to 289 gwei = gas auctions",
+    "visibility": "all 4 DHL txs absent from mempool-dumpster",
+    "social": "~40 on-chain text messages (Jan-Oct 2024) incl. 'Follow @MevRefund', 'dudu has the hugest...', 'ghost of bbc' chain letter; identifies as MEV-community member, plays with vanity addresses 0xbeef/0xdead/0xc0ffee"
+   },
+   "returns": [
+    {
+     "haul": "DAO_SoulMate 134.517 ETH (block 19063677)",
+     "returned": "130.0 ETH to 0x46c2161adc9c4f1aeb0b39377534501c70bf8ee8 after 1 ETH test (tx 0x3c4fe1bf4bcf.., 0x283a73398e90..); recipient self-sent 0 ETH in between",
+     "kept_eth": 4.5
+    },
+    {
+     "haul": "DN404/FLIX 67.646 ETH (19196686)",
+     "returned": "60.0 ETH to 0xed65b99e31628b2ea26d2129647508a8f1164c9a after 1 ETH test (0x196c96ef8b.., 0x97eeb2cb13..)",
+     "kept_eth": 7.6
+    },
+    {
+     "haul": "DeezNutz404 58.658 ETH (19277803)",
+     "returned": "50.0 ETH to the same 0xed65b99e...4c9a (0x1c5ead31fa..) after recipient self-send",
+     "kept_eth": 8.7
+    },
+    {
+     "haul": "20.247 ETH at block 19937051 (tx 0xbeefea0462.., not in DHL)",
+     "returned": "17.0 ETH to 0x4f1f343c18e657a8d738dcba02e9b8c64f0a9c7c (= creator of victim 0x6e5eff9a..)",
+     "kept_eth": 3.2
+    },
+    {
+     "haul": "unidentified, ~block 19946xxx (not in DHL)",
+     "returned": "100.0 ETH to 0x846c7eb3b4032bb11d45c342afbcdf306e1809bb after 1 ETH test",
+     "kept_eth": null
+    },
+    {
+     "haul": "INUMI 5.0 ETH (20729549)",
+     "returned": "no return transfer found (outbound large transfers after block 20729549: 5 ETH to 1inch router 2024-10-08 is a swap)",
+     "kept_eth": 5.0
+    }
+   ],
+   "returns_caveat": "Return-to-owner is inferred from on-chain pattern (round amounts, 1 ETH test, recipient self-tx, recipient = victim creator in one case); no public statement found (web search empty). Treat as 'consistent with whitehat rescue', not confirmed.",
+   "incidents": {
+    "DAO_SoulMate": {
+     "tx": "0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342",
+     "block": 19063677,
+     "idx": 0,
+     "profit_eth": 134.517,
+     "coinbase_eth": 1.3577,
+     "builder": "rsync-builder.xyz (block value 1.393 ETH, so the bot's bribe was ~97% of block value)",
+     "victim": "0x82c063afefb226859abd427ae40167cb77174b68",
+     "mempool": "tx not seen; only public mempool tx to victim that day was an ordinary user claim (0xe097e517.., 17:14:04.456, included 2 blocks earlier, selector 0xc71fcc5d, unrelated)",
+     "racer": "none found",
+     "verdict": "rejected as bot-vs-hacker (bot is the sole exploiter/rescuer)"
+    },
+    "DN404_FLIX": {
+     "tx": "0xbeef09ee9d694d2b24f3f367568cc6ba1dad591ea9f969c36e5b181fd301be82",
+     "block": 19196686,
+     "idx": 0,
+     "profit_eth": 67.646,
+     "priority_gwei": 100,
+     "victim": "0x2c7112245fc4af701ebf90399264a7e89205dad4 (lock/vesting proxy; unprotected init + withdraw per DHL)",
+     "funds_arrived": "400k FLIX 2023-10-27, 300k FLIX 2024-01-23; exploit 18 days after last deposit",
+     "racer": "none: first FLIX movement out of the proxy is the bot tx; victim has no other tx after block 19.1M",
+     "verdict": "rejected"
+    },
+    "DeezNutz404": {
+     "tx": "0xbeefd8faba2aa82704afe821fd41b670319203dd9090f7af8affdf6bcfec2d61",
+     "block": 19277803,
+     "idx": 0,
+     "profit_eth": 58.658,
+     "priority_gwei": 4,
+     "victim": "0xb57e874082417b66877429481473cf9fcd8e0b8a (deployed block 19277527, 276 blocks before)",
+     "racer": "none found in victim tx list (many ordinary mint/buy txs)",
+     "verdict": "rejected"
+    },
+    "INUMI": {
+     "tx": "0xbeef352f716973043236f73dd5104b9d905fd04b7fc58d9958ac5462e7e3dbc1",
+     "block": 20729549,
+     "idx": 1,
+     "profit_eth": 5.0,
+     "priority_gwei": 150,
+     "victim": "0xdb27d4ff4be1cd04c34a7cb6f47402c37cb73459 (created block 20729548 idx 105 by 0x95d4dc882738af8760cb48af9fd8e350ff604d6d with 5 ETH; setMarketingWallet(addr) then rescueEth() unprotected)",
+     "timing": "drained in the NEXT block after deployment, 150 gwei tip, idx 1; idx 0 and other reverted txs in block target an unrelated mint contract (0x42af92af payable calls)",
+     "second_drain": "deployer sent 2 ETH at block 20729671; EOA 0x43debe92a7a32dca999593fad617dbd2e6b080a5 via contract 0x5b5a0580bcfd3673820bb249514234afad33e209 replayed the SAME two victim selectors (0x5d098b38 then 0xce31a06b) at block 20729672 idx 0 (tx 0x45ce017f5a295f387eafb596b4bcb1192dd1c302ccb9d097d7fa2cdf3008b139, 11 gwei, 0.3998 ETH (20%) to builder 0x388c818c, 1.6 ETH to EOA). d215 did not try for these 2 ETH. d215 sent this address a 0.04 ETH 'ghost of bbc' message on 2024-10-08, so they know each other.",
+     "verdict": "rejected for d215 as victim of a racer; second drain = copycat-after-the-fact, related-not-frontrun (later block, different funds)"
+    }
+   },
+   "conclusion": "Not a front-runner replaying a hacker: in every DHL case d215 is the first and only tx touching the victim. It is a MEV bot whose exploit module targets unprotected rescue-style functions on freshly funded contracts, using gas auctions (100-289 gwei tips) to win vs other snipers, and which in 4-5 big cases returned most of the funds."
+  },
+  "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6": {
+   "label": "C: short-lived serial exploiter (OHM-fork rebase/staking bug class)",
+   "class": "serial exploiter that finds bugs itself; later copied by Yoink",
+   "history": {
+    "first_funding": "2023-08-09 0.984 ETH from Tornado Cash 1 ETH pool 0x47ce0c6e..",
+    "first_exploit": "2023-08-18",
+    "last_tx": "2023-09-06 (3x 10 ETH Tornado deposits, then sends)",
+    "txs": 17,
+    "all_success": true
+   },
+   "tx_shape": {
+    "per_target_contract": "deploy (idx 26..114) then call 12-60 s later (1-2 blocks)",
+    "fees": "type-2, 14-27 gwei, tip 2-3 gwei, not idx 0, no coinbase transfer",
+    "visibility": "attack txs absent from mempool-dumpster; one deploy tx (0x7514a063.., 2023-09-05 09:57:28.523 first seen by bloXroute after inclusion)",
+    "flash": "Balancer flash or pair flash-swap; loops stake/unstake (0xadc9772e/0x21d0af34) 10-20x against rebasing staking contracts"
+   },
+   "exploits": [
+    {
+     "name": "unlisted (target token 0x3a01c937..)",
+     "tx": "0xce39168187b29589de07e13944b4a60d375139bdf118406d8ea711e1b0f6c99b",
+     "block": 17939429,
+     "profit_eth": 1.209,
+     "in_dhl": false
+    },
+    {
+     "name": "BTC20",
+     "tx": "0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe",
+     "block": 17949215,
+     "idx": 42,
+     "profit_eth": 18.348
+    },
+    {
+     "name": "HeavensGate #1",
+     "tx": "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834",
+     "block": 18069528,
+     "idx": 14,
+     "profit_eth": 6.45
+    },
+    {
+     "name": "JumpFarm",
+     "tx": "0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079",
+     "block": 18070347,
+     "idx": 7,
+     "profit_eth": 2.409
+    },
+    {
+     "name": "QuantumWN",
+     "tx": "0xa4659632a983b3bfd1b6248fd52d8f247a9fcdc1915f7d38f01008cff285d0bf",
+     "block": 18070349,
+     "idx": 10,
+     "profit_eth": 0.578,
+     "note": "same attack contract 0x154863eb.. as JumpFarm, 2 blocks later"
+    },
+    {
+     "name": "HeavensGate #2",
+     "tx": "0x8e1b0ab098c4cc5f632e00b0842b5f825bbd15ded796d4a59880bb724f6c5372",
+     "block": 18071199,
+     "idx": 4,
+     "profit_eth": 1.393
+    }
+   ],
+   "racers_and_copycats": [
+    {
+     "incident": "HeavensGate (HATE)",
+     "who": "Yoink 0xfde0d1575ed8e06fbf36256bcdfa1f359281455a via contract 0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+     "blocks": "18071203 idx 2-10 (9 txs, tip 0) and 18071204 idx 13",
+     "txs": [
+      "0x83f7a86a9a54a019b96128d0cc55e474bd5a15513ab348980b4b5c5ab3962395",
+      "0xa22bd896b9a798e9733e0eb9e09dcfe3628840eb6cc23e5360ea25b48c1db0a0",
+      "0x4e2414c6690dfa7d9a0cfb4fdc1c425621df20e799cfec62130226591320cadb",
+      "0x12f3237a5fc34155cede529ceb145732211fabce771dbe2c5c24bbc47c29f9e4",
+      "0xcb5fcb05d8a652b6adaf4f3076f8bc94df4063d2ea9b04ae793fc1a77580604c",
+      "0x47e9d1ea0282624bd215d9dac6f31b89000eda602785d979e9d3dcb50e2ba7e8",
+      "0xb7344b1b961bb5f4aa7e0c145ea36c48958864132f97a3e20ca40f793f007913",
+      "0x2208b59bca20570b6c24e7ba90bea8159e97427124e1202a633368520c4b73aa",
+      "0x2fddc0f3361586b40014cd2405a53d1650c9a498a88180a36405d15f919a2ce6",
+      "0x2c322db79244c66aaa9a6ccac75cb0655c45008b5c51ef24cefec924ddeba006"
+     ],
+     "evidence": "call-for-call replay of 6ce9's HATE tx (pair flash-swap 0x022c0d9f -> callback 0x10d1e85c -> 10x staking 0xadc9772e/0x21d0af34 pairs on 0x8ebd6c7d.. -> router sell); all 10 succeeded; builder payments 1.08 ETH total",
+     "order": "4 blocks AFTER 6ce9's second HATE tx (18071199) and 1,675 blocks after the first: copy-after, not a front-run",
+     "also": "0x9efc041667e63de659b6150a6a8346028c33edad via contract 0x5968ada2.. replayed the same pair at 18071204 idx 3 (tx 0xc3e8fb9eb81f297eb4c3fb266d8edee4aed6208e2594f6302981e43f0a0bec1d)",
+     "verdict": "related-not-frontrun (crowd copying after the fact)"
+    },
+    {
+     "incident": "BTC20",
+     "who": "Yoink block 17949216 idx 12 (tx 0x99aeb3fcf3d88faa6e683f09055276b5342a24d583f0f79d6d0379aa785cab48)",
+     "evidence": "WETH->BTC20 pair swap then 1inch route to USDT and back: post-hack arbitrage, no victim calls replayed. Also a 2110 gwei-tip arb by 0x202bb2fab1.. at 17949216 idx 1",
+     "verdict": "related-not-frontrun (post-hack arb)"
+    },
+    {
+     "incident": "JumpFarm / QuantumWN",
+     "who": "none: only 6ce9 txs touch sJUMP / sFumog in +-6,000 blocks",
+     "verdict": "no race"
+    }
+   ],
+   "mempool": "all 6 DHL txs absent from mempool-dumpster 2023-08-19 / 2023-09-05 (no sourcelog for 08-19)",
+   "conclusion": "Serial exploiter: 6 exploits in 18 days across the same bug class (rebasing OHM-fork staking), custom contract each time, Tornado in/out, stopped 2023-09-06. Not a replay of anyone else's exploit; the only racing is later copying by Yoink and another bot."
+  }
+ },
+ "same_operator_analysis": {
+  "shared_counterparties_pairwise": "none (A&B, A&C, B&C all empty over normal+internal tx counterparties)",
+  "funding": {
+   "7248": "0x267be1c1.. (2016 EOA) + top-up wallet 0x25b718..",
+   "d215": "0x4025ee65.. privacy-pool-like contract 0.1 ETH + 0xc0ffeedad16ef4ea21e61f2d3eb5f3ca3249bc1e 1.506 ETH (2024-06-11)",
+   "6ce9": "Tornado Cash 1 ETH pool"
+  },
+  "contracts": "no shared contracts; call grammars unrelated (0xdeadbeef calldata program vs UniV2-style swap vs per-target contracts)",
+  "verdict": "three independent operators"
+ },
+ "earning_farm_0xa57_comparison": {
+  "eoa": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+  "finding": "EOA active since 2019-11-10; first 3,000 txs run to 2021-01 with 2,450 to contract 0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf and 550 plain transfers; long-running generalized MEV operator (2019 onward), a different type from 0x6ce9 (17 txs) and comparable to 0x7248/0xd215 only in being a general searcher. Not investigated further."
+ },
+ "caveats": [
+  "Mempool-dumpster has no sourcelog for 2023-08-19; absence from the CSV means private or dropped-because-already-on-chain, not proof of privacy.",
+  "Etherscan txlist 'isError' is '0' for success.",
+  "Return-to-owner for d215 inferred from tx pattern only.",
+  "No bytecode decompilation done; selector grammar only (cast 4byte lookups returned nothing offline)."
+ ]
+}

@@ -1,0 +1,271 @@
+{
+ "yoink_eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+ "yoink_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+ "txs": [
+  {
+   "tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+   "sub": "pending-usdt",
+   "block": 19393223,
+   "index": 0,
+   "time_utc": "2024-03-08T21:52:59Z",
+   "block_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extradata": "I can haz block?",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 34521105,
+   "status": 1,
+   "gas_used": 236691,
+   "effective_gas_price_wei": 74108051391,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 3452110500000000000,
+   "weth_withdraw_to_bot_wei": 252527656,
+   "builder_refund_wei": 999919539816316259,
+   "builder_refund_tx": "0x5fda5d9d37195903727f6f91910710db4b6324e71fcd7dc98a97867ad88dc0bd",
+   "proposer_payment_wei": 2450663121682000094,
+   "sweeps": [
+    {
+     "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "to": "0x4e2ce48f0b5d97bfd4be3f6c7b6479db1aa5b365",
+     "amount_raw": 0
+    },
+    {
+     "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "to": "0x6855859bea41a682707c4aa98424a734515da111",
+     "amount_raw": 1
+    },
+    {
+     "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "to": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0",
+     "amount_raw": 13565685174
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0xa340a9fb8eaa07d8a23300e6314bf41e8c4e42fc",
+     "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "amount_raw": 8163939786
+    },
+    {
+     "victim": "0xa17de4ec9ecb7aa25dfcbbdac8b301b674d9d10a",
+     "token": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+     "amount_raw": 5401745389
+    }
+   ],
+   "attacker_source_tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44"
+  },
+  {
+   "tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+   "sub": "half-copies",
+   "block": 19393262,
+   "index": 0,
+   "time_utc": "2024-03-08T22:02:23Z",
+   "block_fee_recipient": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+   "builder_extradata": "rsync-builder.xyz",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 958214,
+   "status": 1,
+   "gas_used": 197524,
+   "effective_gas_price_wei": 79181285490,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 95821400000000000,
+   "weth_withdraw_to_bot_wei": 253745985,
+   "builder_refund_wei": null,
+   "builder_refund_tx": null,
+   "proposer_payment_wei": null,
+   "sweeps": [
+    {
+     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "to": "0x3aa370aacf4cb08c7e1e7aa8e8ff9418d73c7e0f",
+     "amount_raw": 1
+    },
+    {
+     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "to": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0",
+     "amount_raw": 4808852620
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0xbf12773b490e1deb57039061aacfa2a87deac9b9",
+     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "amount_raw": 4808852621
+    }
+   ],
+   "attacker_source_tx": "0xd0bab3e76a55033e4ef47a8a52bea74313eaea3b04a23adc7c7e416d359bc3a0"
+  },
+  {
+   "tx": "0xaeb81988bb0b1bcae375f979f9ecb8146d811b42170a8ebe11467625240178a2",
+   "sub": "half-copies",
+   "block": 19393264,
+   "index": 0,
+   "time_utc": "2024-03-08T22:02:47Z",
+   "block_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extradata": "I can haz block?",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 980,
+   "status": 1,
+   "gas_used": 178501,
+   "effective_gas_price_wei": 82465736303,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 757644408520943470,
+   "weth_withdraw_to_bot_wei": 773106539307085175,
+   "builder_refund_wei": 637924399615996306,
+   "builder_refund_tx": "0x6d8a00debd869df55492f83fbc5099938c2807b542feb698fb47ad276dfca510",
+   "proposer_payment_wei": 125117087437169590,
+   "sweeps": [
+    {
+     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "to": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+     "amount_raw": 3026068927
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0x2121fc1b00b30844fa6ef43370666d5487fc118e",
+     "token": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+     "amount_raw": 3026068927
+    }
+   ],
+   "attacker_source_tx": null
+  },
+  {
+   "tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+   "sub": "pending-xi",
+   "block": 19393298,
+   "index": 0,
+   "time_utc": "2024-03-08T22:10:23Z",
+   "block_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extradata": "I can haz block?",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 971,
+   "status": 1,
+   "gas_used": 164393,
+   "effective_gas_price_wei": 68164778787,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 375476264067182472,
+   "weth_withdraw_to_bot_wei": 386690282252505122,
+   "builder_refund_wei": 305127441909821277,
+   "builder_refund_tx": "0x2fef35d4d7911fe16845c52a081fb8f071f727b8bbb1639ccbc71784059ee653",
+   "proposer_payment_wei": 77185630370857551,
+   "sweeps": [
+    {
+     "token": "0x295b42684f90c77da7ea46336001010f2791ec8c",
+     "to": "0x7a99822968410431edd1ee75dab78866e31caf39",
+     "amount_raw": 1118715169744549188730880
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0xd04b7023f7433554c9852ae2da8046933ed6d839",
+     "token": "0x295b42684f90c77da7ea46336001010f2791ec8c",
+     "amount_raw": 1118715169744549188730880
+    }
+   ],
+   "attacker_source_tx": "0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87"
+  },
+  {
+   "tx": "0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746",
+   "sub": "half-copies",
+   "block": 19393342,
+   "index": 0,
+   "time_utc": "2024-03-08T22:19:23Z",
+   "block_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extradata": "I can haz block?",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 993,
+   "status": 1,
+   "gas_used": 204826,
+   "effective_gas_price_wei": 61033142160,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 1954347020566175326,
+   "weth_withdraw_to_bot_wei": 1968123887780639806,
+   "builder_refund_wei": 1582118290753818434,
+   "builder_refund_tx": "0x961a028375ae72d37c8e5aa3f0a9f707383d7ae176ca71035cb5170181096075",
+   "proposer_payment_wei": 377996425294066318,
+   "sweeps": [
+    {
+     "token": "0x4a220e6096b25eadb88358cb44068a3248254675",
+     "to": "0x24ee2c6b9597f035088cda8575e9d5e15a84b9df",
+     "amount_raw": 62505616219404361728
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0x0f119cc79da180856f48ba317347114955ed71f1",
+     "token": "0x4a220e6096b25eadb88358cb44068a3248254675",
+     "amount_raw": 62505616219404361728
+    }
+   ],
+   "attacker_source_tx": null
+  },
+  {
+   "tx": "0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437",
+   "sub": "half-copies",
+   "block": 19393363,
+   "index": 0,
+   "time_utc": "2024-03-08T22:23:59Z",
+   "block_fee_recipient": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97",
+   "builder_extradata": "Titan (titanbuilder.xyz)",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 83,
+   "status": 1,
+   "gas_used": 234808,
+   "effective_gas_price_wei": 63477657309,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 11489718141556879,
+   "weth_withdraw_to_bot_wei": 138430339054902160,
+   "builder_refund_wei": null,
+   "builder_refund_tx": null,
+   "proposer_payment_wei": null,
+   "sweeps": [
+    {
+     "token": "0xf411903cbc70a74d22900a5de66a2dda66507255",
+     "to": "0x60031819a16266d896268cfea5d5be0b6c2b5d75",
+     "amount_raw": 41611328550535574847487
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0x12fe4bc7d0b969055f763c5587f2ed0ca1b334f3",
+     "token": "0xf411903cbc70a74d22900a5de66a2dda66507255",
+     "amount_raw": 41611328550535574847488
+    }
+   ],
+   "attacker_source_tx": null
+  },
+  {
+   "tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+   "sub": "pending-ads",
+   "block": 19393726,
+   "index": 0,
+   "time_utc": "2024-03-08T23:39:59Z",
+   "block_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extradata": "I can haz block?",
+   "bot_contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "msg_value": 978,
+   "status": 1,
+   "gas_used": 173704,
+   "effective_gas_price_wei": 47782800682,
+   "max_priority_fee_wei": 0,
+   "coinbase_transfer_wei": 376285572750809306,
+   "weth_withdraw_to_bot_wei": 384750074387330580,
+   "builder_refund_wei": 273011150640281451,
+   "builder_refund_tx": "0x669c7e56f911fc06b8454111f66e38cd9b604fa5a3ae6ae6819f9747f1be6bab",
+   "proposer_payment_wei": 113757955501026420,
+   "sweeps": [
+    {
+     "token": "0x3106a0a076bedae847652f42ef07fd58589e001f",
+     "to": "0x7b4b3e3097eac69c5d1042983bef7022d658bd36",
+     "amount_raw": 7800000000000000000000
+    }
+   ],
+   "victim_pulls": [
+    {
+     "victim": "0x158fb20ff581731a84c50584f4f82751704708d8",
+     "token": "0x3106a0a076bedae847652f42ef07fd58589e001f",
+     "amount_raw": 7800000000000000000000
+    }
+   ],
+   "attacker_source_tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88"
+  }
+ ]
+}

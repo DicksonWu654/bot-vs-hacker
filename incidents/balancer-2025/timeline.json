@@ -1,0 +1,339 @@
+{
+ "slug": "balancer-2025",
+ "note": "Mempool/first-seen: only mempool-dumpster merged first-seen for 2025-11-03 (A8..A9b and 0x6949b0aa). A1..A7, EOA2 and every replay are absent from the dumpster: private flow or unseen; \"in-block evidence only\" for them. Block-level events use the block timestamp (slot start).",
+ "events": [
+  {
+   "t_utc_ms": 1762064867000,
+   "t_utc": "2025-11-02T06:27:47.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "fund",
+   "actor": "EOA2 0x766a892f",
+   "detail": "15 ETH from 0x86fedad1... (tx 0x60ecb3e7...), block 23709849",
+   "tx": "0x60ecb3e7364da42943adc6ba2edfa11a804e7f0175f549898568d1b1b87cb783",
+   "raw_ref": "site/raw/etherscan/bal_0x766a892f_txlist.json"
+  },
+  {
+   "t_utc_ms": 1762067411000,
+   "t_utc": "2025-11-02T07:10:11.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "fund",
+   "actor": "EOA1 0x506d1f9e",
+   "detail": "2.99985 ETH from 0x5babe600... (block 23710059); source type unverified",
+   "tx": "0xa429ac9eeb4a745cd86af2bc8a98df876b42ce82b2b38895065e05096ea39173",
+   "raw_ref": "site/raw/etherscan/bal_attacker_txlist.json"
+  },
+  {
+   "t_utc_ms": 1762069355000,
+   "t_utc": "2025-11-02T07:42:35.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA1",
+   "detail": "first of 80 self-transfers (0.01-0.12 ETH), nonces 0-79, through block 23717322 (06:58 UTC Nov 3); purpose unknown",
+   "tx": "0x1fe91a8f562cb7fd8507ae50dac7386eab5ff2214cf27419f45d9662ff3d2dd7",
+   "raw_ref": "site/raw/etherscan/bal_attacker_txlist.json"
+  },
+  {
+   "t_utc_ms": 1762156007000,
+   "t_utc": "2025-11-03T07:46:47.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "deploy",
+   "actor": "EOA1 0x506d1f9e",
+   "detail": "A1 contract-creation tx lands: block 23717397 idx 1, slot 12944332, builder Titan (extraData), tip 3.9e-5 gwei, 28.3M gas; stage-1 drain of osETH/WETH + wstETH/WETH pools into Vault internal balance of new contract 0x54b53503...; Not in mempool-dumpster (private flow or unseen), so in-block evidence only for when it first reached a builder.",
+   "tx": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+   "raw_ref": "site/raw/rpc/block_23717397.json"
+  },
+  {
+   "t_utc_ms": 1762156007000,
+   "t_utc": "2025-11-03T07:46:47.000Z",
+   "precision": "bid timing from relay archives; winning bid time unknown",
+   "kind": "bid",
+   "actor": "Titan via Ultra Sound",
+   "detail": "winning bid for slot 12944332: 0.05020864 ETH (delivered by Ultra Sound; bid itself not retrievable); 808 retained bids from Flashbots+Titan relays, first at -8157 ms, last +3022 ms rel. slot start; the winning block hash is not among them",
+   "raw_ref": "incidents/balancer-2025/race_23717397.json"
+  },
+  {
+   "t_utc_ms": 1762156007000,
+   "t_utc": "2025-11-03T07:46:47.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "0xc0ffee445a22 (arb backrun, NOT the c0ffeebabe.eth address)",
+   "detail": "block 23717397 idx 2, directly after A1: WETH out 41.19 ETH, 20.596 ETH to fee recipient 0x4838b106 (Titan) and 20.597 ETH to 0xc0ffeefeed...; tx-level facts only",
+   "tx": "0x4b6b5fb9aa779c7662793a2613dca48f6e4afd15037b1acf2be4355cb032ed63",
+   "raw_ref": "site/raw/rpc/block_23717397.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_23717397.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762156019000,
+   "t_utc": "2025-11-03T07:46:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "0x240926d7f... (arb backrun)",
+   "detail": "block 23717398 idx 1: 17.602 ETH to fee recipient",
+   "tx": "0xfd261ed26272fa1e084066aae99aa0141c403b0e76ce3ffaebe14adae9a6e9eb",
+   "raw_ref": "site/raw/rpc/block_23717398.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_23717398.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762156019000,
+   "t_utc": "2025-11-03T07:46:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "Bitfinding 0x5af00b07 (whitehat)",
+   "detail": "block 23717398 idx 2: contract-creation with A1 input, 3/983 words changed (owner/beneficiary); priority 2 gwei; same two pools drained into internal balance of 0xdb8986fd (WETH 135.86, osETH 105.21, wstETH 10.96, BPT). 12 s (one slot) after A1. Not in mempool-dumpster.",
+   "tx": "0x1dc60f917e4d841f281e827cf82f93c7355e08f5855e9ae5b0a1764b38ed4b87",
+   "raw_ref": "site/raw/rpc/block_23717398.json"
+  },
+  {
+   "t_utc_ms": 1762156019000,
+   "t_utc": "2025-11-03T07:46:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "Bitfinding",
+   "detail": "idx 3: second creation (3,761-byte input, no Vault logs); idx 4: withdraw of WETH 135.857 + wstETH 10.957 from internal balance to EOA",
+   "tx": "0x0d6f2d90c543e137b59318d6c557f772fa638da757c2c8c095c7076d6fbb159d",
+   "raw_ref": "site/raw/rpc/block_23717398.json"
+  },
+  {
+   "t_utc_ms": 1762156019000,
+   "t_utc": "2025-11-03T07:46:59.000Z",
+   "precision": "bid timing from relay archives",
+   "kind": "bid",
+   "actor": "bloXroute regulated (builder pubkey 0x88a53ec4...)",
+   "detail": "winning bid 18.169 ETH (17.6 of it is the 0x240926d7 backrun payment); 762 retained bids (Flashbots 121, Titan 500 capped, ETHGas 141), first -8254 ms, last +4024 ms",
+   "raw_ref": "incidents/balancer-2025/race_23717398.json"
+  },
+  {
+   "t_utc_ms": 1762156031000,
+   "t_utc": "2025-11-03T07:47:11.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "0x7bb28442 (searcher-style copier)",
+   "detail": "block 23717399 idx 0: second copy of A1 input (2 blocks after A1; pools already drained by Bitfinding): net ~0, paid 0.8166 ETH to coinbase",
+   "tx": "0xe1d5f36f0aa6f6a07865ac4feaae5bda839f489372eb3ece7d53fb10100a1eb1",
+   "raw_ref": "site/raw/rpc/block_23717399.json"
+  },
+  {
+   "t_utc_ms": 1762156055000,
+   "t_utc": "2025-11-03T07:47:35.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "0x7bb28442",
+   "detail": "block 23717401 idx 1: third copy (4 blocks after A1)",
+   "tx": "0x78ef0d388ab399dca877af4eb1eca244375456c1c75f07229e1f1c26abf4c596",
+   "raw_ref": "site/raw/rpc/block_23717401.json"
+  },
+  {
+   "t_utc_ms": 1762156091000,
+   "t_utc": "2025-11-03T07:48:11.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA1",
+   "detail": "A2 (block 23717404 idx 193): withdraws 6587.44 WETH, 6851.12 osETH, 4259.84 wstETH + BPT to beneficiary 0xaa760d53; Titan block, tip ~0",
+   "tx": "0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569",
+   "raw_ref": "site/raw/rpc/block_23717404.json",
+   "raw_refs": [
+    "site/raw/etherscan/bal_aa760_tokentx.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762157519000,
+   "t_utc": "2025-11-03T08:11:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA2 0x766a892f",
+   "detail": "first EOA2 creation tx (block 23717522 idx 55) on pools 0xb91159.../0x63e0d4... and a wstETH pool; first mainnet use of pools EOA1 never touched; not in dumpster",
+   "tx": "0x2186a65024fe6532e94744e8c019883d3b93e9cda455d62a3174b9e6c928c863",
+   "raw_ref": "site/raw/rpc/block_23717522.json"
+  },
+  {
+   "t_utc_ms": 1762158515000,
+   "t_utc": "2025-11-03T08:28:35.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA2",
+   "detail": "blocks 23717605-23717611: second contract 0x11986fb1, four more pool runs, then withdraw to 0xaa760d53 (sUSDe 10168.4, USDC 5370.4, WETH 18.0, uniETH 16.6, ...)",
+   "tx": "0xf5b2f4884d11a474713f59901d8be89acebd34d80675607f4a46824661af1b6c",
+   "raw_ref": "site/raw/rpc-balancer2025/tx_0xf5b2f4884d11a474713f59901d8be89acebd34d80675607f4a46824661af1b6c.json",
+   "raw_refs": [
+    "site/raw/rpc/blockhdr_23717605.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762158779000,
+   "t_utc": "2025-11-03T08:32:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA1",
+   "detail": "wave 2: A3 0x8e260bf8 (block 23717627 idx 126, pool 0x05ff47af, private)",
+   "tx": "0x8e260bf89637eb61a7ee298ed6b21aa15f623486431c418df7dc3f6577c8f32a",
+   "raw_ref": "site/raw/rpc/block_23717627.json"
+  },
+  {
+   "t_utc_ms": 1762158803000,
+   "t_utc": "2025-11-03T08:33:23.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA1",
+   "detail": "A4 0x00b08e5e (23717629 idx 71), A5 0x3e173ab0 (23717632 idx 1), A6 0xb8a97818 (23717633 idx 34) and withdraw 0x92f46192 (idx 35); all private",
+   "tx": "0x00b08e5e77da0179c3aae423beea1ecdbd4e27f9072ef002344a766681f020d2",
+   "raw_ref": "site/raw/rpc/block_23717629.json"
+  },
+  {
+   "t_utc_ms": 1762158827000,
+   "t_utc": "2025-11-03T08:33:47.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "Bitfinding",
+   "detail": "block 23717631 idx 13: copy of A3 (4 blocks after A3), priority 2 gwei; gets rETH 6.225, weETH 6.617, 3.87 BPT (pool already drained by A3)",
+   "tx": "0xa4ee77dbc66c106e5a552859f91b2a04cb8d26a94903644919acb53f540847b4",
+   "raw_ref": "site/raw/rpc/block_23717631.json"
+  },
+  {
+   "t_utc_ms": 1762159609956,
+   "t_utc": "2025-11-03T08:46:49.956Z",
+   "precision": "millisecond (dumpster merged first-seen)",
+   "kind": "mempool_seen",
+   "actor": "EOA1 (public)",
+   "detail": "A8 0x6256d6e9 first seen in mempool-dumpster; included 9.0 s later in block 23717697 idx 4 (beaverbuild, bid 0.199 ETH). Only the dumpster merged first-seen is available (no per-source log for 2025-11)",
+   "tx": "0x6256d6e9e6effe2692ba97f7f5047c0e3f6d8cc6407e84b80cf9e7c89636c422",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "site/raw/rpc/block_23717697.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762159622410,
+   "t_utc": "2025-11-03T08:47:02.410Z",
+   "precision": "millisecond",
+   "kind": "mempool_seen",
+   "actor": "EOA1 (public)",
+   "detail": "A8b withdraw 0x59279c1a first seen; included block 23717698 idx 188",
+   "tx": "0x59279c1aee6c48303d30788f8e75d3d8f0029aed5de6e385caaea5cc8ea2a1e4",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1762159708330,
+   "t_utc": "2025-11-03T08:48:28.330Z",
+   "precision": "millisecond",
+   "kind": "mempool_seen",
+   "actor": "EOA1 (public)",
+   "detail": "A9 0x2a0ead4e first seen; included 18.7 s later in block 23717706 idx 185 (Quasar extraData; delivery not found on any answering relay)",
+   "tx": "0x2a0ead4ee9b17a1afa5bfe3dc152833a957f2d25dd9b4b86d68f2c87bdacf69c",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1762159731575,
+   "t_utc": "2025-11-03T08:48:51.575Z",
+   "precision": "millisecond",
+   "kind": "mempool_seen",
+   "actor": "EOA1 (public)",
+   "detail": "A9b withdraw 0x1f486ee2 first seen; included block 23717707 idx 167",
+   "tx": "0x1f486ee28db16682a798bb0d84f926f13f70cf271350e2c276de6edca78403df",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1762159763000,
+   "t_utc": "2025-11-03T08:49:23.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "0x87a16382 then Bitfinding",
+   "detail": "block 23717709 idx 1 and 2: both copy A9 (3 blocks after A9); 0x87a16382 (priority 7.0 gwei) takes 12.09 WETH + 11.55 rsETH, Bitfinding (2 gwei) 0.144 WETH. A pending-tx window ended in 23717706: nobody replayed A9 earlier",
+   "tx": "0x32a604f4404bdda461e9bddbd9a2e62f1c9f01f4850cbed38bf1b47f334f22ef",
+   "raw_ref": "site/raw/rpc/block_23717709.json",
+   "raw_refs": [
+    "site/raw/rpc-balancer2025/rcpt_0x32a604f4404bdda461e9bddbd9a2e62f1c9f01f4850cbed38bf1b47f334f22ef.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762163032114,
+   "t_utc": "2025-11-03T09:43:52.114Z",
+   "precision": "millisecond",
+   "kind": "mempool_seen",
+   "actor": "0x6949b0aa (late copier)",
+   "detail": "first of three public creation txs with the A1 input size (31,427 B); two later included at 23718000/23718015 and reverted",
+   "tx": "0x53d262416421ffa01861f5b5e8baf9e8ee2da7b034c9ca274cc7fb1e5a2cb5c1",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1762165523000,
+   "t_utc": "2025-11-03T10:25:23.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "Yoink 0xfde0d157 (post-hack arb)",
+   "detail": "block 23718188 idx 0: 86 swaps on a pool EOA1 hit in 23717629; 0.187 ETH to coinbase; builder \"I can haz block?\" winning bid 0.1257 ETH; 2 h 38 m after A1",
+   "tx": "0xd8dd6cbcbbf1ad57de4394fee889e63174c65737df17f61e26d48dd17de7385a",
+   "raw_ref": "site/raw/rpc/block_23718188.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlistdesc6_0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1762201739000,
+   "t_utc": "2025-11-03T20:28:59.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "return",
+   "actor": "Safe 0x144a98cb... (StakeWise per press, owner not verified)",
+   "detail": "burn of 3841.12 osETH from attacker wallet 0xaa760d53 (block 23721187), ~12.4 h after A1 (press: StakeWise DAO recovered 5,041 osETH about 90 minutes after the exploit; other StakeWise txs were not searched)",
+   "tx": "0x914c35feb23e05d4c798209fde22684d67df735b91dd0a0528e92927df6dec9b",
+   "raw_ref": "site/raw/rpc-balancer2025/trace_0x914c35feb23e05d4c798209fde22684d67df735b91dd0a0528e92927df6dec9b.json",
+   "raw_refs": [
+    "site/raw/etherscan/bal_aa760_tokentx.json",
+    "site/raw/balancer-web/ambcrypto_postmortem.html"
+   ]
+  },
+  {
+   "t_utc_ms": 1762223543000,
+   "t_utc": "2025-11-04T02:32:23.000Z",
+   "precision": "tx-timestamp",
+   "kind": "return",
+   "actor": "Bitfinding",
+   "detail": "WETH 136.0009 returned to DAO multisig 0x10A19e7e (block 23722994); rETH, weETH, wstETH returned in 23722944-23722968",
+   "tx": "0x1c20be7a609b53011cc569fc33d04ace7a4616de6efbf1c7bc1a72cd4f2909c9",
+   "raw_ref": "site/raw/etherscan/bal_0x5af00b07_tokentx.json"
+  },
+  {
+   "t_utc_ms": 1762376591000,
+   "t_utc": "2025-11-05T21:03:11.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "message",
+   "actor": "Balancer DAO (0x9098b50e...)",
+   "detail": "on-chain notice to EOA1 (block 23735651); same text to EOA2 (23735657), 0x5b1a6bd4 (23735673), 0xf49632e3 (23735702): cooperate/return before Nov 8 21:00 UTC for a bounty",
+   "tx": "0xf462b894f3",
+   "raw_ref": "site/raw/etherscan/bal_dao_notice_sender_txlist.json"
+  },
+  {
+   "t_utc_ms": 1762556447000,
+   "t_utc": "2025-11-07T23:00:47.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "tx",
+   "actor": "EOA2 -> EOA1",
+   "detail": "94 ETH from EOA2 to EOA1 (block 23750534): links the two attacker EOAs",
+   "tx": "0xbf1f59075a700f787842aa5d969e4b472b7b489960d9f2e147edb092c8d7bfa8",
+   "raw_ref": "site/raw/etherscan/bal_0x766a892f_txlist.json"
+  },
+  {
+   "t_utc_ms": 1762632575000,
+   "t_utc": "2025-11-08T20:09:35.000Z",
+   "precision": "block timestamp = slot start; real arrival unknown",
+   "kind": "return",
+   "actor": "Bitfinding",
+   "detail": "osETH 105.208 returned to DAO multisig (block 23756834) after withdrawing it from Vault internal balance in 0xaa52c3a7... (block 23756809)",
+   "tx": "0x60687df48ac95b49e3952c6bb8a5f08b6d9959b26e6f56d24319c6499fd475ce",
+   "raw_ref": "site/raw/etherscan/bal_0x5af00b07_tokentx.json"
+  },
+  {
+   "t_utc_ms": 1768446803000,
+   "t_utc": "2026-01-15T03:13:23.000Z",
+   "precision": "tx-timestamp",
+   "kind": "return",
+   "actor": "DAO multisig -> Bitfinding recipient",
+   "detail": "10 % Safe Harbor bounty paid (13.6 WETH, 1.0957 wstETH, 0.6617 weETH, 0.6225 rETH, 10.5208 osETH) per BIP-892",
+   "tx": "0xaa0de3c2eac83bac2c3c5b78e0ae31aaddab2d7bcc45913b2210b697b535d688",
+   "raw_ref": "site/raw/etherscan/bal_bitf_bounty_tokentx.json"
+  }
+ ]
+}

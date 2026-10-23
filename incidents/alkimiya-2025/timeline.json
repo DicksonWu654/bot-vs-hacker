@@ -1,0 +1,332 @@
+{
+ "slug": "alkimiya-2025",
+ "note": "block-level precision unless precision=ms (relay receive clocks and dumpster ms). Mempool first-seen for attacker attack tx and Yoink tx is UNKNOWN (absent from mempool-dumpster).",
+ "events": [
+  {
+   "t_utc_ms": 1697879063000,
+   "t_utc": "2023-10-21T09:04:23Z",
+   "precision": "block",
+   "kind": "fund",
+   "actor": "Tornado Cash 0.1 ETH pool",
+   "detail": "0.0941 ETH withdrawn to attacker EOA 0xf6ffba5c (first of two)",
+   "tx": "0x2a0a0a6f35b2b0e6ca6e2251be0ea4e10f19c40ca645c6cac23a5696266fbdfa",
+   "raw_ref": "site/raw/etherscan/alk_att_txlistinternal.json"
+  },
+  {
+   "t_utc_ms": 1714872539000,
+   "t_utc": "2024-05-05T01:28:59Z",
+   "precision": "block",
+   "kind": "fund",
+   "actor": "0x02a696cb",
+   "detail": "1.2 ETH to attacker EOA (last inflow before attack)",
+   "tx": "0x1121e4eec6c7c33950bc4796bfa77f0fb21b1332009f0c54baa3e1848c486482",
+   "raw_ref": "site/raw/etherscan/alk_att_txlist.json"
+  },
+  {
+   "t_utc_ms": 1743172955000,
+   "t_utc": "2025-03-28T14:42:35Z",
+   "precision": "block",
+   "kind": "deploy",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146080 idx 36: deploy early fake-index test contract 0x9e31bf60 (296,691 gas)",
+   "tx": "0x7c67e7a301f18599d6af544aa75362d72faa41c7a90840baefb288411b4af412",
+   "raw_ref": "site/raw/rpc/alk_tx_0x7c67e7a301f18599d6af544aa75362d72faa41c7a90840baefb288411b4af412.json"
+  },
+  {
+   "t_utc_ms": 1743172991000,
+   "t_utc": "2025-03-28T14:43:11Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146083 idx 160: call test contract a6f9dae1",
+   "tx": "0x539d559f96195316dc6ec64436f45df219d4912f8ca1321c1e62914c58e01c57",
+   "raw_ref": "site/raw/rpc/alk_tx_0x539d559f96195316dc6ec64436f45df219d4912f8ca1321c1e62914c58e01c57.json"
+  },
+  {
+   "t_utc_ms": 1743173027000,
+   "t_utc": "2025-03-28T14:43:47Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146086 idx 121: call test contract 29ecdcfb",
+   "tx": "0xefd1f9d0d4ad4d9f1d16ca902721674373c3123cfe67d15024978f9e44942c97",
+   "raw_ref": "site/raw/rpc/alk_tx_0xefd1f9d0d4ad4d9f1d16ca902721674373c3123cfe67d15024978f9e44942c97.json"
+  },
+  {
+   "t_utc_ms": 1743173111000,
+   "t_utc": "2025-03-28T14:45:11Z",
+   "precision": "block",
+   "kind": "deploy",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146093 idx 31: deploy attack-contract v1 0x21ace8ea (2.27M gas)",
+   "tx": "0x7b2217389ee82af9cbc11e0d31e63619c3025ad07cd149ce94cd2fae73ce5428",
+   "raw_ref": "site/raw/rpc/alk_tx_0x7b2217389ee82af9cbc11e0d31e63619c3025ad07cd149ce94cd2fae73ce5428.json"
+  },
+  {
+   "t_utc_ms": 1743173183000,
+   "t_utc": "2025-03-28T14:46:23Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146099 idx 266: v1 cd20a6bc(index) config call",
+   "tx": "0x32f74c093e0848379c52f971e0c40663974d45168f077d29b646463ac8c70dc2",
+   "raw_ref": "site/raw/rpc/alk_tx_0x32f74c093e0848379c52f971e0c40663974d45168f077d29b646463ac8c70dc2.json"
+  },
+  {
+   "t_utc_ms": 1743173447000,
+   "t_utc": "2025-03-28T14:50:47Z",
+   "precision": "block",
+   "kind": "deploy",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146121 idx 183: deploy attack-contract v2 0x7e0141a4",
+   "tx": "0x402368d7ff5f3019940e09d5ab9f07eb0ce88a31e2fc33cf5901635e830419d7",
+   "raw_ref": "site/raw/rpc/alk_tx_0x402368d7ff5f3019940e09d5ab9f07eb0ce88a31e2fc33cf5901635e830419d7.json"
+  },
+  {
+   "t_utc_ms": 1743173495000,
+   "t_utc": "2025-03-28T14:51:35Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146125 idx 283: v2 cd20a6bc(index) config call",
+   "tx": "0x6a13351d5c6891dbba89a8aa4b3a8542b6a2d9bbc7eda24049ef66ee93a76190",
+   "raw_ref": "site/raw/rpc/alk_tx_0x6a13351d5c6891dbba89a8aa4b3a8542b6a2d9bbc7eda24049ef66ee93a76190.json"
+  },
+  {
+   "t_utc_ms": 1743175943000,
+   "t_utc": "2025-03-28T15:32:23Z",
+   "precision": "block",
+   "kind": "deploy",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146328 idx 163: deploy final fake-index contract 0x9188738a (the pool treats it as the pool index; later reused by Yoink)",
+   "tx": "0xb34340614221ae8bbeacc9ead14c212b7cc71a56f2e452e9f23e976a1887dcf7",
+   "raw_ref": "site/raw/rpc/alk_tx_0xb34340614221ae8bbeacc9ead14c212b7cc71a56f2e452e9f23e976a1887dcf7.json"
+  },
+  {
+   "t_utc_ms": 1743176027000,
+   "t_utc": "2025-03-28T15:33:47Z",
+   "precision": "block",
+   "kind": "deploy",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146335 idx 220: deploy final attack contract 0x69af47f3 (2.24M gas)",
+   "tx": "0x0d53668957b858cf0e8737858ebd9ddc41de7773eb510df672b9f656d1712d2c",
+   "raw_ref": "site/raw/rpc/alk_tx_0x0d53668957b858cf0e8737858ebd9ddc41de7773eb510df672b9f656d1712d2c.json"
+  },
+  {
+   "t_utc_ms": 1743176063000,
+   "t_utc": "2025-03-28T15:34:23Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146338 idx 77: cd20a6bc(0x9188738a): point attack contract at the index",
+   "tx": "0xbf757045feaa99b06f70ac1bba2bca69181a2893d9c640e1635f850d9d05a1dd",
+   "raw_ref": "site/raw/rpc/alk_tx_0xbf757045feaa99b06f70ac1bba2bca69181a2893d9c640e1635f850d9d05a1dd.json"
+  },
+  {
+   "t_utc_ms": 1743176077227,
+   "t_utc": "2025-03-28T15:34:37.227Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "first bid of block 22146340 auction (Ty For The Block, Flashbots relay)",
+   "detail": "0.0001 ETH; 109 Flashbots + 500 Titan bids in total",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176085886,
+   "t_utc": "2025-03-28T15:34:45.886Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "0.5415 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block) first",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176085893,
+   "t_utc": "2025-03-28T15:34:45.893Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "1.0656 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block)",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176085920,
+   "t_utc": "2025-03-28T15:34:45.920Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "1.5792 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block)",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176085928,
+   "t_utc": "2025-03-28T15:34:45.928Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "2.0826 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block)",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176085952,
+   "t_utc": "2025-03-28T15:34:45.952Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "2.576 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block)",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176086066,
+   "t_utc": "2025-03-28T15:34:46.066Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Yoink-affiliated builder \"I can haz block?\"",
+   "detail": "2.5761 ETH, 5 tx / 1,041,575 gas block (contains Yoink hack tx per final block) pubkey switch",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176086109,
+   "t_utc": "2025-03-28T15:34:46.109Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "\"I can haz block?\" 0xad251e6b",
+   "detail": "WINNING bid 2.5760881503747317 ETH, block 0xc71ade5e, submitted to Flashbots relay (also delivered via Ultrasound and Agnostic)",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/delivered_block22146340.json"
+  },
+  {
+   "t_utc_ms": 1743176087000,
+   "t_utc": "2025-03-28T15:34:47Z",
+   "precision": "ms",
+   "kind": "block",
+   "actor": "proposer 0x98a498e5",
+   "detail": "block 22146340 (slot 11362672) timestamp 15:34:47Z, built by \"I can haz block?\", fee recipient 0x229b8325",
+   "tx": null,
+   "raw_ref": "site/raw/rpc/alk_tx_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+   "raw_refs": [
+    "site/raw/rpc/block_22146340.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1743176087000,
+   "t_utc": "2025-03-28T15:34:47Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "Yoink 0xfde0d157",
+   "detail": "idx 0: 9846cd9e value 999; Morpho 10 WBTC flashLoan -> SilicaPools mint/start/end/redeem -> swap 1.14015390 WBTC -> 50.8849 ETH -> 50.8341 ETH to coinbase",
+   "tx": "0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814",
+   "raw_ref": "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+   "raw_refs": [
+    "site/raw/rpc/receipts_22146340.json",
+    "site/raw/rpc/eth_getTransactionByHash_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1743176087000,
+   "t_utc": "2025-03-28T15:34:47Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "builder 0x229b8325",
+   "detail": "idx 3: refund 48.2783 ETH to Yoink contract; idx 4: 2.5761 ETH to proposer 0x41a90c14",
+   "tx": "0xac6c9ec1b77f3084ac5345813bfa48e4d9cdd67d9309305ce6dfaff69a7cbd11",
+   "raw_ref": "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+   "raw_refs": [
+    "site/raw/rpc/block_22146340.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1743176099000,
+   "t_utc": "2025-03-28T15:34:59Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0xf6ffba5c",
+   "detail": "block 22146341 (15:34:59Z, beaverbuild.org) idx 275: attack() REVERTED, pool already drained; 1 gwei priority fee, no coinbase transfer",
+   "tx": "0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4",
+   "raw_ref": "site/raw/rpc/alk_trace_0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4.json",
+   "raw_refs": [
+    "site/raw/rpc/eth_getTransactionByHash_0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1743176192963,
+   "t_utc": "2025-03-28T15:36:32.963Z",
+   "precision": "ms",
+   "kind": "mempool_seen",
+   "actor": "bloXroute (mempool-dumpster sourcelog)",
+   "detail": "attack-contract deploy tx first seen at 15:36:32.963Z, i.e. AFTER it was included (block 22146335 at 15:33:47Z): the only attacker tx in the dump",
+   "tx": "0x0d53668957b858cf0e8737858ebd9ddc41de7773eb510df672b9f656d1712d2c",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1743188219000,
+   "t_utc": "2025-03-28T18:56:59Z",
+   "precision": "block",
+   "kind": "message",
+   "actor": "Alkimiya owner 0x3bd5f5f3",
+   "detail": "pause() on SilicaPools (block 22147342)",
+   "tx": "0x7f3562d35b8e3d04c877d50c3688a1e2b92ec5ea5079c1b46e15bdbe78152ac2",
+   "raw_ref": "site/raw/etherscan/alk_pool_txlist_after.json"
+  },
+  {
+   "t_utc_ms": 1743237587000,
+   "t_utc": "2025-03-29T08:39:47Z",
+   "precision": "block",
+   "kind": "fund",
+   "actor": "0x02a696cb",
+   "detail": "0.21 ETH to attacker EOA after the hack",
+   "tx": "0xbd68028454949bcb3eba27527b4759a74681cf2c1b713f974a317d71e8c872a5",
+   "raw_ref": "site/raw/etherscan/alk_att_txlist.json"
+  },
+  {
+   "t_utc_ms": 1743309539000,
+   "t_utc": "2025-03-30T04:38:59Z",
+   "precision": "block",
+   "kind": "return",
+   "actor": "Yoink EOA",
+   "detail": "withdrawTo: 60 ETH from Yoink contract to Yoink EOA",
+   "tx": "0xc21e838e32e517f5bee7c5839f497b3e9d4769a3ef50570697d0a6f57317b139",
+   "raw_ref": "site/raw/etherscan/alk_yoink_txlist_after.json",
+   "raw_refs": [
+    "site/raw/etherscan/w8_0xfde0d157_txlist_21996009_99999999.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1743309671000,
+   "t_utc": "2025-03-30T04:41:11Z",
+   "precision": "block",
+   "kind": "return",
+   "actor": "Yoink EOA",
+   "detail": "48.3287 ETH to Safe 0x62e30d19 (1/1 Safe, owner 0x751edd97; funded by SilicaPools owner 0x3bd5f5f3 in 2024-07)",
+   "tx": "0x540aa4f9933ad28f5704db41cfc99df88ade963275be28b38bc8a644484756a5",
+   "raw_ref": "site/raw/etherscan/alk_62e3_txlist.json"
+  },
+  {
+   "t_utc_ms": 1743390443000,
+   "t_utc": "2025-03-31T03:07:23Z",
+   "precision": "block",
+   "kind": "return",
+   "actor": "Safe 0x62e30d19",
+   "detail": "6.3287 ETH to 0xe6ab1d88 (bounty, inferred)",
+   "tx": "0x59d55f0809298a2964ce419da0b72f8c118e2c527abbba9f25b63c97df27e99d",
+   "raw_ref": "site/raw/etherscan/alk_62e3_internal.json"
+  },
+  {
+   "t_utc_ms": 1743390599000,
+   "t_utc": "2025-03-31T03:09:59Z",
+   "precision": "block",
+   "kind": "return",
+   "actor": "0xe6ab1d88",
+   "detail": "6.328687497 ETH forwarded to Yoink EOA",
+   "tx": "0xb0def0ac0afc654dae186248457e9cd96b98e6a41d09ea44c1b9c209cdca22b1",
+   "raw_ref": "site/raw/etherscan/alk_txl_0xe6ab1d88.json"
+  }
+ ]
+}

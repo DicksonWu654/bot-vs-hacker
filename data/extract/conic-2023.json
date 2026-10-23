@@ -1,0 +1,763 @@
+[
+ {
+  "slug": "conic-2023",
+  "sub": "crvusd-pool",
+  "name": "Conic Finance crvUSD omnipool sandwich - Yoink replays the attacker's exploit ten times, starting one block after the attacker's own successful tx",
+  "date_utc": "2023-07-21T19:01:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "late-copy",
+  "race_type_reason": "Yoink gen1's victim-call sequence and round-number parameters equal the attacker's (flash loan, crvUSD create_loan, Curve swaps, Conic deposit/withdraw, tricrypto exit), but its first copy is at block 17743471 idx 0, one block after the attacker's tx succeeded at 17743470 idx 4. Nothing of the attacker's was pending: his next tx came 22 blocks later. Late copy.",
+  "one_liner": "Yoink gen1 replayed the Conic crvUSD sandwich in 10 consecutive blocks (17743471-80; idx 0, once idx 4) starting one block AFTER the attacker's tx landed; gross 125.82 ETH, net 90.34, returned 81.307 (90%) to Conic. Attacker's own take: 13.58 ETH.",
+  "attacker": {
+   "eoa": "0xb6369f59fc24117b16742c9dfe064894d03b3b80",
+   "eoas": [
+    "0xb6369f59fc24117b16742c9dfe064894d03b3b80"
+   ],
+   "contracts": [
+    "0x486cb3f61771ed5483691dd65f4186da9e37c68e",
+    "0x17e0329d8ffe9b4cb1f740110a42ecb541179d9e"
+   ],
+   "funding": "Tornado Cash 1 ETH pool",
+   "funding_tx": "0x4e2678fd999e9fd403f8c5a0abf7d8e1e062486797e05a3e7288c43f361f2ce1",
+   "deploy_tx": "0x90eef27416e85fb1c6acaded14588f1cc244d0ba7b6858f010957ced32d87e6d",
+   "deploy_block": 17743464,
+   "attack_txs": [
+    {
+     "hash": "0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
+     "block": 17743470,
+     "index": 4,
+     "status": "success",
+     "role": "profit 11.5626 ETH"
+    },
+    {
+     "hash": "0x8478a9567b06d5b9a2e09a0599a95c674cf2d9a70496e6ef7e5f0f3d0ec9a0ef",
+     "block": 17743492,
+     "index": 2,
+     "status": "reverted",
+     "role": "nested out of gas in the withdraw path; gas limit 25.28M, 24.46M used; 60.6 gwei"
+    },
+    {
+     "hash": "0xc8818aa3afb0a073ab507fb868f7a9f62c28607763bb3d678cdf0290fff7519e",
+     "block": 17743521,
+     "index": 2,
+     "status": "reverted",
+     "role": "out of gas in a staticcall (contract 2)"
+    },
+    {
+     "hash": "0xc08bfee8653bdb715144f98bc014eecbab6cf92ddaba16b836f3889fd850a862",
+     "block": 17743531,
+     "index": 5,
+     "status": "success",
+     "role": "profit 2.0183 ETH"
+    },
+    {
+     "hash": "0x357037805b2fed21fcbde4d665d53fe1e0906174125e0b50a030793d7cbbec66",
+     "block": 17743628,
+     "index": 0,
+     "status": "reverted",
+     "role": "selector 0x5f1bbb2f, 1.12M gas, 45.9 gwei"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+   "tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+   "block": 17743471,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0,
+   "n_txs": 10,
+   "tx_list": [
+    "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+    "0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80",
+    "0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd",
+    "0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f",
+    "0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41",
+    "0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308",
+    "0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa",
+    "0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080",
+    "0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c",
+    "0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8"
+   ]
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: 2023-07-21 is before the mempool-dumpster archive (starts 2023-08-07). The attacker's tx (idx 4, 1 gwei tip, in a full block) looks like public-mempool flow but that is not shown. Yoink's first inclusion is the next block either way, so no front-run is possible to establish.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen exists. The attacker's tx 0x37acd17a landed at 2023-07-21T19:01:35Z (block 17743470); Yoink's first copy is in the next block (19:01:47Z)."
+  },
+  "attacker_block": 17743470,
+  "attacker_block_note": "Attacker tx 0x37acd17a at block 17743470 idx 4 (success, +11.5626 ETH); Yoink first copy at 17743471 idx 0.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17743470,
+   "tx": "0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882"
+  },
+  "auction": {
+   "block": 17743471,
+   "slot": 6928507,
+   "slot_start_utc_ms": 1689966107000,
+   "relays_answered": [],
+   "n_bids": 0,
+   "n_builders": 0,
+   "bids_per_relay": {},
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": [],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/conic-2023/race_17743471.json"
+   },
+   "auction_note": "Block 17743471 (first Yoink copy, rsync-builder.xyz) is not recorded by any relay that answered (Flashbots bid history: 0 bids; delivered-payload lists empty), so the bid curve is empty. Block 17743472 (second copy, 'I can haz block?') has 57 Flashbots-relay bids, winning bid 2.43348 ETH at -1,180 ms; 17743476 (rsync, 272 bids, 1.93396 ETH) and 17743480 ('I can haz block?', 19 bids, 2.29313 ETH) are in incident.json auction_summary.yoink_blocks."
+  },
+  "loot": {
+   "scope": "bot-10-txs",
+   "gross_loot_eth": 125.82414560197842,
+   "gross_loot_method": "sum over the ten Yoink txs of the ETH value received by the bot contract from the Curve tricrypto exit (successful CALL frames in callTracer traces)",
+   "captured_native": {
+    "amount": 125.82414560197842,
+    "unit": "ETH",
+    "desc": "ETH out of the tricrypto exit after replaying the sandwich; value comes from Conic crvUSD pool LPs"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 21.439744231724486,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 90.34139358873627,
+   "loot_note": "bot_net = gross 125.82415 - coinbase 21.43974 - gas 14.04301 (all base fee: every tx had a 0 gwei tip) = 90.34139 ETH; matches Yoink's on-chain message (125.82415 / 35.48275 / 90.34139) to <1e-5 ETH. Coinbase per tx = msg.value per mille of gross (109-215 per mille). Builder refund checked only in the four blocks with race files (none); six blocks unchecked. The attacker's own take over two successful txs was 13.581 ETH."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 81.30725100000001,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 81.30725100000001,
+   "returned_to": "conicfinance.eth 0xedaeb101f34d767f263c0fe6b8d494e3d071f0ba (deployer of the crvUSD pool)",
+   "returned_desc": "Conic messaged Yoink on-chain (2023-07-22T16:43:59Z), Yoink replied with its accounting (23:34:47Z), Conic offered a 10% bounty (07-23 14:05:35Z); the bot contract's withdrawTo paid 81.307251 ETH to conicfinance.eth at 2023-07-23T15:42:59Z (block 17756778). That is 90.00% of the 90.341 ETH net, 64.6% of gross.",
+   "bounty_kept_eth": 9.034142588736259,
+   "bounty_desc": "10% of Yoink's net by agreement (Conic's message: 'a bounty of 10% of your profits')",
+   "kept_by_bot_eth": 9.034142588736259,
+   "returned_txs": [
+    {
+     "tx": "0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4",
+     "eth": 81.30725100000001,
+     "block": 17756778,
+     "time_utc": "2023-07-23T15:42:59Z",
+     "note": "bot contract withdrawTo(conicfinance.eth, 81.307251 ETH)"
+    }
+   ],
+   "public_statement": "on-chain messages (4 txs) between conicfinance.eth and the Yoink EOA, saved under site/raw/rpc-conic/",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "full cache only (not published)",
+   "bot.position": "full cache only (not published)",
+   "attacker_block": "full cache only (not published)",
+   "loot.gross_loot_eth": [
+    "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+    "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json",
+    "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json",
+    "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json",
+    "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json",
+    "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json",
+    "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json",
+    "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json",
+    "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json",
+    "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+    "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json",
+    "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json",
+    "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json",
+    "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json",
+    "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json",
+    "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json",
+    "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json",
+    "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json",
+    "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_17743471.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "incidents/conic-2023/race_17743471.json",
+    "incidents/conic-2023/race_17743472.json",
+    "incidents/conic-2023/race_17743476.json",
+    "incidents/conic-2023/race_17743480.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+    "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json",
+    "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json",
+    "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json",
+    "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json",
+    "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json",
+    "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json",
+    "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json",
+    "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json",
+    "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.returned_by_bot_eth": "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json",
+   "fate.returned_total_eth": "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json",
+   "fate.bounty_kept_eth": [
+    "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json",
+    "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+    "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json",
+    "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json",
+    "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json",
+    "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json",
+    "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json",
+    "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json",
+    "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json",
+    "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json",
+    "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json",
+    "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+    "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json",
+    "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json",
+    "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json",
+    "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json",
+    "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json",
+    "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json",
+    "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json",
+    "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json",
+    "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json"
+   ],
+   "attacker_call_diff": "incidents/conic-2023/victim_call_diff_crvusd.json",
+   "yoink_ten_txs": "incidents/conic-2023/yoink_10txs.json",
+   "yoink_message_tx": "site/raw/rpc-conic/conic_tx_0xaf1535ea5bee7ccbc048eafd1fe0771c31cde51d065e6abc2c4aa2c1f9d264ff.json",
+   "conic_messages": [
+    "site/raw/rpc-conic/conic_tx_0x6382dad8f1f08c90aa74a01bae2ec414161821b276f8955cb8dddc68856c03ce.json",
+    "site/raw/rpc-conic/conic_tx_0x9074a68818751bcfe88c22f483784bf686481ee8b7b3f81e00b03d36628a4b47.json",
+    "site/raw/rpc-conic/conic_tx_0xd9f718386aa359cd5f2d15619a3a536eb3d17eb10c0cac78106440b3d4c92ce5.json"
+   ],
+   "other_copiers_scan": "full cache only (not published)",
+   "attacker_funding_and_internal": "site/raw/etherscan/conic_conic02_attacker_txlistinternal.json",
+   "attacker_txlist": "site/raw/etherscan/conic_conic02_attacker_txlist.json",
+   "dhl_poc": "site/raw/web-conic/dhl_conic02.txt",
+   "press": [
+    "site/raw/web-conic/rekt.html",
+    "site/raw/web-conic/dlnews.html",
+    "site/raw/web-conic/certik.html"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.captured_usd",
+    "why": "no saved ETH price for 2023-07-21; not converted"
+   },
+   {
+    "field": "loot.builder_refund_to_bot_eth",
+    "why": "checked in 4 of the 10 blocks (race files); 17743473-75, -77-79 not scanned for builder->bot transfers"
+   }
+  ],
+  "discrepancies": [
+   "literature sweep candidates.json called this 'captured value from the attacker's imbalance (not a copy)': the call-by-call diff (victim_call_diff_crvusd.json) shows a replay of the attacker's exploit, but after, not before, the attacker landed.",
+   "DeFiHackLabs dates Conic02 2023-07-22; the tx is 2023-07-21T19:01:35Z.",
+   "Loss figures conflict: DeFiHackLabs ~$934K, CertiK/Rekt ~$300K. On chain the profit-taking txs sum to 13.58 ETH (attacker) + 125.82 ETH (Yoink gross)."
+  ],
+  "evidence_notes": [
+   "Victim-call diff, attacker tx 0x37acd17a vs Yoink tx 0x64910b0a: 8/8 Conic pool calls, 2/2 crvUSD controller calls, 11/11 crvUSD-USDC swaps, 10/10 crvUSD-USDT swaps, 1/1 tricrypto exit have the same target+selector in order; identical calldata for 2/2 controller calls, 5/11 and 5/10 Curve swaps (the round-number ones), 1/8 Conic calls (first 47M crvUSD deposit); the rest are balance-derived and differ by ~0.1%.",
+   "Balancer flash loan tokens/amounts identical (12,000,000 USDC, 80,000 WETH, 9,000,000 USDT); recipient and userData differ.",
+   "Yoink's ten txs fill ~21.2M gas each (70% of the block) and push the base fee from 35.6 to 103.5 gwei; Yoink stops after 17743480 (reason unknown).",
+   "The attacker's own retries: 17743492 (idx 2) reverted, redeployed at 17743514, 17743521 reverted, 17743531 succeeded for 2.018 ETH; we do not claim Yoink caused the reverts (they are nested out-of-gas).",
+   "No other address replayed the pattern: Etherscan getLogs on the pool (17743300-17743700) shows 12 multi-event txs = attacker 2 + Yoink 10."
+  ],
+  "incident_dir": "incidents/conic-2023"
+ },
+ {
+  "slug": "conic-2023",
+  "sub": "eth-pool",
+  "name": "Conic Finance ETH omnipool (read-only reentrancy) - an anonymous clone redeploys the first attacker's contract after its attempt reverted and takes 1,724 ETH",
+  "date_utc": "2023-07-21T10:35:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The first attacker's attack tx (0x97a8315e, block 17740901 idx 4) reverted out of gas. 51 blocks later a different EOA deployed a clone of his contract (creation code identical except one 20-byte beneficiary address) and sent identical calldata, succeeding at idx 0 of 17740955. The original had nothing pending (two txs ever); the clone came after the failure, not before the attack.",
+  "one_liner": "ETH omnipool: the first attacker's tx reverted (out of gas, block 17740901). 51 blocks later an unknown EOA redeployed a 1-address-diff clone of his contract, sent identical calldata and took 1,724 ETH at idx 0 of 17740955. Not returned.",
+  "attacker": {
+   "eoa": "0x10db234e02c3889d8e408c7084e8ce10892bdad7",
+   "eoas": [
+    "0x10db234e02c3889d8e408c7084e8ce10892bdad7"
+   ],
+   "contracts": [
+    "0xdac434f8011e9588f39fa43c3f7cdbbcb3e5cd1f"
+   ],
+   "funding": "Tornado Cash 1 ETH pool",
+   "funding_tx": "0x3334b58cc940fdf77d8cd2027b0869118230bf74bbbdacdb9bdc81af9ededa28",
+   "deploy_tx": "0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74",
+   "deploy_block": 17740893,
+   "attack_txs": [
+    {
+     "hash": "0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16",
+     "block": 17740901,
+     "index": 4,
+     "status": "reverted",
+     "role": "attack 0x52558bb0; out of gas inside a nested Curve call; 27.64M gas limit"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "anon clone exploiter (not a known bot)",
+   "eoa": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
+   "contract": "0x743599ba5cfa3ce8c59691af5ef279aaafa2e4eb",
+   "tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+   "block": 17740955,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 3.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only (2023-07-21, before the archive). Whether the clone's operator saw the failed tx pending, mined, or the deployed contract is unknown; the 51-block gap (~10 min) fits a human or slow pipeline, not a reflex bot.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen. The trigger is the first attacker's contract (deployed 2023-07-21T10:22:47Z, block 17740893) and its reverted attack tx (10:24:23Z, block 17740901)."
+  },
+  "attacker_block": 17740901,
+  "attacker_block_note": "First attacker's attack tx 0x97a8315e at block 17740901 idx 4 (reverted); the clone's attack is 54 blocks later at 17740955 idx 0.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17740901,
+   "tx": "0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16"
+  },
+  "auction": {
+   "block": 17740955,
+   "slot": 6925974,
+   "slot_start_utc_ms": 1689935711000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 273,
+   "n_builders": 36,
+   "bids_per_relay": {
+    "flashbots": 273
+   },
+   "first_bid_ms_rel_slot": -10037,
+   "last_bid_ms_rel_slot": 1385,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": [],
+   "winning_first_submission_ms_rel_slot": 231,
+   "winning_last_submission_ms_rel_slot": 231,
+   "runner_up_eth": 0.12403676903321259,
+   "runner_up_builder": "rsync-builder.xyz",
+   "runner_up_ms_rel_slot": 81,
+   "runner_up_other_builder_eth": 0.12403676903321259,
+   "runner_up_other_builder": "rsync-builder.xyz",
+   "runner_up_other_builder_ms_rel_slot": 81,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.1296234934475187,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10037,
+     0.00340160583210643
+    ],
+    [
+     -9740,
+     0.00376684587480343
+    ],
+    [
+     -9708,
+     0.007390903835569016
+    ],
+    [
+     -9496,
+     0.007694151050412784
+    ],
+    [
+     -9403,
+     0.008177970510736087
+    ],
+    [
+     -9202,
+     0.008210128215263013
+    ],
+    [
+     -9024,
+     0.008304372710736085
+    ],
+    [
+     -8910,
+     0.00900357293010678
+    ],
+    [
+     -8688,
+     0.009625843831245012
+    ],
+    [
+     -8511,
+     0.01002009751848031
+    ],
+    [
+     -8393,
+     0.01051446361848031
+    ],
+    [
+     -8023,
+     0.01083649340486631
+    ],
+    [
+     -7888,
+     0.01126988732084831
+    ],
+    [
+     -7483,
+     0.01148172287423575
+    ],
+    [
+     -7394,
+     0.011584334812595666
+    ],
+    [
+     -7002,
+     0.011610762339678666
+    ],
+    [
+     -6865,
+     0.011760236339678666
+    ],
+    [
+     -6713,
+     0.012958321678305663
+    ],
+    [
+     -5694,
+     0.013186619285578356
+    ],
+    [
+     -5436,
+     0.013187507096610053
+    ],
+    [
+     -5367,
+     0.013354507096610051
+    ],
+    [
+     -5216,
+     0.01438708790158338
+    ],
+    [
+     -4845,
+     0.015042542134662728
+    ],
+    [
+     -4701,
+     0.015086895523631032
+    ],
+    [
+     -4494,
+     0.015612438434662729
+    ],
+    [
+     -4330,
+     0.01565443843466273
+    ],
+    [
+     -4199,
+     0.01660612620318855
+    ],
+    [
+     -4167,
+     0.02214457690158338
+    ],
+    [
+     -3964,
+     0.02474832681397337
+    ],
+    [
+     -3794,
+     0.06707649584175403
+    ],
+    [
+     -3753,
+     0.0678619631833189
+    ],
+    [
+     -3609,
+     0.06790491905866286
+    ],
+    [
+     -3350,
+     0.0679572661033189
+    ],
+    [
+     -3282,
+     0.06797461967866286
+    ],
+    [
+     -3027,
+     0.0714775781233189
+    ],
+    [
+     -2678,
+     0.07723450467003029
+    ],
+    [
+     -2644,
+     0.07898598389235834
+    ],
+    [
+     -2517,
+     0.07914013647881685
+    ],
+    [
+     -2364,
+     0.07929549980794985
+    ],
+    [
+     -2289,
+     0.08124897949225769
+    ],
+    [
+     -2123,
+     0.09071898942268648
+    ],
+    [
+     -1959,
+     0.09087281856268647
+    ],
+    [
+     -1925,
+     0.09120179445107508
+    ],
+    [
+     -1737,
+     0.10011976960532133
+    ],
+    [
+     -1491,
+     0.10109827727033412
+    ],
+    [
+     -1401,
+     0.1077997389872941
+    ],
+    [
+     -939,
+     0.10949910416090552
+    ],
+    [
+     -867,
+     0.1131897259366588
+    ],
+    [
+     -715,
+     0.11720705497407918
+    ],
+    [
+     -548,
+     0.11758562908504876
+    ],
+    [
+     -442,
+     0.12022064099986388
+    ],
+    [
+     -237,
+     0.12036007289830641
+    ],
+    [
+     43,
+     0.12334738705196635
+    ],
+    [
+     81,
+     0.12403676903321259
+    ],
+    [
+     231,
+     0.1245913702332126
+    ],
+    [
+     416,
+     0.12602104690054433
+    ],
+    [
+     503,
+     0.12621833005421187
+    ],
+    [
+     564,
+     0.12722755487506787
+    ],
+    [
+     738,
+     0.12785237924320536
+    ],
+    [
+     1165,
+     0.1296234934475187
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/conic-2023/race_17740955.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block17740955.json"
+   }
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 1724.175115775667,
+   "gross_loot_method": "ETH sent by the clone contract to its EOA in the attack tx (Etherscan internal list; the contract received 22,059.86 + 1,798.53 + 1,701.46 ETH of flash-loaned/withdrawn WETH and repaid the loans)",
+   "captured_native": {
+    "amount": 1724.175115775667,
+    "unit": "ETH",
+    "desc": "net ETH extracted from the Conic ETH omnipool via read-only reentrancy"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.060423174,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 1723.726595625,
+   "loot_note": "bot_net = gross 1724.175116 - attack-tx gas 0.448520 ETH (20.14M gas x 22.27 gwei, of which 0.0604 ETH tip) = 1723.726596 ETH; deployment gas (3.0 gwei tip, block 17740952) not subtracted. No coinbase transfer."
+  },
+  "fate": {
+   "return_status": "none",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 0.0,
+   "returned_to": null,
+   "returned_desc": "Not returned. 1,726.59 ETH was forwarded to 0x3d32c5a2 four minutes later (block 17740980) and, on 2023-07-31 (blocks 17812383-17812515), 300+300+400+400+327 ETH went on to 0x160b431b... (destination not attributed by us). Conic sent on-chain messages on 2023-07-22, 07-23 (offer of a 10% white-hat deal, citing Yoink's return) and 2023-08-08 (10% bounty for identifying information); no reply seen.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "no bounty agreement",
+   "kept_by_bot_eth": 1723.726595625,
+   "returned_txs": [],
+   "public_statement": "Conic on-chain messages only (site/raw/etherscan/conic_ethattacker_after_txlist.json, conic_3d32_txlist.json)",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "full cache only (not published)",
+   "bot.position": "full cache only (not published)",
+   "attacker_block": "full cache only (not published)",
+   "loot.gross_loot_eth": [
+    "site/raw/etherscan/conic_ethattacker_hist_txlistinternal.json",
+    "site/raw/rpc-conic/trace_0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146.json"
+   ],
+   "loot.coinbase_paid_eth": "site/raw/rpc-conic/trace_0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146.json",
+   "loot.priority_fee_paid_eth": "full cache only (not published)",
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_17740955.json",
+    "incidents/conic-2023/race_17740955.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/etherscan/conic_ethattacker_hist_txlistinternal.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/conic_ethattacker_hist_txlistinternal.json",
+    "site/raw/etherscan/conic_ethattacker_after_txlist.json"
+   ],
+   "calldata_and_bytecode_diff": "incidents/conic-2023/victim_call_diff_eth.json",
+   "original_attack_trace": "site/raw/rpc-conic/trace_0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16.json",
+   "clone_attack_trace": "site/raw/rpc-conic/trace_0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146.json",
+   "creation_txs": [
+    "site/raw/rpc-conic/conic_tx_0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74.json",
+    "full cache only (not published)"
+   ],
+   "eth_pool_multi_event_scan": "full cache only (not published)",
+   "conic_messages_to_loot_address": [
+    "site/raw/etherscan/conic_ethattacker_after_txlist.json",
+    "site/raw/etherscan/conic_3d32_txlist.json"
+   ],
+   "press": [
+    "site/raw/web-conic/rekt.html",
+    "site/raw/web-conic/certik.html",
+    "site/raw/web-conic/dlnews.html"
+   ],
+   "dhl_poc": "site/raw/web-conic/dhl_conic.txt"
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.captured_usd",
+    "why": "no saved ETH price for 2023-07-21; not converted"
+   }
+  ],
+  "discrepancies": [
+   "CertiK and DeFiHackLabs name 0x8d67db0b as 'the attacker'; Rekt (with the failed tx 0x97a8315e) identifies 0x10db234e as the original and 0x8d67db0b as a front-runner. On chain Rekt is right on identity; but it is a post-failure clone, not a front-run of a pending tx.",
+   "Funding-link caveat: both EOAs were Tornado-funded; a same-operator second wallet is not excluded (why a clone with a new beneficiary instead of re-calling the first contract with more gas argues for a different operator)."
+  ],
+  "evidence_notes": [
+   "Creation code of the two attack contracts: 21970 bytes each, 20 bytes differ (one address at offset 1370: 0x10db234e... -> 0x8d67db0b...).",
+   "Attack calldata byte-identical: selector 0x52558bb0, args 19700, 240, 3000, 180.",
+   "Trace diff: 6265 vs 6362 frames, type/target/selector sequence similarity 0.9917; first 242 frames fully identical; the clone has 101 extra frames (the tail the original never reached).",
+   "Original: gas limit 27.64M, 24.05M burned, OOG in a nested call to a Curve pool; clone: gas limit 29.5M, 20.14M used. The cause is inferred from the trace; no fork replay was run.",
+   "Etherscan getLogs on the ETH pool for 17740000-17743500: only the clone tx emits the multi-event pattern."
+  ],
+  "incident_dir": "incidents/conic-2023"
+ }
+]

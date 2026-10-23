@@ -1,0 +1,147 @@
+[
+ {
+  "t_utc_ms": 1662562753000,
+  "block": 15490950,
+  "kind": "deploy",
+  "actor": "Yoink",
+  "detail": "deploys gen0 contract 0x6c6b87d4 (2022-09-07T14:59:13Z)",
+  "tx": "0x400589c8e84345645558860a7f8723c92a61182eb136de36dbb831d013bdbc2f",
+  "raw_ref": "site/raw/etherscan/creation_0x6c6b87d4.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15652112,
+  "kind": "fund",
+  "actor": "attacker 0x5f0b31aa",
+  "detail": "receives 2.0167 ETH from 0x8d056d45 (2022-10-01 08:27Z); origin not traced",
+  "tx": "0xf749e50e2b41c4aeac1ae70ecadc14bec1800a8598d5c339300148cfe501900f",
+  "raw_ref": "site/raw/etherscan/ts_att2_txlist.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15655094,
+  "kind": "deploy",
+  "actor": "attacker 0x5f0b31aa",
+  "detail": "deploys attack contract 0x17ff6c94 (2022-10-01T18:28:59Z, idx 124)",
+  "tx": "0x36b71a0f6a7ea0286befb20621191e22b750aebc8702af17e5bfb5af92e1a628",
+  "raw_ref": "site/raw/rpc/block_15655094.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15655118,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "first exploit tx, idx 79, 14.4 gwei (2022-10-01T18:33:47Z); 8 successful exploit txs follow until block 15655247",
+  "tx": "0xba75ad7a43e784f51fe777d749fc55ae10f1df2bcb01cde97641613b19acb6ec",
+  "raw_ref": "site/raw/rpc/trace_0xba75ad7a43e784f51fe777d749fc55ae10f1df2bcb01cde97641613b19acb6ec.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15655184,
+  "kind": "tx",
+  "actor": "exploiter 0x75f2aba6",
+  "detail": "swaps stolen tokens via Uniswap router: +4,619.86 ETH; second swap at block 15655265 +563.86 ETH",
+  "raw_ref": "site/raw/etherscan/ts_att_eth_txlistinternal.json"
+ },
+ {
+  "t_utc_ms": 1664651195000,
+  "block": 15655281,
+  "kind": "block",
+  "actor": "slot clock",
+  "detail": "slot 4818931 starts 2022-10-01T19:06:35Z; in-block evidence only: no mempool archive, no relay bids (vanilla block); fee recipient 0x4675c7e5",
+  "raw_ref": "site/raw/rpc/block_15655281.json"
+ },
+ {
+  "t_utc_ms": 1664651195000,
+  "block": 15655281,
+  "kind": "tx",
+  "actor": "Yoink EOA 0xfde0d157",
+  "detail": "idx 24, tip 3.000000002 gwei: 21 router calls, 5,974.5 UNI -> 29.3065 WETH",
+  "tx": "0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c",
+  "raw_ref": "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json"
+ },
+ {
+  "t_utc_ms": 1664651195000,
+  "block": 15655281,
+  "kind": "tx",
+  "actor": "attacker 0x5f0b31aa",
+  "detail": "idx 43, tip 3.0 gwei, REVERTED (same 21 victims already drained)",
+  "tx": "0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342",
+  "raw_ref": "site/raw/rpc/trace_0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342.json",
+  "raw_refs": [
+   "site/raw/rpc/tx_0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1664651507000,
+  "block": 15655307,
+  "kind": "tx",
+  "actor": "Yoink EOA",
+  "detail": "follow-up sweep: idx 0, tip 0, 0.714 ETH to builder 0xdafea492; 0.869 WETH in",
+  "tx": "0xb7882cc1b71614cb106e15f3baea072ada9ccb4183a9ee1ea3897585e994ed6a",
+  "raw_ref": "site/raw/rpc/trace_0xb7882cc1b71614cb106e15f3baea072ada9ccb4183a9ee1ea3897585e994ed6a.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15658229,
+  "kind": "return",
+  "actor": "attacker 0x75f2aba6",
+  "detail": "sends 3,180 ETH to Transit deployer 0xfab745c5, which forwards it to 0xd989f7b4 at block 15658818",
+  "tx": "0x2e9d1f3ef02f1e3dc944b62976427a83f85ad280a42e6eb5b37bb366f6c017d8",
+  "raw_ref": "site/raw/rpc/trace_0x2e9d1f3ef02f1e3dc944b62976427a83f85ad280a42e6eb5b37bb366f6c017d8.json"
+ },
+ {
+  "t_utc_ms": 1664896391000,
+  "block": 15675586,
+  "kind": "message",
+  "actor": "Transit 0xd989f7b4",
+  "detail": "message to Yoink contract: SlowMist tweet link (2022-10-04T15:13Z)",
+  "tx": "0x375c7ab98db737ca3ce72b4d08f5c9496186bcdc63b32ce9faa90d4d8ac9d454",
+  "raw_ref": "site/raw/etherscan/d989_txlist_all.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15690046,
+  "kind": "message",
+  "actor": "Transit 0xd989f7b4",
+  "detail": "asks the contract to contact them re bounty/refund (2022-10-06T15:47Z)",
+  "tx": "0xc03c3d3606993c81a53ce624ed1fc6ea4b905d1c115cef45ed7da3e3c55ef0f9",
+  "raw_ref": "site/raw/etherscan/d989_txlist_all.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15694529,
+  "kind": "message",
+  "actor": "Transit 0xd989f7b4",
+  "detail": "same request to the Yoink EOA (2022-10-07T06:47Z)",
+  "tx": "0x387ff75c106b0ba57bee8d6f9d5a3b61f2b55db938ebe753651be5014bc99cd5",
+  "raw_ref": "site/raw/etherscan/d989_txlist_all.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15807716,
+  "kind": "message",
+  "actor": "Yoink EOA",
+  "detail": "2022-10-23T02:06:59Z: 'My bot frontran the real attacker. How about I return 90% of the profits (26.505 Eth) and keep 10% as a bounty?'",
+  "tx": "0x57a98ef275569be4727b2e4109e90aa083a875e2f56983275522a1b74d8130d5",
+  "raw_ref": "site/raw/etherscan/d989_txlist_all.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 17313155,
+  "kind": "message",
+  "actor": "Transit 0xd989f7b4",
+  "detail": "2023-05-22T06:48Z: accepts the 90/10 split, gives 0xD989.. as the return address",
+  "tx": "0x3edd298ae34b4dbe5bde5f7f5115d10290cf2006cdcb63c6b626cc9529d21857",
+  "raw_ref": "site/raw/etherscan/d989_msg_17313155.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 18077979,
+  "kind": "return",
+  "actor": "Yoink EOA",
+  "detail": "2023-09-06T14:24:35Z: sends 26.505 ETH to 0xd989f7b4",
+  "tx": "0x074acda86089731f37e42abda7f970c606509419e557f31d9c8f793dd9981b2d",
+  "raw_ref": "site/raw/etherscan/d989_txlist_all.json"
+ }
+]

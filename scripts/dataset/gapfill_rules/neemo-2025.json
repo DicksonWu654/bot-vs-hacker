@@ -1,0 +1,11 @@
+[
+ {
+  "slug": "neemo-2025",
+  "sub": null,
+  "verdict": "confirmed-onchain",
+  "race_type": "deploy-window-copy",
+  "why": "A key thief's proxy upgrade (tx 0xcd4a637d, block 22855568 idx 130) installed an implementation with an unprotected drain function 0x03b79c24(address). An anonymous bot (EOA 0xb750e316, executor 0x1a61249f; not c0ffeebabe or Yoink) called it in the next block at position 0 (tx 0xa57ec56a, block 22855569, 150 gwei priority fee vs 20 gwei next highest), took 106.93 weETH = 114.534 ETH, and the thief never called the function (trace_filter of all calls to the proxy, blocks 22855560-22862000, plus the Etherscan list to 2026-10-21). A local-fork replay of the thief's own 03b79c24 call matches the bot's victim-side call sequence (6 calls, only the recipient argument differs). The bot paid 0.0207 ETH gas, no coinbase transfer, no builder refund, and returned 91.634 ETH (80.0%) to Neemo on 2025-07-14 after the project's on-chain 20% bounty offer. Neither the upgrade nor the bot tx is in mempool-dumpster (private flow or missed), so the bot's reaction time is unmeasured.",
+  "strength": ["medium", "On-chain: upgrade and bot ordering (one block), implementation diff (old + 3 selectors), identical victim-side calls in a local-fork replay of the thief's call, no thief call to the drain function ever, return txs and messages. Not shown: any thief drain tx (pending, private or reverted) that the bot actually pre-empted; the claim that the thief meant to call it rests on the function being theirs plus Defimon/Neemo wording (post-mortem returned 403). In-block evidence only for discovery timing."],
+  "headline_note": "Counts as deploy-window-copy because the bot used the thief's own on-chain setup (the malicious implementation) before the thief's call, but no thief drain tx exists to race against: the thief's later calls were other selectors. Treat as headline with this caveat, or demote if the project wants a hard 'pending attacker tx' proof."
+ }
+]

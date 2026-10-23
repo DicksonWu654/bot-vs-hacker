@@ -1,0 +1,98 @@
+[
+ {
+  "t_utc": "2022-04-30T07:35:50Z",
+  "block": 14684286,
+  "kind": "fund",
+  "actor": "attacker",
+  "detail": "Tornado Cash 100 ETH withdrawal funds attacker EOA",
+  "tx": "0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db",
+  "raw_ref": "site/raw/rpc/tx_0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db.json"
+ },
+ {
+  "t_utc": "2022-04-30T07:38:34Z",
+  "block": 14684300,
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "deploy attack contract 0x7336...",
+  "tx": "0x494b578bce7572e4fb8b1357ddf12754a28eec3439a62f6b14432dacda9cbb76",
+  "raw_ref": "site/raw/etherscan/saddle_attacker_txlist.json"
+ },
+ {
+  "t_utc": "2022-04-30T07:40:24Z",
+  "block": 14684307,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "attack 1: 9 metapool swaps, 3375.67 WETH out",
+  "tx": "0x2b023d65485c4bb68d781960c2196588d03b871dc9eb1c054f596b7ca6f7da56",
+  "raw_ref": "site/raw/rpc/receipts_14684307.json"
+ },
+ {
+  "t_utc": "2022-04-30T08:03:26Z",
+  "block": 14684421,
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "deploy attack contract 2 (0xcc96...)",
+  "tx": "0xa2c41910680b72e5ea236304b89cf5af9630a6f440649f50653235f10bf17492",
+  "raw_ref": "site/raw/etherscan/saddle_attacker_txlist.json"
+ },
+ {
+  "t_utc": "2022-04-30T08:04:30Z",
+  "block": 14684432,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "attack 2 reverts (out of gas on final WETH transfer); pool still holds ~1356.7 WETH worth",
+  "tx": "0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3",
+  "raw_ref": "site/raw/rpc/tx_0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3.json",
+  "raw_refs": [
+   "site/raw/rpc/trace_block_14684432.json"
+  ]
+ },
+ {
+  "t_utc": "2022-04-30T08:04:55Z",
+  "block": 14684434,
+  "kind": "deploy",
+  "actor": "BlockSec rescue",
+  "detail": "index 0: rescue contract 0x0462... deployed (near-clone of attack contract 2)",
+  "tx": "0xf1bc1ab21d717af71801633716f6866330333f5c091b1ed63eddf78325d433ee",
+  "raw_ref": "site/raw/etherscan/saddle_rescue_txlist.json"
+ },
+ {
+  "t_utc": "2022-04-30T08:04:55Z",
+  "block": 14684434,
+  "kind": "tx",
+  "actor": "BlockSec rescue",
+  "detail": "index 1: rescue call, same 403-frame tree and same swap amounts as attack 2, 1356.73 WETH to whitehat account; 202.5 gwei",
+  "tx": "0x9549c0cb48ec5a5a2c4703cbbbbea5638028b2d8c8adc103220ef1c7fe5e99a3",
+  "raw_ref": "site/raw/etherscan/saddle_rescue_tokentx.json"
+ },
+ {
+  "t_utc": "2022-04-30T08:23:03Z",
+  "block": 14684510,
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "deploy attack contract 3 (0x7974...)",
+  "tx": "0x56cf6d3f402e521e3d8c369e4cc249a64c20b14eea47501ec82261f15e4a1475",
+  "raw_ref": "site/raw/etherscan/saddle_attacker_txlist.json"
+ },
+ {
+  "t_utc": "2022-04-30T08:24:23Z",
+  "block": 14684518,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "attack 3 succeeds with re-sized amounts, 557.09 WETH",
+  "tx": "0xe7e0474793aad11875c131ebd7582c8b73499dd3c5a473b59e6762d4e373d7b8",
+  "raw_ref": "site/raw/rpc/receipts_14684518.json"
+ },
+ {
+  "t_utc": "2022-04-30T14:42:29Z",
+  "block": 14686088,
+  "kind": "return",
+  "actor": "BlockSec rescue",
+  "detail": "1356.7335721 WETH sent to 0xd186540f...",
+  "tx": "0x22efe4743cdbd6650e745e3e6ef4f611aa316e81b5b88d5413b0cd19205ab060",
+  "raw_ref": "site/raw/etherscan/saddle_rescue_tokentx.json"
+ },
+ {
+  "note": "in-block evidence only: no mempool archive or Flashbots bundle data exists for 2022-04-30; the time between A2 revert and rescue is 25 s block-timestamp spacing, which is also an upper bound on any reaction time."
+ }
+]

@@ -1,0 +1,10 @@
+DeFi Plaza, 2024-07-05 - verdict: confirmed-onchain (front-run of a still-pending attacker tx)
+
+The real attacker is EOA 0x14b362d2... (Tornado-funded in Feb 2024, a serial exploit hunter). At 13:15:29.185 UTC all four mempool-dumpster sources saw it broadcast a pair: a contract deployment (tx 0x8f029510..., nonce 12) and run() on the new contract (tx 0xe00b0998..., nonce 13), 5.8 s before slot 9446776. Yoink's builder ("I can haz block?") put a first 14-tx block on the Flashbots relay 3.013 s later (6.98 ETH), climbed 18.60 -> 62.48 -> 62.5409 ETH and won; the block (20240539) has Yoink's tx 0xa245deda... at position 0 and the attacker's deploy at position 3. The attacker's run() was not in the block; it landed in 20240540 at position 27 and reverted. Yoink's own tx never appears in the public mempool.
+
+Replay: on a local anvil fork of block 20240538, the attacker's own deploy + run() drain the pool (4.55 ETH and 15 tokens, about $217K). The 25 state-changing calls it makes into DeFi Plaza match Yoink's 25 calls byte for byte (same selectors, calldata, ETH values); only msg.sender differs. Yoink funds the same calls with a Balancer plus Aave flash loan.
+
+Three facts:
+1. Yoink paid a fixed 66.318 ETH bribe; its builder passed 62.5409 ETH to the Lido Execution Layer Rewards Vault and refunded 4.761 ETH to the bot. It beat the best rival builder bid (62.4928 ETH) by 0.048 ETH.
+2. A byte-identical deployment from a second EOA (0x907f8529...) was seen 1.2 s before the attacker's own; relationship unproven.
+3. No ETH return is visible on chain. After DeFi Plaza's on-chain message (19:00:23), the vault returned DAI, USDC, DFP2 and eXRD (about $23K); about 13.4 ETH from sold USDT/WBTC/USDC stayed.

@@ -1,0 +1,8 @@
+# Python 3.10 or newer (developed on 3.12).
+# The collection, reconstruction and dataset scripts use only the standard library, except:
+# scripts/mempool.py looks up cited transactions in the Flashbots mempool-dumpster day files with duckdb
+duckdb>=1.0
+# scripts/export_paper.py renders paper/paper.md to site/paper.html
+markdown>=3.5
+# Optional command-line tools: Foundry (cast, anvil) for the local replays in scripts/bot_re and incidents/*/scripts,
+# heimdall and evmole for the bytecode notes in research/bot-re.

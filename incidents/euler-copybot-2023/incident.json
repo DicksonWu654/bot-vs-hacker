@@ -1,0 +1,404 @@
+{
+ "slug": "euler-copybot-2023",
+ "name": "Euler Finance: copied exploit contract executes the DAI-market exploit first, proceeds routed to the hacker by a hard-coded destination",
+ "date": "2023-03-13",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "Sub-type: copy-of-contract front-run that captured nothing (the copier's own contract paid the hacker). (1) Real attacker = EOA 0xB2698C2D99aD2C302a95A8Db26B08d17A77CEdd4 (funded by Tornado Cash 1 ETH pool) which deployed exploit contract 0x036cec1a... in block 16817993 idx 35 (tx 0x50dc9c91..., 3 gwei tip). (2) One block later (16817994 idx 5, tx 0x725db76c...) a different EOA 0x5F259D0b... deployed a contract whose creation calldata is BYTE-IDENTICAL to the attacker's (17,115 bytes) except 4 occurrences of the 20-byte address 0xB2698C2D... replaced by 0x5F259D0b... (80 differing bytes; incidents/euler-copybot-2023/bytecode_diff.json); the hard-coded 0xb66cd966... (profit/withdraw destination) was left untouched. (3) In block 16817996 idx 0 (tx 0xc310a0af..., 37.9 gwei tip, top of block by gas price) the copier called the DAI-market entry point (0x863df8af) of its copy: Aave flash loan 30M DAI -> Euler exploit -> 38,904,507.35 DAI out of Euler, 30,027,000 DAI repaid, 8,877,507.35 DAI net left in the copy. The hacker never called that entry point on its own contract; its own first attack call (WETH market, tx 0xa476fad7, block 16818013 idx 44) came 17 blocks (~3.5 min) later and failed out-of-gas, first success 0x47ac3527 at 16818024. So the copy beat the hacker to the first exploit tx by 17 blocks and to the DAI market entirely. It captured $0 for the copier: the DAI sat in the copy until the copier itself called withdraw() (0x3ccfd60b) in block 16818823 (tx 0xdae809e4, 11:38:11Z), which sent all 8,877,507.35 DAI to the hard-coded 0xb66cd966... (hacker's cash-out wallet; same wallet received the hacker's own loot from contract 0x036cec1a). Calls to the copy's withdraw/entry points by other addresses all reverted. Caveats: the copier's claim to be an MEV bot rests on its on-chain message (tx 0x44b559c8..., block 16818973); on-chain it is a fresh single-purpose EOA (nonce 0 at the copy, funded 4.22 ETH on 2023-02-12, no prior MEV history). Whether it saw the hacker's deploy tx in the mempool or only after block 16817993 (12 s earlier) is unknowable: in-block evidence only. It is not a calldata replay of a pending attacker call tx; it is a copy of the attacker's deployment plus an adapted call.",
+ "era": "2022-23 post-Merge, MEV-boost (Flashbots relay bids available; no mempool archive: in-block evidence only)",
+ "protocol_loss_usd": 197000000,
+ "protocol_loss_note": "~$197M total (PeckShield/Euler, from research/candidates, not re-verified); the DAI market part drained by the copier's call = 8,877,507.35 DAI (~$8.88M), which ended at the hacker's wallet",
+ "victim": {
+  "protocol": "Euler Finance",
+  "contract": "0x27182842e098f60e3d576794a5bffb0777e025d3",
+  "eDAI": "0xe025e3ca2be02316033184551d4d3aa22024d9dc",
+  "flash_loan_source": "Aave V2 aDAI 0x028171bca77440897b824ca71d1c56cac55b68a3 via LendingPool 0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9"
+ },
+ "attacker": {
+  "eoas": [
+   "0xb2698c2d99ad2c302a95a8db26b08d17a77cedd4 (deployer/caller of the hacker's contract)",
+   "0xb66cd966670d962c227b3eaba30a872dbfb995db (hard-coded profit/cash-out destination in both contracts; sent no txs before block 16818504)"
+  ],
+  "contracts": [
+   "0x036cec1a199234fc02f72d29e596a09440825f1c (hacker's exploit contract)"
+  ],
+  "deploy_tx": "0x50dc9c9126519a70319cc312418488145bed4e2ef6e110eb864a97f5beaeca05",
+  "deploy_block": 16817993,
+  "deploy_index": 35,
+  "deploy_time_utc": "2023-03-13T08:50:23Z",
+  "deploy_tip_gwei": 3.0,
+  "funding_tx": {
+   "tx": "0x4ec892aa820cee184b708749fbbdcf1c1d0a5b4867669bfaac3aa5713544a3fc",
+   "block": 16817962,
+   "amount_eth": "0.9681",
+   "origin": "Tornado Cash 1 ETH pool 0x47ce0c6e... via router 0xd90e2f92... (relayer EOA 0x155301c5...)"
+  },
+  "txs": [
+   {
+    "hash": "0x50dc9c9126519a70319cc312418488145bed4e2ef6e110eb864a97f5beaeca05",
+    "block": 16817993,
+    "index": 35,
+    "status": 1,
+    "note": "CREATE 0x036cec1a"
+   },
+   {
+    "hash": "0xa476fad72c8f4ee15fd2d75ecda4701d8f3ac74431aa453521f13a01c8688142",
+    "block": 16818013,
+    "index": 44,
+    "status": 0,
+    "note": "0xa91864d4(1) WETH market; OUT OF GAS in Aave delegatecall (gas limit 2,048,770, used 1,986,829); tip 3 gwei; not shown to be caused by the copier"
+   },
+   {
+    "hash": "0x47ac3527d02e6b9631c77fad1cdee7bfa77a8a7bfd4880dccbda5146ace4088f",
+    "block": 16818024,
+    "index": 20,
+    "status": 1,
+    "note": "0xa91864d4(0): Aave 20,895 WETH flash loan; +8,080.5 WETH net"
+   },
+   {
+    "hash": "0x68eb306c558d45e777c8d588e611db5323a6a5021a9f551bc0be915ef5e24691",
+    "block": 16818032,
+    "index": 25,
+    "status": 1
+   },
+   {
+    "hash": "0xe237c57ccf8664411cae71a50b1e94b21dde7a0e096f0cceaa7f432db8151366",
+    "block": 16818034,
+    "index": 29,
+    "status": 1,
+    "note": "8,080 ETH to 0xB2698"
+   },
+   {
+    "hash": "0x71a908be0bef6174bccc3d493becdfd28395d78898e355d451cb52f7bac38617",
+    "block": 16818057,
+    "index": 1,
+    "status": 1,
+    "note": "WBTC market"
+   },
+   {
+    "hash": "0x6e9bb8fa66c65dbdb23cfe1a50de1ace48593077f8609cff3ef9da19412062cc",
+    "block": 16818060,
+    "index": 43,
+    "status": 0,
+    "note": "0x840f2e95(1) reverted"
+   },
+   {
+    "hash": "0x62bd3d31a7b75c098ccf28bc4d4af8c4a191b4b9e451fab4232258079e8b18c4",
+    "block": 16818062,
+    "index": 11,
+    "status": 1,
+    "note": "stETH/wstETH"
+   },
+   {
+    "hash": "0x465a6780145f1efe3ab52f94c006065575712d2003d83d85481f3d110ed131d9",
+    "block": 16818065,
+    "index": 35,
+    "status": 1,
+    "note": "USDC market, +34,224,863.42 USDC"
+   },
+   {
+    "hash": "0x9f43b6577f513435368b4b339a24932a9b2465906bc5ac8a1b1239d7bef0f705",
+    "block": 16818068,
+    "index": 43,
+    "status": 1,
+    "note": "swap USDC->DAI 34,186,225.92 DAI"
+   },
+   {
+    "hash": "0x7fea1b4d9500d5f2eba22b9e7ff61b4eb36554cafac4f0952ddd4c39761829fe",
+    "block": 16818080,
+    "index": 29,
+    "status": 1
+   },
+   {
+    "hash": "0x3097830e9921e4063d334acb82f6a79374f76f0b1a8f857e89b89bc58df1f311",
+    "block": 16818085,
+    "index": 4,
+    "status": 1
+   },
+   {
+    "hash": "0x298bde3f9e53f7a5d870f7f5d56ee2f5e41fa25e6eb5e74611ac97025405db55",
+    "block": 16818102,
+    "index": 33,
+    "status": 1,
+    "note": "withdraw(): 34,186,225.92 DAI to 0xb66cd966"
+   }
+  ],
+  "attacker_loss": {
+   "note": "none caused: the copier's DAI-market exploit sent its proceeds to the hacker's own wallet"
+  }
+ },
+ "bots": [
+  {
+   "label": "copier EOA 0x5F259D0b (self-described MEV bot; 'Euler Finance Exploiter 3' per Etherscan label cited in literature sweep candidates, not re-checked)",
+   "eoa": "0x5f259d0b76665c337c6104145894f4d1d2758b8c",
+   "contract": "0xebc29199c817dc47ba12e3f86102564d640cbf99 (copy #1); 0xe4eb1f9ff2edf4e390fe00dcc37c024a33e68767 (copy #2, byte-identical creation code, never successfully called)",
+   "txs": [
+    "0x725db76cf4bf3bdc72be4f755ed72df4adbc8e4e803c044617cc11e34907ccdc",
+    "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+    "0x684f82f596f8d211b85893abf85a9e1d9d686bfd5c17131467f93eb782bd1d2d",
+    "0xdae809e4a1ddf77c39d44a4acfe6165bedbc19a385c4b241242cc9bd582a80b9",
+    "0x44b559c86ca8ccac5c16df507516ef19c06042a48cdbd865cb9db4c52d15ea17"
+   ],
+   "captured": {
+    "token": "DAI",
+    "amount": "0 for the copier; 8,877,507.35 DAI gross exploit proceeds were forwarded to 0xb66cd966 (hacker)",
+    "usd": 0,
+    "routed_to_hacker_usd": 8877507
+   },
+   "coinbase_paid_eth": 0,
+   "priority_fee_gwei": 37.899493496,
+   "effective_gas_price_gwei": 56.818948194,
+   "max_fee_gwei": 56.818948194,
+   "gas_cost_eth_total": 0.6091,
+   "gas_cost_breakdown_eth": {
+    "deploy1": 0.2376,
+    "attack": 0.1108,
+    "deploy2": 0.2575,
+    "withdraw": 0.0018,
+    "message": 0.0014
+   },
+   "replay_evidence": {
+    "copied_tx": "hacker's CREATE tx 0x50dc9c91... (block 16817993 idx 35), NOT an attacker call tx",
+    "creation_calldata_diff": "17,115 bytes each; 80 differing bytes = 4 x 20-byte address: 0xb2698c2d99ad2c302a95a8db26b08d17a77cedd4 -> 0x5f259d0b76665c337c6104145894f4d1d2758b8c at byte offsets 353, 1454, 7355, 15144; 0xb66cd966670d962c227b3eaba30a872dbfb995db remains in both",
+    "runtime_code": "copy #1 and copy #2 runtime code 33,334 bytes each",
+    "call_tree": "copy#1 0xc310a0af: DAI decimals x2, DAI balanceOf, Aave LendingPool.flashLoan (0xab9c4b5d, 30M DAI) -> callback 0x920f5c84 into the copy -> Euler (0x27182842) ops -> 38,904,507.35 DAI to the copy -> repay 30,027,000 DAI. Hacker's 0x47ac3527 (WETH variant, entry 0xa91864d4) has the same skeleton with WETH: decimals x2, balanceOf, flashLoan(0xab9c4b5d), callback 0x920f5c84, repay. Entry point 0x863df8af (DAI) exists in the hacker's identical bytecode but the hacker never called it.",
+    "ownership_inference": "calls to copy #1/#2 by other EOAs (0x5fb303dc x2, 0xf472e73c, 0x8cbcfa0d x3) all reverted - consistent with an owner check on the swapped constant (not proven; contract logic not otherwise analysed)",
+    "why_funds_went_to_hacker": "withdraw() 0x3ccfd60b on the copy calls 0xb66cd966 with ETH and transfers its DAI balance to 0xb66cd966 (trace of 0xdae809e4); 0xb66cd966 is baked in the creation code in both versions. The copier's own withdraw call (block 16818823) executed it ~2h47m after the exploit."
+   },
+   "notes": "Copier EOA: nonce 0 at the first deploy, received 4.2207 ETH from 0xbcaa6ce6 on 2023-02-12 (that wallet got 2.89 ETH from 0x4e5b2e1d on 2023-02-03; CertiK reports a link to a deflationary-token exploit and Tornado - not verified here). Published its message on-chain at block 16818973 (tx 0x44b559c8, self-transfer): 'I am the owner of a MEV bot that has accidentally frontrun the first tx of the hacker. It tried to frontrun the second tx but failed and only the contract has been created. I tried to return the money but the contract can only send to an address already in bytecode. Unfotunately it sent the money to the hacker's address.'"
+  }
+ ],
+ "other_racers": [
+  {
+   "tx": "0x6db06532a0ba4c14134e42316fd3a97916408fecfe821315d52c99ecec995932",
+   "from": "0xf472e73c9c509cac924135bae08d98a3882a5a49",
+   "note": "block 16818336: tried entry 0x863df8af on copy #2 -> reverted",
+   "status": 0
+  },
+  {
+   "tx": "0x5975c3b885fd9f03cac24a10aba1fef0188744233ff413fd51b0a5e70bff55f6",
+   "from": "0x5fb303dc8e6c36ad736e8e3cdc0e39f6bec2b790",
+   "note": "block 16818579: withdraw() on copy #1 by a third party -> reverted (and 0x5059ff85... entry 0x6bdebcc9, block 16818591, reverted)",
+   "status": 0
+  },
+  {
+   "tx": "0x27c8a01af0044e2a98ce8dbaa294199507301b3a34a0eb368cf24cd22c18fd31",
+   "from": "0x8cbcfa0d642c9feb55b3ff6a025fa6327b03e8ef",
+   "note": "blocks 16839858-64: three 0x63616e20 ('can ') message-style calls to copy #1, reverted",
+   "status": 0
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Euler DAI market drained to copy #1 (net of flash-loan repayment)",
+   "tx": "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+   "amount": "8,877,507.35 DAI",
+   "to": "0xebc29199c817dc47ba12e3f86102564d640cbf99"
+  },
+  {
+   "what": "copier's withdraw() forwards all DAI to the hard-coded address",
+   "tx": "0xdae809e4a1ddf77c39d44a4acfe6165bedbc19a385c4b241242cc9bd582a80b9",
+   "amount": "8,877,507.35 DAI",
+   "to": "0xb66cd966670d962c227b3eaba30a872dbfb995db"
+  },
+  {
+   "what": "builder revenue from the copier's attack tx (priority fee, no coinbase transfer)",
+   "tx": "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+   "amount": "0.07390378492023902 ETH",
+   "to": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5 (Flashbots builder)"
+  },
+  {
+   "what": "proposer payment for block 16817996",
+   "tx": "0x6d814e400564106b1d6ccb094e01eb25c546ed2578f0c1d4681f90d4fed65325",
+   "amount": "0.0942500397113145 ETH",
+   "to": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127"
+  },
+  {
+   "what": "hacker's own USDC proceeds swapped to DAI and withdrawn to the same wallet (for scale)",
+   "tx": "0x298bde3f9e53f7a5d870f7f5d56ee2f5e41fa25e6eb5e74611ac97025405db55",
+   "amount": "34,186,225.92 DAI",
+   "to": "0xb66cd966670d962c227b3eaba30a872dbfb995db"
+  }
+ ],
+ "auction": {
+  "block": 16817996,
+  "slot": 5989453,
+  "slot_start_utc": "2023-03-13T08:50:59Z",
+  "delivered_by": [
+   "flashbots"
+  ],
+  "n_bids": 342,
+  "n_builders": 46,
+  "first_bid_t_rel_slot_ms": -10430,
+  "last_bid_t_rel_slot_ms": -134,
+  "max_bid_eth": 0.09693,
+  "winning_builder": "Flashbots",
+  "winning_value_eth": 0.09425,
+  "winning_block_first_received_t_rel_slot_ms": [
+   -1014
+  ],
+  "proposer_fee_recipient": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127",
+  "block_miner": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5",
+  "raw": "incidents/euler-copybot-2023/race_16817996.json",
+  "relays_answered": {
+   "flashbots": "delivered 1, bids 342",
+   "ultrasound": "0/0 (retention)",
+   "bloxroute-regulated": "0/0",
+   "agnostic": "0/0",
+   "aestus": "0/0",
+   "titan": "0/0",
+   "ethgas": "0/0",
+   "btcs": "0/0"
+  },
+  "bid_ladder_eth": {
+   "by_-10s": 0.07879,
+   "by_-5s": 0.08807,
+   "by_-2s": 0.09312,
+   "by_-1s": 0.09425,
+   "by_0": 0.09693
+  },
+  "winning": {
+   "builder": "Flashbots (extraData 'Illuminate Dmocratize Dstribute'; miner 0xdafea492...)",
+   "builder_pubkey": "0x81beef03aafd3dd33ffd7deb337407142c80fea2690e5b3190cfc01bde5753f28982a7857c96172a75a234cb7bcb994f",
+   "value_eth": 0.0942500397113145,
+   "relay": "flashbots",
+   "block_first_received_t_rel_slot_ms": -1014,
+   "num_tx": 155,
+   "contains_bot_tx": true,
+   "bot_tx_index": 0,
+   "proposer_fee_recipient": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127",
+   "proposer_payment_tx": "0x6d814e400564106b1d6ccb094e01eb25c546ed2578f0c1d4681f90d4fed65325",
+   "proposer_payment_eth": 0.0942500397113145
+  },
+  "runner_up_note": "3 later-arriving Flashbots-builder bids were higher (0.09428 @-897ms, 0.09434 @-536ms, 0.09693 @-228ms) but the block received at -1014 ms (0.09425 ETH) was delivered; contents of losing bids unknowable.",
+  "bot_tx_share_of_winning_bid": 0.7841,
+  "bot_tip_eth": 0.07390378492023902,
+  "ordering_inference": "Bot tx idx 0 by priority fee alone: 37.9 gwei tip (effective 56.82 gwei) vs 17.5 gwei for idx 1; no coinbase transfer, so ordering = public gas-price auction (PGA), not a bundle. Hacker's deploy tx in 16817993 paid a 3 gwei tip. Mempool first-seen: none (archive starts 2023-08-07).",
+  "builder_refund_to_bot": "none seen"
+ },
+ "auction_other_blocks": {
+  "16817993_hacker_deploy": {
+   "block": 16817993,
+   "slot": 5989450,
+   "slot_start_utc": "2023-03-13T08:50:23Z",
+   "delivered_by": [
+    "flashbots"
+   ],
+   "n_bids": 572,
+   "n_builders": 49,
+   "first_bid_t_rel_slot_ms": -10191,
+   "last_bid_t_rel_slot_ms": 1068,
+   "max_bid_eth": 0.1192,
+   "winning_builder": "Flashbots",
+   "winning_value_eth": 0.11724,
+   "winning_block_first_received_t_rel_slot_ms": [
+    -352
+   ],
+   "proposer_fee_recipient": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+   "block_miner": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5",
+   "raw": "incidents/euler-copybot-2023/race_16817993.json"
+  },
+  "16817994_copier_deploy": {
+   "block": 16817994,
+   "slot": 5989451,
+   "slot_start_utc": "2023-03-13T08:50:35Z",
+   "delivered_by": [
+    "flashbots"
+   ],
+   "n_bids": 552,
+   "n_builders": 50,
+   "first_bid_t_rel_slot_ms": -10187,
+   "last_bid_t_rel_slot_ms": 772,
+   "max_bid_eth": 0.29821,
+   "winning_builder": "rsync-builder.xyz",
+   "winning_value_eth": 0.2963,
+   "winning_block_first_received_t_rel_slot_ms": [
+    -76
+   ],
+   "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+   "block_miner": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+   "raw": "incidents/euler-copybot-2023/race_16817994.json"
+  },
+  "16818013_copy2_deploy_and_hacker_failed_call": {
+   "block": 16818013,
+   "slot": 5989470,
+   "slot_start_utc": "2023-03-13T08:54:23Z",
+   "delivered_by": [
+    "flashbots"
+   ],
+   "n_bids": 513,
+   "n_builders": 51,
+   "first_bid_t_rel_slot_ms": -10689,
+   "last_bid_t_rel_slot_ms": 957,
+   "max_bid_eth": 0.27796,
+   "winning_builder": "builder0x69",
+   "winning_value_eth": 0.27785,
+   "winning_block_first_received_t_rel_slot_ms": [
+    -335
+   ],
+   "proposer_fee_recipient": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+   "block_miner": "0x690b9a9e9aa1c9db991c7721a92d351db4fac990",
+   "raw": "incidents/euler-copybot-2023/race_16818013.json"
+  },
+  "16818024_hacker_first_success": {
+   "block": 16818024,
+   "slot": 5989481,
+   "slot_start_utc": "2023-03-13T08:56:35Z",
+   "delivered_by": [
+    "flashbots"
+   ],
+   "n_bids": 557,
+   "n_builders": 48,
+   "first_bid_t_rel_slot_ms": -10634,
+   "last_bid_t_rel_slot_ms": 811,
+   "max_bid_eth": 0.04433,
+   "winning_builder": "Flashbots",
+   "winning_value_eth": 0.04345,
+   "winning_block_first_received_t_rel_slot_ms": [
+    -513
+   ],
+   "proposer_fee_recipient": "0xd4e96ef8eee8678dbff4d535e033ed1a4f7605b7",
+   "block_miner": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5",
+   "raw": "incidents/euler-copybot-2023/race_16818024.json"
+  }
+ },
+ "evidence_limits": "in-block evidence only: no mempool archive for 2023-03-13; unknown whether the copier saw the hacker's CREATE in the mempool or after block 16817993; bundle/PGA status of other txs unverified; losing-bid contents unknowable.",
+ "sources": [
+  "https://www.certik.com/resources/blog/4iSrYY6HoaYxk1aKyjFb5v-euler-finance-incident-analysis",
+  "https://eigenphi.substack.com/p/200-million-heist-unmasked-unraveling",
+  "https://etherscan.io/tx/0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+  "https://etherscan.io/tx/0x44b559c86ca8ccac5c16df507516ef19c06042a48cdbd865cb9db4c52d15ea17",
+  "https://etherscan.io/address/0x5F259D0b76665c337c6104145894F4D1D2758B8c",
+  "https://boost-relay.flashbots.net/relay/v1/data/bidtraces/builder_blocks_received?block_number=16817996"
+ ],
+ "raw_refs": {
+  "blocks": "full cache only (not published)",
+  "bot_attack_trace": "site/raw/rpc/trace_tx_0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d.json",
+  "hacker_creation_tx": "site/raw/rpc/tx_0x50dc9c9126519a70319cc312418488145bed4e2ef6e110eb864a97f5beaeca05.json",
+  "copier_creation_tx": "site/raw/rpc/tx_0x725db76cf4bf3bdc72be4f755ed72df4adbc8e4e803c044617cc11e34907ccdc.json",
+  "bytecode_diff": "incidents/euler-copybot-2023/bytecode_diff.json",
+  "withdraw_trace": "site/raw/rpc/trace_tx_0xdae809e4a1ddf77c39d44a4acfe6165bedbc19a385c4b241242cc9bd582a80b9.json",
+  "flashbots_bids_16817996": "site/raw/relay-flashbots/bids_block16817996.json",
+  "flashbots_delivered_16817996": "site/raw/relay-flashbots/delivered_block16817996.json",
+  "euler_logs": "site/raw/etherscan/elogs_0x27182842E098f60e3D576794A5bFFb0777E025d3_16817900_16818100.json",
+  "hacker_txlist": "full cache only (not published)",
+  "copier_txlist": "full cache only (not published)"
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "deploy-window-copy",
+ "headline": false,
+ "headline_text": "A fresh EOA copied the Euler attacker's exploit contract one block after its deploy, swapping only the owner address, and ran its DAI-market entry point at block 16817996 position 0: 8,877,507 DAI out of Euler. Funds went to the attacker's hard-coded wallet; the copier captured nothing.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "The copier deployed a bytecode copy (4x20 bytes differ) one block after the attacker's deploy and ran the DAI-market entry point 17 blocks before the hacker's first call; it captured nothing (proceeds went to the hard-coded attacker wallet).",
+  "headline_note": "The copier may be the attacker’s own second account: it was a fresh single-purpose EOA, kept the attacker’s cash-out wallet and captured nothing. Its own on-chain message is the only claim that it was a bot.",
+  "dataset_rows": [
+   "euler-copybot-2023"
+  ]
+ }
+}

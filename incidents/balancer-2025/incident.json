@@ -1,0 +1,2047 @@
+{
+ "slug": "balancer-2025",
+ "name": "Balancer v2 Composable Stable Pool rounding exploit (mainnet leg)",
+ "date": "2025-11-03",
+ "chain": "ethereum (mainnet leg only; Arbitrum, Base, Optimism, Polygon, Gnosis also hit)",
+ "verdict": "related-not-frontrun",
+ "verdict_reason": "On the Ethereum mainnet leg no bot or whitehat front-ran an attacker tx. Every replay of the attacker calls (Bitfinding 0x5af00b07 = the whitehat that returned ~$964K; plus searcher/copycat EOAs) lands in a LATER block than the attacker tx on the same pool: Bitfinding 1 block after A1 (23717398 vs 23717397), 4 blocks after A3, 3 blocks after A9. The call data is a confirmed adaptation (A1 creation input vs Bitfinding input: 3 of 983 32-byte words differ, all address constants), so the \"front-ran the attacker\" wording in the Balancer post-mortem (as quoted by AMBCrypto) is a post-inclusion replay/rescue of the residual pool balances, not a pre-emption of a pending attacker tx. A1 and most attacker txs never appeared in the public mempool; the only public pending ones (A8-A9b) were not pre-empted. Same-block activity before/after the attacker is arbitrage backrunning (0xc0ffee445a22 at idx 2 paying 20.6 ETH to the builder).",
+ "verdict_detail": {
+  "front_run_of_pending_attacker_tx": "rejected",
+  "post_inclusion_replay_by_whitehat": "confirmed-onchain (Bitfinding, 1 block later)",
+  "crowd_copying": "confirmed-onchain (0x7bb28442, 0x87a16382, 0xedecee64, 0x5b1a6bd4, others)",
+  "post_hack_arb": "related-not-frontrun"
+ },
+ "era": "2024-26 (mature PBS / private flow)",
+ "protocol_loss_usd": {
+  "all_chains_postmortem": 121100000,
+  "other_press_range": "110M-128.6M",
+  "ethereum_reported_secondary": "~99M (press; not verified here)",
+  "basis": "reported; not recomputed. Mainnet attacker withdrawals in tokens listed under funds_fate."
+ },
+ "attacker": {
+  "eoas": [
+   {
+    "address": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "role": "EOA1: deployed/ran A1 and the wave-2/3 contracts; nonce 80 = A1; all 93 outgoing txs succeeded (no reverts)",
+    "dao_notice_tx": "0xf462b894f3... (block 23735651)"
+   },
+   {
+    "address": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "role": "EOA2: same operator (same beneficiary 0xaa760d53 receives its withdrawals; sent 94 ETH to EOA1 in 0xbf1f59075a... block 23750534); first mainnet exploit at 23717522; ran pools the EOA1 never touched on mainnet",
+    "dao_notice_tx": "0x0d5329ea2f... (block 23735657)"
+   }
+  ],
+  "contracts": [
+   {
+    "address": "0x54b53503c0e2173df29f8da735fbd45ee8aba30d",
+    "role": "A1 exploit/vault-internal-balance holder (created in 0x6ed07db1...)"
+   },
+   {
+    "address": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "role": "EOA1 wave-2 contract (created 0x8e260bf8...)"
+   },
+   {
+    "address": "0x399a8e046bc0e9dddd0e757a09af748d03d80e54",
+    "role": "EOA1 wave-3 contract (created 0x6256d6e9...)"
+   },
+   {
+    "address": "0x7374fa9d1c12aa5a46a89800c37e7f47e3636bdd",
+    "role": "EOA1 wave-4 contract (created 0x2a0ead4e...)"
+   },
+   {
+    "address": "0x31b16ac6...",
+    "role": "EOA2 first contract (created 0x2186a650...)"
+   },
+   {
+    "address": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "role": "EOA2 second contract (created 0xf9267c1a...; withdrew in 0xf5b2f488...)"
+   }
+  ],
+  "beneficiary_wallet": "0xaa760d53541d8390074c61defeaba314675b8e3f (receives all Vault withdrawals; next hop 0xf19fd5c683a958ce9210948858b80d433f6bfae2)",
+  "deploy_tx": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742 (block 23717397 idx 1; contract creation = exploit in constructor)",
+  "funding_tx": {
+   "tx": "0xa429ac9eeb4a745cd86af2bc8a98df876b42ce82b2b38895065e05096ea39173",
+   "block": 23710059,
+   "utc": "2025-11-02T07:10:11Z",
+   "from": "0x5babe600b9fcd5fb7b66c0611bf4896d967b23a1",
+   "value_eth": 2.99985,
+   "source": "0x5babe600... is a high-throughput payout-style wallet (many sub-ETH in/out per minute in block 23709007+). Not Tornado Cash; type (instant-exchange/OTC service) NOT verified.",
+   "eoa2_funding": "0x60ecb3e7364da42943adc6ba2edfa11a804e7f0175f549898568d1b1b87cb783 15 ETH from 0x86fedad11c4765700934639f1efe1fc01355c982 (block 23709849)"
+  },
+  "preparation": "EOA1 sent 80 self-transfers of 0.01-0.12 ETH (nonces 0-79, blocks 23710220-23717322; many were public in the mempool dumpster) before the creation tx at nonce 80. Purpose not established (nonce/address grinding is one hypothesis).",
+  "txs": [
+   {
+    "hash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+    "block": 23717397,
+    "index": 1,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": null,
+    "created": "0x54b53503c0e2173df29f8da735fbd45ee8aba30d",
+    "nonce": 80,
+    "priority_fee_gwei": 3.9074e-05,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A1: deploy + stage-1 exploit in one contract-creation tx (constructor does the work). Tips ~0 (3.9e-5 gwei).",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569",
+    "block": 23717404,
+    "index": 193,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x54b53503c0e2173df29f8da735fbd45ee8aba30d",
+    "created": null,
+    "nonce": 81,
+    "priority_fee_gwei": 3.9074e-05,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A2: withdraws stage-1 balances (6587.44 WETH, 6851.12 osETH, 4259.84 wstETH + BPT) from Vault internal balance to beneficiary 0xaa760d53...",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x2186a65024fe6532e94744e8c019883d3b93e9cda455d62a3174b9e6c928c863",
+    "block": 23717522,
+    "index": 55,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": null,
+    "created": "0x31b16ac6f1f2f96471e4e523c5deed3a8e663461",
+    "nonce": 2,
+    "priority_fee_gwei": 0.001,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0xf9267c1ad9c5eb8f8cd50c1698c2611f3a4d39b1e01a47b263d7f7a6e1aa4a1f",
+    "block": 23717605,
+    "index": 7,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": null,
+    "created": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "nonce": 3,
+    "priority_fee_gwei": 0.036216871,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0x53bb4cdeae8c1e57a87cffedcad2074b55ed95ace86dcaaf696b8dfffb32d0c1",
+    "block": 23717606,
+    "index": 1,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "created": null,
+    "nonce": 4,
+    "priority_fee_gwei": 0.036216871,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0xacd180e279a821b16fb85d9f97526d86420215cced4180944f04e34abfc5a306",
+    "block": 23717607,
+    "index": 5,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "created": null,
+    "nonce": 5,
+    "priority_fee_gwei": 0.036216871,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0x0861b2a70d67d0f8c81030e9ef1bc645e9799b2535df401a425465ea5efae457",
+    "block": 23717609,
+    "index": 45,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "created": null,
+    "nonce": 6,
+    "priority_fee_gwei": 0.036216871,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0xf5b2f4884d11a474713f59901d8be89acebd34d80675607f4a46824661af1b6c",
+    "block": 23717611,
+    "index": 87,
+    "status": 1,
+    "from": "0x766a892f8ba102556c8537d02fca0ff4cacfc492",
+    "to": "0x11986fb1709652d906b73c8f55e5634aaed84a0a",
+    "created": null,
+    "nonce": 7,
+    "priority_fee_gwei": 0.036216871,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "site/raw/rpc-balancer2025/tx_0xf5b2f4884d11a474713f59901d8be89acebd34d80675607f4a46824661af1b6c.json",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "EOA2 withdraw to beneficiary 0xaa760d53: sUSDe 10168.4, USDC 5370.4, uniETH 16.6, swETH 5.7, WETH 18.0, vETH 4.0 ...",
+    "eoa": "EOA2 0x766a892f"
+   },
+   {
+    "hash": "0x8e260bf89637eb61a7ee298ed6b21aa15f623486431c418df7dc3f6577c8f32a",
+    "block": 23717627,
+    "index": 126,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": null,
+    "created": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "nonce": 82,
+    "priority_fee_gwei": 0.00038337,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A3: new creation tx on pool 0x05ff47af... (rETH/weETH-type pool)",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x00b08e5e77da0179c3aae423beea1ecdbd4e27f9072ef002344a766681f020d2",
+    "block": 23717629,
+    "index": 71,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "created": null,
+    "nonce": 83,
+    "priority_fee_gwei": 0.00038337,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A4: second stage on pools 0x596192bb..., 0xdfe6e7e1...",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x3e173ab0ba9183efa8a42caa783bdb5ec75daffcc8505cc1302009d11daf1ccf",
+    "block": 23717632,
+    "index": 1,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "created": null,
+    "nonce": 84,
+    "priority_fee_gwei": 0.00038337,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A5: pool 0x848a5564...",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0xb8a978185e834620f5572aaa9b3858630abfcdbe09459c512f54b3a26ef643d4",
+    "block": 23717633,
+    "index": 34,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "created": null,
+    "nonce": 85,
+    "priority_fee_gwei": 0.00038337,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A6: pool 0x5aee1e99...",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x92f461929814cada7b8a3814f678bcc859f0f31fd417d01ec930e1a240228a60",
+    "block": 23717633,
+    "index": 35,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "created": null,
+    "nonce": 86,
+    "priority_fee_gwei": 0.00038337,
+    "first_seen_ms": null,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": null,
+    "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)",
+    "note": "A7: withdraw of wave-2 internal balances to 0xaa760d53 (rETH 698.1, weETH 522.3, rsETH-like 783.9, WETH 435.1, ankrETH 93.3, rswETH 74.0, sfrxETH 5.0, ...)",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x6256d6e9e6effe2692ba97f7f5047c0e3f6d8cc6407e84b80cf9e7c89636c422",
+    "block": 23717697,
+    "index": 4,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": null,
+    "created": "0x399a8e046bc0e9dddd0e757a09af748d03d80e54",
+    "nonce": 87,
+    "priority_fee_gwei": 0.0004246,
+    "first_seen_ms": 1762159609956,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": "2025-11-03T08:46:49.956Z",
+    "mempool": "seen in mempool-dumpster",
+    "note": "A8: creation, pool 0x42ed016f...; PUBLIC pending tx",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x59279c1aee6c48303d30788f8e75d3d8f0029aed5de6e385caaea5cc8ea2a1e4",
+    "block": 23717698,
+    "index": 188,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x399a8e046bc0e9dddd0e757a09af748d03d80e54",
+    "created": null,
+    "nonce": 88,
+    "priority_fee_gwei": 0.0004246,
+    "first_seen_ms": 1762159622410,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": "2025-11-03T08:47:02.410Z",
+    "mempool": "seen in mempool-dumpster",
+    "note": "A8b: withdraw (sfrxETH 2140.2, wstETH 183.4, rETH 204.2); PUBLIC pending tx",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x2a0ead4ee9b17a1afa5bfe3dc152833a957f2d25dd9b4b86d68f2c87bdacf69c",
+    "block": 23717706,
+    "index": 185,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": null,
+    "created": "0x7374fa9d1c12aa5a46a89800c37e7f47e3636bdd",
+    "nonce": 89,
+    "priority_fee_gwei": 0.000495189,
+    "first_seen_ms": 1762159708330,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": "2025-11-03T08:48:28.330Z",
+    "mempool": "seen in mempool-dumpster",
+    "note": "A9: creation, pool 0x58aadfb1... (rsETH/WETH); PUBLIC pending tx",
+    "eoa": "EOA1 0x506d1f9e"
+   },
+   {
+    "hash": "0x1f486ee28db16682a798bb0d84f926f13f70cf271350e2c276de6edca78403df",
+    "block": 23717707,
+    "index": 167,
+    "status": 1,
+    "from": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "to": "0x7374fa9d1c12aa5a46a89800c37e7f47e3636bdd",
+    "created": null,
+    "nonce": 90,
+    "priority_fee_gwei": 0.000495189,
+    "first_seen_ms": 1762159731575,
+    "raw_ref": {
+     "tx": "full cache only (not published)",
+     "receipt": "full cache only (not published)"
+    },
+    "first_seen_utc": "2025-11-03T08:48:51.575Z",
+    "mempool": "seen in mempool-dumpster",
+    "note": "A9b: withdraw (rsETH 1176.5, WETH 797.8); PUBLIC pending tx",
+    "eoa": "EOA1 0x506d1f9e"
+   }
+  ],
+  "reverted_txs": "none: all 93 outgoing EOA1 txs and all EOA2 exploit txs have status 1."
+ },
+ "bots": [
+  {
+   "label": "Bitfinding (whitehat; identity match = amounts, see replay_evidence)",
+   "eoa": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+   "contract": "0xdb8986fd3ff03182bd5fac4a8338ad6e6136fbf4 (created by 0x1dc60f91...); later 0xdc15720f21a8891be16243be07cfccd20a689635, 0xe632a557...",
+   "attribution": "EOA is identified as Bitfinding by exact amount match: 0x5af00b07 returned WETH 136.00091172896626, wstETH 10.956795326731383, weETH 6.61652287665074, rETH 6.225119272163926, osETH 105.20820841752568 to the DAO multisig 0x10A19e7e; BIP-892 lists the Bitfinding refund as 136.000911728966261966 WETH / 10.956795326731383128 wstETH / 6.616522876650740387 weETH / 6.225119272163926053 rETH / 105.208208417525687999 osETH, with the refund txs 0x1c20be7a, 0x60687df4, 0xf6e3db8f, 0x4936c50c, 0x18fccc83 = exactly the 5 transfers from 0x5af00b07. BIP-892 itself does not print the EOA.",
+   "txs": [
+    {
+     "hash": "0x1dc60f917e4d841f281e827cf82f93c7355e08f5855e9ae5b0a1764b38ed4b87",
+     "block": 23717398,
+     "index": 2,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": null,
+     "created": "0xdb8986fd3ff03182bd5fac4a8338ad6e6136fbf4",
+     "nonce": 29,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    },
+    {
+     "hash": "0xd29c16461a6394b0615c02ed69010a040ebdebe6f445dfb45c3e7810871889f8",
+     "block": 23717398,
+     "index": 3,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": null,
+     "created": "0x554a063e5a7eb42ae0555eb265c190c66d1a4cc8",
+     "nonce": 30,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    },
+    {
+     "hash": "0x0d6f2d90c543e137b59318d6c557f772fa638da757c2c8c095c7076d6fbb159d",
+     "block": 23717398,
+     "index": 4,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": "0xdb8986fd3ff03182bd5fac4a8338ad6e6136fbf4",
+     "created": null,
+     "nonce": 31,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    },
+    {
+     "hash": "0xa4ee77dbc66c106e5a552859f91b2a04cb8d26a94903644919acb53f540847b4",
+     "block": 23717631,
+     "index": 13,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": null,
+     "created": "0xdc15720f21a8891be16243be07cfccd20a689635",
+     "nonce": 45,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    },
+    {
+     "hash": "0xed0c8654af364a30957550cdf5eb664951cd277b1bc585902914ffe75247ee3a",
+     "block": 23717709,
+     "index": 2,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": null,
+     "created": "0xe632a557b057bb205f6596626242f5bfbb660213",
+     "nonce": 48,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    },
+    {
+     "hash": "0x49ae1bd397578f6aacc3b6706ca04d778e5240e75b79dc831df0f1958acfcf43",
+     "block": 23717631,
+     "index": 14,
+     "status": 1,
+     "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+     "to": null,
+     "created": "0xa7905740912788995705da1c162608f3fd35b702",
+     "nonce": 46,
+     "priority_fee_gwei": 2.0,
+     "first_seen_ms": null,
+     "raw_ref": {
+      "tx": "full cache only (not published)",
+      "receipt": "full cache only (not published)"
+     },
+     "first_seen_utc": null,
+     "mempool": "NOT in mempool-dumpster 2025-11-03 (private flow or not seen by its nodes; unknown != none)"
+    }
+   ],
+   "captured": {
+    "token": "WETH 136.0009 + osETH 105.2082 + wstETH 10.9568 + weETH 6.6165 + rETH 6.2251",
+    "usd": 963832,
+    "usd_basis": "BIP-892 \"USD at the time of recovery\" for Bitfinding on Ethereum mainnet",
+    "kept": false
+   },
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_gwei": 2.0,
+   "builder_priority_fees_eth": {
+    "0x1dc60f91 (creation, idx 2)": 0.056115418,
+    "0xd29c1646 (idx 3)": 0.001688692,
+    "0x0d6f2d90 (withdraw, idx 4)": 0.00054782
+   },
+   "replay_evidence": {
+    "summary": "tx 0x1dc60f91 (block 23717398 idx 2) is a contract-creation tx whose input is the attacker A1 input (0x6ed07db1, block 23717397 idx 1) with 3 of 983 32-byte words changed: word 1 (beneficiary address: attacker 0xaa760d53... -> 0x5af00b07...) and words 895-896 (owner address 0x506d1f9e... -> 0x5af00b07...). Same length (31,427 bytes). Everything else, including the attacker EOA2 address constant 0x766a892f8b..., is byte-identical. Call tree is the same shape (12 Vault staticcalls, 2 batchSwap-selector calls, 2 manageUserBalance calls; 121 + 103 Swap events vs 121 + 105 for A1) on the same two pools (0xdacf5fa1... osETH/WETH, 0x93d19926...). The next tx in the bundle (idx 4) withdraws WETH/wstETH from the Vault internal balance of the new contract to the EOA.",
+    "diff_artifact": "computed in this run from site/raw/rpc-balancer2025/tx_<hash>.json inputs (not a separate file)",
+    "tx_pairs": {
+     "attacker": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+     "bitfinding": "0x1dc60f917e4d841f281e827cf82f93c7355e08f5855e9ae5b0a1764b38ed4b87",
+     "copycat_7bb2_1": "0xe1d5f36f0aa6f6a07865ac4feaae5bda839f489372eb3ece7d53fb10100a1eb1",
+     "copycat_7bb2_2": "0x78ef0d388ab399dca877af4eb1eca244375456c1c75f07229e1f1c26abf4c596"
+    }
+   },
+   "ordering": "Attacker A1 lands in block 23717397 (slot 12944332, 07:46:47 UTC) at idx 1; Bitfinding bundle lands in the NEXT block 23717398 (slot 12944333, 07:46:59 UTC) at idx 2-4 with 2 gwei priority; A1 was not in the public mempool dump, nor were Bitfinding txs. The copy is a post-inclusion replay, 1 block (12 s) later.",
+   "notes": "Same pattern repeated against EOA1 wave 2: 0xa4ee77db (block 23717631) copies A3 0x8e260bf8 (block 23717627), 4 blocks later; 0xed0c8654 (23717709) copies A9 0x2a0ead4e (23717706), 3 blocks later. Never earlier than the attacker tx on the same pool. Funds returned to the DAO multisig; 10 % bounty paid 2026-01-15."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "0x7bb28442 searcher-style copy of A1",
+   "eoa": "0x7bb284421d3eafde4d45ee5e420c3269f87fa4fb",
+   "kind": "replay (copycat/MEV bot; intent unknown)",
+   "txs": [
+    {
+     "hash": "0xe1d5f36f0aa6f6a07865ac4feaae5bda839f489372eb3ece7d53fb10100a1eb1",
+     "block": 23717399,
+     "index": 0,
+     "from": "0x7bb284421d3eafde4d45ee5e420c3269f87fa4fb",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.771,
+      "0xdacf5f": 41.426,
+      "osETH": 3.848,
+      "wstETH": 0.041,
+      "0x93d199": 20.519
+     },
+     "priority_fee_gwei": 0.1214
+    },
+    {
+     "hash": "0x78ef0d388ab399dca877af4eb1eca244375456c1c75f07229e1f1c26abf4c596",
+     "block": 23717401,
+     "index": 1,
+     "from": "0x7bb284421d3eafde4d45ee5e420c3269f87fa4fb",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.048,
+      "0xdacf5f": 44.957,
+      "osETH": 0.056,
+      "wstETH": 0.0,
+      "0x93d199": 24.718
+     },
+     "priority_fee_gwei": 0.1273
+    }
+   ],
+   "detail": "Two creation txs with the A1 input (same 3-word diff) at block 23717399 idx 0 and 23717401 idx 1, i.e. 2 and 4 blocks AFTER A1 and after Bitfinding drained the pools: it got 0.77 WETH + 3.85 osETH + 0.04 wstETH, then paid 0.8166 ETH of it to coinbase in 23717399 idx 4. Net ~0."
+  },
+  {
+   "label": "0x87a16382 copy of A9 (rsETH/WETH pool)",
+   "eoa": "0x87a1638239a404487ade18800d2c8f1ea641e0fd",
+   "kind": "replay after A9",
+   "txs": [
+    {
+     "hash": "0x32a604f4404bdda461e9bddbd9a2e62f1c9f01f4850cbed38bf1b47f334f22ef",
+     "block": 23717709,
+     "index": 1,
+     "from": "0x87a1638239a404487ade18800d2c8f1ea641e0fd",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x58aadf": 5.977,
+      "0xa1290d": 11.547,
+      "WETH": 12.094
+     },
+     "priority_fee_gwei": 11.1101
+    }
+   ],
+   "detail": "0x32a604f4 at block 23717709 idx 1 (priority 7.03 gwei, 11.1 gwei max) 3 blocks after A9 0x2a0ead4e (23717706); outranked Bitfinding (idx 2) in that block: got 12.09 WETH + 11.55 rsETH. The same EOA repeatedly called its contract 0x3eaa7f6a... in blocks 23717573-23717706 (one tx received 1.14 ETH); that contract was not analysed and is not shown to be an exploit replay."
+  },
+  {
+   "label": "0xedecee64 late copier",
+   "eoa": "0xedecee6406859724f369a2d11752dbfbf27d1aa0",
+   "kind": "replay after A3/A9",
+   "txs": [
+    {
+     "hash": "0x766569fdd544f2a4c0b1350dc9a04067697e7c5183b68ab0b0ce50b817df6c50",
+     "block": 23717911,
+     "index": 9,
+     "from": "0xedecee6406859724f369a2d11752dbfbf27d1aa0",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x58aadf": 6.014,
+      "0xa1290d": 0.002,
+      "WETH": 0.002
+     },
+     "priority_fee_gwei": 0.6611
+    },
+    {
+     "hash": "0x338e71bfebbe9927ca41c938eb8ce5a4d0900bdc417f30195634fddf67b9e7de",
+     "block": 23717914,
+     "index": 43,
+     "from": "0xedecee6406859724f369a2d11752dbfbf27d1aa0",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x58aadf": 6.131,
+      "0xa1290d": 0.0,
+      "WETH": 0.0
+     },
+     "priority_fee_gwei": 0.7664
+    },
+    {
+     "hash": "0x625a63f1f6f43dd321da295f404165a0e4e7bbb31a5e3363937a9b17f46d7ec9",
+     "block": 23717950,
+     "index": 203,
+     "from": "0xedecee6406859724f369a2d11752dbfbf27d1aa0",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x05ff47": 3.887,
+      "0xae7873": 0.067,
+      "0xcd5fe2": 0.071
+     },
+     "priority_fee_gwei": 0.6342
+    }
+   ],
+   "detail": "blocks 23717911-23717950: small residues only (about 6.0 + 6.1 + 3.9 BPT-type tokens from pools 0x58aadfb1.../0x05ff47af..., 0.07 rETH/weETH). No DAO notice found."
+  },
+  {
+   "label": "0x5b1a6bd4 late copier (DAO notice recipient)",
+   "eoa": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+   "kind": "replay after attacker; DAO-notified as linked to the exploit",
+   "txs": [
+    {
+     "hash": "0xaf786f37c9d96ddfb0da98eafd2e79f4cd64b531284a9eed7f0c509f7c36a4b4",
+     "block": 23717997,
+     "index": 1,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x05ff47": 3.984,
+      "0xae7873": 0.001,
+      "0xcd5fe2": 0.001
+     },
+     "priority_fee_gwei": 0.0272
+    },
+    {
+     "hash": "0x51f5d7dd9ac1829b0d3e014f18d47be1e6bd14fa9aab297bee863ea7a3d31dae",
+     "block": 23718042,
+     "index": 127,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x05ff47": 11.806,
+      "0xae7873": 0.0,
+      "0xcd5fe2": 0.0
+     },
+     "priority_fee_gwei": 0.002
+    },
+    {
+     "hash": "0xd1f44ccfe16fb3e6b009cbe0df881dbfb9ebdee9e055ba1a962e0c3849da043c",
+     "block": 23718061,
+     "index": 126,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x05ff47": 728.575,
+      "0xae7873": 0.0,
+      "0xcd5fe2": 0.0
+     },
+     "priority_fee_gwei": 0.0001
+    },
+    {
+     "hash": "0xeef9169ee663359ee22df9aa7bda0afb03ecd5cfb6d7aa5ecb0fc933c06b9d27",
+     "block": 23718147,
+     "index": 23,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.011,
+      "0xdacf5f": 39.064,
+      "osETH": 0.002,
+      "wstETH": 0.0,
+      "0x93d199": 52508195.484
+     },
+     "priority_fee_gwei": 0.0016
+    },
+    {
+     "hash": "0x826dff18f25abd9eee0f96a56af44ff1f6cfdf9c757b997f272bc80883c97b83",
+     "block": 23718247,
+     "index": 90,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "wstETH": 0.004,
+      "0xa35b1b": 0.003,
+      "0xb91159": 0.15,
+      "0x63e0d4": 0.216,
+      "0xd9a442": 0.005
+     },
+     "priority_fee_gwei": 0.0012
+    },
+    {
+     "hash": "0x6e4f666e88d4a3f0e075953ac0fd2bc811c4fdff925d2088a444a8d8f9392f28",
+     "block": 23718254,
+     "index": 31,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.016,
+      "0xdd59f8": 0.001,
+      "0xf1376b": 0.029
+     },
+     "priority_fee_gwei": 0.002
+    },
+    {
+     "hash": "0xe768d892d2370da1340a4265ecce045126acaa82cd94cdd213bc009d04e24efd",
+     "block": 23718260,
+     "index": 102,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.001,
+      "0xe7e2c6": 0.029,
+      "0xf951e3": 0.0
+     },
+     "priority_fee_gwei": 0.0014
+    },
+    {
+     "hash": "0xee61e8cf66f07e02fd62fd779e77558f548efc9b8ae9c95b6fbeff68c1c6c5e6",
+     "block": 23718264,
+     "index": 17,
+     "from": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "WETH": 0.0,
+      "0xe7e2c6": 0.029,
+      "0xf951e3": 0.0
+     },
+     "priority_fee_gwei": 0.0012
+    }
+   ],
+   "detail": "8 exploit-shaped creation txs 23717997-23718247; took 728.57 weETH/rETH BPT (0xd1f44ccf, block 23718061) and 39.06 osETH/wETH BPT. Wallet existed since Apr 2025. DAO message 0xcf8ec5bd2c... (block 23735673)."
+  },
+  {
+   "label": "0xf49632e3 exploit-shaped runs on other pools (DAO notice recipient)",
+   "eoa": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+   "kind": "unknown (exploit-shaped txs with zero internal-balance delta; DAO-notified)",
+   "txs": [
+    {
+     "hash": "0x14fb45dd869208edffcb221add152a20292283be172ddb6ccfd2d73e3710b6f4",
+     "block": 23717662,
+     "index": 11,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x4bc326": 0.038,
+      "0xb54e6a": 0.02,
+      "WETH": -0.0,
+      "wstETH": 0.0,
+      "0x93d199": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0596
+    },
+    {
+     "hash": "0xcb52dba0c984adae17d3927153cff3d5a04972d512239540763ff1febbec7737",
+     "block": 23717977,
+     "index": 7,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x37b18b": 0.0,
+      "0xa35b1b": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0001
+    },
+    {
+     "hash": "0x3023e68cd030229461ed9760e4f8c5cecc605ca0d8e642476fb82e0bd43265c6",
+     "block": 23718091,
+     "index": 46,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x40c806": 0.0,
+      "0x93ef1e": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0017
+    },
+    {
+     "hash": "0x3dcbae6106080c6b474ed0cd84646663f1d8acc67f687a4e29da1c16a4b621fa",
+     "block": 23718098,
+     "index": 37,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x38fe2b": 0.0,
+      "wstETH": 0.0,
+      "0xf16178": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0018
+    },
+    {
+     "hash": "0x02ee5994814c7211b861b1c6afcd77d97f468b424e615fa9ee5487ef2eeeb4dd",
+     "block": 23718102,
+     "index": 39,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x47a4f5": 0.0,
+      "wstETH": 0.0,
+      "0xfc8775": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0019
+    },
+    {
+     "hash": "0x0f0501f5e25d1ab88be1ca63c05fbb18a6776b90251ca141e44f5523ffba8e22",
+     "block": 23718105,
+     "index": 6,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x35c5c8": 0.0,
+      "0x83f20f": 0.0,
+      "0xa48f32": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.002
+    },
+    {
+     "hash": "0x6e74b62490498a8eb17af8775acae48552f9e447a512a35c759c4f16861177b5",
+     "block": 23718112,
+     "index": 5,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x6733f0": -0.0,
+      "wstETH": 0.0,
+      "0xdedb11": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.002
+    },
+    {
+     "hash": "0x20d9e1657aba1a3cd6c91d534bab6ae0eec0416d0cfa094d9ef6017b68388477",
+     "block": 23718120,
+     "index": 3,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "wstETH": -0.0,
+      "0x7fa768": -0.0,
+      "0xe3e002": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0034
+    },
+    {
+     "hash": "0x650dbd855afcd76c2f92eda99b147eb18d8b4962fcf6d0a9363541f4b82de36b",
+     "block": 23718126,
+     "index": 16,
+     "from": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x6aa5a6": 0.0,
+      "wstETH": 0.0,
+      "0xf073ba": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 0.0034
+    }
+   ],
+   "detail": "9 creation txs 23717662-23718126 each with 200+ Swap events on pools not touched by the attacker; internal-balance deltas ~0 in receipts; later DeFi unwinds. DAO message 0x6de7c28ae4... (block 23735702)."
+  },
+  {
+   "label": "0x642cf741 exploit-shaped runs",
+   "eoa": "0x642cf74148c33820872c5e943a2bb538a0530f33",
+   "kind": "unknown",
+   "txs": [
+    {
+     "hash": "0xd9ea231fc39b7c2e2b30289cb67691e47cc15665912c5dbd9392a507b3e71257",
+     "block": 23717978,
+     "index": 0,
+     "from": "0x642cf74148c33820872c5e943a2bb538a0530f33",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x37b18b": 0.0,
+      "0xa35b1b": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 12.59
+    },
+    {
+     "hash": "0x88126df9ea3fbecabc462641d4fa29867a8f8cd08aa34c523e36988bf34f0937",
+     "block": 23718092,
+     "index": 1,
+     "from": "0x642cf74148c33820872c5e943a2bb538a0530f33",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {
+      "0x40c806": 0.0,
+      "0x93ef1e": 0.0,
+      "WETH": 0.0,
+      "0xdacf5f": 0.0,
+      "osETH": 0.0
+     },
+     "priority_fee_gwei": 12.59
+    }
+   ],
+   "detail": "two txs at 23717978 and 23718092 (priority 12.6 gwei) calling a contract 0xa8d60930... (creator not checked). Both txs show zero internal-balance gain."
+  },
+  {
+   "label": "0x6949b0aa reverted public copies (never early)",
+   "eoa": "0x6949b0aa93c0f21e0ff0f44935649f332d33208a",
+   "kind": "late copies, reverted",
+   "txs": [
+    {
+     "hash": "0x53d262416421ffa01861f5b5e8baf9e8ee2da7b034c9ca274cc7fb1e5a2cb5c1",
+     "first_seen_ms": 1762163032114,
+     "first_seen_utc": "2025-11-03T09:43:52.114Z",
+     "status": "never included (gas limit 3,000,000)"
+    },
+    {
+     "hash": "0x6d021cb5468ca0fc0a1d60576af0c977c34754216143c03780dcdd2815c31808",
+     "block": 23718000,
+     "index": 84,
+     "first_seen_ms": 1762163246389,
+     "first_seen_utc": "2025-11-03T09:47:26.389Z",
+     "status": 0
+    },
+    {
+     "hash": "0x0e3c59593d19f670d0a217a535459fe2714a6321f9ee102ee22fb0ee761215a4",
+     "block": 23718015,
+     "index": 103,
+     "first_seen_ms": 1762163427804,
+     "first_seen_utc": "2025-11-03T09:50:27.804Z",
+     "status": 0
+    }
+   ],
+   "detail": "Same input size 31,427 bytes as A1. Seen in the public mempool ~1 h 57 min after A1; both included txs reverted (out of gas, 2,195,021 gas used). Only exploit-shaped txs for this day found in the mempool dump other than the attacker's own."
+  },
+  {
+   "label": "0xc0ffee445a22 same-block backrun (arbitrage)",
+   "eoa": "0xc0ffee445a22e6228cfb77ec0483c426fc856161",
+   "contract": "0x00549bdcd932c45b5b6b8910b5ed9e33f2fe2f6f",
+   "kind": "backrun arbitrage (not a replay)",
+   "txs": [
+    {
+     "hash": "0x4b6b5fb9aa779c7662793a2613dca48f6e4afd15037b1acf2be4355cb032ed63",
+     "block": 23717397,
+     "index": 2,
+     "status": 1,
+     "coinbase_paid_eth": 20.596481582068154,
+     "also_paid_eth": 20.597491310558368,
+     "also_paid_to": "0xc0ffeefeed8b9d271445cf5d1d24d74d2ca4235e",
+     "priority_fee_gwei": 0.0
+    }
+   ],
+   "detail": "Tx-level facts only: idx 2, directly after A1, one Swap on the osETH/WETH pool; WETH.withdraw 41.19 ETH; 20.596 ETH to block fee recipient 0x4838b106... (Titan) and 20.597 ETH to 0xc0ffeefeed.... This is NOT the c0ffeebabe.eth address (0xc0ffeebabe5d...); no attribution or analysis of its contract is made. Evidence the searcher/builder saw A1 before it was public: its tx is bundled at the next index of the same block."
+  },
+  {
+   "label": "0x240926d7f... backrun (arbitrage)",
+   "eoa": "0x240926d7f0000006608b59d3952a5b64d3877d15",
+   "contract": "0x4fed5e80294c958f3ceea7df8e77fcbecd8a5545",
+   "kind": "backrun arbitrage",
+   "txs": [
+    {
+     "hash": "0xfd261ed26272fa1e084066aae99aa0141c403b0e76ce3ffaebe14adae9a6e9eb",
+     "block": 23717398,
+     "index": 1,
+     "status": 1,
+     "coinbase_paid_eth": 17.60219067238818,
+     "priority_fee_gwei": 0.96
+    }
+   ],
+   "detail": "Next block, idx 1 (directly before Bitfinding bundle). WETH out 17.94; 17.602 ETH to fee recipient (98.1 %). Accounts for 17.6 of the 18.169 ETH winning bid of that block."
+  },
+  {
+   "label": "Yoink (EOA 0xfde0d157..) post-hack arb",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "kind": "post-hack arbitrage (not a replay of an attacker tx)",
+   "txs": [
+    {
+     "hash": "0xd8dd6cbcbbf1ad57de4394fee889e63174c65737df17f61e26d48dd17de7385a",
+     "block": 23718188,
+     "index": 0,
+     "status": 1,
+     "value_wei": 984,
+     "coinbase_paid_eth": 0.18738030008439793,
+     "builder": "I can haz block? (pubkey 0x81476ce9...), winning bid 0.1257 ETH via Agnostic/Flashbots/Ultra Sound"
+    }
+   ],
+   "detail": "10:25:23 UTC, 2 h 38 m after A1, 86 Swap events on pool 0x596192bb... (a pool EOA1 hit in block 23717629). No internal-balance gain: ordinary rebalancing arb. Not in the dumpster. Per the Yoink grammar the msg.value 984 is a per-mille bribe (98.4 %)."
+  },
+  {
+   "label": "0x0000000000004f3d8aaf... + 0x3d782c0c + 0xfa025394 + 0xc9a5643e arb bots",
+   "kind": "post-hack arbitrage",
+   "txs": [
+    {
+     "hash": "0xfaff11ec02333fa0c611f917f7b3014b7baf3b7e71382d4d9acb3b6c9a598b7c",
+     "block": 23718187,
+     "index": 25,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    },
+    {
+     "hash": "0x922fdb4710352ad09bcd6688d334eec15d7f33a1f7a7687ee4b67a6890e2413a",
+     "block": 23718189,
+     "index": 14,
+     "from": "0x3d782c0c69101358a8267ba116c86726fdf35f91",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.0
+    },
+    {
+     "hash": "0xc024cef98315989e63714eccdabc3d7a6a3ee86b493e18103a890ccb1488a3d7",
+     "block": 23718216,
+     "index": 39,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    },
+    {
+     "hash": "0x893fd196f43387857359fc1220257b9b315b02c145221a1613686cb32dfd1c09",
+     "block": 23718217,
+     "index": 2,
+     "from": "0xfa0253943c3ff0e43898cba5a7a0da9d17c27995",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.0
+    },
+    {
+     "hash": "0xb26eab829d8093fef4fa2f9f5d46068a5bcfcb68ed223f275a344495a6144852",
+     "block": 23718222,
+     "index": 18,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    },
+    {
+     "hash": "0x82e9e447668351e06ece216c4de5d7c04d90c2bdd0b2732e389505a3c0881d8f",
+     "block": 23718250,
+     "index": 209,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    },
+    {
+     "hash": "0x786a278a62dc4932f6d25ddf7076dac94740ddc61e9f85dce9584666220902b8",
+     "block": 23718251,
+     "index": 0,
+     "from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.4384
+    },
+    {
+     "hash": "0xcd1a0f4e1be3c0df23ce27a26dfa1b67a11177f95b6c9189310fa09b6d07f5a7",
+     "block": 23718287,
+     "index": 8,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    },
+    {
+     "hash": "0x260ff10c4500aa6749f1e0e4adeb257a528150f5f63296416a1e0823f4d6e58d",
+     "block": 23718343,
+     "index": 309,
+     "from": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+     "status": "0x1",
+     "first_seen": "not in dumpster",
+     "ibc": {},
+     "priority_fee_gwei": 0.01
+    }
+   ],
+   "detail": "80-99 Swap events each on attacked pools, blocks 23718187-23718343, no internal-balance gain: rebalancing arbitrage, 2h38m+ after A1. Related-not-frontrun."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Attacker stage-1 withdrawal (A2): WETH 6587.44, osETH 6851.12, wstETH 4259.84 + BPT",
+   "tx": "0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569",
+   "amount": "see what",
+   "to": "0xaa760d53541d8390074c61defeaba314675b8e3f"
+  },
+  {
+   "what": "Sum of all mainnet Vault withdrawals to attacker wallet 0xaa760d53 (tokens, from Etherscan tokentx, EOA1+EOA2 txs)",
+   "tx": "multiple",
+   "amount": {
+    "sUSDe": 10168.436,
+    "WETH": 7838.357,
+    "osETH": 6851.123,
+    "USDC": 5370.415,
+    "wstETH": 4459.152,
+    "sfrxETH": 2145.157,
+    "rsETH": 1176.529,
+    "rETH": 902.246,
+    "Renzo Restaked ETH": 783.897,
+    "weETH": 522.334,
+    "ankrETH": 93.274,
+    "rswETH": 73.999,
+    "sUSDe/USDC": 52.53,
+    "osETH/wETH-BPT": 44.155,
+    "wstETH-WETH-BPT": 20.414,
+    "uniETH": 16.635,
+    "wstETH-rETH-sfrxETH-BPT": 7.81,
+    "rsETH / WETH": 5.961,
+    "swETH": 5.676,
+    "vETH": 3.952
+   },
+   "to": "0xaa760d53..."
+  },
+  {
+   "what": "StakeWise-style burn of attacker osETH (3841.1229542 osETH sent to 0x0 by Safe 0x144a98cb... via signer 0x61b01a33; osToken burn call 0x9dc29fac in trace). StakeWise attribution is from press (AMBCrypto/DL News), the Safe owner was not checked",
+   "tx": "0x914c35feb23e05d4c798209fde22684d67df735b91dd0a0528e92927df6dec9b",
+   "amount": "3841.1229542350766 osETH (block 23721187)",
+   "to": "0x0000000000000000000000000000000000000000"
+  },
+  {
+   "what": "Attacker moved 10 + 500 + 500 + 2000 osETH, sfrxETH 2145.16, rsETH 1176.53, rETH 902.25, Renzo ezETH 783.90, weETH 522.33, ankrETH 93.27, rswETH 74.0, USDC 5370.4 to 0xf19fd5c683a958ce9210948858b80d433f6bfae2 / 0xf19d1a69... (blocks 23717825-23721792)",
+   "tx": "0x9c4eb67885739a24bcc8fb8fb39d7f1abd0740a7b4ceedb78e023ccd73437e61 (first)",
+   "amount": "see what",
+   "to": "0xf19fd5c683a958ce9210948858b80d433f6bfae2"
+  },
+  {
+   "what": "Bitfinding return: rETH 6.225119272163926",
+   "tx": "0x18fccc83a078ab75ba671789a8d895a8342693e2e6905c45ab4b0be4ec0e973b",
+   "amount": "6.225119272163926 rETH",
+   "to": "0x10A19e7eE7d7F8a52822f6817de8ea18204F2e4f (DAO multisig)"
+  },
+  {
+   "what": "Bitfinding return: weETH",
+   "tx": "0x4936c50c99bc07d1023b095bd7158ee1100117b75c66b0a7523984e4618756a4",
+   "amount": "6.61652287665074 weETH",
+   "to": "0x10A19e7e..."
+  },
+  {
+   "what": "Bitfinding return: wstETH",
+   "tx": "0xf6e3db8ff335aa3859ad2686a339920a718a5db64390cda1295f8f84fb7f7bed",
+   "amount": "10.956795326731383 wstETH",
+   "to": "0x10A19e7e..."
+  },
+  {
+   "what": "Bitfinding return: WETH",
+   "tx": "0x1c20be7a609b53011cc569fc33d04ace7a4616de6efbf1c7bc1a72cd4f2909c9",
+   "amount": "136.00091172896626 WETH (block 23722994, 2025-11-04 UTC)",
+   "to": "0x10A19e7e..."
+  },
+  {
+   "what": "Bitfinding return: osETH (withdrawn from Vault internal balance 5 days later in 0xaa52c3a7a0..., block 23756809, then returned)",
+   "tx": "0x60687df48ac95b49e3952c6bb8a5f08b6d9959b26e6f56d24319c6499fd475ce",
+   "amount": "105.20820841752568 osETH (block 23756834)",
+   "to": "0x10A19e7e..."
+  },
+  {
+   "what": "10 % Safe Harbor bounty to Bitfinding recipient 0xc3C7ccE1962B7a744847933CC3abD50b67ff5402 (BIP-892): 13.6001 WETH, 1.0957 wstETH, 0.6617 weETH, 0.6225 rETH, 10.5208 osETH",
+   "tx": "0xaa0de3c2eac83bac2c3c5b78e0ae31aaddab2d7bcc45913b2210b697b535d688",
+   "amount": "block 24237348, 2026-01-15",
+   "to": "0xc3C7ccE1962B7a744847933CC3abD50b67ff5402"
+  },
+  {
+   "what": "Block fee recipient (Titan builder 0x4838b106...) kept the two backrun payments: 20.596 ETH in block 23717397 (delivered bid to proposer only 0.0502 ETH) and 17.602 ETH in 23717398 (winning bid 18.169 ETH)",
+   "tx": "0x4b6b5fb9..., 0xfd261ed2...",
+   "amount": "38.2 ETH",
+   "to": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97"
+  },
+  {
+   "what": "Internal rescue (Certora/Balancer, metastable pools, later; not a race): WETH 510.37, rETH 320.12, wstETH 141.39, StaFi rETH 0.80 to DAO multisig 0x10A19e7e (internal Vault balance), snapshot blocks ~23785042+",
+   "tx": "n/a (BIP-892 section 3)",
+   "amount": "$3.59M on Ethereum",
+   "to": "0x10A19e7e..."
+  }
+ ],
+ "auction": {
+  "summary": "Titan (extraData) built the attack block 23717397 and the Bitfinding block 23717398 (the latter delivered by bloXroute regulated from an unlabelled builder pubkey 0x88a53ec4...); the attack tx paid ~0 tip (3.9e-5 gwei) yet sat at idx 1 behind a 7-wei self-send, with the Titan fee-recipient collecting a 20.6 ETH backrun payment at idx 2 while only 0.0502 ETH reached the proposer (Ultra Sound). Bitfinding paid 2 gwei priority (0.058 ETH total). Next-block winner 18.169 ETH via bloXroute regulated. No builder refunds to a bot were observed. Winning block of 23717397 is not in the retained bids (Ultra Sound history aged out), so when the attack tx first reached the builder is unknown.",
+  "blocks": [
+   {
+    "block": 23717397,
+    "slot": 12944332,
+    "utc": "2025-11-03T07:46:47+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "ultrasound"
+    ],
+    "n_bids": 808,
+    "bids_per_relay": {
+     "flashbots": 308,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8157,
+    "last_bid_t_rel_slot_ms": 3022,
+    "first_record_bid_eth": 0.001146632555647804,
+    "max_bid_eth": 0.05057791631382503,
+    "n_record_bids": 94,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0xb26f96664274e15fb6fcda862302e47de7e0e2a6687f8349327a9846043e42596ec44af676126e2cacbdd181f548e681",
+    "winning_bid_eth": 0.05020864178205087,
+    "proposer_payment_tx": "0x1273419b0d8a90d45321fa5d218d6a6e77e4edc521c5170b9fa671bb5f87cf11",
+    "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+    "runner_up_visible_bid_eth": 0.050208322655923045,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+      "index": 1,
+      "of": 214,
+      "priority_fee_gwei": 3.9074e-05,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 1.107696087876e-06,
+      "share_of_winning_bid": 2.206186123664455e-05
+     }
+    ],
+    "sum_builder_revenue_eth": 20.609168,
+    "raw": "incidents/balancer-2025/race_23717397.json"
+   },
+   {
+    "block": 23717398,
+    "slot": 12944333,
+    "utc": "2025-11-03T07:46:59+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan",
+     "ethgas"
+    ],
+    "relays_delivered": [
+     "bloxroute-regulated"
+    ],
+    "n_bids": 762,
+    "bids_per_relay": {
+     "flashbots": 121,
+     "titan": 500,
+     "ethgas": 141
+    },
+    "first_bid_t_rel_slot_ms": -8254,
+    "last_bid_t_rel_slot_ms": 4024,
+    "first_record_bid_eth": 0.000824356597136732,
+    "max_bid_eth": 18.169146490962397,
+    "n_record_bids": 74,
+    "winning_builder": null,
+    "winning_builder_pubkey": "0x88a53ec4422f50238def5696446e06acd076f94d73c76e51449cf82eb5312dcb8a845a6c3199ce35de3f2b0441deb76b",
+    "winning_bid_eth": 18.1691468492027,
+    "proposer_payment_tx": "0xd7ccb7bb2c9b00de25fd935474253575b13a0416e567bff2b33995fafb338181",
+    "proposer_fee_recipient": "0x724170Fd09B1AA0Fc50a3d70a92b238BA1FF17A7",
+    "runner_up_visible_bid_eth": 18.169146490962397,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x1dc60f917e4d841f281e827cf82f93c7355e08f5855e9ae5b0a1764b38ed4b87",
+      "index": 2,
+      "of": 185,
+      "priority_fee_gwei": 2.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.056115418,
+      "share_of_winning_bid": 0.003088500437898242
+     },
+     {
+      "hash": "0xd29c16461a6394b0615c02ed69010a040ebdebe6f445dfb45c3e7810871889f8",
+      "index": 3,
+      "of": 185,
+      "priority_fee_gwei": 2.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.001688692,
+      "share_of_winning_bid": 9.294283402602932e-05
+     },
+     {
+      "hash": "0x0d6f2d90c543e137b59318d6c557f772fa638da757c2c8c095c7076d6fbb159d",
+      "index": 4,
+      "of": 185,
+      "priority_fee_gwei": 2.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.00054782,
+      "share_of_winning_bid": 3.0151113012994304e-05
+     }
+    ],
+    "sum_builder_revenue_eth": 18.837506,
+    "raw": "incidents/balancer-2025/race_23717398.json"
+   },
+   {
+    "block": 23717399,
+    "slot": 12944334,
+    "utc": "2025-11-03T07:47:11+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan",
+     "ethgas"
+    ],
+    "relays_delivered": [
+     "flashbots",
+     "agnostic"
+    ],
+    "n_bids": 660,
+    "bids_per_relay": {
+     "flashbots": 51,
+     "titan": 500,
+     "ethgas": 109
+    },
+    "first_bid_t_rel_slot_ms": -7985,
+    "last_bid_t_rel_slot_ms": 3062,
+    "first_record_bid_eth": 0.000911914589341348,
+    "max_bid_eth": 0.36796655740659623,
+    "n_record_bids": 34,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0x87d7fb5c1b6e76550d8960b48a12505bc7b6478723db006fb659761ccde41500d951ef1457874ab1875f5f869f761b6b",
+    "winning_bid_eth": 0.3517829347351943,
+    "proposer_payment_tx": "0x25dddd8a18ef9a1895eb98c5670e6790d38e45f81c32233cf96113ce7ff51879",
+    "proposer_fee_recipient": "0x9d4C3166c59412CEdBe7d901f5fDe41903a1d6Fc",
+    "runner_up_visible_bid_eth": 0.32237472493257713,
+    "winning_block_in_retained_bids": true,
+    "focus": [
+     {
+      "hash": "0xe1d5f36f0aa6f6a07865ac4feaae5bda839f489372eb3ece7d53fb10100a1eb1",
+      "index": 0,
+      "of": 94,
+      "priority_fee_gwei": 0.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.0,
+      "share_of_winning_bid": 0.0
+     }
+    ],
+    "sum_builder_revenue_eth": 0.820159,
+    "raw": "incidents/balancer-2025/race_23717399.json"
+   },
+   {
+    "block": 23717401,
+    "slot": 12944336,
+    "utc": "2025-11-03T07:47:35+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "titan"
+    ],
+    "n_bids": 509,
+    "bids_per_relay": {
+     "flashbots": 9,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -7989,
+    "last_bid_t_rel_slot_ms": 1220,
+    "first_record_bid_eth": 1.3676863401e-08,
+    "max_bid_eth": 0.050592093732989736,
+    "n_record_bids": 24,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0xb26f96664274e15fb6fcda862302e47de7e0e2a6687f8349327a9846043e42596ec44af676126e2cacbdd181f548e681",
+    "winning_bid_eth": 0.03983115347548599,
+    "proposer_payment_tx": "0xde4183347b134280a26130a5b14c86416de97b4dee531bd6f667a798546ed26a",
+    "proposer_fee_recipient": "0x555c1a885f98968874e7b69e96937a59182ab8da",
+    "runner_up_visible_bid_eth": 0.039775371814193015,
+    "winning_block_in_retained_bids": true,
+    "focus": [
+     {
+      "hash": "0x78ef0d388ab399dca877af4eb1eca244375456c1c75f07229e1f1c26abf4c596",
+      "index": 1,
+      "of": 220,
+      "priority_fee_gwei": 0.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.0,
+      "share_of_winning_bid": 0.0
+     }
+    ],
+    "sum_builder_revenue_eth": 0.039187,
+    "raw": "incidents/balancer-2025/race_23717401.json"
+   },
+   {
+    "block": 23717404,
+    "slot": 12944339,
+    "utc": "2025-11-03T07:48:11+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "titan"
+    ],
+    "n_bids": 820,
+    "bids_per_relay": {
+     "flashbots": 320,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8166,
+    "last_bid_t_rel_slot_ms": 1902,
+    "first_record_bid_eth": 0.000248996522380527,
+    "max_bid_eth": 0.007131057124107531,
+    "n_record_bids": 85,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0x8a85062118e29045e8b199723d9af519b0c071d9e7586fa89733e798536d4637f8545a169012cc1b76005d9453603273",
+    "winning_bid_eth": 0.007076498552710966,
+    "proposer_payment_tx": "0x19093eda541f05b2a8efff96997b55ef7e75bc8051f00daaf80c8399f48a109d",
+    "proposer_fee_recipient": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+    "runner_up_visible_bid_eth": 0.007076498552518496,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569",
+      "index": 193,
+      "of": 211,
+      "priority_fee_gwei": 3.9074e-05,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 1.3406797362e-08,
+      "share_of_winning_bid": 1.8945524064106439e-06
+     }
+    ],
+    "sum_builder_revenue_eth": 0.010706,
+    "raw": "incidents/balancer-2025/race_23717404.json"
+   },
+   {
+    "block": 23717522,
+    "slot": 12944458,
+    "utc": "2025-11-03T08:11:59+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "btcs"
+    ],
+    "relays_delivered": [
+     "bloxroute-regulated"
+    ],
+    "n_bids": 270,
+    "bids_per_relay": {
+     "flashbots": 216,
+     "btcs": 54
+    },
+    "first_bid_t_rel_slot_ms": -7914,
+    "last_bid_t_rel_slot_ms": 1835,
+    "first_record_bid_eth": 1.5199645309e-08,
+    "max_bid_eth": 0.007452164639959676,
+    "n_record_bids": 69,
+    "winning_builder": null,
+    "winning_builder_pubkey": "0x88a53ec4422f50238def5696446e06acd076f94d73c76e51449cf82eb5312dcb8a845a6c3199ce35de3f2b0441deb76b",
+    "winning_bid_eth": 0.007326143803575164,
+    "proposer_payment_tx": "0x56cc59505f0866e5bce42aefbece68232fafeb2d20af4f9c82c23e03bbb7a334",
+    "proposer_fee_recipient": "0x1135FA96848f34Bff9D003F4c1699AE97418DE29",
+    "runner_up_visible_bid_eth": 0.007314965656526769,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x2186a65024fe6532e94744e8c019883d3b93e9cda455d62a3174b9e6c928c863",
+      "index": 55,
+      "of": 187,
+      "priority_fee_gwei": 0.001,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 2.8617574e-05,
+      "share_of_winning_bid": 0.0039062260811799244
+     }
+    ],
+    "sum_builder_revenue_eth": 0.019574,
+    "raw": "incidents/balancer-2025/race_23717522.json"
+   },
+   {
+    "block": 23717627,
+    "slot": 12944563,
+    "utc": "2025-11-03T08:32:59+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "titan"
+    ],
+    "n_bids": 627,
+    "bids_per_relay": {
+     "flashbots": 127,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8980,
+    "last_bid_t_rel_slot_ms": 2157,
+    "first_record_bid_eth": 0.000643058433208265,
+    "max_bid_eth": 0.19646162234210454,
+    "n_record_bids": 102,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0x8a85062118e29045e8b199723d9af519b0c071d9e7586fa89733e798536d4637f8545a169012cc1b76005d9453603273",
+    "winning_bid_eth": 0.13572672762564325,
+    "proposer_payment_tx": "0x4d319f587f0a5cda5e4bfbaa9a655c9d3c9d6661843083e32fb2bd616ec0d825",
+    "proposer_fee_recipient": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127",
+    "runner_up_visible_bid_eth": 0.13572672757983278,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x8e260bf89637eb61a7ee298ed6b21aa15f623486431c418df7dc3f6577c8f32a",
+      "index": 126,
+      "of": 194,
+      "priority_fee_gwei": 0.00038337,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 6.67272276606e-06,
+      "share_of_winning_bid": 4.916292378656967e-05
+     }
+    ],
+    "sum_builder_revenue_eth": 0.389093,
+    "raw": "incidents/balancer-2025/race_23717627.json"
+   },
+   {
+    "block": 23717629,
+    "slot": 12944565,
+    "utc": "2025-11-03T08:33:23+00:00",
+    "extra_data": "Builder+ www.btcs.com/builder",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "ultrasound",
+     "bloxroute-regulated",
+     "titan"
+    ],
+    "n_bids": 661,
+    "bids_per_relay": {
+     "flashbots": 161,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8922,
+    "last_bid_t_rel_slot_ms": 3443,
+    "first_record_bid_eth": 0.00016238606322231,
+    "max_bid_eth": 1.7848112709793678,
+    "n_record_bids": 60,
+    "winning_builder": "Builder+ www.btcs.com/builder",
+    "winning_builder_pubkey": "0xb7c5fbdde8ca800875d7aac708761e07486fbab117af3826c48a6c287bc52ab1ae7320bf7b9701467a9bdc7b43aaddba",
+    "winning_bid_eth": 1.7846883106781966,
+    "proposer_payment_tx": "0x686c1fb70d857a150a9b764f33ea43b91fec0150ce6471341eac12a636d628bf",
+    "proposer_fee_recipient": "0x8eb24bea0b4f4f6c09359a00637faa9c127d9d4f",
+    "runner_up_visible_bid_eth": 1.7846374969630963,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x00b08e5e77da0179c3aae423beea1ecdbd4e27f9072ef002344a766681f020d2",
+      "index": 71,
+      "of": 118,
+      "priority_fee_gwei": 0.00038337,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 8.31723400209e-06,
+      "share_of_winning_bid": 4.660328614428691e-06
+     }
+    ],
+    "sum_builder_revenue_eth": 1.785287,
+    "raw": "incidents/balancer-2025/race_23717629.json"
+   },
+   {
+    "block": 23717631,
+    "slot": 12944567,
+    "utc": "2025-11-03T08:33:47+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan",
+     "ethgas"
+    ],
+    "relays_delivered": [
+     "bloxroute-regulated"
+    ],
+    "n_bids": 765,
+    "bids_per_relay": {
+     "flashbots": 106,
+     "titan": 500,
+     "ethgas": 159
+    },
+    "first_bid_t_rel_slot_ms": -9181,
+    "last_bid_t_rel_slot_ms": 4204,
+    "first_record_bid_eth": 0.001183725571889714,
+    "max_bid_eth": 0.2238476319482086,
+    "n_record_bids": 80,
+    "winning_builder": null,
+    "winning_builder_pubkey": "0x88a53ec4422f50238def5696446e06acd076f94d73c76e51449cf82eb5312dcb8a845a6c3199ce35de3f2b0441deb76b",
+    "winning_bid_eth": 0.2042130704999153,
+    "proposer_payment_tx": "0x9cd19e7c7a3406ed396f8db9e4a2543b44186c8d327fd23a47260a5f0fae134b",
+    "proposer_fee_recipient": "0x7D16d2c4e96BCFC8f815E15b771aC847EcbDB48b",
+    "runner_up_visible_bid_eth": 0.20421250435757707,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0xa4ee77dbc66c106e5a552859f91b2a04cb8d26a94903644919acb53f540847b4",
+      "index": 13,
+      "of": 154,
+      "priority_fee_gwei": 2.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.034396206,
+      "share_of_winning_bid": 0.1684329309372696
+     }
+    ],
+    "sum_builder_revenue_eth": 0.383021,
+    "raw": "incidents/balancer-2025/race_23717631.json"
+   },
+   {
+    "block": 23717632,
+    "slot": 12944568,
+    "utc": "2025-11-03T08:33:59+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "ultrasound"
+    ],
+    "n_bids": 679,
+    "bids_per_relay": {
+     "flashbots": 179,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8111,
+    "last_bid_t_rel_slot_ms": 4678,
+    "first_record_bid_eth": 0.000647735395093076,
+    "max_bid_eth": 0.20382162789839017,
+    "n_record_bids": 70,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0x8527d16cf01edcea2cbb05e27f5f61b184578ea27c4015e4533e4cebd6d53297bd004c14fe3f247a468361bf781e0069",
+    "winning_bid_eth": 0.11489157404197192,
+    "proposer_payment_tx": "0xc41fd81904abd2c9ab2d1f428c5825ab15f43e390f63af25af6518c3562737a1",
+    "proposer_fee_recipient": "0xd4d3fde5145141ddf7c465889923f29154526de3",
+    "runner_up_visible_bid_eth": 0.11489148805589701,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x3e173ab0ba9183efa8a42caa783bdb5ec75daffcc8505cc1302009d11daf1ccf",
+      "index": 1,
+      "of": 118,
+      "priority_fee_gwei": 0.00038337,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 5.48142272652e-06,
+      "share_of_winning_bid": 4.770952763270124e-05
+     }
+    ],
+    "sum_builder_revenue_eth": 0.295842,
+    "raw": "incidents/balancer-2025/race_23717632.json"
+   },
+   {
+    "block": 23717633,
+    "slot": 12944569,
+    "utc": "2025-11-03T08:34:11+00:00",
+    "extra_data": "Builder+ www.btcs.com/builder",
+    "relays_with_bids": [
+     "titan"
+    ],
+    "relays_delivered": [
+     "ultrasound"
+    ],
+    "n_bids": 500,
+    "bids_per_relay": {
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -7786,
+    "last_bid_t_rel_slot_ms": 4032,
+    "first_record_bid_eth": 0.00453625102318645,
+    "max_bid_eth": 2.7301142791458237,
+    "n_record_bids": 49,
+    "winning_builder": "Builder+ www.btcs.com/builder",
+    "winning_builder_pubkey": "0xb7c5beef142c8ff6440e4b7cf2b3efb8e4fbe3a76acf6ed20d69717a46adf9f8bbefb502828d7234a4d3fd03597bd601",
+    "winning_bid_eth": 2.6803468576955947,
+    "proposer_payment_tx": "0xbb094fff6b003d68629dae1b139b63fd4c05e0871b367bfc46490211c2565ab2",
+    "proposer_fee_recipient": "0xe5490c8820317384ec88fc94b1d427d921483681",
+    "runner_up_visible_bid_eth": 2.680222482881552,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0xb8a978185e834620f5572aaa9b3858630abfcdbe09459c512f54b3a26ef643d4",
+      "index": 34,
+      "of": 185,
+      "priority_fee_gwei": 0.00038337,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 7.19209365693e-06,
+      "share_of_winning_bid": 2.68326975528583e-06
+     }
+    ],
+    "sum_builder_revenue_eth": 2.229856,
+    "raw": "incidents/balancer-2025/race_23717633.json"
+   },
+   {
+    "block": 23717697,
+    "slot": 12944633,
+    "utc": "2025-11-03T08:46:59+00:00",
+    "extra_data": "beaverbuild.org",
+    "relays_with_bids": [
+     "titan"
+    ],
+    "relays_delivered": [
+     "ultrasound"
+    ],
+    "n_bids": 500,
+    "bids_per_relay": {
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8102,
+    "last_bid_t_rel_slot_ms": 3235,
+    "first_record_bid_eth": 0.001647083673045927,
+    "max_bid_eth": 0.2215980000000141,
+    "n_record_bids": 63,
+    "winning_builder": "beaverbuild.org",
+    "winning_builder_pubkey": "0xa1da297871a9b654ff91f8d39a5e2c4fbdc9011f9f75b2f743c2d2bddab10926b0e80f68a20dc647e7b51b76ff5b05a5",
+    "winning_bid_eth": 0.19902687631193233,
+    "proposer_payment_tx": "0xf78417a617293ede5935467b6ea48bedeac4e7604de7bffac8334792e15b9c2e",
+    "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+    "runner_up_visible_bid_eth": 0.1989207291321071,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x6256d6e9e6effe2692ba97f7f5047c0e3f6d8cc6407e84b80cf9e7c89636c422",
+      "index": 4,
+      "of": 194,
+      "priority_fee_gwei": 0.0004246,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 1.10809798176e-05,
+      "share_of_winning_bid": 5.5675796269007e-05
+     }
+    ],
+    "sum_builder_revenue_eth": 0.205893,
+    "raw": "incidents/balancer-2025/race_23717697.json"
+   },
+   {
+    "block": 23717706,
+    "slot": 12944642,
+    "utc": "2025-11-03T08:48:47+00:00",
+    "extra_data": "✨ Quasar (quasar.win) ✨",
+    "relays_with_bids": [
+     "titan"
+    ],
+    "relays_delivered": [],
+    "n_bids": 500,
+    "bids_per_relay": {
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -7784,
+    "last_bid_t_rel_slot_ms": 3002,
+    "first_record_bid_eth": 0.002071510876603327,
+    "max_bid_eth": 0.014469606040604502,
+    "n_record_bids": 101,
+    "winning_builder": null,
+    "winning_builder_pubkey": null,
+    "winning_bid_eth": null,
+    "proposer_payment_tx": null,
+    "proposer_fee_recipient": null,
+    "runner_up_visible_bid_eth": 0.014469606040604502,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x2a0ead4ee9b17a1afa5bfe3dc152833a957f2d25dd9b4b86d68f2c87bdacf69c",
+      "index": 185,
+      "of": 228,
+      "priority_fee_gwei": 0.000495189,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 7.42641380757e-06,
+      "share_of_winning_bid": null
+     }
+    ],
+    "sum_builder_revenue_eth": 0.015796,
+    "raw": "incidents/balancer-2025/race_23717706.json"
+   },
+   {
+    "block": 23717709,
+    "slot": 12944645,
+    "utc": "2025-11-03T08:49:23+00:00",
+    "extra_data": "Titan (titanbuilder.xyz)",
+    "relays_with_bids": [
+     "titan"
+    ],
+    "relays_delivered": [
+     "titan"
+    ],
+    "n_bids": 500,
+    "bids_per_relay": {
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -9099,
+    "last_bid_t_rel_slot_ms": 1925,
+    "first_record_bid_eth": 0.000930224110830044,
+    "max_bid_eth": 0.15112200954817465,
+    "n_record_bids": 73,
+    "winning_builder": "Titan (titanbuilder.xyz)",
+    "winning_builder_pubkey": "0xb26f96664274e15fb6fcda862302e47de7e0e2a6687f8349327a9846043e42596ec44af676126e2cacbdd181f548e681",
+    "winning_bid_eth": 0.12629945571928036,
+    "proposer_payment_tx": "0xc19ebe6673ac4f867076be78aa0bb98638f28efbab32db51c6b434d76255502a",
+    "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+    "runner_up_visible_bid_eth": 0.12625500473940227,
+    "winning_block_in_retained_bids": false,
+    "focus": [
+     {
+      "hash": "0x32a604f4404bdda461e9bddbd9a2e62f1c9f01f4850cbed38bf1b47f334f22ef",
+      "index": 1,
+      "of": 67,
+      "priority_fee_gwei": 7.026785128,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.10430368715447719,
+      "share_of_winning_bid": 0.8258443123168157
+     },
+     {
+      "hash": "0xed0c8654af364a30957550cdf5eb664951cd277b1bc585902914ffe75247ee3a",
+      "index": 2,
+      "of": 67,
+      "priority_fee_gwei": 2.0,
+      "coinbase_transfer_eth": 0.0,
+      "builder_revenue_eth": 0.029299814,
+      "share_of_winning_bid": 0.23198685879631398
+     }
+    ],
+    "sum_builder_revenue_eth": 0.184953,
+    "raw": "incidents/balancer-2025/race_23717709.json"
+   },
+   {
+    "block": 23718188,
+    "slot": 12945125,
+    "utc": "2025-11-03T10:25:23+00:00",
+    "extra_data": "I can haz block?",
+    "relays_with_bids": [
+     "flashbots",
+     "titan"
+    ],
+    "relays_delivered": [
+     "flashbots",
+     "ultrasound",
+     "agnostic"
+    ],
+    "n_bids": 553,
+    "bids_per_relay": {
+     "flashbots": 53,
+     "titan": 500
+    },
+    "first_bid_t_rel_slot_ms": -8921,
+    "last_bid_t_rel_slot_ms": 3294,
+    "first_record_bid_eth": 0.000348809288903532,
+    "max_bid_eth": 0.1323972473005894,
+    "n_record_bids": 57,
+    "winning_builder": "I can haz block?",
+    "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+    "winning_bid_eth": 0.12567213167393276,
+    "proposer_payment_tx": "0xa9ace9932aa0fdef399f0308cfb4f5261df36cd0d0fd12b2945733af08c17832",
+    "proposer_fee_recipient": "0xF42FeCc40F6E31dCa303478cDdF60286Bf39e2eB",
+    "runner_up_visible_bid_eth": 0.1250917521973289,
+    "winning_block_in_retained_bids": true,
+    "focus": [
+     {
+      "hash": "0xd8dd6cbcbbf1ad57de4394fee889e63174c65737df17f61e26d48dd17de7385a",
+      "index": 0,
+      "of": 3,
+      "priority_fee_gwei": 0.0,
+      "coinbase_transfer_eth": 0.18738030008439793,
+      "builder_revenue_eth": 0.18738030008439793,
+      "share_of_winning_bid": 1.4910250792162287
+     }
+    ],
+    "sum_builder_revenue_eth": 0.18738,
+    "raw": "incidents/balancer-2025/race_23718188.json"
+   }
+  ]
+ },
+ "tests": [
+  {
+   "test": "Real attacker identified incl. several EOAs, contracts, deployment, reverted/late txs",
+   "result": "PASS",
+   "detail": "EOA1 0x506d1f9e + EOA2 0x766a892f, one beneficiary 0xaa760d53; deployment = A1 (constructor exploit); no reverted attacker txs."
+  },
+  {
+   "test": "Bot tx from a different address whose call tree replays the attacker victim calls, SAME OR EARLIER block",
+   "result": "FAIL",
+   "detail": "Replays exist (Bitfinding, 0x7bb28442, 0x87a16382, others; 3 of 983 words differ) but every one lands in a LATER block than the attacker tx on the same pool (1, 2, 3, 4 blocks later)."
+  },
+  {
+   "test": "Bot tx pre-empted a still-pending attacker tx",
+   "result": "FAIL",
+   "detail": "Only A8, A8b, A9, A9b were public (mempool-dumpster first-seen 7.4-18.7 s before the timestamp of the including block); no exploit-shaped tx on those pools precedes them (pool-sequence scan blocks 23717390-23718400). A1-A7 and EOA2 txs are absent from the dumpster (private flow), so no public pending window exists to pre-empt."
+  },
+  {
+   "test": "Ordering evidence",
+   "result": "PASS (for the negative result)",
+   "detail": "race_<block>.json for 15 key blocks; Titan built the attack block (23717397) and next block; relay bids exist (Flashbots 308 / Titan 500 capped) but the winning block of 23717397 was delivered by Ultra Sound whose bids have aged out."
+  },
+  {
+   "test": "Adversarial: arbitrage bots touching same pools",
+   "result": "EXCLUDED",
+   "detail": "0xc0ffee445a22, 0x240926d7..., 0x0000..4f3d8a, Yoink etc. backrun/rebalance but do not replay attacker calls."
+  }
+ ],
+ "mempool": {
+  "dumpster_day": "2025-11-03 (csv covered; sourcelog.csv.zip not published for this month, so only merged first-seen)",
+  "attacker_A1_seen": false,
+  "public_attacker_txs": [
+   {
+    "hash": "0x6256d6e9e6effe2692ba97f7f5047c0e3f6d8cc6407e84b80cf9e7c89636c422",
+    "first_seen_utc": "2025-11-03T08:46:49.956Z",
+    "block": 23717697
+   },
+   {
+    "hash": "0x59279c1aee6c48303d30788f8e75d3d8f0029aed5de6e385caaea5cc8ea2a1e4",
+    "first_seen_utc": "2025-11-03T08:47:02.410Z",
+    "block": 23717698
+   },
+   {
+    "hash": "0x2a0ead4ee9b17a1afa5bfe3dc152833a957f2d25dd9b4b86d68f2c87bdacf69c",
+    "first_seen_utc": "2025-11-03T08:48:28.330Z",
+    "block": 23717706
+   },
+   {
+    "hash": "0x1f486ee28db16682a798bb0d84f926f13f70cf271350e2c276de6edca78403df",
+    "first_seen_utc": "2025-11-03T08:48:51.575Z",
+    "block": 23717707
+   }
+  ],
+  "bitfinding_seen": false,
+  "note": "First-seen of A1 and of every replay is unknown (absent from dumpster = private order flow or not seen by its nodes). A8/A9 public sightings: see public_attacker_txs."
+ },
+ "scan_coverage": "Vault Swap/PoolBalanceChanged logs scanned for blocks 23717390-23718400 (528 txs; 46 non-trivial ones classified); txs after block 23718400 not scanned for further copies. Etherscan txlists for 8 candidate EOAs blocks 23700000-23800000.",
+ "data_gaps": [
+  "Mempool first-seen of A1..A7 and all replays unknown (private)",
+  "Winning-block bids for 23717397/23717706 not retrievable (Ultra Sound bids aged out; 23717706 delivery not found on any answering relay)",
+  "Bitfinding attribution rests on amount-exact match to BIP-892, not a published address",
+  "StakeWise/Safe ownership of 0x144a98cb not checked",
+  "Funder 0x5babe600 type not verified",
+  "Other-chain legs (Polygon, Base, Arbitrum rescues) out of scope",
+  "Purpose of 80 self-transfers unknown"
+ ],
+ "sources": [
+  "https://forum.balancer.fi/t/bip-892-distribution-of-rescued-funds-from-balancer-v2-november-3rd-2025-attacks/6883 (saved JSON)",
+  "https://ambcrypto.com/balancer-recovers-45-7m-after-121m-hack-but-bal-stays-down-24/ (quotes Balancer post-mortem: \"Bitfinding alone front-ran attackers on Ethereum Mainnet for $964,000\")",
+  "https://www.theblock.co/post/380751/balancer-recovered-funds-distribution (WebFetch; not saved raw)",
+  "https://www.dlnews.com/articles/defi/stakewise-uses-loophole-to-take-back-funds-from-balancer-hacker/ (search result only)",
+  "https://x.com/Balancer/status/1990856260988670132 (post-mortem link; not fetched)"
+ ],
+ "raw_refs": {
+  "bip892": "site/raw/balancer-web/bip892_6883.json",
+  "ambcrypto": "site/raw/balancer-web/ambcrypto_postmortem.html",
+  "attacker_txlist": "site/raw/etherscan/bal_attacker_txlist.json",
+  "bitfinding_txlist": "site/raw/etherscan/bal_0x5af00b07_txlist.json",
+  "bitfinding_tokentx": "site/raw/etherscan/bal_0x5af00b07_tokentx.json",
+  "beneficiary_tokentx": "site/raw/etherscan/bal_aa760_tokentx.json",
+  "dao_notices": "site/raw/etherscan/bal_dao_notice_sender_txlist.json",
+  "mempool_day": "full cache only (not published)",
+  "vault_logs": "full cache only (not published)",
+  "race_files": "full cache only (not published)"
+ },
+ "verdict_original": "related-not-frontrun",
+ "race_type": "post-failure-replay",
+ "headline": false,
+ "headline_text": "Balancer v2 mainnet: whitehat Bitfinding replayed the attacker's exploit input one block after it landed, rescued about 260 ETH-equivalent in this tx, and returned it to the DAO; a 10% bounty was paid on 2026-01-15.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Every replay (Bitfinding whitehat 23717398; copiers) landed AFTER the attacker's tx 23717397 on the same pool: post-inclusion rescue of residual balances, not pre-emption.",
+  "headline_note": null,
+  "dataset_rows": [
+   "balancer-2025"
+  ]
+ }
+}

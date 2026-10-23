@@ -1,0 +1,208 @@
+[
+ {
+  "sub": "pending-ads",
+  "yoink_tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+  "attacker_tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88",
+  "victim": "0x158fb20ff581731a84c50584f4f82751704708d8",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "000000000000000000000000011ee2b5a4ef3e05e11d45a241582ea191a86077",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "pending-usdt",
+  "yoink_tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+  "attacker_tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44",
+  "victim": "0xa340a9fb8eaa07d8a23300e6314bf41e8c4e42fc",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "000000000000000000000000f22a258da7e1ac4ae5abc0ea7059df638ae3b4ec",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   },
+   {
+    "word": 21,
+    "attacker": "854877ac00000000000000000000000000000000000000000000000000000000",
+    "yoink": "854877ac00000000000000000000000000000000000000000000000000000001"
+   },
+   {
+    "word": 22,
+    "attacker": "0000000000000000000000000000000000000000000000000000000000000000",
+    "yoink": "e69bd5ca00000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "pending-usdt",
+  "yoink_tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+  "attacker_tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44",
+  "victim": "0xa17de4ec9ecb7aa25dfcbbdac8b301b674d9d10a",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "000000000000000000000000f22a258da7e1ac4ae5abc0ea7059df638ae3b4ec",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   },
+   {
+    "word": 21,
+    "attacker": "854877ac00000000000000000000000000000000000000000000000000000000",
+    "yoink": "854877ac00000000000000000000000000000000000000000000000000000001"
+   },
+   {
+    "word": 22,
+    "attacker": "0000000000000000000000000000000000000000000000000000000000000000",
+    "yoink": "41f817ed00000000000000000000000000000000000000000000000000000000"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "half-copies",
+  "yoink_tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+  "attacker_tx": "0xd0bab3e76a55033e4ef47a8a52bea74313eaea3b04a23adc7c7e416d359bc3a0",
+  "victim": "0xbf12773b490e1deb57039061aacfa2a87deac9b9",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "half-copies",
+  "yoink_tx": "0xaeb81988bb0b1bcae375f979f9ecb8146d811b42170a8ebe11467625240178a2",
+  "attacker_tx": "0xaf663a20894ce49fd4e666ac64fae7957b0884e1dc324fabe71562eea13876de",
+  "victim": "0x2121fc1b00b30844fa6ef43370666d5487fc118e",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "pending-xi",
+  "yoink_tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+  "attacker_tx": "0x5cfe50df6e9bb8e07d36f7f5a031adad672550695106f4b94e227928b86efe61",
+  "victim": "0xd04b7023f7433554c9852ae2da8046933ed6d839",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "pending-xi",
+  "yoink_tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+  "attacker_tx": "0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87",
+  "victim": "0xd04b7023f7433554c9852ae2da8046933ed6d839",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "half-copies",
+  "yoink_tx": "0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746",
+  "attacker_tx": "0x2ee9720613dabe7795ca3511eb4aca64f51f39eb4364705ae79716df6992aa89",
+  "victim": "0x0f119cc79da180856f48ba317347114955ed71f1",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "half-copies",
+  "yoink_tx": "0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437",
+  "attacker_tx": "0xdd0636e2598f4d7b74f364fedb38f334365fd956747a04a6dd597444af0bc1c0",
+  "victim": "0x12fe4bc7d0b969055f763c5587f2ed0ca1b334f3",
+  "yoink_call_hex_len": 1482,
+  "attacker_call_hex_len": 1482,
+  "n_words": [
+   23,
+   23
+  ],
+  "differing_words": [
+   {
+    "word": 2,
+    "attacker": "0000000000000000000000002ad8aed847e8d4d3da52aabb7d0f5c25729d10df",
+    "yoink": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   }
+  ],
+  "reading": "identical 32-byte words except the listed ones; word 2 is the recipient field of the first argument (Info.to) in every case"
+ },
+ {
+  "sub": "pending-ads",
+  "note": "attacker's first attempt (nonce 124, tx 0x14329584..., reverted at 19393715, public since 23:37:15.017) carries the same victim, token and amount but its argument encoding is shifted by 4 bytes (input 1474 vs 1482 hex chars), and it reverted; the nonce-125 resend is the well-formed one",
+  "attacker_tx_malformed": "0x143329584d01e998e1b6c32b3a3fbcb9801245354df53b366efb72aa6151ff59",
+  "malformed_input_hex_len": 1474
+ }
+]

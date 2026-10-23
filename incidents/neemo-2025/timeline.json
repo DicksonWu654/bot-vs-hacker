@@ -1,0 +1,220 @@
+{
+ "slug": "neemo-2025",
+ "note": "Times are 12-s block timestamps unless stated. Neither the upgrade tx nor the bot tx has a mempool first-seen (absent from mempool-dumpster, which saw 52-58% of txs in those blocks); no sub-block ordering of bot discovery is possible. Messages from the Defimon posts are in site/raw/web-neemo/.",
+ "events": [
+  {
+   "t_utc_ms": 1738760963000,
+   "t_utc": "2025-02-05T13:09:23.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "deploy",
+   "actor": "deployer 0x067cbde2",
+   "detail": "2025-02-05 (block 21780495 onward): CREATEs of implementations and upgradeToAndCall on proxy 0x54cd2346 by 0x067cbde2 (context: who administered the proxy before)",
+   "raw_ref": "site/raw/etherscan/txlist_0x067cbde24a3d3cbd11ca62b7b490a1291b2e1d39_0_99999999.json"
+  },
+  {
+   "t_utc_ms": 1747987271000,
+   "t_utc": "2025-05-23T08:01:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "fund",
+   "actor": "0x067cbde2 -> 0x7e9b11d0",
+   "detail": "Neemo deployer funds the later key-holder EOA with 0.0236 ETH (2025-05-23)",
+   "tx": "0xed547ad6bc8cf8797ac940e3ae393fae7c2af236a9ee690010d1f86684ed3b51",
+   "block": 22544239,
+   "raw_ref": "site/raw/etherscan/txlist_0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d.json"
+  },
+  {
+   "t_utc_ms": 1751749391000,
+   "t_utc": "2025-07-05T21:03:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "deploy",
+   "actor": "key-holder EOA 0x7e9b11d0",
+   "detail": "CREATE of implementation 0xbc4b1d58 (old implementation + 3 new selectors incl. open 0x03b79c24). Same block holds a routine bot tx at idx 63 (tx 0xc9e04076..., ~294k gas, 0.37 gwei) - listed only because the bot EOA is active here.",
+   "tx": "0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486",
+   "block": 22855567,
+   "index": 107,
+   "raw_ref": "site/raw/rpc/tx_0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486.json"
+  },
+  {
+   "t_utc_ms": 1751749403000,
+   "t_utc": "2025-07-05T21:03:23.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "key-holder EOA 0x7e9b11d0",
+   "detail": "proxy 0x54cd2346 .upgradeToAndCall(0xbc4b1d58, 0x). Tx not in mempool-dumpster (private flow or missed). Block built by Titan (header extra_data 'Titan (titanbuilder.xyz)').",
+   "tx": "0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373",
+   "block": 22855568,
+   "index": 130,
+   "raw_ref": "site/raw/rpc/tx_0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373.json"
+  },
+  {
+   "t_utc_ms": 1751749415000,
+   "t_utc": "2025-07-05T21:03:35.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "bot EOA 0xb750e316",
+   "detail": "BOT drain: executor 0x1a61249f calls proxy.0x03b79c24(executor); 106.929468 weETH -> 114.534060 WETH -> ETH to the bot EOA; priority fee 150 gwei (0.0206628 ETH), coinbase transfer 0; block 22855569 (BuilderNet, delivered by Ultra Sound, bid 0.0342 ETH). Not in mempool-dumpster.",
+   "tx": "0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2",
+   "block": 22855569,
+   "index": 0,
+   "raw_ref": "site/raw/rpc/trace_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+   "raw_refs": [
+    "site/raw/rpc/block_22855569.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1751749931000,
+   "t_utc": "2025-07-05T21:12:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "key-holder EOA 0x7e9b11d0",
+   "detail": "calls new selector 0x53474b2c() (writes one storage constant, no external call)",
+   "tx": "0xc8c2c1e8513604fa4a26d05a99dac0e4d5db32d7e6e23c386ddded2c64bcca27",
+   "block": 22855612,
+   "index": 158,
+   "raw_ref": "site/raw/rpc/trace_0xc8c2c1e8513604fa4a26d05a99dac0e4d5db32d7e6e23c386ddded2c64bcca27.json",
+   "raw_refs": [
+    "site/raw/rpc/tx_0xc8c2c1e8513604fa4a26d05a99dac0e4d5db32d7e6e23c386ddded2c64bcca27.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1751752643000,
+   "t_utc": "2025-07-05T21:57:23.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "key-holder EOA 0x7e9b11d0",
+   "detail": "calls new selector 0x97e44edc(0x7e9b11d0): CCIP send from the proxy's 0.0000199 ETH of WETH; no weETH moved",
+   "tx": "0x6d5a765f8583b05134fcd588426e99b585ba045970f4b78ae7e19a7aafc5be0d",
+   "block": 22855836,
+   "index": 123,
+   "raw_ref": "site/raw/rpc/trace_0x6d5a765f8583b05134fcd588426e99b585ba045970f4b78ae7e19a7aafc5be0d.json",
+   "raw_refs": [
+    "site/raw/rpc/tx_0x6d5a765f8583b05134fcd588426e99b585ba045970f4b78ae7e19a7aafc5be0d.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1751754467000,
+   "t_utc": "2025-07-05T22:27:47.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "return",
+   "actor": "0x5c7bcd6e -> 0x7e9b11d0",
+   "detail": "12.264 ETH arrives in the key-holder EOA from 0x5c7bcd6e (a proxy whose implementation Etherscan names Ethereum_SpokePool); origin chain not traced",
+   "block": 22855986,
+   "raw_ref": "site/raw/etherscan/txlistinternal_0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d.json"
+  },
+  {
+   "t_utc_ms": 1751754731000,
+   "t_utc": "2025-07-05T22:32:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "key-holder EOA 0x7e9b11d0",
+   "detail": "sends 12.27 ETH to collection address 0x4ec65e4d",
+   "tx": "0x58661caf2a70c4ddfa9393574b8d3e26aab579031de2373cbb0ffbc6b8c5a4ae",
+   "block": 22856007,
+   "index": 146,
+   "raw_ref": "site/raw/rpc/tx_0x58661caf2a70c4ddfa9393574b8d3e26aab579031de2373cbb0ffbc6b8c5a4ae.json"
+  },
+  {
+   "t_utc_ms": 1751760287000,
+   "t_utc": "2025-07-06T00:04:47.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "0x198b2c4e -> 0x4ec65e4d",
+   "detail": "160.9 ETH (then 3.4 ETH at 1751761475, block 22856567) to the collection address; 12.27+160.9+3.4 = 176.57 ETH, the figure in Neemo's message",
+   "tx": "0x882d6512953ce1a4c50be9bd0f8dcbd7449799da294d7eed231644a976da2202",
+   "block": 22856468,
+   "index": 104,
+   "raw_ref": "site/raw/etherscan/txlist_0x4ec65e4dbe6e53ee4938aef2b173b38763d3bc2b.json"
+  },
+  {
+   "t_utc_ms": 1751763215000,
+   "t_utc": "2025-07-06T00:53:35.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "tx",
+   "actor": "0x4ec65e4d -> Tornado Router 0xd90e2f92",
+   "detail": "starts depositing the collected ETH (176.4 ETH over 32 txs through 2025-07-06/07)",
+   "tx": "0x5c2c5b4dfce12c7b4aa08ad0c70181fb1ab149332806da8b6a9db203ab665354",
+   "block": 22856711,
+   "index": 34,
+   "raw_ref": "site/raw/etherscan/txlist_0x4ec65e4dbe6e53ee4938aef2b173b38763d3bc2b.json"
+  },
+  {
+   "t_utc_ms": 1752408011000,
+   "t_utc": "2025-07-13T12:00:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "message",
+   "actor": "Neemo 0xdf902f5c -> bot EOA",
+   "detail": "on-chain message: 20% white-hat bounty for return of the other 80% within 72 h (sent twice; also to the key-holder EOA 0x7e9b11d0 at block 22910118)",
+   "tx": "0x1d75316b056095fb7584bfa84fdf6fe1388cf076d71470d39a9a652d996655a6",
+   "block": 22910118,
+   "raw_ref": "site/raw/rpc/tx_0x1d75316b056095fb7584bfa84fdf6fe1388cf076d71470d39a9a652d996655a6.json"
+  },
+  {
+   "t_utc_ms": 1752472031000,
+   "t_utc": "2025-07-14T05:47:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "message",
+   "actor": "Neemo 0xdf902f5c -> bot EOA",
+   "detail": "acknowledges the willingness to return 80%; gives 0x1671e4e1 as destination for the 91.634 ETH refund",
+   "tx": "0xcd07f5769fb937541613bfa0a92b10060f2c8e074fdfc0bfae071a71907095e7",
+   "block": 22915421,
+   "raw_ref": "site/raw/rpc/tx_0xcd07f5769fb937541613bfa0a92b10060f2c8e074fdfc0bfae071a71907095e7.json"
+  },
+  {
+   "t_utc_ms": 1752497291000,
+   "t_utc": "2025-07-14T12:48:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "return",
+   "actor": "bot EOA -> Neemo 0x1671e4e1",
+   "detail": "1.0 ETH test return",
+   "tx": "0x9fce819f59a0e61d1b8571aaa1a4fb06bd037ae8f1263b0de4fe7cbccc17db23",
+   "block": 22917516,
+   "index": 125,
+   "raw_ref": "site/raw/rpc/tx_0x9fce819f59a0e61d1b8571aaa1a4fb06bd037ae8f1263b0de4fe7cbccc17db23.json"
+  },
+  {
+   "t_utc_ms": 1752497375000,
+   "t_utc": "2025-07-14T12:49:35.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "return",
+   "actor": "bot EOA -> Neemo 0x1671e4e1",
+   "detail": "90.634 ETH (total 91.634 ETH = 80.0% of the 114.534 ETH the bot received; the bot keeps 22.900 ETH)",
+   "tx": "0x0aede3f295d97291f22589b7dc71e783ee8ae6cc816f55c698376ee4c5362de9",
+   "block": 22917522,
+   "index": 230,
+   "raw_ref": "site/raw/rpc/tx_0x0aede3f295d97291f22589b7dc71e783ee8ae6cc816f55c698376ee4c5362de9.json"
+  },
+  {
+   "t_utc_ms": 1752502271000,
+   "t_utc": "2025-07-14T14:11:11.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "message",
+   "actor": "Neemo 0xdf902f5c -> bot EOA",
+   "detail": "funds received - thank you; asks about 176.57 ETH moved to 0x4ec65e4d (same text also sent to 0x4ec65e4d in tx 0x02078e3c..., block 22917927)",
+   "tx": "0xe95ba4cb65ecaf7f7cd9e1820987aeb5e51fbc493d734a9de56ada5986480ea8",
+   "block": 22917927,
+   "raw_ref": "site/raw/rpc/tx_0xe95ba4cb65ecaf7f7cd9e1820987aeb5e51fbc493d734a9de56ada5986480ea8.json"
+  },
+  {
+   "t_utc_ms": 1752526583000,
+   "t_utc": "2025-07-14T20:56:23.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "message",
+   "actor": "bot EOA -> Neemo 0xdf902f5c",
+   "detail": "bot message: contract upgraded with the compromised key, the new implementation had no access control, 'the bot picked up on this and executed a withdraw a block later'; does not know 0x4ec65e4d",
+   "tx": "0xc2511fb4e918c5c5d62789b389a775ac6175d8f86371f38a03077055a4511555",
+   "block": 22919941,
+   "raw_ref": "site/raw/rpc/tx_0xc2511fb4e918c5c5d62789b389a775ac6175d8f86371f38a03077055a4511555.json"
+  },
+  {
+   "t_utc_ms": 1752527135000,
+   "t_utc": "2025-07-14T21:05:35.000Z",
+   "precision": "block timestamp (12 s)",
+   "kind": "message",
+   "actor": "bot EOA -> Neemo 0xdf902f5c",
+   "detail": "repeats that it does not know 0x4ec65e4d",
+   "tx": "0xdd4d03b68e05daaab8558847aed0d5d359ec87084a43ea9ad7a66f260530165d",
+   "block": 22919987,
+   "raw_ref": "site/raw/rpc/tx_0xdd4d03b68e05daaab8558847aed0d5d359ec87084a43ea9ad7a66f260530165d.json"
+  }
+ ]
+}

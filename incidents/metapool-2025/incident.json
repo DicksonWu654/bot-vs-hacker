@@ -1,0 +1,356 @@
+{
+ "slug": "metapool-2025",
+ "name": "Meta Pool mpETH: unprotected ERC4626 mint() exploit (Yoink first, a separate attacker 1h44m later)",
+ "date": "2025-06-17",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "race_type": "bot-was-first-exploiter",
+ "headline": false,
+ "era": "mature-pbs-2024-26",
+ "verdict_reason": "Yoink's tx 0x4f43fc6d (block 22722394, index 0, 2025-06-17T06:18:59Z) is the FIRST tx ever to use the mpETH mint-without-deposit bug; the human attacker's first exploit tx (0x691c8070, EOA 0xd08559ce, block 22722643) landed 50 min 00 s later and its main tx (0x57ee419a, block 22722911) 1 h 44 min later. Nothing of the attacker's was pending when Yoink landed: the main-tx EOA 0x48f1d0f5 held only 0.00083 ETH until the first test run paid it 1.64 ETH at 07:08:59Z (its 29.1M-gas main tx needs ~0.03 ETH), the older EOA 0xd08559ce had made no Meta Pool call before 07:08:59Z, and none of the attacker's txs ever appears in the public mempool archive. So the press wording 'Yoink front-ran the attacker' is wrong in the race sense: Yoink independently found/used the bug, the attacker (or whoever built the second tx) came afterwards and reproduced the same call grammar with their own contracts and a Balancer flash loan. Yoink then returned its net 45.79 ETH to the Meta Pool admin EOA and received a 5 ETH reward; the attacker returned nothing.",
+ "protocol_loss_usd": 132000,
+ "protocol_loss_basis": "press (Cointelegraph/Quill): ~52.5 ETH, ~$132k. Own measure from traces: Yoink tx removed 50.77 ETH (13.26 ETH from the unstake pool net of its own 90 ETH deposit + 37.51 WETH from the V3 pool), attacker cluster realised 15.29 ETH on Ethereum (part of it third-party WETH) plus c0ffeebabe 0.0285 ETH; no USD price source saved, so no USD recomputation.",
+ "attacker": {
+  "eoas": [
+   "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98",
+   "0xd08559ceb2217bc6c11b0e808f22d56e70118605"
+  ],
+  "eoa_roles": {
+   "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98": "sends the main tx 0x57ee419a (the DeFiHackLabs/press 'attacker'); funded by D_EOA",
+   "0xd08559ceb2217bc6c11b0e808f22d56e70118605": "older EOA (first tx 2025-04-06) that sends the two test runs and funds A_EOA; same cluster: funds A_EOA 0.001 ETH (tx 0x005e52eaf440a1ea7268a1b67fe608f26efec80c5cca2950d5baf35d4e80c0e3), receives 100 mpETH from A_EOA (0x44f242cf), both forward proceeds to 0x45dd46c45fe6681168927a261842abb55a8b910a"
+  },
+  "contracts": [
+   "0xff13d5899aa7d84c10e4cd6fb030b80554424136",
+   "0xc3d10bd8e051a2be6408d18be8464654f699a25a",
+   "0x5a2d1102106f3103b582fd80ce953dcaa8bd5ce4",
+   "0xb24c5b89599ae53ffc1ddd334e91c758543f7ecb",
+   "0x9543b58a08003cadbc0586774b125169f0d5f53d",
+   "0x24b176b5ec102b512dc70e3f25193afac18e2cff"
+  ],
+  "deploy_tx": "0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69",
+  "deploy_note": "constructor-style attack: the main tx is a contract creation (to = null, 12,350 B init code) that creates 0xff13d589 which creates the worker 0xc3d10bd8; the two tests are the same pattern from D_EOA",
+  "funding_tx": "0x41d191fc56023ee3a387864e3cc922c3fabc9ba71f6ff3c062288b28b786e3d1",
+  "funding_source": "0xb0086e13ad1a643f61f2e6b88ab4f3fb7021d168 -> D_EOA 0.0298 ETH on 2025-04-06 (its only tx in the saved window; unlabelled); A_EOA funded by D_EOA 0.001 ETH on 2025-04-29 (no mixer/Tornado seen)",
+  "txs": [
+   {
+    "hash": "0x691c8070749f00a5a5be3135d3912ff97d0dad05a0fb2b77b235aaa13260f002",
+    "block": 22722643,
+    "index": 91,
+    "status": "success",
+    "time_utc": "2025-06-17T07:08:59Z",
+    "from": "0xd08559ceb2217bc6c11b0e808f22d56e70118605",
+    "role": "test run 1: mint 1.6550 mpETH -> pool swap, 1.6429 ETH to A_EOA; first attacker-cluster use of the bug"
+   },
+   {
+    "hash": "0x4858abc51876e1de9f506f34799d4f1852b4255f467b9e1f40951c631ddfa747",
+    "block": 22722653,
+    "index": 7,
+    "status": "success",
+    "time_utc": "2025-06-17T07:10:59Z",
+    "from": "0xd08559ceb2217bc6c11b0e808f22d56e70118605",
+    "role": "test run 2: mint 0.0300 mpETH -> pool swap, 0.0298 ETH to A_EOA"
+   },
+   {
+    "hash": "0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69",
+    "block": 22722911,
+    "index": 0,
+    "status": "success",
+    "time_utc": "2025-06-17T08:02:59Z",
+    "from": "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98",
+    "role": "main tx: Balancer 200 WETH flash loan, depositETH 107, mint 9,701.95 mpETH, 2 pool swaps, V3 leg, 8.89 ETH to A_EOA, 9,682.7 mpETH left in A_EOA"
+   }
+  ],
+  "later_txs": "A_EOA then sells mpETH to the unstake pool (4 swaps, 1.24 ETH) and via Uniswap routers (1.55 + 1.94 ETH), redeems, bridges 200+100 mpETH to Optimism/Linea (22723478, 22723600, 22723649), and parks ETH at 0x45dd46c45fe6681168927a261842abb55a8b910a: 23.678 ETH in 4 transfers (2025-06-17 and 2025-07-19)",
+  "realised_eth_a_eoa_internal_receipts": 15.29215,
+  "balances_before": {
+   "0x48f1d0f5_at_22722393": 0.000831806908442169,
+   "0x48f1d0f5_at_22722910": 1.6735837960613962,
+   "0xd08559ce_at_22722393": 0.02755021691264935,
+   "raw": [
+    "site/raw/rpc/mp_ebal_A_22722393.json",
+    "site/raw/rpc/mp_ebal_A_22722910.json",
+    "site/raw/rpc/mp_ebal_D_22722393.json"
+   ]
+  },
+  "parked_at": {
+   "0x40ee1cb15a7fa2f1da7ab7a2f0a9a1e3b8946ff7dab3498bc8552a2897bf88d5": {
+    "block": 22723408,
+    "from": "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98",
+    "eth": 11.7,
+    "time_utc": "2025-06-17T09:43:47Z"
+   },
+   "0x44554179afd2ae89d54766cfdfde4b692cfbec99e2316731f992d3d21933ef13": {
+    "block": 22724386,
+    "from": "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98",
+    "eth": 3.0,
+    "time_utc": "2025-06-17T13:00:11Z"
+   },
+   "0x1397bbf4840f547a830c2c25a2103214e08d27ddb4265833febbfb4befd287fc": {
+    "block": 22952692,
+    "from": "0x48f1d0f5831eb6e544f8cbde777b527b87a1be98",
+    "eth": 0.6033548114359673,
+    "time_utc": "2025-07-19T10:36:59Z"
+   },
+   "0xc2a2f61206cdb039913aeb9c2cbb15599a766eba6462f8c8d9cbbce100b21ac6": {
+    "block": 22952678,
+    "from": "0xd08559ceb2217bc6c11b0e808f22d56e70118605",
+    "eth": 8.375012233435827,
+    "time_utc": "2025-07-19T10:34:11Z"
+   }
+  }
+ },
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "contract_gen": "gen3 (created 2025-02-08, block 21805063, research/bot-re/analysis.md)",
+   "txs": [
+    "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9"
+   ],
+   "block": 22722394,
+   "index": 0,
+   "captured": {
+    "token": "ETH",
+    "amount": 50.766305285,
+    "usd": 117000,
+    "basis": "gross inflow 103.256 ETH (unstake pool) + 37.510 WETH (V3 pool) - 90 ETH v4 flash loan; Meta Pool's post puts the amount it recovered from Yoink at about $117,000"
+   },
+   "coinbase_paid_eth": 4.975097917948,
+   "coinbase_share_of_winning_bid": 0.9924,
+   "priority_fee_gwei": 0.0,
+   "msg_value_wei": 98,
+   "bribe_rule_check": "coinbase / gross = 0.098000 = tx value 98 wei read as per-mille (research/bot-re/analysis.md: msg.value < 1000 -> per-mille of profit)",
+   "builder_refund_to_bot_eth": 0.0,
+   "net_after_bribe_eth": 45.791207367,
+   "gas_eth": 0.000218,
+   "unbacked_mpeth_left_with_vault": {
+    "vault": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0",
+    "amount": 28.926459,
+    "still_held_at_latest": true
+   },
+   "replay_evidence": "none needed: no earlier or pending attacker tx exists. See call_diff.json: the attacker's later txs share the call grammar but no calldata/contract with Yoink.",
+   "notes": "Yoink's tx is private flow (absent from mempool-dumpster); winning block Titan via bloXroute-regulated, tx at index 0."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "c0ffeebabe.eth (public tx-level facts only)",
+   "tx": "0x22a4bdce5c1dd68b3106fc488b1c3e1353f6af35243214170c9258c4bd34505a",
+   "block": 22722912,
+   "index": 0,
+   "time_utc": "2025-06-17T08:03:11Z",
+   "facts": "Classification: small late-copy of the bug after both Yoink and the attacker; its trigger is unknown and was not analysed further (publication policy). Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "classification": "late-copy (not a pre-emption of anyone)"
+  },
+  {
+   "label": "third-party user (collateral)",
+   "tx": "0x960e4b8644e101e1f6560c182b6a558b534f537b57410b9f3bd99acca8b33896",
+   "block": 22722814,
+   "role": "swapped 10 WETH into the UniV3 mpETH/WETH pool 97 blocks before the attacker's main tx; the attacker's V3 leg took exactly 10 WETH out. Not a racer; shows part of the attacker's 'profit' was third-party liquidity."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Yoink withdraws net profit from its contract",
+   "tx": "0xd1e3ab7353626a273f62ce26378317a20cf12923450ca7279620344f45075949",
+   "block": 22740644,
+   "time_utc": "2025-06-19T19:33:47Z",
+   "amount_eth": 45.79,
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "note": "withdrawTo(Yoink EOA, 45.79 ETH) on the Yoink contract"
+  },
+  {
+   "what": "Yoink returned to Meta Pool",
+   "tx": "0x3a21cb34c7ca1b0a662f3105a57305bd5d4b8ba7faafc1e05070b370b28ce035",
+   "block": 22740672,
+   "time_utc": "2025-06-19T19:39:23Z",
+   "amount_eth": 45.79,
+   "to": "0x8c89569355f321a91655ca520fc09be5f6b0ec4d",
+   "note": "Yoink EOA -> 0x8c895693 (the EOA that deployed the mpETH implementation 0x37474845 in tx 0xc9aafccf, block 18851324, and toggled the mpETH whitelist at block 22723221): exactly 45.79 ETH = gross 50.7663 - 4.9751 builder bribe = 45.7912 ETH, rounded down. Meta Pool's X post (2025-06-21, quoted by Territorio Bitcoin): 'the entire amount recovered by MEV Frontrunner [email redacted] - approximately $117,000 USD - was promptly returned'."
+  },
+  {
+   "what": "Meta Pool reward to Yoink",
+   "tx": "0xbd02fdab07f42ed0a21cc4e1464642f3b51805ea4d66aac1fa4cb4ea57e73ccc",
+   "block": 22745667,
+   "time_utc": "2025-06-20T12:23:59Z",
+   "amount_eth": 5.0,
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "note": "0x8c895693 -> Yoink EOA 5 ETH (press: 'Meta Pool granted the group a reward of 5 ETH')."
+  },
+  {
+   "what": "builder bribe",
+   "tx": "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9",
+   "amount_eth": 4.975097918,
+   "to": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97",
+   "note": "99.2%% of the 5.0133 ETH Titan paid the proposer; no refund to the bot in the block; this part of the loss was not recovered by Meta Pool."
+  },
+  {
+   "what": "unbacked mpETH left with Yoink's vault",
+   "tx": "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9",
+   "amount_mpeth": 28.926459,
+   "to": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0",
+   "note": "swept to the vault in the same tx; no outbound mpETH transfer from the vault in Etherscan's token history; balance unchanged at latest block. The 45.79 ETH return does not include it."
+  },
+  {
+   "what": "attacker cluster",
+   "amount_eth": 15.292,
+   "note": "no return; ETH parked at 0x45dd46c45fe6681168927a261842abb55a8b910a (23.678 ETH in 4 transfers)"
+  }
+ ],
+ "auction": {
+  "block": 22722394,
+  "slot": 11943093,
+  "relays_answered": [
+   "flashbots",
+   "titan",
+   "bloxroute-regulated(delivered only)"
+  ],
+  "n_bids": 628,
+  "winning_builder": "Titan (titanbuilder.xyz)",
+  "winning_bid_eth": 5.013340356661272,
+  "winning_relay": "bloxroute-regulated",
+  "proposer_payment_tx": "0xefa928d0cf4bf1c372cde34f783affc38c4780a3723ed77d1537d056a71a9cb3",
+  "note": "Bid curve jumps from 0.14 to 0.64 ETH at -1.19 s and to 5.1 ETH by +0.96 s, consistent with the bot's 4.975 ETH payment entering builders' blocks; contents of bids are not published. No pending attacker tx to race, so no detection delay is defined."
+ },
+ "mempool": {
+  "txs_absent": [
+   "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9",
+   "0x691c8070749f00a5a5be3135d3912ff97d0dad05a0fb2b77b235aaa13260f002",
+   "0x4858abc51876e1de9f506f34799d4f1852b4255f467b9e1f40951c631ddfa747",
+   "0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69",
+   "0x22a4bdce5c1dd68b3106fc488b1c3e1353f6af35243214170c9258c4bd34505a"
+  ],
+  "note": "mempool-dumpster 2025-06-17 (csv + sourcelog present, 974,844 unique txs; it held 25 of the 60 other txs of block 22722911): none of the five exploit txs is in the sourcelog; no tx from EOAs 0x48f1d0f5, 0xd08559ce or c0ffeebabe that day; first public tx to a Meta Pool contract that day is 10:03:14Z (0xd7e68da5, block 22723507). So no pending public tx of anyone was visible for Yoink to react to, and Yoink's own tx is private flow."
+ },
+ "no_earlier_exploiter": {
+  "method": "Every mpETH Transfer-from-zero (mint) event from genesis to Yoink's block: 381 events. 351 go to the fee recipient 0xcab282ec (daily fee mints) and 30 to the vault itself from direct calls to the proxy (depositETH / operator calls); none of the 30 txs behind the vault mints has top-level selector 0x94bf804d (ERC4626 mint). Yoink's tx contains the first abusive mint.",
+  "limit": "a private exploit tx that never landed, or a pre-June-2025 exploit through a different wrapper that left no mint event, would be invisible (Unknown != none). The implementation (Dec 2023, block 18851457) was unchanged until the post-attack upgrade at block 22723682/22723816, and the V3 pool's 37.51 WETH sat unchanged from at least block 22.0M (Mar 2025; the unstake pool held 15.15 ETH from block 22.70M and 50 ETH at 22.0M), so the bug was latent and profitable for months before Yoink used it."
+ },
+ "meta_pool_response": {
+  "whitelist_toggle_tx": "0x23a00334a6cb0c03c2b4dc9c4a3d19a4ada944f6fd16e7b82b76f164ec59c3a5",
+  "block": 22723221,
+  "time_utc": "2025-06-17T09:05:59Z",
+  "upgrades": [
+   {
+    "block": 22723682,
+    "time_utc": "2025-06-17T10:38:59Z",
+    "to_impl": "0x3747484567119592ff6841df399cf679955a111a",
+    "tx": "0x669dada8a68960263439902054951c1550ca9d73cffe728c8f568f4976c5005e"
+   },
+   {
+    "block": 22723816,
+    "time_utc": "2025-06-17T11:05:47Z",
+    "to_impl": "0x56c517308ec9dcbe1db9d38e8b42bc7a948f7ffa",
+    "tx": "0xf61344c448b1aaa263d0759251f806c5a47458daa5891f8bd7a6371b626b9618"
+   }
+  ],
+  "raw": "site/raw/etherscan/mp_upgraded_logs.json"
+ },
+ "sources": [
+  {
+   "url": "https://www.quillaudits.com/blog/hack-analysis/meta-pool-hack-analysis",
+   "quote": "The first attack was front-run by a frontrunner, Yoink (seems to be a white hack attempt)",
+   "raw": "site/raw/web-metapool/quillaudits_metapool_analysis.html"
+  },
+  {
+   "url": "https://www.newsletter.quillaudits.com/posts/quillaudits-monthly-security-roundup-june-2025",
+   "quote": "the protocol was able to retrieve $117k worth of assets as the attack was frontrun by a whitehat, Yoink",
+   "raw": "site/raw/web-metapool/quillaudits_roundup_june2025.html"
+  },
+  {
+   "url": "https://blog.solidityscan.com/meta-pool-hack-analysis-fef7796f2303/",
+   "quote": "first front-run by an MEV bot called Yoink, and later reproduced manually by a separate attacker using a flash loan",
+   "raw": "site/raw/web-metapool/solidityscan_metapool.html"
+  },
+  {
+   "url": "https://www.territoriobitcoin.com/tras-un-exploit-en-el-contrato-mpeth-de-meta-pool-fue-pausado-por-seguridad/",
+   "quote": "lograron rescatar 45.79 ETH ...; Meta Pool otorgo una recompensa de 5 ETH; quoted Meta Pool post: the entire amount recovered by MEV Frontrunner [email redacted] - approximately $117,000 USD - was promptly returned to Meta Pool",
+   "raw": "site/raw/web-metapool/territoriobitcoin_metapool.html"
+  },
+  {
+   "url": "https://cointelegraph.com/news/meta-pool-exploiter-flees-132k-in-27-million-hack",
+   "quote": "~52.5 ETH (~$132k) taken; no mention of Yoink",
+   "raw": "site/raw/web-metapool/cointelegraph_metapool.html"
+  },
+  {
+   "url": "DeFiHackLabs src/test/2025-06/MetaPool_exp.sol",
+   "quote": "lists only the attacker's 0x57ee419a; no mention of Yoink",
+   "raw": "site/raw/web-metapool/defihacklabs_MetaPool_exp.sol.txt"
+  }
+ ],
+ "discrepancies": [
+  "QuillAudits/SolidityScan: 'Yoink front-ran the attacker'. Chain: Yoink landed 50 min before the attacker's first exploit tx and 1 h 44 min before the main tx; there was nothing to front-run. The order of events (Yoink first, attacker reproduces later with a flash loan) is what SolidityScan says; the 'front-run' wording is loose.",
+  "DeFiHackLabs lists 0x57ee419a as 'the attack' and 25k USD loss; it is the second-comer's main tx. Two earlier attacker-cluster test txs (0x691c8070, 0x4858abc5) exist and SolidityScan lists them as 'attack transactions'.",
+  "Quill: first tx lost 37.51 WETH, second ~15 ETH (= 52.5 ETH). Traces: Yoink's tx took 13.26 ETH net from the unstake pool plus 37.51 WETH from the V3 pool (gross 50.77 ETH); attacker cluster realised 15.29 ETH (incl. 10 WETH of a third party's V3 swap). Totals differ from the press figure.",
+  "Quill roundup says '$117k retrieved as the attack was frontrun'. What was retrieved is Yoink's net 45.79 ETH (~$117k per Meta Pool's post) after a 4.975 ETH bribe that went to Titan/the proposer; Meta Pool paid back 5 ETH as reward, so net recovered by Meta Pool = 40.79 ETH.",
+  "Territorio Bitcoin says Yoink 'front-ran one of the attacker's transactions'; same wording problem as above. The Meta Pool post is only available second-hand (quoted in that article); the original X post was not retrievable."
+ ],
+ "raw_refs": {
+  "yoink_tx": "site/raw/rpc/mp_tx_0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9.json",
+  "yoink_receipt": "site/raw/rpc/mp_rcpt_0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9.json",
+  "yoink_trace": "site/raw/rpc/mp_trace_0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9.json",
+  "attacker_main_trace": "site/raw/rpc/mp_trace_0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69.json",
+  "attacker_test1_trace": "site/raw/rpc/mp_trace_0x691c8070749f00a5a5be3135d3912ff97d0dad05a0fb2b77b235aaa13260f002.json",
+  "attacker_test2_trace": "site/raw/rpc/mp_trace_0x4858abc51876e1de9f506f34799d4f1852b4255f467b9e1f40951c631ddfa747.json",
+  "c0ffeebabe_tx_trace": "",
+  "attacker_A_txlist": "site/raw/etherscan/mp_att_txlist.json",
+  "attacker_A_internal": "site/raw/etherscan/mp_att_txlistinternal.json",
+  "attacker_A_tokentx": "site/raw/etherscan/mp_att_tokentx.json",
+  "attacker_D_txlist": "site/raw/etherscan/mp_d085_txlist.json",
+  "attacker_D_internal": "site/raw/etherscan/mp_d085_txlistinternal.json",
+  "yoink_txlist": "site/raw/etherscan/mp2_0xfde0d1_txlist.json",
+  "meta_pool_admin_txlist": "site/raw/etherscan/mp_M_txlist.json",
+  "impl_creation": "site/raw/etherscan/mp_creation.json",
+  "mint_event_history": [
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "pool_state": [
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "mempool": [
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "vault_balance_latest": "site/raw/rpc/mp_vaultbal_latest.json",
+  "call_diff": "full cache only (not published)"
+ },
+ "numbers": {
+  "gross_eth": 50.76630528518205,
+  "pool_eth_in": 103.25601719999999,
+  "v3_weth_in": 37.51028808518205,
+  "coinbase_eth": 4.97509791794784,
+  "net_before_gas_eth": 45.79120736723421,
+  "gas_eth": 0.00021820807156087797,
+  "net_eth": 45.79098915916265,
+  "returned_eth": 45.79,
+  "reward_eth": 5.0,
+  "net_returned_eth": 40.79,
+  "kept_by_bot_eth": 5.00098915916265,
+  "attacker_realised_eth": 15.292149659396442,
+  "gap_yoink_to_first_attacker_tx_s": 3000,
+  "gap_yoink_to_main_tx_s": 6240,
+  "share_of_winning_bid": 0.9923718646665154
+ },
+ "verdict_original": "related-not-frontrun",
+ "headline_text": "Yoink was the first to exploit Meta Pool's mpETH mint() bug (50.77 ETH gross, block 22722394), 50 min before the attacker's first test run and 1 h 44 min before its main tx; it returned its net 45.79 ETH and received a 5 ETH reward.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": "bot-was-first-exploiter",
+   "headline": false
+  },
+  "verdict_reason": "Yoink's tx 0x4f43fc6d (block 22722394, index 0, 06:18:59Z) is the first use of the mpETH mint-without-deposit bug (all 381 earlier mpETH mint events are fee or staking mints). The attacker cluster's first exploit tx is a test run 50 min later (0x691c8070, block 22722643, EOA 0xd08559ce) and the main flash-loan tx (0x57ee419a, block 22722911) 1 h 44 min later; the main-tx EOA held 0.0008 ETH until the test proceeds arrived, and none of the attacker's txs is in the public mempool archive. Nothing of the attacker's was pending, so Yoink neither front-ran nor replayed anyone: the press 'Yoink front-ran the attacker' is loose wording. The attacker's txs share the call grammar (mint with 0 ETH, pool swap, V3 leg, optional flash-funded depositETH) but no contract or calldata with Yoink's. Yoink returned its net 45.79 ETH to the Meta Pool admin EOA and got a 5 ETH reward; the 28.9 unbacked mpETH it swept to its vault was not returned. c0ffeebabe.eth made a small late copy one block after the attacker's main tx.",
+  "headline_note": null,
+  "dataset_rows": [
+   "metapool-2025"
+  ]
+ }
+}

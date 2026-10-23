@@ -1,0 +1,1510 @@
+{
+ "schema": "bvh-calldiff/1",
+ "note": "Attacker side = LOCAL anvil fork at block 24273361 (post-deploy state), eth_call-style debug_traceCall of 0x2c19b916...::F1() (selector 0xe90c3493) from the attacker EOA 0x2f93...; nothing broadcast. Copy side = on-chain debug_traceTransaction of tx 0x569733b8... Sequences list non-view calls to Makina/Curve/Morpho/Aave/UniV3 contracts (approve and view calls excluded).",
+ "ratio_sequence_match": 0.9863945578231292,
+ "attacker_calls": 146,
+ "copy_calls": 148,
+ "diff_ops": [
+  {
+   "op": "replace",
+   "attacker": [
+    [
+     "UniV3 USDC/WETH 0.05%",
+     "UniV3.swap",
+     "0x128acb08"
+    ]
+   ],
+   "copy": [
+    [
+     "UniV3 SwapRouter",
+     "exactInputSingle",
+     "0x414bf389"
+    ],
+    [
+     "UniV3 pool 0x8ad5",
+     "UniV3.swap",
+     "0x128acb08"
+    ],
+    [
+     "UniV3 SwapRouter",
+     "0xfa461e33",
+     "0xfa461e33"
+    ]
+   ]
+  }
+ ],
+ "attacker_sequence": [
+  [
+   "Morpho Blue",
+   "Morpho.flashLoan",
+   "0xe0232b42"
+  ],
+  [
+   "Aave V3 Pool",
+   "Aave.flashLoanSimple?",
+   "0x42b0b77c"
+  ],
+  [
+   "Aave V3 Pool",
+   "0xd15e0053",
+   "0xd15e0053"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "add_liquidity(uint256[],uint256)",
+   "0xb72df5de"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "add_liquidity(uint256[3],uint256)",
+   "0x4515cef3"
+  ],
+  [
+   "3Crv token",
+   "0x40c10f19",
+   "0x40c10f19"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "add_liquidity(uint256[2],uint256)",
+   "0x0b4c7e4d"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "3Crv token",
+   "0x79cc6790",
+   "0x79cc6790"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "add_liquidity(uint256[],uint256)",
+   "0xb72df5de"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "add_liquidity(uint256[3],uint256)",
+   "0x4515cef3"
+  ],
+  [
+   "3Crv token",
+   "0x40c10f19",
+   "0x40c10f19"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "add_liquidity(uint256[2],uint256)",
+   "0x0b4c7e4d"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "3Crv token",
+   "0x79cc6790",
+   "0x79cc6790"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "UniV3 USDC/WETH 0.05%",
+   "UniV3.swap",
+   "0x128acb08"
+  ]
+ ],
+ "copy_sequence": [
+  [
+   "Morpho Blue",
+   "Morpho.flashLoan",
+   "0xe0232b42"
+  ],
+  [
+   "Aave V3 Pool",
+   "Aave.flashLoanSimple?",
+   "0x42b0b77c"
+  ],
+  [
+   "Aave V3 Pool",
+   "0xd15e0053",
+   "0xd15e0053"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "add_liquidity(uint256[],uint256)",
+   "0xb72df5de"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "add_liquidity(uint256[3],uint256)",
+   "0x4515cef3"
+  ],
+  [
+   "3Crv token",
+   "0x40c10f19",
+   "0x40c10f19"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "add_liquidity(uint256[2],uint256)",
+   "0x0b4c7e4d"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "3Crv token",
+   "0x79cc6790",
+   "0x79cc6790"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "add_liquidity(uint256[],uint256)",
+   "0xb72df5de"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "add_liquidity(uint256[3],uint256)",
+   "0x4515cef3"
+  ],
+  [
+   "3Crv token",
+   "0x40c10f19",
+   "0x40c10f19"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "add_liquidity(uint256[2],uint256)",
+   "0x0b4c7e4d"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "MIM",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "MachineShare DUSD",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "CurveNG DUSD/USDC pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "exchange",
+   "0x3df02124"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "MIM",
+   "0x23b872dd",
+   "0x23b872dd"
+  ],
+  [
+   "3Crv token",
+   "transfer",
+   "0xa9059cbb"
+  ],
+  [
+   "Curve 3pool",
+   "remove_liquidity_one_coin",
+   "0x1a4d01d2"
+  ],
+  [
+   "3Crv token",
+   "0x79cc6790",
+   "0x79cc6790"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0x9341a475",
+   "0x9341a475"
+  ],
+  [
+   "Curve MIM-3CRV pool",
+   "calc_withdraw_one_coin",
+   "0xcc2b27d7"
+  ],
+  [
+   "Curve 3pool",
+   "0xbb7b8b80",
+   "0xbb7b8b80"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Curve 3pool",
+   "0x4903b0d1",
+   "0x4903b0d1"
+  ],
+  [
+   "Makina proxy 0x6b00",
+   "updateTotalAum()",
+   "0x4ebd0b94"
+  ],
+  [
+   "Makina proxy 0xd1a1 (Caliber)",
+   "0xd98964f1",
+   "0xd98964f1"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "Morpho Blue",
+   "0x2c3c9157",
+   "0x2c3c9157"
+  ],
+  [
+   "Morpho Blue",
+   "0x7784c685",
+   "0x7784c685"
+  ],
+  [
+   "Morpho Blue",
+   "0x5c60e39a",
+   "0x5c60e39a"
+  ],
+  [
+   "UniV3 SwapRouter",
+   "exactInputSingle",
+   "0x414bf389"
+  ],
+  [
+   "UniV3 pool 0x8ad5",
+   "UniV3.swap",
+   "0x128acb08"
+  ],
+  [
+   "UniV3 SwapRouter",
+   "0xfa461e33",
+   "0xfa461e33"
+  ]
+ ]
+}

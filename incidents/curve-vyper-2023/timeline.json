@@ -1,0 +1,189 @@
+{
+ "slug": "curve-vyper-2023",
+ "caveat": "in-block evidence only: no mempool archive before 2023-08-07; times are block timestamps (two message events are dated by block only).",
+ "events": [
+  {
+   "t_utc": "2023-07-18T00:00:00Z",
+   "kind": "fund",
+   "actor": "0x172f6fde (pETH attacker)",
+   "detail": "0.0889 ETH from Tornado Cash 0.1 ETH pool (block 17723782; date approximate to the day)",
+   "tx": "0x56ca0a0cff2ac75906e8ab0ea406fa263fac6a0e68e0ddef521bfe04b35eed64",
+   "block": 17723782,
+   "raw_ref": "site/raw/etherscan/txlistinternal_0x172f6fde_0_17806100.json"
+  },
+  {
+   "t_utc": "2023-07-30T13:10:35Z",
+   "kind": "block",
+   "actor": "rsync-builder.xyz (no relay record)",
+   "detail": "17806056: front-runner 0x6ec21d18 at idx 0 (18.28 gwei priority) takes 6,106.65 WETH; attacker deploy idx 90 and attack idx 91 (reverts)",
+   "tx": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+   "block": 17806056,
+   "raw_ref": "site/raw/rpc/trace_block_17806056.json",
+   "raw_refs": [
+    "site/raw/etherscan/tokentx_0x9420f882_17806000_17830000.json"
+   ]
+  },
+  {
+   "t_utc": "2023-07-30T13:10:47Z",
+   "kind": "tx",
+   "actor": "0x19c7849d",
+   "detail": "deploys a byte-copy of the pETH attacker's initcode (beneficiary swapped), 52.4 gwei",
+   "tx": "0x3fbe0c28fe252a218399dc38d44fbd2f7c3e039ef08eb07c9581c371cda6583f",
+   "block": 17806057,
+   "raw_ref": "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json"
+  },
+  {
+   "t_utc": "2023-07-30T13:10:59Z",
+   "kind": "tx",
+   "actor": "0x79310104",
+   "detail": "deploys a re-implementation (idx 0) and fires it (idx 2) at 698 gwei: no net effect",
+   "tx": "0xfe07ef76b96624643be6e5ab68c4001330732154ab786f23dd3cf979b0bf4461",
+   "block": 17806058,
+   "raw_ref": "site/raw/rpc/trace_0xfe07ef76b96624643be6e5ab68c4001330732154ab786f23dd3cf979b0bf4461.json"
+  },
+  {
+   "t_utc": "2023-07-30T14:50:11Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe.eth",
+   "detail": "17806550 idx 0: msETH pool drained, 866.55 ETH to EOA, 0.1733 ETH coinbase; builder BuildAI via Ultra Sound (0.3618 ETH)",
+   "tx": "0xc93eb238ff42632525e990119d3edc7775299a70b56e54d83ec4f53736400964",
+   "block": 17806550,
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "site/raw/rpc/block_17806550.json"
+   ]
+  },
+  {
+   "t_utc": "2023-07-30T14:50:11Z",
+   "kind": "deploy",
+   "actor": "0x19c7849d (msETH actor)",
+   "detail": "17806550 idx 10: deploys the msETH-adapted contract (same block, after c0ffeebabe's idx 0)",
+   "tx": "0x95827369a933e695832dd73b35097c89d94663722e0589e98f00053af3ed132c",
+   "block": 17806550,
+   "raw_ref": "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json"
+  },
+  {
+   "t_utc": "2023-07-30T14:50:35Z",
+   "kind": "tx",
+   "actor": "0x19c7849d",
+   "detail": "17806552 idx 3: boom(), 55.36 gwei, 10,000 WETH in/out, zero profit (status 1, inner reverts)",
+   "tx": "0xe2eb61b1ff11e447b791e030039ce89ae294423da1622d0be8c7ec3b2ff1a22a",
+   "block": 17806552,
+   "raw_ref": "site/raw/rpc/trace_0xe2eb61b1ff11e447b791e030039ce89ae294423da1622d0be8c7ec3b2ff1a22a.json"
+  },
+  {
+   "t_utc": "2023-07-30T15:34:47Z",
+   "kind": "tx",
+   "actor": "0xdce5d6b4 (alETH attacker)",
+   "detail": "17806772 idx 10: +7,258.70 ETH, no racer; paid builders 0.00122 ETH",
+   "tx": "0xb676d789bb8b66a08105c844a49c2bcffb400e5c1cfabd4bc30cca4bff3c9801",
+   "block": 17806772,
+   "raw_ref": "site/raw/rpc/trace_0xb676d789bb8b66a08105c844a49c2bcffb400e5c1cfabd4bc30cca4bff3c9801.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlist_0xdce5d6b4_17800000_17812000.json"
+   ]
+  },
+  {
+   "t_utc": "2023-07-30T19:08:23Z",
+   "kind": "tx",
+   "actor": "0xb752def3 (CRV/ETH attacker)",
+   "detail": "17807830 idx 6: CRV/ETH phase 1 (contract deployed in the previous block)",
+   "tx": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
+   "block": 17807830,
+   "raw_ref": "site/raw/rpc/trace_0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c.json"
+  },
+  {
+   "t_utc": "2023-07-30T22:xx",
+   "kind": "message",
+   "actor": "JPEG'd team",
+   "detail": "17808132: first white-hat-bounty message to 0x6ec21d18",
+   "tx": "0x9722b337e4c85b3c12370d0b01df8603d72f3311021e2e6b1e97ffaf0724b566",
+   "block": 17808132,
+   "raw_ref": "site/raw/etherscan/txlist_0x7a271674_17800000_17900000.json"
+  },
+  {
+   "t_utc": "2023-07-30T22:00:47Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe.eth",
+   "detail": "17808683 idx 7: CRV/ETH phase 2, +2,879.66 ETH, zero coinbase payment; attacker deploy follows at idx 13 (53.4 gwei)",
+   "tx": "0xcd99fadd7e28a42a063e07d9d86f67c88e10a7afe5921bd28cd1124924ae2052",
+   "block": 17808683,
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc": "2023-07-30T22:01:11Z",
+   "kind": "tx",
+   "actor": "0x79310104",
+   "detail": "17808685: deploy idx 0 + exchange attempt idx 3 at 85 gwei (reverts inside)",
+   "tx": "0xbe06d1e02d08c3e1551f519e3ed7df12dcd6c0f6363ca1eb95dbf1cb109545c9",
+   "block": 17808685,
+   "raw_ref": "site/raw/rpc/trace_0xbe06d1e02d08c3e1551f519e3ed7df12dcd6c0f6363ca1eb95dbf1cb109545c9.json"
+  },
+  {
+   "t_utc": "2023-07-30T22:01:23Z",
+   "kind": "tx",
+   "actor": "0x19c7849d",
+   "detail": "17808686 idx 6: go() reverts at the pool exchange",
+   "tx": "0x3079ebb01a1eedbf655d038a387b61476dfb2e687d2f21e8c48c8d8e80e0da70",
+   "block": 17808686,
+   "raw_ref": "site/raw/rpc/trace_0x3079ebb01a1eedbf655d038a387b61476dfb2e687d2f21e8c48c8d8e80e0da70.json"
+  },
+  {
+   "t_utc": "2023-07-30T22:xx",
+   "kind": "message",
+   "actor": "Curve deployer 0xbabe6188 / c0ffeebabe",
+   "detail": "17808834-17808891: 'One tx you front-ran was a hack of CRV/ETH pool. Can refund?' ... 'will contact'",
+   "tx": "0x65670d8e4f08d56971d476b0c68ca745b0749ec7f79f9b79d993ef47cc91b9c6",
+   "block": 17808841,
+   "raw_ref": "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json"
+  },
+  {
+   "t_utc": "2023-07-30T23:50:47Z",
+   "kind": "return",
+   "actor": "c0ffeebabe.eth",
+   "detail": "2,879.54 ETH to the Curve deployer 0xc447fcaf",
+   "tx": "0xb76754124fdde090f25129105ed2907e3c62e0db87ecb8ffcefcb1dede0954fd",
+   "block": 17809228,
+   "raw_ref": "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json"
+  },
+  {
+   "t_utc": "2023-07-31T00:05:59Z",
+   "kind": "return",
+   "actor": "c0ffeebabe.eth",
+   "detail": "1,000 ETH to 0xfa9b97d6 (recipient unverified; msETH side)",
+   "tx": "0x9d18d84353c8216d653afd402de8b4961cb3316f40152fab592c35d28515e060",
+   "block": 17809304,
+   "raw_ref": "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json"
+  },
+  {
+   "t_utc": "2023-08-04T06:42:23Z",
+   "kind": "return",
+   "actor": "0x6ec21d18",
+   "detail": "6,105.75 + 1.0 WETH moved to 0x9d1ec337",
+   "tx": "0x0986994c7829965973acde3df774f198a497c7e185007597f61e32735cb521e5",
+   "block": 17839905,
+   "raw_ref": "site/raw/etherscan/tokentx_0x6ec21d18_17806056_17860000.json"
+  },
+  {
+   "t_utc": "2023-08-04T14:20:35Z",
+   "kind": "return",
+   "actor": "0xdce5d6b4 (alETH attacker)",
+   "detail": "alETH 4,819.55 and ETH 2,259 sent to 0x9e2b6378 (17841974-17842725)",
+   "tx": "0x4ab8367b391ad733ab98433f51f2c4d56cec93941d31c9d19b0e3ff6e8771639",
+   "block": 17842176,
+   "raw_ref": "site/raw/etherscan/txlist_0xdce5d6b4_17806000_17860000.json"
+  },
+  {
+   "t_utc": "2023-08-04T22:28:23Z",
+   "kind": "return",
+   "actor": "0x9d1ec337",
+   "detail": "5,494.4 (+1.0) WETH to the JPEG'd Safe 0x51c2cef9; JPEG'd confirms 5,495.4 WETH and a 610.6 WETH bounty (17844761)",
+   "tx": "0x003b00378ac52c10200d8fcac0e42138a34e46b9d7c3350ad3372ae0eb141df3",
+   "block": 17844597,
+   "raw_ref": "site/raw/etherscan/tokentx_0x9d1ec337_17839000_17900000.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlist_0x7a271674_17800000_17900000.json"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "purpose": "Compare victim-facing calls (to vault 0xe39fd820.. and Balancer 0xba122222..) of the bot tx and the attacker's reverted tx in the same block 15746200.",
+ "bot_tx": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+ "attacker_reverted_tx": "0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d",
+ "vault_deposit_0xb6b55f25": {
+  "identical_calldata": true,
+  "calldata": "0xb6b55f25000000000000000000000000000000000000000000000000016345785d8a0000",
+  "value_eth": 0.1,
+  "bot_caller": "0x0e113904cb1d53cabb324927dffae2f8f6705111",
+  "attacker_caller": "0x3b8ddbb0c2b1f7f152557568ec138033bd149704"
+ },
+ "balancer_flashLoan_0x5c38449e": {
+  "bot_n": 3,
+  "attacker_n": 2,
+  "first_identical": true,
+  "second_identical": true,
+  "second_loan_amount_eth": 1000,
+  "note": "Both flashLoan calldatas (recipient = vault, 1000 ETH WETH, userData strings '0x1' / '0x2') are byte-identical in the bot and the attacker's reverted tx. The bot then makes a third loan (withdraw leg 0x2e1a7d4d) which the attacker's tx never reached (reverted)."
+ },
+ "balancer_callbacks_0xf04f2707_identical": [
+  true,
+  true
+ ],
+ "different": {
+  "entry": "bot: EOA 0x26bce6ec -> 0xa69babef (sel 0x1cff79cd) -> helper 0x0e113904; attacker: EOA 0xdf31f4c8 -> 0x140cca42 (sel 0xb8bb98a7) -> 0x8663fbfc -> helper 0x3b8ddbb0",
+  "attacker_tx_reverted_at": "second flashLoan (callback) after the bot had already emptied the vault in idx 0"
+ },
+ "evidence_level": "confirmed-onchain (in-block evidence only; no pre-2023 mempool archive)",
+ "raw_refs": {
+  "bot_trace": "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json",
+  "attacker_trace": "site/raw/rpc/trace_0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d.json"
+ }
+}

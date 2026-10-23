@@ -1,0 +1,68 @@
+{
+ "ETH-leg searcher 0x1a56abf4->0x4ab12e7c vs user 0xc78fb8cd (id 166631)": {
+  "copy_tx": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+  "victim_tx": "0xc78fb8cd5f7813a3d8abebdc5351aafd5011e8e13c5f6740837eeef9308d1faf",
+  "bridge_calls_in_copy": 1,
+  "victim_words": 76,
+  "copy_words": 76,
+  "same_length": true,
+  "differing_words": [
+   {
+    "word": 2,
+    "victim": "000000000000000000000000441e6581d1b4869abb80188b9cf5223e77ab0302",
+    "copy": "0000000000000000000000004ab12e7ce31857ee022f273e8580f73335a73c0b"
+   },
+   {
+    "word": 10,
+    "victim": "00000000000000000000000000000000000000000000000004db732547630000",
+    "copy": "0000000000000000000000000000000000000000000000d8a0f0ed69b4a16000"
+   }
+  ],
+  "n_identical_words": 74,
+  "note": "word 0..: offset(receipt), offset(sigs), receipt{id,kind,mainchain{addr,token,chainId},ronin{addr,token,chainId},info{erc,id,quantity}}, then sigs array"
+ },
+ "racer 0x00001b0b->0x02f3d391 vs user 0x56439cf9 (id 166632)": {
+  "copy_tx": "0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b",
+  "victim_tx": "0x56439cf9427a9188d12b35ef4c8b80fc94a8a1dd205789999c000d8035f27afe",
+  "bridge_calls_in_copy": 1,
+  "victim_words": 67,
+  "copy_words": 67,
+  "same_length": true,
+  "differing_words": [
+   {
+    "word": 2,
+    "victim": "000000000000000000000000fbbf14eaec015bca5a4d1e934ae1796638a17919",
+    "copy": "00000000000000000000000002f3d3912f8bd97c4791970aa4cf96dedd05772c"
+   }
+  ],
+  "n_identical_words": 66,
+  "note": "word 0..: offset(receipt), offset(sigs), receipt{id,kind,mainchain{addr,token,chainId},ronin{addr,token,chainId},info{erc,id,quantity}}, then sigs array"
+ },
+ "Yoink 0xfde0d157->0x6980a47b vs user 0xb7c3f85a (id 166633)": {
+  "copy_tx": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+  "victim_tx": "0xb7c3f85abd0b9ede7b64868eeb6778ea4731adb1d49f8640b7e7234e470e96c1",
+  "bridge_calls_in_copy": 1,
+  "victim_words": 61,
+  "copy_words": 61,
+  "same_length": true,
+  "differing_words": [
+   {
+    "word": 2,
+    "victim": "0000000000000000000000005f494a30f1b71b748b71939c18446288168cdaab",
+    "copy": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   },
+   {
+    "word": 5,
+    "victim": "0000000000000000000000005f494a30f1b71b748b71939c18446288168cdaab",
+    "copy": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+   },
+   {
+    "word": 10,
+    "victim": "000000000000000000000000000000000000000000000000000000009d67b973",
+    "copy": "000000000000000000000000000000000000000000000000000001d134dfcd78"
+   }
+  ],
+  "n_identical_words": 58,
+  "note": "word 0..: offset(receipt), offset(sigs), receipt{id,kind,mainchain{addr,token,chainId},ronin{addr,token,chainId},info{erc,id,quantity}}, then sigs array"
+ }
+}

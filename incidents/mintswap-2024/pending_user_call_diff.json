@@ -1,0 +1,94 @@
+{
+ "contract": "0xd8d5b0775a992d1ba9f1b9f43c976a2c1f50bfde",
+ "function": "swapExactTokensForETH(uint256 amount1, uint256 amount0min, address to, uint256 deadline) = 0x5c7e072b",
+ "pending_user_tx": {
+  "hash": "0x2bca4d6150d1c8e852229215dd92a75e2d39b7b41281872e77458c0d266e2ba0",
+  "from": "0x7a61c7d30fd3de8119c7c87674a35687dcdff2fe",
+  "first_seen_utc": "2024-04-01T19:49:25.637000+00:00",
+  "sources": [
+   "bloxroute",
+   "chainbound",
+   "eden",
+   "local",
+   "mempoolguru"
+  ],
+  "per_source_first_seen_ms": [
+   {
+    "source": "bloxroute",
+    "first_seen_ms": 1712000965637
+   },
+   {
+    "source": "chainbound",
+    "first_seen_ms": 1712000965651
+   },
+   {
+    "source": "eden",
+    "first_seen_ms": 1712000965682
+   },
+   {
+    "source": "local",
+    "first_seen_ms": 1712000965745
+   },
+   {
+    "source": "mempoolguru",
+    "first_seen_ms": 1712000965776
+   }
+  ],
+  "included_block": 19563166,
+  "index": 356,
+  "status": "reverted",
+  "revert": "MintSwap: SLIPPAGE_REACHED",
+  "max_fee_gwei": 42.411765481,
+  "max_priority_gwei": 0.041886441,
+  "nonce": 3,
+  "decoded": {
+   "selector": "0x5c7e072b",
+   "amount1_vmint_in": 5991.780915423277,
+   "amount0min_eth_out_min": 0.10810811171163011,
+   "to": "0x7a61c7d30fd3de8119c7c87674a35687dcdff2fe",
+   "deadline": 1712002127,
+   "deadline_utc": "2024-04-01T20:08:47Z"
+  },
+  "calldata": "0x5c7e072b000000000000000000000000000000000000000000000144d0aa04c2f94dcf81000000000000000000000000000000000000000000000000018013c13be8f3180000000000000000000000007a61c7d30fd3de8119c7c87674a35687dcdff2fe00000000000000000000000000000000000000000000000000000000660b144f",
+  "quote_with_buggy_formula_eth_at_block_19563163": 0.10964661819196062,
+  "note": "Seller 0x7a61c7d3 bought these 5,991.78 vMINT for 0.1 ETH at block 19561170 (13:06:49). amount0min = 98.6% of the buggy getAmountIn quote."
+ },
+ "yoink_tx_first_sell_call": {
+  "hash": "0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20",
+  "block": 19563164,
+  "decoded": {
+   "selector": "0x5c7e072b",
+   "amount1_vmint_in": 1882580.5379611752,
+   "amount0min_eth_out_min": 1e-18,
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "deadline": 1712004565,
+   "deadline_utc": "2024-04-01T20:49:25Z"
+  },
+  "calldata": "0x5c7e072b000000000000000000000000000000000000000000018ea6e53ca8849347c43300000000000000000000000000000000000000000000000000000000000000010000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd000000000000000000000000000000000000000000000000000000000660b1dd5",
+  "note": "This sell call is one step inside Yoink's script: flash loan -> Uniswap V3 -> V2 buy of vMINT -> THIS call -> swap ETH back -> repay."
+ },
+ "diff": {
+  "same_function": true,
+  "amount1": "user 5991.78 vMINT vs Yoink 1882580.54 vMINT (x314); Yoink's amount is 49.3% of the pool's vMINT balance at block 19563163 (3817624)",
+  "amount0min": "user 0.1081 ETH vs Yoink 1e-18 (1 wei)",
+  "to": "user's own EOA vs Yoink's contract",
+  "deadline": "user 2024-04-01T20:08:47Z vs Yoink 2024-04-01T20:49:25Z = 2024-04-01T19:49:25Z + 3600 s"
+ },
+ "timing": {
+  "block_19563163_utc": "2024-04-01T19:49:23Z",
+  "user_tx_first_seen_utc": "2024-04-01T19:49:25.637000+00:00",
+  "yoink_tx_build_time_utc_from_deadline_minus_3600": "2024-04-01T19:49:25Z",
+  "block_19563164_utc": "2024-04-01T19:49:35Z",
+  "block_19563166_utc": "2024-04-01T19:49:59Z",
+  "user_tx_seconds_before_block_19563164": 9.36299991607666
+ },
+ "yoink_deadline_convention": "Across all six Yoink txs that call the pool the router deadline equals (second the tx was built) + 3600 s: built at 19:49:25, 19:49:36, 19:53:11, 19:53:25, 19:54:25, 19:54:36 UTC, i.e. 0-2 s after the previous block's timestamp each time (blocks 19563163, 64, 182, 183, 188, 189). The user tx first-seen second (19:49:25.637) equals the build second of Yoink's first tx, but that second is also 2 s after block 19563163, the normal build offset, so the match is consistent with a trigger and does not prove one.",
+ "verdict_on_trigger": "unproven. The pending user sell is the first and only public call to the vulnerable function anywhere before Yoink's tx; Yoink's follow-up sells in blocks 19563183 and 19563189 had no new public trigger, so Yoink's pipeline can find this without one.",
+ "raw": {
+  "user_tx": "site/raw/rpc/tx_0x2bca4d6150d1c8e852229215dd92a75e2d39b7b41281872e77458c0d266e2ba0.json",
+  "user_trace": "site/raw/rpc/trace_0x2bca4d6150d1c8e852229215dd92a75e2d39b7b41281872e77458c0d266e2ba0.json",
+  "yoink_trace": "site/raw/rpc/trace_0xd2337efb820b7bce143bd940f9738b288540a9a88f791177f156bbe2b5b86d20.json",
+  "mempool_csv": "site/raw/mempool-dumpster/2024-04-01.csv.zip",
+  "mempool_sourcelog": "site/raw/mempool-dumpster/2024-04-01_sourcelog.csv.zip"
+ }
+}

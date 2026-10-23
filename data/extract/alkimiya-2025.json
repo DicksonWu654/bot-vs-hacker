@@ -1,0 +1,512 @@
+[
+ {
+  "slug": "alkimiya-2025",
+  "name": "Alkimiya SilicaPools collateralizedMint cast bug",
+  "date_utc": "2025-03-28T15:34:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "Yoink (block 22146340, index 0) replayed the attacker's whole victim call tree from its own contract, one block before the attacker's own attack tx (22146341, index 275) landed and reverted. Attacker's tx was never seen in the public mempool, so how Yoink saw it is unknown.",
+  "one_liner": "Yoink copied the Alkimiya attacker's 7-call exploit (reusing its fake-index contract) one block ahead of the attacker's own tx, which then reverted; Yoink returned 48.33 ETH to a Safe and got 6.33 ETH back as bounty.",
+  "attacker": {
+   "eoa": "0xf6ffba5cbf285824000dac0b9431032169672b6e",
+   "eoas": [
+    "0xf6ffba5cbf285824000dac0b9431032169672b6e"
+   ],
+   "contracts": [
+    "0x69af47f33d19428c206bb46fea2119719dbd3556",
+    "0x9188738a7ca1e4b2af840a77e8726cc6dcbe7bdb",
+    "0x21ace8eac604afb3a5fab23824177fed9b9ea72c",
+    "0x7e0141a4fbcd7363baff42d8862d68b1b5343003",
+    "0x9e31bf60d7d2e2cfcbb48c4e3ba5e70b890024ac"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0x2a0a0a6f35b2b0e6ca6e2251be0ea4e10f19c40ca645c6cac23a5696266fbdfa",
+   "deploy_tx": "0x0d53668957b858cf0e8737858ebd9ddc41de7773eb510df672b9f656d1712d2c",
+   "deploy_block": 22146335,
+   "attack_txs": [
+    {
+     "hash": "0xb34340614221ae8bbeacc9ead14c212b7cc71a56f2e452e9f23e976a1887dcf7",
+     "block": 22146328,
+     "index": 163,
+     "status": "success",
+     "role": "deploy fake pool-index contract 0x9188738a (later reused by Yoink)"
+    },
+    {
+     "hash": "0x0d53668957b858cf0e8737858ebd9ddc41de7773eb510df672b9f656d1712d2c",
+     "block": 22146335,
+     "index": 220,
+     "status": "success",
+     "role": "deploy final attack contract 0x69af47f3"
+    },
+    {
+     "hash": "0xbf757045feaa99b06f70ac1bba2bca69181a2893d9c640e1635f850d9d05a1dd",
+     "block": 22146338,
+     "index": 77,
+     "status": "success",
+     "role": "configure attack contract to point at the index"
+    },
+    {
+     "hash": "0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4",
+     "block": 22146341,
+     "index": 275,
+     "status": "reverted",
+     "role": "attack(): reverted because Yoink had already drained the pool one block earlier"
+    }
+   ],
+   "none_reason": null,
+   "funding_note": "EOA first funded 2023-10-21 by two 0.1 ETH Tornado Cash withdrawals (per incident.json; first listed here)."
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814",
+   "block": 22146340,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2025-03-28 (csv + sourcelog present) but neither the attacker's config/attack txs nor Yoink's tx appear (private flow or missed; the dumpster held 163 of 325 txs of block 22146341). First-seen of the attacker tx is unknown, not none.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No pre-inclusion first-seen exists; the attacker's on-chain setup (deploys 22146328/22146335, config 22146338) was public before Yoink's block, so the trigger may have been that setup or the attacker's private attack tx. Unknown."
+  },
+  "attacker_block": 22146341,
+  "attacker_block_note": "Attacker's own attack tx 0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4 landed at index 275 of block 22146341 (beaverbuild, 1 gwei priority) and reverted.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 22146341,
+   "tx": "0xc8875004a36cb97a40b9d9c8d1a56cf0d6042aec5eb330d17de7d70c8e13d7b4"
+  },
+  "auction": {
+   "block": 22146340,
+   "slot": 11362672,
+   "slot_start_utc_ms": 1743176087000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "agnostic",
+    "titan"
+   ],
+   "n_bids": 609,
+   "n_builders": 46,
+   "bids_per_relay": {
+    "flashbots": 109,
+    "titan": 500
+   },
+   "first_bid_ms_rel_slot": -9773,
+   "last_bid_ms_rel_slot": 3118,
+   "winning_bid_eth": 2.5760881503747317,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0xad251e6b9047500c4849d283fe2fdd0f59ebb4750eed883a2fba4fdbef588f13114fe9420f19b1c53968f3a78fdbe930",
+   "winning_relays": [
+    "agnostic",
+    "flashbots",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": -891,
+   "winning_last_submission_ms_rel_slot": -891,
+   "runner_up_eth": 2.5760873472158474,
+   "runner_up_builder": "I can haz block?",
+   "runner_up_ms_rel_slot": -934,
+   "runner_up_other_builder_eth": 0.03303852481193369,
+   "runner_up_other_builder": "BuilderNet",
+   "runner_up_other_builder_ms_rel_slot": -1164,
+   "n_higher_bids_after_winner": 80,
+   "max_bid_eth": 39.27987887227748,
+   "proposer_paid_eth": 2.5760881503747317,
+   "proposer_payment_tx": "0xd4d0fd855b721d2340dca6bd349bc31e4f07ef331419fca8591937e1a1b59b05",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9773,
+     7.7402287968129e-05
+    ],
+    [
+     -9744,
+     0.000400890635019652
+    ],
+    [
+     -7361,
+     0.000661451365943001
+    ],
+    [
+     -6891,
+     0.000798059809410196
+    ],
+    [
+     -6857,
+     0.000922868922909196
+    ],
+    [
+     -6523,
+     0.001118057986027656
+    ],
+    [
+     -6455,
+     0.001275451581939419
+    ],
+    [
+     -6342,
+     0.001378383288693659
+    ],
+    [
+     -6267,
+     0.001482585288693659
+    ],
+    [
+     -5507,
+     0.001640029894256435
+    ],
+    [
+     -5447,
+     0.001753422088213198
+    ],
+    [
+     -5341,
+     0.001900532825934345
+    ],
+    [
+     -5155,
+     0.002104337827551038
+    ],
+    [
+     -5085,
+     0.002233961326626801
+    ],
+    [
+     -4585,
+     0.002393405285968101
+    ],
+    [
+     -4461,
+     0.002546686136925652
+    ],
+    [
+     -4397,
+     0.002677351394297424
+    ],
+    [
+     -4242,
+     0.003772282948713129
+    ],
+    [
+     -3987,
+     0.003905961089146169
+    ],
+    [
+     -3739,
+     0.00408374649088814
+    ],
+    [
+     -3504,
+     0.004169867985295048
+    ],
+    [
+     -3421,
+     0.004331819034257382
+    ],
+    [
+     -2947,
+     0.004464138734257382
+    ],
+    [
+     -2514,
+     0.004552813874690422
+    ],
+    [
+     -2430,
+     0.005029622138307239
+    ],
+    [
+     -2202,
+     0.005678990749526565
+    ],
+    [
+     -1983,
+     0.00577431274699594
+    ],
+    [
+     -1939,
+     0.005932410157732389
+    ],
+    [
+     -1696,
+     0.006576835448108882
+    ],
+    [
+     -1532,
+     0.00669358757126493
+    ],
+    [
+     -1420,
+     0.03264477515165087
+    ],
+    [
+     -1291,
+     0.032788775924701176
+    ],
+    [
+     -1164,
+     0.03303852481193369
+    ],
+    [
+     -1114,
+     0.5415201503675713
+    ],
+    [
+     -1107,
+     1.0655891220627312
+    ],
+    [
+     -1080,
+     1.5792295137371888
+    ],
+    [
+     -1072,
+     2.0826484630674793
+    ],
+    [
+     -1048,
+     2.5760480826248275
+    ],
+    [
+     2574,
+     2.650072587282419
+    ],
+    [
+     2589,
+     5.475006754406147
+    ],
+    [
+     2618,
+     11.427868498549657
+    ],
+    [
+     2638,
+     15.081033517052953
+    ],
+    [
+     2641,
+     18.482576786186502
+    ],
+    [
+     2651,
+     18.483322188197185
+    ],
+    [
+     2652,
+     21.10519131160354
+    ],
+    [
+     2666,
+     24.038548297572937
+    ],
+    [
+     2670,
+     25.698408979793957
+    ],
+    [
+     2703,
+     29.44328823811325
+    ],
+    [
+     2716,
+     31.59107678809735
+    ],
+    [
+     2737,
+     33.54179709173234
+    ],
+    [
+     2751,
+     35.355141188209714
+    ],
+    [
+     2755,
+     35.356444383415756
+    ],
+    [
+     2770,
+     38.136780170586725
+    ],
+    [
+     2828,
+     38.63067006153882
+    ],
+    [
+     2835,
+     38.806728013052314
+    ],
+    [
+     2913,
+     38.975406235253104
+    ],
+    [
+     2962,
+     39.18739875282199
+    ],
+    [
+     3034,
+     39.20826713552371
+    ],
+    [
+     3069,
+     39.21673514336004
+    ],
+    [
+     3095,
+     39.27987887227748
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/alkimiya-2025/race_22146340.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block22146340.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block22146340.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block22146340.json",
+    "relay_delivered:agnostic": "site/raw/relay-agnostic/delivered_block22146340.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block22146340.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "Winning builder 'I can haz block?' (fee recipient 0x229b8325, also sends the refund tx). Yoink-builder pubkeys' earliest bid already held the 5-tx block incl. the hack tx (0.54 ETH at -1114 ms); when Yoink first saw the attacker tx is unknown. Titan relay answered with 500 bids (API cap) and 309 Titan bids are timestamped after slot start; Ultrasound/Agnostic delivered but hold no bids."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 50.884937982392,
+   "gross_loot_method": "WETH.withdraw value delivered to the Yoink contract in the bot tx trace, after a UniV3 swap of the 1.14015390 WBTC (114,015,390 sat) taken from the pool",
+   "captured_native": {
+    "amount": "1.14015390",
+    "unit": "WBTC",
+    "desc": "114,015,390 sat WBTC swapped to ETH on UniV3 WBTC/WETH in the same tx"
+   },
+   "captured_usd": 95500,
+   "captured_usd_source": "Verichains post: \"loss of approximately $95.5K\" (site/raw/web-alkimiya/verichains_alkimiya.html); headline loss, not recomputed",
+   "coinbase_paid_eth": 50.83405304441,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 48.278272182122,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 48.329157120105,
+   "loot_note": "Scope is the bot tx 0x9b9a6dd0 (index 0): gross 50.885 ETH, 999/1000 sent to the coinbase (50.834), priority fee 0. The builder's refund tx (index 3, 48.278 ETH) is a block-level remainder after the 2.576 ETH proposer payment, so it also covers Yoink's second routine tx (index 2, 0.0202 ETH coinbase); bot_net = gross - coinbase + refund is the incident's own figure and matches the 48.3287 ETH later sent to the Safe. Effective proposer payment was 5.07% of block coinbase payments."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 48.3287,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 42.0,
+   "returned_to": "Safe 0x62e30d1969faf92dc8a3c22a1552eb83763eb372 (1/1 Safe, owner 0x751edd97; funded 2024-07-14 by SilicaPools owner/deployer 0x3bd5f5f3, so Alkimiya-affiliated is an inference)",
+   "returned_desc": "2025-03-30T04:41:11Z Yoink EOA sent 48.3287 ETH to the Safe. 2025-03-31T03:07:23Z the Safe sent 6.3287 ETH to 0xe6ab1d88, which forwarded 6.328687 ETH to the Yoink EOA at 03:09:59Z. Net returned = 48.3287 - 6.3287 = 42.0 ETH. INFERENCE: the 6.3287 ETH is read as a bounty (about 13% of the return) from on-chain flows only; no public statement from Alkimiya or Yoink was found. Net retention by Yoink is about the bounty plus the 0.1% fee kept in tx0.",
+   "bounty_kept_eth": 6.3286874974,
+   "bounty_desc": "6.3287 ETH sent back from the Safe via 0xe6ab1d88 to the Yoink EOA (6.328687 ETH received after a 21000-gas forward); inferred bounty, not stated publicly.",
+   "kept_by_bot_eth": 6.329157,
+   "returned_txs": [
+    {
+     "tx": "0x540aa4f9933ad28f5704db41cfc99df88ade963275be28b38bc8a644484756a5",
+     "eth": 48.3287,
+     "note": "Yoink EOA -> Safe 0x62e30d19",
+     "block": 22157403,
+     "time_utc": "2025-03-30T04:41:11Z"
+    },
+    {
+     "tx": "0x59d55f0809298a2964ce419da0b72f8c118e2c527abbba9f25b63c97df27e99d",
+     "eth": 6.3287,
+     "note": "Safe -> 0xe6ab1d88 (inferred bounty)",
+     "block": 22164103,
+     "time_utc": "2025-03-31T03:07:23Z"
+    },
+    {
+     "tx": "0xb0def0ac0afc654dae186248457e9cd96b98e6a41d09ea44c1b9c209cdca22b1",
+     "eth": 6.3286874974,
+     "note": "0xe6ab1d88 -> Yoink EOA (bounty forwarded)",
+     "block": 22164116,
+     "time_utc": "2025-03-31T03:09:59Z"
+    }
+   ],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_22146340.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_22146340.json",
+    "site/raw/rpc/receipts_22146340.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_22146341.json",
+    "site/raw/rpc/receipts_22146341.json"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+    "site/raw/rpc/trace_block_22146340.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_22146340.json",
+    "site/raw/rpc/block_22146340.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_22146340.json",
+    "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+    "site/raw/rpc/block_22146340.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/alk_62e3_txlist.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/alk_62e3_txlist.json",
+    "site/raw/etherscan/alk_62e3_internal.json",
+    "site/raw/etherscan/alk_txl_0xe6ab1d88.json"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/alk_62e3_internal.json",
+    "site/raw/etherscan/alk_txl_0xe6ab1d88.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/alk_trace_0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814.json",
+    "site/raw/rpc/block_22146340.json",
+    "site/raw/etherscan/alk_62e3_txlist.json",
+    "site/raw/etherscan/alk_62e3_internal.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.captured_usd": [
+    "site/raw/web-alkimiya/verichains_alkimiya.html"
+   ],
+   "attacker.safe_funding": [
+    "site/raw/etherscan/alk_62e3_txlist.json"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "attacker config/attack txs and Yoink tx are absent from mempool-dumpster for 2025-03-28 (private flow or missed); first-seen unknown"
+   }
+  ],
+  "discrepancies": [],
+  "evidence_notes": [
+   "incidents/alkimiya-2025/replay_diff.json: Yoink's 8-call Morpho flashLoan callback matches the attacker's call tree call-for-call (collateralizedMint, 2x safeTransferFrom, index.2ee79ded, startPool, endPool, redeemShort); only the caller address and timestamp words (0x67e6c18b vs 0x67e6c197) differ.",
+   "Yoink reuses the attacker-deployed fake pool-index contract 0x9188738a (deployed by the attacker EOA in block 22146328).",
+   "Counterfactual: debug_traceCall of the attacker's tx on state after block 22146339 succeeds with net +114,015,390 sat WBTC, exactly Yoink's swap amount (site/raw/rpc/alk_simA_22146339.json); on state after 22146340 it reverts (alk_simA_22146340.json).",
+   "Attacker's real attack tx 0xc8875004 landed one block later (22146341, index 275) and reverted.",
+   "No public-mempool first-seen exists for the attacker's attack tx, so pre-emption of a public pending tx is unproven."
+  ],
+  "incident_dir": "incidents/alkimiya-2025"
+ }
+]

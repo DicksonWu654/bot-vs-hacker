@@ -1,0 +1,379 @@
+{
+ "slug": "peapods-2025",
+ "evidence_level_mempool": "absent-from-archive",
+ "note": "mempool-dumpster covers 2025-07-08/09 and 2025-10-09 but none of the attacker's or Yoink's txs appear (private flow or missed); times for txs are block timestamps (12 s granularity). Bid times are relay-receive times (ms).",
+ "events": [
+  {
+   "t_utc": "2025-07-08T07:15:59Z",
+   "t_utc_ms": 1751958959000,
+   "block": 22872913,
+   "kind": "fund",
+   "actor": "attacker",
+   "detail": "EOA funded 0.3896 ETH (internal transfer from 0xe7351fd7...)",
+   "tx": "0x357cf108e5e0be8dccbfb718691f843987d8735b1e7700772bf020568b76fa1c",
+   "raw_ref": "site/raw/etherscan/peap_att_txlistinternal.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:25:35Z",
+   "t_utc_ms": 1751970335000,
+   "block": 22873857,
+   "kind": "deploy",
+   "actor": "attacker",
+   "detail": "deploy attack contract 0x7212de58; status success",
+   "tx": "0x2f7b867f20ac537332bf6a202986f40e111254ce3fb1e5c49f9d0742ca4e6dc2",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:35:59Z",
+   "t_utc_ms": 1751970959000,
+   "block": 22873909,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0xb93e15cd11f515b43fb79163cd2577caa0ee3327b8876bad2cee6c10ab96d133",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:36:11Z",
+   "t_utc_ms": 1751970971000,
+   "block": 22873910,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0x4496832a88c8cea44abf0d6b22343643b379b4167807c0c60284dcdbf36e2c7c",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:36:35Z",
+   "t_utc_ms": 1751970995000,
+   "block": 22873912,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0xa227e35ede150deafd21f9a6d84e21a20e2873283147e60fb8b49d7bd8f976da",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:41:23Z",
+   "t_utc_ms": 1751971283000,
+   "block": 22873935,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0x85b1323b3448966f1fac99be7122ef9449150af3edb812d9cd7d855b9a142ea0",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:41:35Z",
+   "t_utc_ms": 1751971295000,
+   "block": 22873936,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0xf0817db5730701ca552c391594048a7a3ab80177a10bd07adfa21da505dba373",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:41:59Z",
+   "t_utc_ms": 1751971319000,
+   "block": 22873938,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0x0ddd8b04f170b305bcc942a8db12d1f992a40497ef9a8e74734e9df2d28e8f3b",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:42:11Z",
+   "t_utc_ms": 1751971331000,
+   "block": 22873939,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "probe (66k gas, all three internal steps revert inside try/catch); status success",
+   "tx": "0x58fd10796f03426d7d2e84c775b8f7a032cbac1e5b3fb1cd78d1d0d5b3278793",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:51:35Z",
+   "t_utc_ms": 1751971895000,
+   "block": 22873986,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attack 1: pair 1 (WETH market) - SUCCEEDED, +78.186 ETH (+78.186405 ETH to contract); status success",
+   "tx": "0xeff836fa1ce60f04b94544fa424764101323f1f7c8ab8265b4bd34e9fa84f8db",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json",
+   "raw_refs": [
+    "site/raw/rpc/receipts_22873986.json"
+   ]
+  },
+  {
+   "t_utc": "2025-07-08T10:51:47Z",
+   "t_utc_ms": 1751971907000,
+   "block": 22873987,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "same calldata as attack 1, dust only (pair 1 already drained) (+0.000132 ETH to contract); status success",
+   "tx": "0x47041beef910f35023f6854ee21ec89d49cd4fe97024fad10d413b71dbf6e19e",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:51:59Z",
+   "t_utc_ms": 1751971919000,
+   "block": 22873988,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "same calldata as attack 1, dust only (pair 1 already drained) (+0.000001 ETH to contract); status success",
+   "tx": "0xc299e2e03b7c0d6842dd9930fa2a87320ae5b0daf1e2155223abcc7babb2df3a",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:55:47Z",
+   "t_utc_ms": 1751972147000,
+   "block": 22874007,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attempt on pair 2 (USDC market, pair 0xca1154bb) + dust on pair 1: pair-2 leg reverts inside try/catch, no profit (+0.000010 ETH to contract); status success",
+   "tx": "0xdc77441724cbdda85ae9b3ae9f34d82307a12ea1e728750411dd4e35679f7f62",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:55:59Z",
+   "t_utc_ms": 1751972159000,
+   "block": 22874008,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attempt on pair 2 (USDC market, pair 0xca1154bb) + dust on pair 1: pair-2 leg reverts inside try/catch, no profit (+0.000194 ETH to contract); status success",
+   "tx": "0x505db20226ec0eaa3d20e2972cbb14772ffe8da9669349684042c82b33f7f9ed",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:56:11Z",
+   "t_utc_ms": 1751972171000,
+   "block": 22874009,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attempt on pair 2 (USDC market, pair 0xca1154bb) + dust on pair 1: pair-2 leg reverts inside try/catch, no profit (+0.000198 ETH to contract); status success",
+   "tx": "0xa03582cc1b84b1c56ad59d503a54e43e1a599d38d64eb52acfdcf571492fb2f1",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": null,
+   "t_utc_ms": 1751972177084,
+   "block": 22874010,
+   "kind": "bid",
+   "actor": "beaverbuild.org",
+   "detail": "first >4 ETH bid for slot 12095680: 4.913 ETH (relay flashbots); -5916 ms relative to slot start, i.e. 6.1 s after block 22874009 was sealed",
+   "tx": null,
+   "raw_ref": "incidents/peapods-2025/race_22874010.json"
+  },
+  {
+   "t_utc": null,
+   "t_utc_ms": 1751972181813,
+   "block": 22874010,
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "first of its 6 bids: 5.548 ETH, 5 txs, -1187 ms rel. slot",
+   "tx": null,
+   "raw_ref": "incidents/peapods-2025/race_22874010.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:56:23Z",
+   "t_utc_ms": 1751972183000,
+   "block": 22874010,
+   "kind": "block",
+   "actor": "Yoink",
+   "detail": "Yoink tx0 lands at index 0 of block 22874010: pair-2 exploit, 174,258.31 USDC to the vault, 11.4944 ETH to coinbase; tx1/tx2 are arbitrage of the moved prices",
+   "tx": "0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32",
+   "raw_ref": "site/raw/rpc/block_22874010.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_22874010.json"
+   ]
+  },
+  {
+   "t_utc": null,
+   "t_utc_ms": 1751972183266,
+   "block": 22874010,
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "winning block submitted: 12.4423 ETH, 4 txs, 266 ms rel. slot (Flashbots relay)",
+   "tx": null,
+   "raw_ref": "incidents/peapods-2025/race_22874010.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:57:23Z",
+   "t_utc_ms": 1751972243000,
+   "block": 22874015,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attempt on pair 2 after Yoink: every leg reverts inside try/catch ('zero token' / arithmetic), no profit; status success",
+   "tx": "0x12b1dc098f75b661d0b1bc2db71588e0aa95a2e66be742b3abfeec678d86bf7d",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T10:57:35Z",
+   "t_utc_ms": 1751972255000,
+   "block": 22874016,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "attempt on pair 2 after Yoink: every leg reverts inside try/catch ('zero token' / arithmetic), no profit; status success",
+   "tx": "0x03986527138815646e56082789fd6dd0f20faa7c3abc758abe58a5e9f5a811ad",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T11:01:23Z",
+   "t_utc_ms": 1751972483000,
+   "block": 22874035,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "withdrawAll(): contract -> EOA; status success",
+   "tx": "0xa8f560f76a9de51a0b5119bb128584055523f00f969172515ea8ea7eb23d5448",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T11:09:59Z",
+   "t_utc_ms": 1751972999000,
+   "block": 22874078,
+   "kind": "tx",
+   "actor": "attacker",
+   "detail": "78.5175512 ETH sent on to 0x656148f2... (CertiK/Quadriga: ChangeNow / FixedFloat); status success",
+   "tx": "0xf0f090982c624e934f0d255913fb94eab9f04c4c4a97dc59c0bba2f69ba2c9a3",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-08T11:58:59Z",
+   "t_utc_ms": 1751975939000,
+   "block": 22874322,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "Yoink vault sends 30.0 ETH to the Yoink EOA (purpose not stated)",
+   "tx": "0x97185c161ec6c39710cf0f67011d7d8f419edcf5e3715a7ecc3dd88e13a94e6d",
+   "raw_ref": "site/raw/etherscan/peap_vault_txlist_22874010_22960000.json"
+  },
+  {
+   "t_utc": "2025-07-09T18:09:23Z",
+   "t_utc_ms": 1752084563000,
+   "block": 22883324,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "block 22883324 (2025-07-09): 36 routine Yoink txs, none touching Peapods contracts (rejected sub-row)",
+   "tx": "0xd685d0741cf257493c8d804a0daca45f48284ffac1bf749f63326699781ffd6e",
+   "raw_ref": "site/raw/rpc/block_22883324.json"
+  },
+  {
+   "t_utc": "2025-07-10T12:07:35Z",
+   "t_utc_ms": 1752149255000,
+   "block": 22888679,
+   "kind": "message",
+   "actor": "Peapods team",
+   "detail": "10% white-hat bounty message to the Yoink EOA",
+   "tx": "0xf24a946485ebd0aa518fa8f4c8180eec24bc7039b6209f4af1184102077f3d91",
+   "raw_ref": "site/raw/rpc/peap_tx_0xf24a946485ebd0aa518fa8f4c8180eec24bc7039b6209f4af1184102077f3d91.json"
+  },
+  {
+   "t_utc": "2025-07-10T12:10:35Z",
+   "t_utc_ms": 1752149435000,
+   "block": 22888693,
+   "kind": "message",
+   "actor": "Peapods team",
+   "detail": "same message to the Yoink vault",
+   "tx": "0xf051e9004693846eddfa358fbce20d1d1844f53cbee9e4bef9742d784ff38d59",
+   "raw_ref": "site/raw/etherscan/peap_vault_txlist_22874010_22960000.json"
+  },
+  {
+   "t_utc": "2025-07-10T12:10:47Z",
+   "t_utc_ms": 1752149447000,
+   "block": 22888694,
+   "kind": "message",
+   "actor": "Peapods team",
+   "detail": "same message to the attacker EOA (and again at 22888697)",
+   "tx": "0xb555b8e437c7a2cd7029b1bb5876a197071dc01afacd85e74ea1be9af19ef097",
+   "raw_ref": "site/raw/etherscan/peap_att_txlist.json"
+  },
+  {
+   "t_utc": "2025-07-10T13:40:23Z",
+   "t_utc_ms": 1752154823000,
+   "block": 22889139,
+   "kind": "message",
+   "actor": "Yoink vault",
+   "detail": "Frontran 0x277da2D1ce5601c0f0133515c19DA314fc52a846 here. Unfortunately had to pay 11.95248 Eth to win the block, so will remove that first and then return 90% of the remaining.",
+   "tx": "0xa1856637256a110f4bd38fb3841d0f6442794a4a6a366b361e64558c9d7185c2",
+   "raw_ref": "site/raw/etherscan/peap_vault_txlist_22874010_22960000.json"
+  },
+  {
+   "t_utc": "2025-07-10T13:42:11Z",
+   "t_utc_ms": 1752154931000,
+   "block": 22889148,
+   "kind": "tx",
+   "actor": "Yoink vault",
+   "detail": "sells 33,267.41 USDC for 11.95248 ETH (cost recovery)",
+   "tx": "0x405e44f4ad9855efd152a02dd75933997de2b3dd0ed393c1ac224e338f60bea2",
+   "raw_ref": "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+   "raw_refs": [
+    "site/raw/rpc-quotecheck/tx_0x405e44f4ad9855efd152a02dd75933997de2b3dd0ed393c1ac224e338f60bea2.json"
+   ]
+  },
+  {
+   "t_utc": "2025-07-10T13:45:59Z",
+   "t_utc_ms": 1752155159000,
+   "block": 22889167,
+   "kind": "return",
+   "actor": "Yoink vault",
+   "detail": "returns 126,891.81 USDC to the Peapods team address",
+   "tx": "0xe64f202c0b76a2d6cbfde7629386ef21f1ad47b31aaf963148ad59a7e1be1c7c",
+   "raw_ref": "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json"
+  },
+  {
+   "t_utc": "2025-07-10T22:44:47Z",
+   "t_utc_ms": 1752187487000,
+   "block": 22891847,
+   "kind": "message",
+   "actor": "Peapods team",
+   "detail": "Thank you for your swift cooperation and for acting in good faith. We appreciate your efforts in mitigating the exploit by frontrunning one of the malicious txs and returning 90% of the recovered fund",
+   "tx": "0xd49d8e526c2bb0cf8d80f2687d4c574d1a53d1ed20965d32c88c9daae90b08f1",
+   "raw_ref": "site/raw/etherscan/peap_vault_txlist_22874010_22960000.json"
+  },
+  {
+   "t_utc": "2025-07-16T02:12:35Z",
+   "t_utc_ms": 1752631955000,
+   "block": 22928685,
+   "kind": "tx",
+   "actor": "Yoink vault",
+   "detail": "sells retained 14,099.10 USDC for 4.4978 ETH",
+   "tx": "0x2a6f435416fb63764609537f0c79e89fcdb983aac5f2d90901e19b2285f089b4",
+   "raw_ref": "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json"
+  },
+  {
+   "t_utc": "2025-10-09T12:27:23Z",
+   "t_utc_ms": 1760012843000,
+   "block": 23540172,
+   "kind": "tx",
+   "actor": "user 0x1b081a9f",
+   "detail": "removeLeverage on the Peapods LeverageManager strands 8,957.75 USDC",
+   "tx": "0x60b2c65c3fded55a34bde7b99f0b5e1ef9d7a91c5ad6afc31fcd29e15bf9c8f1",
+   "raw_ref": "site/raw/etherscan/peap_LM_txlist_23540000_23541600.json"
+  },
+  {
+   "t_utc": "2025-10-09T12:29:23Z",
+   "t_utc_ms": 1760012963000,
+   "block": 23540182,
+   "kind": "block",
+   "actor": "Yoink",
+   "detail": "Yoink sweeps the stranded USDC at idx 0 of block 23540182; coinbase 1.8048 ETH, builder refund 1.5725 ETH",
+   "tx": "0xe00aea94c4f9374f1a005a9f5832f0d36b3e8cd1f6f5407ee6cb629461ecbbde",
+   "raw_ref": "site/raw/rpc/block_23540182.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_23540182.json"
+   ]
+  },
+  {
+   "t_utc": "2025-10-09T17:46:23Z",
+   "t_utc_ms": 1760031983000,
+   "block": 23541758,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "returns 1.416285 ETH to the Peapods team ('Returning profits minus 10% bounty')",
+   "tx": "0xcd6d475f859cddeb637906c668dc616f1f470033bdb44f4b99c40eb84dacd3e6",
+   "raw_ref": "site/raw/etherscan/peap_peateam_txlist_22800000.json"
+  }
+ ]
+}

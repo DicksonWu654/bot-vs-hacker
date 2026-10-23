@@ -1,0 +1,506 @@
+[
+ {
+  "slug": "kelp-rseth-2026",
+  "name": "Kelp-related rsETH holder Safe exploit 2026-09-15 (Uniswap v4 module): Yoink uses the attacker's prepared executor",
+  "date_utc": "2026-09-15T04:38:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "deploy-window-copy",
+  "race_type_reason": "The attacker deployed an executor (0x10605ee4, block 25980523) and called prepare() (block 25980524); one block later Yoink called the executor's own permissionless function (selector 0x882d6bfa, 2900e18) at position 0 and pulled 2,900 aEthrsETH out of the victim Safe. No calldata was copied; an eth_call shows the function reverts 'not prepared' before prepare() and succeeds after it, so Yoink used the attacker's on-chain setup before the attacker's finishing call ever landed.",
+  "one_liner": "One block after the attacker's prepare() tx, Yoink called the attacker's own executor and pulled 2,900 rsETH from a holder's Safe, paying a 18.93 ETH builder tip; 2,882.37 rsETH went back to a Safe signer about 30 hours later.",
+  "attacker": {
+   "eoa": "0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66",
+   "eoas": [
+    "0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66"
+   ],
+   "contracts": [
+    "0x10605ee48ff962952c966277a5d2dac0a0705cb1"
+   ],
+   "funding": "railgun",
+   "funding_tx": "0xd07ce4dc6acf73501467cda47400ea5768b3fa7093cca9f634ef33203b38717c",
+   "deploy_tx": "0x946e318b52474d8832451abf7716f65822f4562acb25a6ce453b159055904c69",
+   "deploy_block": 25980523,
+   "attack_txs": [
+    {
+     "hash": "0x946e318b52474d8832451abf7716f65822f4562acb25a6ce453b159055904c69",
+     "block": 25980523,
+     "index": 155,
+     "status": "success",
+     "role": "deploys executor 0x10605ee4 (nonce 2)"
+    },
+    {
+     "hash": "0x0a7d69abe64d99c77741a54639057e077d096bc68cde094a1a05590557f76e56",
+     "block": 25980524,
+     "index": 207,
+     "status": "success",
+     "role": "prepare() 0xd28cebb8 on the executor (nonce 3); makes the executor's function callable by anyone"
+    },
+    {
+     "hash": null,
+     "block": null,
+     "index": null,
+     "status": "never-landed",
+     "role": "attacker's finishing call (inferred, nonce 4): never mined and invisible (private flow); nonce 4 was burned by self-transfer 0xe8c2776814ec291e160ac433abe96def4c3ff10e380f5d42e324e27b8463ee4f at block 25980578"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+   "block": 25980525,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "second searcher (0x492d2552, self-calling EOA)",
+    "eoa": "0x492d255234c83f2ddc5aa904d8a9db6743e9f046",
+    "tx": "0x16b9ddf976b805e20e08ff49e3f1d01ac7605814fb489f8795c7d95fbc3eeb45",
+    "block": 25980525,
+    "position": 3,
+    "status": "success",
+    "role": "called the same executor function 0x882d6bfa three positions after Yoink in the same block; its inner call reverted (executor already drained) while the outer tx succeeded and paid 0.000320 ETH to the coinbase; identity and strategy not analysed"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-09-15 (1,025,816 rows) but holds none of the 19 attacker txs, Yoink's txs or the second searcher's txs (queried by from/to and by hash): all private flow. Whether Yoink saw the prepare tx in block 25980524 (public chain state) or in private order flow cannot be separated.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "The trigger was the attacker's prepare() tx 0x0a7d69abe64d99c77741a54639057e077d096bc68cde094a1a05590557f76e56 (block 25980524, idx 207), which has no mempool first-seen (private); the attacker's deploy tx is also absent from the archive."
+  },
+  "attacker_block": null,
+  "attacker_block_note": "The attacker's finishing call never landed (no reverted tx exists on the attacker EOA; nonce 4 was burned by a self-transfer at 25980578), so there is no attacker block for the race; the reference is the prepare() tx instead.",
+  "attacker_reference": {
+   "kind": "prepare",
+   "block": 25980524,
+   "tx": "0x0a7d69abe64d99c77741a54639057e077d096bc68cde094a1a05590557f76e56"
+  },
+  "auction": {
+   "block": 25980525,
+   "slot": 15218592,
+   "slot_start_utc_ms": 1789447127000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "bloxroute-regulated",
+    "agnostic",
+    "aestus",
+    "titan",
+    "ethgas"
+   ],
+   "n_bids": 5937,
+   "n_builders": 51,
+   "bids_per_relay": {
+    "flashbots": 143,
+    "bloxroute-regulated": 3857,
+    "agnostic": 725,
+    "aestus": 470,
+    "titan": 442,
+    "ethgas": 300
+   },
+   "first_bid_ms_rel_slot": -7763,
+   "last_bid_ms_rel_slot": 3476,
+   "winning_bid_eth": 13.862964598163177,
+   "winning_builder": "builder.ultrasound.money",
+   "winning_builder_pubkey": "0x94771940ba7a5f20d357d2cd41dbb9f88fdf5cffa0b8fbf24130a383c743b21ab3d599b05cf5faf6e1076699a96cf604",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 14.003257615044976,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -7763,
+     0.000163865706888093
+    ],
+    [
+     -995,
+     0.20323012205284355
+    ],
+    [
+     -691,
+     0.3940732030922147
+    ],
+    [
+     -653,
+     0.5796703712132502
+    ],
+    [
+     -614,
+     0.7634115676530753
+    ],
+    [
+     -577,
+     0.9453153521285022
+    ],
+    [
+     -538,
+     1.125400409518666
+    ],
+    [
+     -498,
+     1.3036846163349287
+    ],
+    [
+     -460,
+     1.480185027280366
+    ],
+    [
+     -421,
+     1.6549204341163495
+    ],
+    [
+     -382,
+     1.8279084868839728
+    ],
+    [
+     -343,
+     1.9991666591239199
+    ],
+    [
+     -306,
+     2.1687122496414677
+    ],
+    [
+     -268,
+     2.3365623842538397
+    ],
+    [
+     -230,
+     2.5027340175200887
+    ],
+    [
+     -192,
+     2.6672439344536745
+    ],
+    [
+     -175,
+     2.9913481119182888
+    ],
+    [
+     -157,
+     3.4654498790987684
+    ],
+    [
+     -98,
+     3.9254703496922203
+    ],
+    [
+     -71,
+     4.075753977380296
+    ],
+    [
+     -66,
+     4.224534768791493
+    ],
+    [
+     -61,
+     4.371827752288577
+    ],
+    [
+     -54,
+     4.5176478059506895
+    ],
+    [
+     -51,
+     5.086491107644525
+    ],
+    [
+     -51,
+     6.028564162606764
+    ],
+    [
+     -3,
+     6.157816852165695
+    ],
+    [
+     2,
+     7.146376998926646
+    ],
+    [
+     8,
+     7.264451560122378
+    ],
+    [
+     22,
+     7.4970702531340905
+    ],
+    [
+     88,
+     7.837347566998319
+    ],
+    [
+     94,
+     7.9485124225133355
+    ],
+    [
+     134,
+     8.0585656294732
+    ],
+    [
+     184,
+     8.372897339326776
+    ],
+    [
+     274,
+     9.049683554119175
+    ],
+    [
+     366,
+     9.14872467599458
+    ],
+    [
+     439,
+     9.246775386651231
+    ],
+    [
+     528,
+     9.343845590201317
+    ],
+    [
+     641,
+     9.439945091715902
+    ],
+    [
+     658,
+     9.691464755452918
+    ],
+    [
+     720,
+     9.777094327299428
+    ],
+    [
+     833,
+     10.008913215872756
+    ],
+    [
+     879,
+     10.14963798036388
+    ],
+    [
+     885,
+     10.235062171213437
+    ],
+    [
+     886,
+     10.322309301818292
+    ],
+    [
+     888,
+     10.408622722335423
+    ],
+    [
+     889,
+     10.516181768897583
+    ],
+    [
+     889,
+     10.777584863264044
+    ],
+    [
+     892,
+     10.868424773228568
+    ],
+    [
+     893,
+     10.997102043923306
+    ],
+    [
+     897,
+     11.281793466800892
+    ],
+    [
+     899,
+     11.890075286966947
+    ],
+    [
+     911,
+     12.049548285964677
+    ],
+    [
+     929,
+     12.504731613211002
+    ],
+    [
+     934,
+     12.671527401520168
+    ],
+    [
+     949,
+     12.930626347871337
+    ],
+    [
+     961,
+     13.246748887417443
+    ],
+    [
+     963,
+     13.379913218552268
+    ],
+    [
+     967,
+     13.598932670076389
+    ],
+    [
+     972,
+     13.85171
+    ],
+    [
+     1416,
+     14.003257615044976
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/kelp-rseth-2026/race_25980525.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block25980525.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block25980525.json",
+    "relay_bids:bloxroute-regulated": "site/raw/relay-bloxroute-regulated/bids_block25980525.json",
+    "relay_bids:agnostic": "site/raw/relay-agnostic/bids_block25980525.json",
+    "relay_bids:aestus": "site/raw/relay-aestus/bids_block25980525.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block25980525.json",
+    "relay_bids:ethgas": "site/raw/relay-ethgas/bids_block25980525.json"
+   },
+   "auction_note": "Winning block: builder.ultrasound.money, bid 13.8630 ETH delivered by the ultrasound relay only (that relay publishes no bids, so the winning block's submission time is unknown); builder -> proposer payment tx 0x29e6d2a277e9d34261139f5987f9acf25c7f7a45ede6100a65b442027894fd65 (idx 26) equals the bid. Higher bids existed but were not chosen: the highest visible bid was 14.0033 ETH (Eureka, +1416 ms via agnostic / +1469 ms via flashbots). Block builder revenue 18.9524 ETH of which the builder kept 5.0894 ETH (26.9%); Yoink's coinbase transfer was 18.9312 ETH (paid out of 17.63 rsETH swapped on Uniswap v4). 51 builders and 5,937 bids from 6 relays; no builder -> bot refund in this block."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 3116.7002067424173,
+   "gross_loot_method": "2900.0000000000 rsETH pulled out of the victim Safe (Aave aEthrsETH redeemed to rsETH) x 1.074724 ETH per rsETH, the rate of the swap inside the same tx (17.632591 rsETH -> 18.950173 ETH from the Uniswap v4 PoolManager)",
+   "captured_native": {
+    "amount": 2899.9999999999977,
+    "unit": "rsETH",
+    "desc": "2,900 aEthrsETH redeemed to rsETH from the victim Safe 0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8; 17.632591 rsETH swapped to ETH for the builder tip, 2882.367409 rsETH sent to vault EOA 0xc70f00cd7e461686b04b0e912e309beca8b80ea0"
+   },
+   "captured_usd": 7810000.0,
+   "captured_usd_source": "PeckShield alert quoted in the saved crypto.news article ('~$7.81M $rsETH', press, not recomputed); the saved Parameter and crypto.news pages say about $7.8 million",
+   "coinbase_paid_eth": 18.931222433268342,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 3097.768984309149,
+   "loot_note": "Scope: the bot tx only. ETH-equivalent uses the in-tx swap rate (1.074724 ETH/rsETH), not a market price, so it is an approximation. Coinbase transfer 18.931222 ETH to the block fee recipient 0x6c42a0b5 (builder.ultrasound.money), funded by the 18.950173 ETH swap proceeds (0.018950 ETH left unspent in the Yoink contract). priority fee 0 (max priority 0). No builder -> bot refund (block + trace scan). Yoink's second tx in the block (idx 1) is a routine pool backrun and is not part of this row. bot_net = gross - coinbase, before gas base fee and before the later return."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 3097.7500341365435,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 3097.7500341365435,
+   "returned_to": "0x8c2aeccef3b3634d039c96993577f80d3278fee8: an EOA that is one of the 3 owners (threshold 1) of the victim Safe 0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8 (owner list from eth_call getOwners; the person is not identified)",
+   "returned_desc": "Yoink's vault EOA 0xc70f00cd7e461686b04b0e912e309beca8b80ea0 returned the whole 2,882.367408826118 rsETH it received (100% of the vault's receipt, 99.39% of the 2,900 pulled; the other 17.6326 rsETH paid the builder tip) to 0x8c2aeccef3b3634d039c96993577f80d3278fee8 in two txs: 1.0 rsETH (test) at 2026-09-16T10:26:23Z and 2,881.367408826118 rsETH at 2026-09-16T10:38:35Z, about 30.0 hours after the take. ETH-equivalent is rsETH x 1.074724 (in-tx swap rate). Later Aave liquidations of the Safe (including Yoink's own at 25980901, 157.7 aEthrsETH) are separate and not part of this row. KelpDAO reportedly restricted the vault address for 24 h (press), which may relate to the timing; not established.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "No bounty found; the whole vault receipt was returned.",
+   "kept_by_bot_eth": 0.01895017260587295,
+   "returned_txs": [
+    {
+     "tx": "0x03d31426be57673645f3da0de091135383e09ea7f376b55e5457bdc0267c9ac7",
+     "eth": 1.0747242092215241,
+     "note": "vault -> Safe owner 0x8c2aecce: 1.0 rsETH (test); ETH-equivalent at the in-tx swap rate",
+     "block": 25989429,
+     "time_utc": "2026-09-16T10:26:23Z"
+    },
+    {
+     "tx": "0xe1615caa9f8fe328f6d336a8f4006a54b9342ea6b1cfb3a7fa4e733dbd120c6e",
+     "eth": 3096.675309927322,
+     "note": "vault -> Safe owner 0x8c2aecce: 2,881.367408826118 rsETH; ETH-equivalent at the in-tx swap rate",
+     "block": 25989490,
+     "time_utc": "2026-09-16T10:38:35Z"
+    }
+   ],
+   "public_statement": "KelpDAO (via saved Parameter article): restricted the address holding the recovered funds for 24 hours and said its core contracts remained secure. The saved crypto.news article records that, at the time, the vault address's owner was not identified and no return was described.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_25980525.json",
+   "bot.position": "site/raw/rpc/block_25980525.json",
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/trace_0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705.json",
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_25980525.json",
+    "site/raw/rpc/trace_0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_25980525.json",
+    "site/raw/rpc/block_25980525.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_25980525.json",
+    "site/raw/rpc/trace_block_25980525.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705.json",
+    "full cache only (not published)",
+    "site/raw/rpc/trace_block_25980525.json"
+   ],
+   "loot.captured_usd": "full cache only (not published)",
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/c70f_rseth_real_tokentx.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/c70f_rseth_real_tokentx.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705.json"
+   ],
+   "executor_not_prepared_test": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "attacker_block",
+    "why": "the attacker's finishing call never landed; null by design (attacker_reference = prepare tx)"
+   },
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "attacker deploy/prepare txs and all bot txs are absent from the mempool-dumpster 2026-09-15 file (private flow)"
+   },
+   {
+    "field": "fate.returned_by_builder_eth",
+    "why": "no builder return exists; builder kept 5.09 ETH of its block revenue (null, not 0)"
+   },
+   {
+    "field": "loot.captured_usd",
+    "why": "USD figure is press-reported (PeckShield via crypto.news, ~$7.81M); no priced raw feed was saved for rsETH on 2026-09-15"
+   }
+  ],
+  "discrepancies": [
+   "incident.json raw_refs list site/raw/rpc/ethcall2_exec_882d_arbitrary_at_25980523.json but the file did not exist; it was fetched during this extraction (eth_call at block 25980523 reverts 'execution reverted: not prepared') and saved with its request params. The 25980522 files return '0x' because the executor is not deployed yet (deployed in 25980523), so they show no revert.",
+   "incident.json bots[0].captured.usd is 7,700,000 and protocol_loss_usd 7,730,000 (cites Blockaid/CoinTelegraph, page not saved); the saved crypto.news/Parameter pages quote ~$7.81M (PeckShield) / $7.8M. The saved value is used here.",
+   "ETH-equivalents use the in-tx swap rate 1.074724 ETH per rsETH (not a market price)."
+  ],
+  "evidence_notes": [
+   "Yoink's contract calls the attacker's executor 0x10605ee48ff962952c966277a5d2dac0a0705cb1 selector 0x882d6bfa with (2900e18,0,0) inside tx 0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705 (site/raw/rpc/trace_0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705.json); no calldata of any attacker tx is reused.",
+   "eth_call of the same function from an arbitrary address: no code at state 25980522 ('0x'), reverts 'execution reverted: not prepared' at 25980523, succeeds (returns 2900e18-scale values) at 25980524 (site/raw/rpc/ethcall2_exec_882d_arbitrary_at_25980522.json, ..._23.json, ..._24.json).",
+   "Attacker txs from the EOA's Etherscan list: deploy 25980523 idx 155 (nonce 2), prepare() 25980524 idx 207 (nonce 3), burned nonce 4 at 25980578; no reverted tx exists on the EOA; funded by a Railgun unshield at 25976003 (site/raw/etherscan/k_txlist_0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66.json).",
+   "Second searcher 0x492d2552 (idx 3, same block) called the same executor function and its inner call reverted: incidents/kelp-rseth-2026/race_25980525.json and site/raw/rpc/trace_0x16b9ddf976b805e20e08ff49e3f1d01ac7605814fb489f8795c7d95fbc3eeb45.json.",
+   "Return: vault tokentx shows 2,882.367408826118 rsETH in (25980525) and 1.0 + 2,881.367408826118 out to 0x8c2aecce on 2026-09-16 (site/raw/etherscan/c70f_rseth_real_tokentx.json); 0x8c2aecce is in the Safe's getOwners list."
+  ],
+  "incident_dir": "incidents/kelp-rseth-2026"
+ }
+]

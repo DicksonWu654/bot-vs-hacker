@@ -1,0 +1,92 @@
+{
+ "slug": "bifi-2026",
+ "note": "No mempool first-seen for the deploy or race tx; relay bid times only.",
+ "events": [
+  {
+   "t_utc": "2026-10-17T03:18:35Z",
+   "kind": "fund",
+   "actor": "attacker EOA 0x7c78a049",
+   "detail": "1.670240 ETH internal transfer from contract 0xac9f360a... (block 26209535)",
+   "tx": "0x5166f24bd843c944eceecb160b4a33411115fd639763593be47e7196f642e79c",
+   "raw_ref": "site/raw/etherscan/bifi_att_txlistinternal_all.json"
+  },
+  {
+   "t_utc": "2026-10-17T03:41:23Z",
+   "kind": "tx",
+   "actor": "attacker EOA",
+   "detail": "nonce 0: 0.05 ETH to 0x85f0881f... (block 26209649)",
+   "tx": "0xd06554eb83d284a829bd311c36e41b7243ee45a7d97e111f5518005b09d16d5c",
+   "raw_ref": "site/raw/rpc/tx_0xd06554eb83d284a829bd311c36e41b7243ee45a7d97e111f5518005b09d16d5c.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:42:59Z",
+   "kind": "block",
+   "actor": "builder Eureka",
+   "detail": "block 26210255 built; winning bid 0.008584 ETH delivered via ultrasound +1221 ms / agnostic +1240 ms (05:43:00.221 UTC)",
+   "raw_ref": "site/raw/rpc/block_26210255.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:42:59Z",
+   "kind": "deploy",
+   "actor": "attacker EOA",
+   "detail": "attack contract 0x8c0d729d deployed, position 333/518; not in mempool-dumpster, no first-seen",
+   "tx": "0x15b47e2c0daf723dec64c75b435079d3a1f8a6058b21b9a64dda4844e877a034",
+   "raw_ref": "site/raw/rpc/block_26210255.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:03.087Z",
+   "kind": "bid",
+   "actor": "bloxroute-regulated",
+   "detail": "first bid for slot 15449314 built on block 26210255 (t=-7913 ms)",
+   "raw_ref": "incidents/bifi-2026/race_26210256.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:10.136Z",
+   "kind": "bid",
+   "actor": "builder.ultrasound.money",
+   "detail": "first elevated bid 0.6803 ETH, 128 txs (baseline ~0.0015) via titan relay (t=-864 ms)",
+   "raw_ref": "incidents/bifi-2026/race_26210256.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:11.920Z",
+   "kind": "bid",
+   "actor": "builder.ultrasound.money",
+   "detail": "1.3646 ETH, 161 txs at +920 ms (not delivered)",
+   "raw_ref": "incidents/bifi-2026/race_26210256.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:12.011Z",
+   "kind": "bid",
+   "actor": "Titan builder",
+   "detail": "winning submission 0.990070 ETH, 276 txs, titan relay +1011 ms, bloxroute-regulated +1012 ms",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:11Z",
+   "kind": "tx",
+   "actor": "unrelated arb 0xc917c3fa",
+   "detail": "block 26210256 pos 0: v4 PoolManager arb at base fee",
+   "tx": "0xf8a79e4aef429c5a16c87f898e8d560d73289d8afd3f88d8e0f9dfc2a7e5149f",
+   "raw_ref": "site/raw/rpc/block_26210256.json"
+  },
+  {
+   "t_utc": "2026-10-17T05:43:11Z",
+   "kind": "tx",
+   "actor": "c0ffeebabe.eth",
+   "detail": "block 26210256 pos 1: c0ffeebabe.eth's tx empties the market (USDT balance 170,038.09 -> 4,462.94); coinbase transfer 0.986829 ETH",
+   "tx": "0x756c68055af7a0630aa0b56891ba4de14c56c39cbebe99e47eeb4728f4d6ad14",
+   "raw_ref": "site/raw/rpc/block_26210256.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_26210256.json"
+   ]
+  },
+  {
+   "t_utc": "2026-10-17T05:53:23Z",
+   "kind": "tx",
+   "actor": "attacker EOA",
+   "detail": "block 26210307: nonce 2 tx (0.1 ETH to 0x0439e60f..., unrelated); attacker contract never called",
+   "tx": "0xa1b79a9fe5010345d6b22cf8bc160a6d90145c0b9d1d4059da9684a9a86061b3",
+   "raw_ref": "site/raw/rpc/tx_0xa1b79a9fe5010345d6b22cf8bc160a6d90145c0b9d1d4059da9684a9a86061b3.json"
+  }
+ ]
+}

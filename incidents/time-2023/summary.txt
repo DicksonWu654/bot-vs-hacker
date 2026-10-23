@@ -1,0 +1,10 @@
+TIME token (thirdweb ERC2771 + Multicall spoofing), 2023-12-06. Verdict: related-not-frontrun (no separate attacker tx exists; evidence level for "bot replayed a hacker": rejected).
+
+The tx everyone calls "the attack" (0xecdd111a..., block 18730463, index 0, 23:11:59 UTC) is Yoink's own. Yoink wrapped 5 ETH, bought TIME, called the thirdweb forwarder 0xc82bbe41 so that TIME.multicall(burn) ran with the Uniswap pool as spoofed sender (62.2 billion TIME burned from the pool), then sold back: 94.513 WETH out, 4.923 ETH coinbase bribe (msg.value 55 -> 5.5% of profit, bot analysis rule matches to the wei), 84.59 ETH kept. CertiK's "attacker gained 84.6 ETH" is exactly Yoink's net. A trace_filter over 18700000-18740000 finds only two multicall-through-forwarder txs: Yoink's, and a different bot's copy 5 h later (0x1911be70..., block 18732002, transfer() instead of burn(), 0.27 WETH). Nothing in the 2023-12-06 mempool-dumpster touches the forwarder, TIME, the pool or Yoink; Yoink's tx is private. So there is no hacker tx to diff against; Unknown != none for a private attacker tx that never landed.
+
+Auction: Flashbots relay kept 295 bids. Baseline 0.0013-0.28 ETH until t=-2942 ms, then the Flashbots builder bids 4.953 ETH and ~8 builders follow within 1 s (the 4.92 ETH Yoink payment). Winner: Flashbots builder 5.0011 ETH at -155 ms. A higher 8.33 ETH bid from "I can haz block?" was never delivered. No builder refund.
+
+Three most interesting facts:
+1. Yoink was the first mover; the published "hack" loss figure is the bot's profit after its bribe.
+2. On 2023-12-11 Yoink funded a contract with 84.1 ETH and posted a (reverted) message telling TIME holders to claim there; balance stayed at 84.1 ETH at every sampled block, and on 2024-01-12 Yoink's owner call pulled all 84.1 ETH back (tx 0x487f7c96...).
+3. Independent copy bot 5 h later used a different calldata for the same hole.

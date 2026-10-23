@@ -1,0 +1,359 @@
+[
+ {
+  "slug": "shoco-2023",
+  "name": "SHOCO token (reflection deliver()+skim exploit) - bot tx at block position 0, attacker tx at position 15 reverted",
+  "date_utc": "2023-01-19T12:54:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "A generic searcher bot's tx at index 0 of block 16440979 runs the same victim calls (router swap, SHOCO.deliver, pair.skim, WETH->ETH) as the attacker's tx at index 15, which then reverted. A local fork replay shows the attacker's tx alone succeeds with the identical gain, and bot-first-then-attacker reproduces the revert.",
+  "one_liner": "At block 16440979 a generic searcher bot (index 0, 0.092 ETH coinbase) ran the SHOCO deliver/skim exploit calls ahead of the attacker's tx (index 15, reverted) and kept 4.1589 ETH gross, about 4.05 ETH net. Fork replay: the attacker alone would have got the same 4.1589 ETH.",
+  "attacker": {
+   "eoa": "0x14d8ada7a0ba91f59dc0cb97c8f44f1d177c2195",
+   "eoas": [
+    "0x14d8ada7a0ba91f59dc0cb97c8f44f1d177c2195"
+   ],
+   "contracts": [
+    "0x15d684b4ecdc0ece8bc9aec6bce3398a9a4c7611",
+    "0xb2af6dda3e321247458cd0e6ba12c83922a220f9"
+   ],
+   "funding": "unknown",
+   "funding_tx": "0xd21f079724082fec1f09a11382b6a8e30460e55cdf5f2d999a3ae3faed570e3b",
+   "deploy_tx": "0xf656affcd5c11ca07fb141043d85dba9d9682c08eef020ac6b724ad240ed2be8",
+   "deploy_block": 16440959,
+   "attack_txs": [
+    {
+     "hash": "0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f",
+     "block": 16440979,
+     "index": 15,
+     "status": "reverted",
+     "role": "attack call 0xb05f303c via Balancer flash loan; reverted with ds-math-sub-underflow at pair.skim after the bot had drained the pair (tip 3 gwei)"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "anon searcher",
+   "eoa": "0xe71aca93c0e0721f8250d2d0e4f883aa1c020361",
+   "contract": "0x000000000000660def84e69995117c0176ba446e",
+   "tx": "0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b",
+   "block": 16440979,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 2.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: January 2023 is before the mempool-dumpster archive (starts 2023-08-07). Whether the bot saw the attacker's pending tx or found the bug from the attack contract deployed four minutes earlier (block 16440959) is unknowable. The bot's index-0 placement despite a lower effective gas price (15.61 vs 16.61 gwei) and a 0.092 ETH coinbase transfer suggests bundle-style placement (inferred; Flashbots bundle API is gone).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen exists. The attacker's contract 0x15d684b4 was deployed in block 16440959 (2023-01-19T12:50:11Z) and its attack tx 0x2f2c3c1c landed in the same block as the bot's tx."
+  },
+  "attacker_block": 16440979,
+  "attacker_block_note": "Attacker's attack tx 0x2f2c3c1c is in the same block as the bot's, at index 15 (tip 3 gwei, effective 16.61 gwei); it reverted.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 16440979,
+   "tx": "0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f"
+  },
+  "auction": {
+   "block": 16440979,
+   "slot": 5609069,
+   "slot_start_utc_ms": 1674132851000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 540,
+   "n_builders": 45,
+   "bids_per_relay": {
+    "flashbots": 540
+   },
+   "first_bid_ms_rel_slot": -10375,
+   "last_bid_ms_rel_slot": 679,
+   "winning_bid_eth": 0.1327020146246266,
+   "winning_builder": "Flashbots",
+   "winning_builder_pubkey": "0xa1dead01e65f0a0eee7b5170223f20c8f0cbf122eac3324d61afbdb33a8885ff8cab2ef514ac2c7698ae0d6289ef27fc",
+   "winning_relays": [
+    "flashbots"
+   ],
+   "winning_first_submission_ms_rel_slot": -843,
+   "winning_last_submission_ms_rel_slot": -843,
+   "runner_up_eth": 0.1327020146246266,
+   "runner_up_builder": "Flashbots",
+   "runner_up_ms_rel_slot": -916,
+   "runner_up_other_builder_eth": 0.1274136446121845,
+   "runner_up_other_builder": "builder0x69",
+   "runner_up_other_builder_ms_rel_slot": -1056,
+   "n_higher_bids_after_winner": 12,
+   "max_bid_eth": 0.13935601662260838,
+   "proposer_paid_eth": 0.1327020146246266,
+   "proposer_payment_tx": "0x1d077443eab3009ea22bbc2b93b26269f44f2c34c1bfdaec7f678e05940a9fbf",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10375,
+     4.2185391325827e-05
+    ],
+    [
+     -10328,
+     0.001025421417181434
+    ],
+    [
+     -10254,
+     0.0085818463988964
+    ],
+    [
+     -9972,
+     0.0093964473988964
+    ],
+    [
+     -9971,
+     0.009428326580456746
+    ],
+    [
+     -9456,
+     0.010747491473299814
+    ],
+    [
+     -9453,
+     0.010878138094719174
+    ],
+    [
+     -9169,
+     0.010977975436554174
+    ],
+    [
+     -8950,
+     0.012591184188779391
+    ],
+    [
+     -8949,
+     0.01286421676587852
+    ],
+    [
+     -8445,
+     0.016049827882859156
+    ],
+    [
+     -8445,
+     0.016173486537859157
+    ],
+    [
+     -7949,
+     0.016486472066876583
+    ],
+    [
+     -7946,
+     0.016507472066876583
+    ],
+    [
+     -7627,
+     0.016721343066876584
+    ],
+    [
+     -7115,
+     0.017036271596092584
+    ],
+    [
+     -6558,
+     0.01877838787289411
+    ],
+    [
+     -6478,
+     0.018975071877417104
+    ],
+    [
+     -6451,
+     0.02067715407814767
+    ],
+    [
+     -6367,
+     0.07030753381925098
+    ],
+    [
+     -5948,
+     0.10722464404313077
+    ],
+    [
+     -5945,
+     0.11001950404313077
+    ],
+    [
+     -5850,
+     0.11348137570645654
+    ],
+    [
+     -5278,
+     0.11592331416012479
+    ],
+    [
+     -5265,
+     0.11629468536012479
+    ],
+    [
+     -4783,
+     0.11724110114681906
+    ],
+    [
+     -4682,
+     0.11734971458681906
+    ],
+    [
+     -4247,
+     0.11824874086493253
+    ],
+    [
+     -4097,
+     0.12694057552718976
+    ],
+    [
+     -3863,
+     0.12789010441264576
+    ],
+    [
+     -3351,
+     0.12938465130109889
+    ],
+    [
+     -2852,
+     0.1297321218010989
+    ],
+    [
+     -2347,
+     0.1300964819154184
+    ],
+    [
+     -1836,
+     0.13158742796520612
+    ],
+    [
+     -1350,
+     0.13176121646520614
+    ],
+    [
+     -916,
+     0.1327020146246266
+    ],
+    [
+     -399,
+     0.13754672108970442
+    ],
+    [
+     -333,
+     0.13790133308970443
+    ],
+    [
+     79,
+     0.13838119828834913
+    ],
+    [
+     158,
+     0.1385574917883491
+    ],
+    [
+     582,
+     0.13929860980058512
+    ],
+    [
+     660,
+     0.13935601662260838
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/shoco-2023/race.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block16440979.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block16440979.json"
+   }
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 4.158888932826055,
+   "gross_loot_method": "WETH withdrawn to the bot contract (5.626475735040) minus the ETH it wrapped as working capital (1.467586802214), from the callTracer trace; the pair's WETH was the only asset taken",
+   "captured_native": {
+    "amount": 4.158888932826055,
+    "unit": "ETH",
+    "desc": "WETH out of the SHOCO/WETH Uniswap V2 pair, unwrapped to ETH in the bot contract"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.09206209868255019,
+   "priority_fee_paid_eth": 0.001845822,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 4.05241991,
+   "loot_note": "bot_net_eth = 4.158889 gross - 0.092062 ETH coinbase - 0.014407 ETH gas (incl. 0.001846 ETH tip) = 4.052420 ETH. The bot contract's balance rose 1.4676 -> 5.5344 ETH across the block (= gross - coinbase). The coinbase payment is 69.4% of the 0.1327 ETH winning bid (70.8% counting the tip, the figure in incident.json). No builder refund in the block. No USD figure is saved for 2023-01-19."
+  },
+  "fate": {
+   "return_status": "none",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 0.0,
+   "returned_to": null,
+   "returned_desc": "No return or bounty found. The proceeds stayed in the bot contract: its ETH balance is unchanged at blocks 16440979, 16441000 and 16445000 and later moves are not attributable (the contract is a shared 'MEV Bot' used by other EOAs). No public statement found.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": 4.05241991,
+   "returned_txs": [],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_16440979.json",
+   "bot.position": "site/raw/rpc/block_16440979.json",
+   "attacker_block": "site/raw/rpc/block_16440979.json",
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/trace_tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json"
+   ],
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_16440979.json",
+   "loot.priority_fee_paid_eth": "site/raw/rpc/receipts_16440979.json",
+   "loot.builder_refund_to_bot_eth": "site/raw/rpc/block_16440979.json",
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json",
+    "site/raw/rpc/trace_block_16440979.json",
+    "site/raw/rpc/receipts_16440979.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json",
+    "site/raw/rpc/trace_block_16440979.json",
+    "site/raw/rpc/receipts_16440979.json"
+   ],
+   "bot_contract_balance": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "anvil_replay": [
+    "incidents/shoco-2023/anvil_replay.json",
+    "incidents/shoco-2023/anvil_attacker_alone_trace.json"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.captured_usd",
+    "why": "no saved ETH price for 2023-01-19; not converted"
+   }
+  ],
+  "discrepancies": [
+   "Not a calldata copy: the attacker used a Balancer flash loan and one deliver/skim cycle (36-byte calldata); the bot self-funded 1.4676 ETH and ran 12 skim rounds with 19 deliver calls (7,780-byte calldata, own format, not decoded). The match is the victim-facing call pattern and the identical gross gain.",
+   "The attacker's reverted tx cost 0.005252 ETH of gas (incident.json); his forgone gain equals the bot's gross to the wei per the fork replay."
+  ],
+  "evidence_notes": [
+   "Fork replay at block 16440978 (incidents/shoco-2023/anvil_replay.json, anvil_attacker_alone_trace.json): the attacker's tx alone succeeds and unwraps 4.158888932826055 ETH of WETH, equal to the bot's gross 4.158888932826055; bot-first-then-attacker reproduces the attacker's revert; attacker-first-then-bot makes the bot revert.",
+   "Both txs make the same victim-facing calls: Uniswap V2 router swapTokensForExactTokens WETH->SHOCO from pair 0x806b6c68, SHOCO.deliver (0x3bd5d173), pair.skim (0xbc25cf77) to the caller, then WETH->ETH (incident.json bots[0].replay_evidence). Only these two txs in the block touched the pair or token.",
+   "Block 16440979: bot at index 0 (effective 15.61 gwei, coinbase 0.0921 ETH), attacker at index 15 (16.61 gwei, 3 gwei tip, reverted). Winning builder Flashbots delivered 0.1327 ETH; the winning block arrived 843 ms before the slot (race.json).",
+   "The attacker's attack contract was created four minutes earlier (block 16440959, tx 0xf656affc), so a pending attack tx, the deployed contract, or independent discovery are all possible sources for the bot (unknowable).",
+   "Bot is a generic searcher (contract 0x...660d is a shared MEV bot used by other EOAs), not Yoink or c0ffeebabe."
+  ],
+  "incident_dir": "incidents/shoco-2023"
+ }
+]

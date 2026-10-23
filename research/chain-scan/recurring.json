@@ -1,0 +1,395 @@
+{
+ "dhl_attack_tx_sender_in_>=3_incidents": {
+  "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671": [
+   "AnyswapWETHPermit",
+   "BiFi",
+   "BlueberryProtocol",
+   "DRLVaultV3",
+   "ERC20TokenBank",
+   "SecuredFi",
+   "Sushi_Router",
+   "SwarmMarkets",
+   "WiseLending"
+  ],
+  "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a": [
+   "Alkimiya_io",
+   "DeFiPlaza",
+   "Erc20transfer",
+   "Paraswap",
+   "RsETHSafeModule",
+   "TIME"
+  ],
+  "0x7248939f65bdd23aab9eaab1bc4a4f909567486e": [
+   "DOGGO",
+   "HANAToken",
+   "PestoToken"
+  ],
+  "0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd": [
+   "DAO_SoulMate",
+   "DN404",
+   "DeezNutz404",
+   "INUMI"
+  ],
+  "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6": [
+   "BTC20",
+   "HeavensGate",
+   "JumpFarm",
+   "QuantumWN"
+  ]
+ },
+ "candidate_sender_in_>=3_incidents": {
+  "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671": [
+   "GFOX",
+   "MetaPool",
+   "Reddio",
+   "SocketGateway",
+   "bot"
+  ],
+  "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a": [
+   "BTC20",
+   "Conic02",
+   "PeapodsFinance",
+   "SASHAToken",
+   "Sushi_Router"
+  ]
+ },
+ "bundle_style_attack_txs": {
+  "post_london_scanned": 376,
+  "count": 37,
+  "list": [
+   {
+    "name": "Anyswap",
+    "date": "20220118",
+    "tx": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7",
+    "block": 14037237,
+    "index": 0,
+    "from": "0xfa2731d0bede684993ab1109db7ecf5bf33e8051",
+    "coinbase_paid_eth": 33.95003092342074
+   },
+   {
+    "name": "EFLeverVault",
+    "date": "20221014",
+    "tx": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+    "block": 15746200,
+    "index": 0,
+    "from": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+    "coinbase_paid_eth": 18.71705485376855
+   },
+   {
+    "name": "MEVa47b",
+    "date": "20221014",
+    "tx": "0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
+    "block": 15741333,
+    "index": 1,
+    "from": "0x1dc90b5b7fe74715c2056e5158641c0af7d28865",
+    "coinbase_paid_eth": 0.1
+   },
+   {
+    "name": "NUM",
+    "date": "20221123",
+    "tx": "0x8a8145ab28b5d2a2e61d74c02c12350731f479b3175893de2014124f998bff32",
+    "block": 16029970,
+    "index": 0,
+    "from": "0xb792faf099991f96c5dfef037ae9f248186d9b30",
+    "coinbase_paid_eth": 10.091424440903923
+   },
+   {
+    "name": "Sushi_Router",
+    "date": "20230409",
+    "tx": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
+    "block": 17007842,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 678.88
+   },
+   {
+    "name": "ERC20TokenBank",
+    "date": "20230531",
+    "tx": "0x578a195e05f04b19fd8af6358dc6407aa1add87c3167f053beb990d6b4735f26",
+    "block": 17376907,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 1.036355512292966
+   },
+   {
+    "name": "WiseLending",
+    "date": "20231013",
+    "tx": "0x7ac4a98599596adbf12fffa2bd23e2a2d2ac7e8989b6ea043fcc412a29126555",
+    "block": 18342121,
+    "index": 1,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 169.2674469790852
+   },
+   {
+    "name": "TIME",
+    "date": "20231206",
+    "tx": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+    "block": 18730463,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 4.923240442287576
+   },
+   {
+    "name": "Bmizapper",
+    "date": "20240117",
+    "tx": "0x97201900198d0054a2f7a914f5625591feb6a18e7fc6bb4f0c964b967a6c15f6",
+    "block": 19029290,
+    "index": 0,
+    "from": "0x63136677355840f26c0695dd6de5c9e4f514f8e8",
+    "coinbase_paid_eth": 2.2396514561889074
+   },
+   {
+    "name": "DAO_SoulMate",
+    "date": "20240122",
+    "tx": "0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342",
+    "block": 19063677,
+    "index": 0,
+    "from": "0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd",
+    "coinbase_paid_eth": 1.3576922261250155
+   },
+   {
+    "name": "PANDORA",
+    "date": "20240208",
+    "tx": "0x7c5a909b45014e35ddb89697f6be38d08eff30e7c3d3d553033a6efc3b444fdd",
+    "block": 19184578,
+    "index": 3,
+    "from": "0x096f0f03e4be68d7e6dd39b22a3846b8ce9849a3",
+    "coinbase_paid_eth": 0.4906212871287129
+   },
+   {
+    "name": "SwarmMarkets",
+    "date": "20240222",
+    "tx": "0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9",
+    "block": 19286457,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 2.559241617030985
+   },
+   {
+    "name": "BlueberryProtocol",
+    "date": "20240223",
+    "tx": "0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4",
+    "block": 19287289,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 457.5472677999905
+   },
+   {
+    "name": "GHT",
+    "date": "20240307",
+    "tx": "0xd17266bcdf30cbcbd7d0b5a006f43141981aeee2e1f860f68c9a1805ecacbc68",
+    "block": 19380955,
+    "index": 22,
+    "from": "0x096f0f03e4be68d7e6dd39b22a3846b8ce9849a3",
+    "coinbase_paid_eth": 0.7564920792079207
+   },
+   {
+    "name": "BBT",
+    "date": "20240312",
+    "tx": "0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca",
+    "block": 19417823,
+    "index": 4,
+    "from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+    "coinbase_paid_eth": 3.2046694019092934
+   },
+   {
+    "name": "Paraswap",
+    "date": "20240320",
+    "tx": "0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60",
+    "block": 19470561,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 6.450406123948403
+   },
+   {
+    "name": "GFOX",
+    "date": "20240510",
+    "tx": "0x12fe79f1de8aed0ba947cec4dce5d33368d649903cb45a5d3e915cc459e751fc",
+    "block": 19835925,
+    "index": 0,
+    "from": "0xfce19f8f823759b5867ef9a5055a376f20c5e454",
+    "coinbase_paid_eth": 8.943354253693862
+   },
+   {
+    "name": "DeFiPlaza",
+    "date": "20240705",
+    "tx": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+    "block": 20240539,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 66.31809150000001
+   },
+   {
+    "name": "HANAToken",
+    "date": "20240905",
+    "tx": "0xe8cee3450545a865b4a8fffd93938ae93429574dc8e01b02bc6a02f2f4490e4e",
+    "block": 20827437,
+    "index": 10,
+    "from": "0x7248939f65bdd23aab9eaab1bc4a4f909567486e",
+    "coinbase_paid_eth": 0.00412387008942168
+   },
+   {
+    "name": "unverified_03f9",
+    "date": "20240912",
+    "tx": "0x1a3e9eb5e00f39e84f90ca23bd851aa194b1e7a90003e3f6b9b17bbb66dabbb9",
+    "block": 20737849,
+    "index": 0,
+    "from": "0xf073a21f0d68adacfff34d5b8df04550c944e348",
+    "coinbase_paid_eth": 0.3758020683457544
+   },
+   {
+    "name": "DOGGO",
+    "date": "20240920",
+    "tx": "0x9e074d70e4f9022cba33c1417a6f6338d8248b67d6141c9a32913ca567d0efca",
+    "block": 20794803,
+    "index": 3,
+    "from": "0x7248939f65bdd23aab9eaab1bc4a4f909567486e",
+    "coinbase_paid_eth": 0.1063915964842166
+   },
+   {
+    "name": "PestoToken",
+    "date": "20240923",
+    "tx": "0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c",
+    "block": 20811949,
+    "index": 0,
+    "from": "0x7248939f65bdd23aab9eaab1bc4a4f909567486e",
+    "coinbase_paid_eth": 0.023961153697538488
+   },
+   {
+    "name": "Erc20transfer",
+    "date": "20241022",
+    "tx": "0x7f2540af4a1f7b0172a46f5539ebf943dd5418422e4faa8150d3ae5337e92172",
+    "block": 21019772,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 5.57153717443084
+   },
+   {
+    "name": "CoW",
+    "date": "20241107",
+    "tx": "0x2fc9f2fd393db2273abb9b0451f9a4830aa2ebd5490d453f1a06a8e9e5edc4f9",
+    "block": 21135438,
+    "index": 0,
+    "from": "0x00bad13fa32e0000e35b8517e19986b93f000034",
+    "coinbase_paid_eth": 2.632915496757719
+   },
+   {
+    "name": "Scorch",
+    "date": "20250211",
+    "tx": "0x02dc4409af99de400b2427dad525c31467a8fd2ac6cb251f885d33c073510ba2",
+    "block": 21822424,
+    "index": 0,
+    "from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+    "coinbase_paid_eth": 0.13608390460222453
+   },
+   {
+    "name": "Alkimiya_io",
+    "date": "20250328",
+    "tx": "0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814",
+    "block": 22146340,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 50.834053044409906
+   },
+   {
+    "name": "AnyswapWETHPermit",
+    "date": "20250729",
+    "tx": "0xae79fdcfd7c36ed654d11b352b495340bd3cc47d0849c35ac6ffa1e4859098ec",
+    "block": 23026900,
+    "index": 1,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 199.92
+   },
+   {
+    "name": "coinbase",
+    "date": "20250813",
+    "tx": "0x33b2cb5bc3c0ccb97f0cc21e231ecb6457df242710dfce8d1b68935f0e05773b",
+    "block": 23134257,
+    "index": 12,
+    "from": "0xc31a49d1c4c652af57cefdef248f3c55b801c649",
+    "coinbase_paid_eth": 0.00021101224137146
+   },
+   {
+    "name": "unverified_6f7a",
+    "date": "20250822",
+    "tx": "0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7",
+    "block": 23196046,
+    "index": 1,
+    "from": "0xe4b97db5faf476db464bc271097fac97d6ce3783",
+    "coinbase_paid_eth": 1.5134074732857943
+   },
+   {
+    "name": "DRLVaultV3",
+    "date": "20251110",
+    "tx": "0xe3eab35b288c086afa9b86a97ab93c7bb61d21b1951a156d2a8f6f5d5715c475",
+    "block": 23769387,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 0.9953752039805557
+   },
+   {
+    "name": "yETH",
+    "date": "20251201",
+    "tx": "0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156",
+    "block": 23914086,
+    "index": 0,
+    "from": "0xfb63aa935cf0a003335dce9cca03c4f9c0fa4779",
+    "coinbase_paid_eth": 0.1
+   },
+   {
+    "name": "makina",
+    "date": "20260120",
+    "tx": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+    "block": 24273362,
+    "index": 0,
+    "from": "0x935bfb495e33f74d2e9735df1da66ace442ede48",
+    "coinbase_paid_eth": 1299.0499043876423
+   },
+   {
+    "name": "RWAVault",
+    "date": "20260428",
+    "tx": "0x6b04344d5627df59d3bc645e7454f4605a90272852a91e435e370376643353b3",
+    "block": 24979316,
+    "index": 2,
+    "from": "0x7137804200a073f616d92e87007f1f100100b56a",
+    "coinbase_paid_eth": 2.195959995966763
+   },
+   {
+    "name": "AmbientCrocSwapDex",
+    "date": "20260607",
+    "tx": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52",
+    "block": 25266405,
+    "index": 1,
+    "from": "0x0000000000037e625b2502c26029aea237f102af",
+    "coinbase_paid_eth": 33.92546359515874
+   },
+   {
+    "name": "SecuredFi",
+    "date": "20260905",
+    "tx": "0xcd6159860783d8d481cc4bf4dceddc88acdca6bb08f6445525b2904cfd75b1da",
+    "block": 25914192,
+    "index": 0,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 28.837210715286012
+   },
+   {
+    "name": "RsETHSafeModule",
+    "date": "20260915",
+    "tx": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+    "block": 25980525,
+    "index": 0,
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "coinbase_paid_eth": 18.93122243326834
+   },
+   {
+    "name": "BiFi",
+    "date": "20261017",
+    "tx": "0x756c68055af7a0630aa0b56891ba4de14c56c39cbebe99e47eeb4728f4d6ad14",
+    "block": 26210256,
+    "index": 1,
+    "from": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "coinbase_paid_eth": 0.9868294451199223
+   }
+  ]
+ }
+}

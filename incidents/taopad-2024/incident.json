@@ -1,0 +1,206 @@
+{
+ "slug": "taopad-2024",
+ "name": "TaoPad (TPAD) tax-ETH extraction: Yoink replays the operator's failed tx",
+ "date": "2024-02-14",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "race_type": "post-failure-replay",
+ "headline": false,
+ "headline_text": "TaoPad's own operator tx to pull the token's 29.2 ETH tax balance ran out of gas; Yoink replayed its calls 4 min later (net 26.32 ETH) and returned it all the next day after the team wrote to it.",
+ "verdict_reason": "The counterparty is not a hacker: it is the TaoPad project's own operator wallet taopad.eth (0x98915686..., deployer and operator of the TPAD token), extracting the ETH that the TPAD token contract had accumulated from taxes (about 29.18 ETH) by using a bug in the token's public distribute(minOut) (a permissionless swap of the whole ETH balance with a caller-chosen minimum-out through the operator-set Uniswap V3 fee tier), the same weakness that had been exploited by a third party weeks earlier (per TaoPad's own messages; not independently identified here). The operator deployed a helper contract (block 19226396), set poolFee to 100 (19226402) and sent execute() with 1 ETH (public mempool first seen 2024-02-14T13:23:12.276Z, block 19226482 index 0, 13:23:23Z). That tx REVERTED out of gas inside its second swap (gas limit 29,792,302). Yoink's tx 0x5853b7a0... (block 19226503, index 0, 13:27:35Z; not in the mempool archive, private flow) repeats the operator's victim-protocol call sequence (6 core calls: createPool, pool initialize and distribute(0) byte-identical after normalising the two contracts; the two swaps and the liquidity mint identical except the deadline and one amount-bound word), with a 30,000,000 gas limit, finishes the extraction and sells: 29.5056 ETH in, 1.0 ETH working capital out, 1.3968 ETH to the coinbase, 0.7847 ETH gas, 26.3242 ETH net. It landed 21 blocks (252 s after the failure's block time, 263 s after the operator's tx was first seen) AFTER the operator's tx had already failed on chain; no tx of the operator was pending in between (the operator's next tx is setPoolFee(0) at block 19226577, after Yoink), and nobody else called distribute() in blocks 19226300-19226700 (trace_filter). So Yoink did not pre-empt anything: it succeeded where the operator's tx had failed (post-failure replay of a non-hacker's tx). TaoPad's message says Yoink 'frontran' them; the chain shows a replay after the operator's own out-of-gas failure. Yoink answered the same evening asking whether it was 'a failed rug attempt', then on 2024-02-15 12:53:35Z sent 26.32 ETH (exact) back to taopad.eth in tx 0xa0346352... ('sent back the entire bot profit'): 26.32 of a 26.324 ETH net (99.98%).",
+ "era": "mature-pbs-2024-26",
+ "protocol_loss_usd": null,
+ "protocol_loss_note": "TPAD tax ETH extracted in the tx: 29.1789 ETH. No USD figure from a saved source; not computed.",
+ "attacker": {
+  "eoas": [],
+  "contracts": [],
+  "deploy_tx": null,
+  "funding_tx": null,
+  "txs": [],
+  "none_reason": "No hostile attacker in this event. The racing counterparty is the project's operator (below). The earlier third-party exploit of the TPAD token that TaoPad mentions is outside the scope and not identified here."
+ },
+ "counterparty": {
+  "kind": "project operator (the protocol extracting its own accumulated tax ETH)",
+  "label": "taopad.eth (TaoPad team)",
+  "eoa": "0x98915686e23032a1d3b8596badd7fadf147d5c00",
+  "helper_contract": "0x8ec2e9dee58efb69e9986d3a27d7f3810209c6cb",
+  "helper_deployer": "0x397c9e1c1241430af08668e1ba6ea0c00fefde30",
+  "token": "0x5483dc6abda5f094865120b2d251b5744fc2ecb5",
+  "txs": [
+   {
+    "hash": "0xbcfb472530332c7206c6cc0a32f99833c20092510a672d3a3c813cc46d167961",
+    "block": 19226381,
+    "index": 128,
+    "status": "success",
+    "role": "operator funds helper deployer 0x397c9e1c with 0.12 ETH"
+   },
+   {
+    "hash": "0xd0e8fc22b214c24f5dffadb6105aebc00fcd5927cf4c33ea8c7f27f390b329c5",
+    "block": 19226396,
+    "index": 90,
+    "status": "success",
+    "role": "0x397c9e1c deploys helper contract 0x8ec2e9de"
+   },
+   {
+    "hash": "0xe21e4f3d4eab52a62f203ec63b4a6496389c584e3ad683011075e05ba2ae88df",
+    "block": 19226402,
+    "index": 112,
+    "status": "success",
+    "role": "operator: TPAD.setPoolFee(100)"
+   },
+   {
+    "hash": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+    "block": 19226482,
+    "index": 0,
+    "status": "reverted",
+    "first_seen_ms": 1707916992276,
+    "role": "operator: helper.execute() with 1 ETH, public mempool, out of gas in the second swap"
+   },
+   {
+    "hash": "0xeaa5f727dd6e2467e6bd8f7a6f2625cd37a67e0552875756eb0b001f02df5a96",
+    "block": 19226577,
+    "index": 93,
+    "status": "success",
+    "role": "operator: TPAD.setPoolFee(0) after Yoink's tx (message: 'so nobody could exploit Tpad again')"
+   }
+  ],
+  "message_txs": [
+   "0x1c900a5c5d0aa25d2cc931682f470d38c158ad54b06d15e689f3d607e7545e84",
+   "0x20d4929ea446a16473b90336c1f0a419f7be5744e2064c5bfb4c11a0868efc8f",
+   "0x13f4d83c0f4ed0fabdd88a90fe49774660166db637e8e3b89432ceb3f350f3b7",
+   "0x9a88afc42aef10cc652ba97fafa6a8929d924c51d697965cb038fc881851b1a6"
+  ]
+ },
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "txs": [
+    {
+     "hash": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+     "block": 19226503,
+     "index": 0,
+     "status": "success"
+    }
+   ],
+   "captured": {
+    "token": "ETH",
+    "amount": 29.178877212439,
+    "usd": null
+   },
+   "coinbase_paid_eth": 1.396774176782,
+   "priority_fee_gwei": 0.0,
+   "bot_net_eth": 26.324156993719,
+   "replay_evidence": "incidents/taopad-2024/call_diff.json: 4 of 9 paired calls byte-identical after normalisation; same ETH values; same TPAD.distribute argument; operator failed by out-of-gas, Yoink used a higher gas limit.",
+   "notes": "tx not in mempool-dumpster (private flow); 0.7847 ETH gas at base fee 26.71 gwei, priority fee 0; msg.value 49 (per-mille bribe rule: 49 per-mille of 28.5056 ETH profit = 1.3968 ETH, matches the coinbase transfer)."
+  }
+ ],
+ "other_racers": [],
+ "other_racers_note": "trace_filter (toAddress = TPAD token, blocks 19226300-19226700): the only distribute() (0x91c05b0b) calls are the operator's reverted one and Yoink's. No other bot or attacker tx.",
+ "funds_fate": [
+  {
+   "what": "Yoink returns the bot profit to taopad.eth",
+   "tx": "0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32",
+   "amount_eth": 26.32,
+   "to": "0x98915686e23032a1d3b8596badd7fadf147d5c00",
+   "block": 19233454,
+   "time_utc": "2024-02-15T12:53:35Z",
+   "message": "Thanks for the explanation, sent back the entire bot profit."
+  },
+  {
+   "what": "coinbase (builder fee recipient 0x7adc0e86, blockbeelder) paid by Yoink's tx",
+   "tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+   "amount_eth": 1.396774176782,
+   "to": "0x7adc0e867ebc337e2d20c44db181c067fa08637b"
+  },
+  {
+   "what": "builder refund to Yoink in the block",
+   "amount_eth": 0.0,
+   "note": "none: the block has 13 txs; the only builder-sent tx is the proposer payment (index 12)"
+  },
+  {
+   "what": "proposer payment by the builder",
+   "tx": "0xd4405f3beee60d05b6e54f7a4356e9e4e98c971751b8003076de03e5fa91107b",
+   "amount_eth": 1.403189437488996,
+   "to": "0x3ec0977544889c0bb3115e5e8c654e24cd36e7d3"
+  }
+ ],
+ "auction": {
+  "block": 19226503,
+  "slot": 8424436,
+  "see": "incidents/taopad-2024/race_19226503.json",
+  "note": "138 bids from 21 builders on Flashbots' bid archive; the winning block (blockbeelder, via Ultrasound, 1.4032 ETH to the proposer, which contains Yoink's tx) was submitted once at +380 ms in the slot; the best other bid was beaverbuild at 0.0222 ETH. No bid history exists that shows when Yoink's bundle was first seen."
+ },
+ "sources": [
+  "https://etherscan.io/tx/0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+  "https://etherscan.io/tx/0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+  "https://etherscan.io/tx/0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32",
+  "https://etherscan.io/tx/0x1c900a5c5d0aa25d2cc931682f470d38c158ad54b06d15e689f3d607e7545e84",
+  "https://etherscan.io/tx/0x9a88afc42aef10cc652ba97fafa6a8929d924c51d697965cb038fc881851b1a6",
+  "https://github.com/taopad/rewards-contracts (cited by TaoPad's message; not fetched)",
+  "research/lineages/yoink_more_incidents.json (lead)",
+  "research/lineages/yoink_messages.json (messages, decoded from Yoink EOA txlist)"
+ ],
+ "numbers": {
+  "gross": 28.50559544453101,
+  "coinbase": 1.3967741767820196,
+  "gas": 0.78466427402994,
+  "net": 26.32415699371905,
+  "ret": 26.32,
+  "tax_eth": 29.17887721243935,
+  "wc": 1.0,
+  "in": 29.50559544453101,
+  "bribe_permille_check": 49.0,
+  "msg_value": 49
+ },
+ "limits": [
+  "Yoink's trigger is unknown: its tx is private flow and the earliest visible event is the operator's public tx or the helper deployment / setPoolFee txs; we only show the ordering (Yoink after the failure).",
+  "TaoPad's account of the earlier third-party exploit and of the 20% tax share is from its own messages; not verified.",
+  "No web sources were fetched for this case (search budget exhausted); the story is built from chain data and the on-chain messages."
+ ],
+ "raw_refs": {
+  "operator_failed_tx": [
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "yoink_tx": [
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json"
+  ],
+  "return_tx": [
+   "site/raw/rpc/tx_0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32.json",
+   "full cache only (not published)"
+  ],
+  "mempool": [
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "yoink_txlist": "site/raw/etherscan/taopad_yoink_txlist_19226000_19234000.json",
+  "operator_txlist": "site/raw/etherscan/taopad_victim_txlist_19200000_19240000.json",
+  "token_calls_trace_filter": "site/raw/rpc/taopad_tf_token_19226300_19226700.json",
+  "token_source": "site/raw/etherscan/taopad_source_0x5483dc6abda5f094865120b2d251b5744fc2ecb5.json",
+  "helper_creation": "site/raw/etherscan/taopad_creation_0x8ec2e9dee58efb69e9986d3a27d7f3810209c6cb.json",
+  "races": [
+   "incidents/taopad-2024/race_19226482.json",
+   "incidents/taopad-2024/race_19226503.json"
+  ],
+  "call_diff": "incidents/taopad-2024/call_diff.json"
+ },
+ "verdict_original": "related-not-frontrun",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  "verdict_reason": "Counterparty is the TaoPad project's own operator wallet, not a hacker. Its tx 0xced2c7fa (block 19226482, index 0, public mempool, 13:23:12Z) reverted out of gas; Yoink's tx 0x5853b7a0 (block 19226503, index 0, 13:27:35Z, private) replays the same victim-protocol calls 21 blocks / 252 s later with a higher gas limit, nets 26.32 ETH and returns it to taopad.eth the next day. Nothing was pending in between and no other tx called the vulnerable function, so Yoink did not beat anything: it succeeded where the operator's tx had already failed.",
+  "headline_note": null,
+  "dataset_rows": [
+   "taopad-2024"
+  ]
+ }
+}

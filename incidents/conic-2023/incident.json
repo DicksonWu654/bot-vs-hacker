@@ -1,0 +1,599 @@
+{
+ "slug": "conic-2023",
+ "name": "Conic Finance omnipools, 2023-07-21: ETH pool read-only reentrancy (cloned after a failed first attempt) and crvUSD pool sandwich (replayed ten times by Yoink)",
+ "date": "2023-07-21",
+ "chain": "ethereum",
+ "era": "early-pbs-2022-23; before the 2023-08-07 mempool archive, so in-block evidence only; Flashbots-relay bid history exists for most blocks",
+ "verdict": "related-not-frontrun",
+ "race_type": "late-copy",
+ "headline": false,
+ "verdict_reason": "No bot beat a pending attacker tx in either Conic pool. (1) crvUSD pool: Yoink gen1 replays the attacker's sandwich (same Balancer flash loan, same crvUSD create_loan, same Curve swap and Conic deposit/withdraw sequence with identical round-number sizes, amounts re-derived from live balances) ten times in blocks 17743471-17743480, starting ONE BLOCK AFTER the attacker's own successful tx (17743470 idx 4). Copy: confirmed. Order: after, so late-copy, not a front-run. (2) ETH pool (read-only reentrancy): the first attacker 0x10db234e deployed a contract and its attack tx reverted (out of gas, block 17740901); 51 blocks / ~10 min later 0x8d67db0b redeployed the SAME creation code (one 20-byte address differs) and sent the identical calldata, succeeding at idx 0 of 17740955 for 1,724 ETH: post-failure-replay by an anonymous clone exploiter, not a bot beating a pending attack, and not returned. Neither case is 'post-hack arbitrage of an imbalance': the crvUSD copy is a replay of the attacker's exploit calls. In-block evidence only (no mempool archive before 2023-08-07).",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "protocol_loss_usd": {
+  "eth_pool": "1,724.175 ETH taken by the clone tx (on-chain); press: ~$3.25M (DeFiHackLabs), $3.3M (Rekt), 1,724 ETH / $3.2M (CertiK)",
+  "crvusd_pool": "press: ~$300K taken (CertiK; Conic post-mortem via Rekt/DL News: attacker deposited ~$600K, withdrew ~$900K); DeFiHackLabs headline ~$934K. On-chain, the profit-taking txs we traced sum to 13.581 ETH (attacker, 2 successful txs) + 125.824 ETH (Yoink gross, 10 txs). No USD conversion is saved, so no USD figure of ours is given."
+ },
+ "attacker": {
+  "eth_pool_first_attacker": {
+   "eoa": "0x10db234e02c3889d8e408c7084e8ce10892bdad7",
+   "contract": "0xdac434f8011e9588f39fa43c3f7cdbbcb3e5cd1f",
+   "deploy_tx": "0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74",
+   "deploy_block": 17740893,
+   "deploy_index": 6,
+   "funding": "Tornado Cash 1 ETH pool (0x47ce0c6e...2936) -> EOA, 0.98282 ETH, block 17740718 idx 22 (relayer-style withdrawal via router 0xd90e2f92...)",
+   "funding_tx": "0x3334b58cc940fdf77d8cd2027b0869118230bf74bbbdacdb9bdc81af9ededa28",
+   "txs": [
+    {
+     "hash": "0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16",
+     "block": 17740901,
+     "index": 4,
+     "status": "reverted",
+     "note": "selector 0x52558bb0, Aave+Balancer flash loans, Curve add/remove_liquidity, re-entrant ConicEthPool.withdraw; out of gas inside a nested Curve call; gas limit 27.64M, 24.05M burned; max priority 20 gwei (13.7 effective) = 0.73 ETH wasted",
+     "raw_ref": "site/raw/rpc-conic/trace_0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16.json"
+    }
+   ],
+   "only_two_txs_ever": true,
+   "source_for_identity": "Rekt: 'Original failed tx (1st attack): 0x97a8315e...; Original exploiter address: 0x10db234e...'. We verified both on-chain."
+  },
+  "eth_pool_clone_exploiter": {
+   "eoa": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
+   "contract": "0x743599ba5cfa3ce8c59691af5ef279aaafa2e4eb",
+   "deploy_tx": "0x16718a6df144de749035e4763946ad56d3dfaeb5d151a82f913698fa4ae28c3d",
+   "deploy_block": 17740952,
+   "deploy_index": 3,
+   "funding": "Tornado Cash 1 ETH pool -> EOA 0.98702 ETH on 2023-07-19 block 17725270 (about 52 hours before the first attacker's funding; the EOA also made unrelated deploy+call txs on 2023-07-20 at blocks 17731866-68 and 17732907-40)",
+   "funding_tx": "0xecdd09dd1e34d0f54909b06408a15719ed4b8b79ddad64e57ffad021e8f6f3de",
+   "labels_reported": "'LadyPepe Token Exploiter' (BlockSec label via Rekt); CertiK names it 'Attacker'. Not verified by us.",
+   "attack_tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+   "attack_block": 17740955,
+   "attack_index": 0,
+   "loot_eth": 1724.175115775667,
+   "proceeds_forwarded_to": "0x3d32c5a2e592c7b17e16bddc87eab75f33ae3010 ('Conic Finance Exploiter 2')"
+  },
+  "crvusd_pool_attacker": {
+   "eoa": "0xb6369f59fc24117b16742c9dfe064894d03b3b80",
+   "contracts": [
+    "0x486cb3f61771ed5483691dd65f4186da9e37c68e",
+    "0x17e0329d8ffe9b4cb1f740110a42ecb541179d9e"
+   ],
+   "funding": "Tornado Cash 1 ETH pool -> EOA, two withdrawals (0.96831 ETH block 17743378; 0.97064 ETH block 17743451)",
+   "funding_txs": [
+    "0x4e2678fd999e9fd403f8c5a0abf7d8e1e062486797e05a3e7288c43f361f2ce1",
+    "0x41ed3160a526a08b861e8622c75944ac7c0143be674fc409be71f61d9648e118"
+   ],
+   "deploy_txs": [
+    {
+     "tx": "0x90eef27416e85fb1c6acaded14588f1cc244d0ba7b6858f010957ced32d87e6d",
+     "block": 17743464,
+     "index": 98,
+     "contract": "0x486cb3f61771ed5483691dd65f4186da9e37c68e"
+    },
+    {
+     "tx": "0x4e74c092c3e01a4b9f51c7d3ac214ce6d231bac1ccf17d5514625740870f81a2",
+     "block": 17743514,
+     "index": 74,
+     "contract": "0x17e0329d8ffe9b4cb1f740110a42ecb541179d9e"
+    }
+   ],
+   "setup_txs": [
+    {
+     "tx": "0xc8603387e50e659d128790b827627911b039e986f221eda9124f1e263f2093a0",
+     "block": 17743467,
+     "index": 84,
+     "note": "approvals (0x12424e3f)"
+    },
+    {
+     "tx": "0x3f505c0efd5ab37517317732d0862d1e4f2e53bb5ed5ae573bd1656a222ee24a",
+     "block": 17743516,
+     "index": 68
+    }
+   ],
+   "txs": [
+    {
+     "hash": "0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
+     "block": 17743470,
+     "index": 4,
+     "status": "success",
+     "profit_eth": 11.562597740138711,
+     "gas_price_gwei": 36.574,
+     "priority_fee_gwei": 1.0,
+     "gas_used": 21658306
+    },
+    {
+     "hash": "0x8478a9567b06d5b9a2e09a0599a95c674cf2d9a70496e6ef7e5f0f3d0ec9a0ef",
+     "block": 17743492,
+     "index": 2,
+     "status": "reverted",
+     "note": "nested out of gas in the withdraw path; gas limit 25.28M, 24.46M used; 60.6 gwei"
+    },
+    {
+     "hash": "0xc8818aa3afb0a073ab507fb868f7a9f62c28607763bb3d678cdf0290fff7519e",
+     "block": 17743521,
+     "index": 2,
+     "status": "reverted",
+     "note": "out of gas in a staticcall (contract 2)"
+    },
+    {
+     "hash": "0xc08bfee8653bdb715144f98bc014eecbab6cf92ddaba16b836f3889fd850a862",
+     "block": 17743531,
+     "index": 5,
+     "status": "success",
+     "profit_eth": 2.018288974295397,
+     "gas_used": 22293140
+    },
+    {
+     "hash": "0x357037805b2fed21fcbde4d665d53fe1e0906174125e0b50a030793d7cbbec66",
+     "block": 17743628,
+     "index": 0,
+     "status": "reverted",
+     "note": "selector 0x5f1bbb2f, 1.12M gas, 45.9 gwei"
+    }
+   ],
+   "total_profit_eth_two_successes": 13.580886714,
+   "laundering": "9 x 1 ETH deposits to Tornado Cash router 0xd90e2f92... between blocks 17748821 and 17748913 (2023-07-22 12:59-13:18Z), tx e.g. 0x0fcb43ab934afc812d87fe2c71204e530cd1653fa56b3cd45f002ebf9541d7b7"
+  }
+ },
+ "sub_races": [
+  {
+   "id": "eth-pool",
+   "pool": "0xbb787d6243a8d450659e09ea6fd82f1c859691e9",
+   "date_utc": "2023-07-21T10:35:11Z",
+   "block": 17740955,
+   "verdict": "related-not-frontrun",
+   "race_type": "post-failure-replay",
+   "verdict_reason": "The first attacker's attack tx (block 17740901 idx 4) reverted. 51 blocks (~10 min) later a different EOA deployed a byte-for-byte clone of the first attacker's contract (creation code differs in exactly one 20-byte address, the beneficiary), sent identical calldata (0x52558bb0, args 19700/240/3000/180) and succeeded at idx 0 of 17740955, taking 1,724.175 ETH. Nothing of the first attacker was pending in between (his EOA made only two txs ever). Not returned.",
+   "calldata_diff": "incidents/conic-2023/victim_call_diff_eth.json",
+   "assumption": "Clone operator assumed distinct from the first attacker (redeployed instead of re-calling the first contract; separate Tornado funding about 52 hours earlier; older EOA with unrelated deploy history). A second wallet of the same operator is not excluded."
+  },
+  {
+   "id": "crvusd-pool",
+   "pool": "0x369cbc5c6f139b1132d3b91b87241b37fc5b971f",
+   "date_utc": "2023-07-21T19:01:47Z",
+   "block": 17743471,
+   "verdict": "related-not-frontrun",
+   "race_type": "late-copy",
+   "verdict_reason": "Yoink gen1 (EOA 0xfde0d157, contract 0xd050e0a4) replays the attacker's sandwich in ten consecutive blocks 17743471-17743480 at idx 0 (idx 4 once). The attacker's own tx 0x37acd17a landed at 17743470 idx 4 and succeeded, so the copy comes after. Call-by-call diff: every state-changing call (Balancer flash loan, crvUSD create_loan/repay, Curve crvUSD/USDC and crvUSD/USDT swaps, Conic deposit/withdraw, tricrypto exit) has the same target and selector in the same order; round-number sizes are identical, state-derived sizes differ in the 3rd-4th digit.",
+   "calldata_diff": "incidents/conic-2023/victim_call_diff_crvusd.json"
+  }
+ ],
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+   "generation": "gen1 (created 2022-12-02, block 16097930)",
+   "txs": [
+    {
+     "hash": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+     "block": 17743471,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 131,
+     "gross_eth": 12.583475073,
+     "coinbase_paid_eth": 1.648435235,
+     "gas_cost_eth": 0.859415435,
+     "net_eth": 10.075624403,
+     "builder": "rsync-builder.xyz"
+    },
+    {
+     "hash": "0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80",
+     "block": 17743472,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 195,
+     "gross_eth": 12.562563517,
+     "coinbase_paid_eth": 2.449699886,
+     "gas_cost_eth": 0.95409768,
+     "net_eth": 9.158765952,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd",
+     "block": 17743473,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 187,
+     "gross_eth": 12.537645901,
+     "coinbase_paid_eth": 2.344539783,
+     "gas_cost_eth": 1.073318898,
+     "net_eth": 9.11978722,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f",
+     "block": 17743474,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 215,
+     "gross_eth": 12.510627601,
+     "coinbase_paid_eth": 2.689784934,
+     "gas_cost_eth": 1.19586157,
+     "net_eth": 8.624981097,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41",
+     "block": 17743475,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 194,
+     "gross_eth": 12.482758807,
+     "coinbase_paid_eth": 2.421655209,
+     "gas_cost_eth": 1.320278547,
+     "net_eth": 8.740825052,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308",
+     "block": 17743476,
+     "index": 4,
+     "status": "success",
+     "msg_value_wei": 109,
+     "gross_eth": 12.65675211,
+     "coinbase_paid_eth": 1.37958598,
+     "gas_cost_eth": 1.415110308,
+     "net_eth": 9.862055823,
+     "builder": "rsync-builder.xyz"
+    },
+    {
+     "hash": "0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa",
+     "block": 17743477,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 110,
+     "gross_eth": 12.650534485,
+     "coinbase_paid_eth": 1.391558793,
+     "gas_cost_eth": 1.594526864,
+     "net_eth": 9.664448828,
+     "builder": "builder0x69"
+    },
+    {
+     "hash": "0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080",
+     "block": 17743478,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 211,
+     "gross_eth": 12.63555975,
+     "coinbase_paid_eth": 2.666103107,
+     "gas_cost_eth": 1.722626397,
+     "net_eth": 8.246830246,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c",
+     "block": 17743479,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 170,
+     "gross_eth": 12.614806539,
+     "coinbase_paid_eth": 2.144517112,
+     "gas_cost_eth": 1.876470792,
+     "net_eth": 8.593818636,
+     "builder": "I can haz block?"
+    },
+    {
+     "hash": "0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8",
+     "block": 17743480,
+     "index": 0,
+     "status": "success",
+     "msg_value_wei": 183,
+     "gross_eth": 12.589421818,
+     "coinbase_paid_eth": 2.303864193,
+     "gas_cost_eth": 2.031301291,
+     "net_eth": 8.254256334,
+     "builder": "I can haz block?"
+    }
+   ],
+   "captured": {
+    "token": "ETH",
+    "gross_amount": 125.82414560197842,
+    "net_amount": 90.34139358873627,
+    "usd": null
+   },
+   "coinbase_paid_eth": 21.439744231724486,
+   "gas_cost_eth": 14.043007781517655,
+   "priority_fee_gwei": 0.0,
+   "replay_evidence": "incidents/conic-2023/victim_call_diff_crvusd.json (attacker tx 0x37acd17a vs Yoink tx 0x64910b0a)",
+   "bribe_rule_check": "coinbase / gross equals msg.value per mille (131 -> 0.131 etc.), the same rule research/bot-re/analysis.md derived for gen2/gen3 (checked on all ten txs, yoink_10txs.json).",
+   "notes": "Ten copies in ten blocks; each tx used ~21.2M gas (70% of the block), which also pushed the base fee from 35.6 to 103.5 gwei (blocks 17743470 to 17743481). Coinbase went to the block's builder: rsync-builder.xyz, 'I can haz block?' (0x229b8325, the builder EigenPhi attributes to Yoink per research/bot-re/analysis.md) and builder0x69. Yoink stopped after 17743480; why is unknown (Conic paused deposits at some point; we did not time it)."
+  },
+  {
+   "label": "anon clone exploiter (not a known bot)",
+   "eoa": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
+   "contract": "0x743599ba5cfa3ce8c59691af5ef279aaafa2e4eb",
+   "txs": [
+    {
+     "hash": "0x16718a6df144de749035e4763946ad56d3dfaeb5d151a82f913698fa4ae28c3d",
+     "block": 17740952,
+     "index": 3,
+     "status": "success",
+     "role": "deploy clone (21,970-byte creation code, one 20-byte diff)"
+    },
+    {
+     "hash": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+     "block": 17740955,
+     "index": 0,
+     "status": "success",
+     "gas_limit": 29500000,
+     "gas_used": 20141058,
+     "priority_fee_gwei": 3.0,
+     "coinbase_paid_eth": 0.0
+    }
+   ],
+   "captured": {
+    "token": "ETH",
+    "amount": 1724.175115775667,
+    "usd": null
+   },
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_gwei": 3.0,
+   "replay_evidence": "incidents/conic-2023/victim_call_diff_eth.json",
+   "notes": "Keeps the funds; ignored four on-chain messages from Conic (2023-07-22, -23, -08-08 offering a 10% bounty)."
+  }
+ ],
+ "other_racers": [
+  {
+   "what": "crvUSD pool: other txs emitting the 4x deposit/withdraw pattern between blocks 17743300 and 17743700",
+   "result": "only the attacker's two successes and Yoink's ten (Etherscan getLogs on the pool, site/raw/etherscan/conic_logs_omnipool_17743300_17743700.json). the other 25 pool txs in that window emit a single event each (ordinary deposits/withdrawals)."
+  },
+  {
+   "what": "ETH pool: other multi-event txs on ConicEthPool 17740000-17743500",
+   "result": "only the clone tx 0x8b74995d (site/raw/etherscan/conic_logs_ethpool_17740000_17743500_p1.json)."
+  },
+  {
+   "what": "attacker's own later attempts on the crvUSD pool",
+   "result": "0x8478a956 (17743492) and 0xc8818aa3 (17743521) reverted; 0xc08bfee8 (17743531) succeeded for 2.018 ETH after redeploying a new contract."
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Yoink returned 90.0% of its net to Conic",
+   "tx": "0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4",
+   "block": 17756778,
+   "amount_eth": 81.30725100000001,
+   "to": "0xedaeb101f34d767f263c0fe6b8d494e3d071f0ba (conicfinance.eth, deployer of the crvUSD pool)",
+   "detail": "net 90.34139 ETH = gross 125.82415 - coinbase 21.43974 - gas 14.04301; kept 9.03414 ETH (10% bounty by agreement)"
+  },
+  {
+   "what": "coinbase payments of Yoink's ten txs went to builders, who pass them on to the proposer",
+   "amount_eth": 21.439744231724486,
+   "detail": "block 17743471: builder (rsync) paid proposer 1.70579 ETH in the last tx against Yoink's 1.64844 ETH coinbase; 17743472: 'I can haz block?' bid/paid 2.43348 ETH against 2.44970 ETH. No builder refund tx to Yoink seen in 17743471/17743472."
+  },
+  {
+   "what": "ETH-pool loot not returned",
+   "tx": "0x388a60c2958cd6dd5f8b9efe8163938700fcdc4ac40b8e70d07d27163b07acf3",
+   "amount_eth": 1726.5914693180482,
+   "to": "0x3d32c5a2e592c7b17e16bddc87eab75f33ae3010 (block 17740980)",
+   "detail": "then 300+300+400+400+327 ETH from 0x3d32c5a2 to 0x160b431b... on 2023-07-31 (blocks 17812383-17812515); destination not attributed by us"
+  },
+  {
+   "what": "crvUSD attacker's take",
+   "amount_eth": 13.580887,
+   "detail": "laundered via Tornado Cash (9 x 1 ETH deposits, 2023-07-22)"
+  }
+ ],
+ "auction_summary": {
+  "relays_that_answered": "Flashbots (bid history 2023); Ultra Sound, Agnostic, bloXroute-regulated, Aestus, Titan, ETHGas, BTCS answered with no data for most blocks; Eden, Manifold, bloXroute max-profit/ethical, Blocknative unreachable or timed out",
+  "yoink_blocks": [
+   {
+    "block": 17743471,
+    "builder_extra_data": "rsync-builder.xyz",
+    "fee_recipient": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+    "slot": 6928507,
+    "relay_bid_data": {},
+    "n_bids": 0,
+    "n_builders": 0,
+    "winning_bid_eth": null,
+    "winning_builder": null,
+    "delivered_by_relays": [],
+    "last_tx_in_block": {
+     "index": 114,
+     "from": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+     "to": "0x2f777e9f26aa138ed21c404079e80656b448c711",
+     "value_eth": 1.7057873471181708,
+     "note": "builder-to-proposer payment"
+    },
+    "yoink_coinbase_eth": [
+     1.6484352345599078
+    ],
+    "raw_ref": "incidents/conic-2023/race_17743471.json"
+   },
+   {
+    "block": 17743472,
+    "builder_extra_data": "I can haz block?",
+    "fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+    "slot": 6928508,
+    "relay_bid_data": {
+     "flashbots": 57
+    },
+    "n_bids": 57,
+    "n_builders": 23,
+    "winning_bid_eth": 2.4334844737032113,
+    "winning_builder": "I can haz block?",
+    "delivered_by_relays": [
+     "agnostic",
+     "flashbots",
+     "ultrasound"
+    ],
+    "last_tx_in_block": {
+     "index": 111,
+     "from": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+     "to": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+     "value_eth": 2.4334844737032113,
+     "note": "builder-to-proposer payment"
+    },
+    "yoink_coinbase_eth": [
+     2.449699885895913
+    ],
+    "raw_ref": "incidents/conic-2023/race_17743472.json"
+   },
+   {
+    "block": 17743476,
+    "builder_extra_data": "rsync-builder.xyz",
+    "fee_recipient": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+    "slot": 6928512,
+    "relay_bid_data": {
+     "flashbots": 272
+    },
+    "n_bids": 272,
+    "n_builders": 25,
+    "winning_bid_eth": 1.9339596671723016,
+    "winning_builder": "rsync-builder.xyz",
+    "delivered_by_relays": [
+     "ultrasound"
+    ],
+    "last_tx_in_block": {
+     "index": 87,
+     "from": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+     "to": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127",
+     "value_eth": 1.9339596671723016,
+     "note": "builder-to-proposer payment"
+    },
+    "yoink_coinbase_eth": [
+     1.3795859800348724
+    ],
+    "raw_ref": "incidents/conic-2023/race_17743476.json"
+   },
+   {
+    "block": 17743480,
+    "builder_extra_data": "I can haz block?",
+    "fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+    "slot": 6928516,
+    "relay_bid_data": {
+     "flashbots": 19
+    },
+    "n_bids": 19,
+    "n_builders": 6,
+    "winning_bid_eth": 2.293132368353688,
+    "winning_builder": "I can haz block?",
+    "delivered_by_relays": [
+     "agnostic",
+     "flashbots",
+     "ultrasound"
+    ],
+    "last_tx_in_block": {
+     "index": 47,
+     "from": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+     "to": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+     "value_eth": 2.293132368353688,
+     "note": "builder-to-proposer payment"
+    },
+    "yoink_coinbase_eth": [
+     2.303864192620866
+    ],
+    "raw_ref": "incidents/conic-2023/race_17743480.json"
+   }
+  ],
+  "reading": "17743471 (first copy): no relay recorded this block, builder rsync-builder.xyz, proposer paid 1.7058 ETH in the last tx, of which Yoink's coinbase transfer was 1.6484 ETH (96.6%). 17743472: 57 Flashbots-relay bids, first at -9.9 s, winning bid 2.4335 ETH at -1.18 s from 'I can haz block?' (Yoink's coinbase 2.4497 ETH). Bid contents are not public, so whether a given bid contained the Yoink tx is unknown except for the winning block.",
+  "attacker_block_17743470": {
+   "builder": "Made on the moon by Blocknative",
+   "winning_bid_eth": 0.2379,
+   "n_bids": 192,
+   "attacker_tx_priority_fee_gwei": 1.0,
+   "attacker_index": 4,
+   "note": "low-priority tx at idx 4 of a full block: consistent with the public mempool but not proven (no archive for 2023-07-21)"
+  },
+  "eth_pool_clone_block_17740955": {
+   "builder": "rsync-builder.xyz",
+   "winning_submission_eth": 0.12459,
+   "winning_submission_t_rel_slot_ms": 231,
+   "n_bids": 273,
+   "clone_index": 0,
+   "clone_priority_fee_gwei": 3.0
+  }
+ },
+ "claims_checked": [
+  {
+   "claim": "literature sweep candidates.json: 'Yoink captured value from attacker's imbalance, not a copy'",
+   "result": "WRONG for the call content: Yoink's victim-call sequence and round-number parameters equal the attacker's (victim_call_diff_crvusd.json). It is a copy, but a late one (next block)."
+  },
+  {
+   "claim": "literature sweep candidates.json: 'crvUSD-pool attacker tx not identified'",
+   "result": "Identified: EOA 0xb6369f59, contract 0x486cb3f6, tx 0x37acd17a (also DeFiHackLabs Conic02)."
+  },
+  {
+   "claim": "yoink_more_incidents.json: Yoink gen1 made 10 consecutive-block txs 17743471-17743480, idx 0/4, ~1.4-2.7 ETH coinbase",
+   "result": "CONFIRMED (coinbase 1.380-2.690 ETH)."
+  },
+  {
+   "claim": "Yoink took 125.82 ETH, spent 35.48 on gas/bribes, returned 81.307, kept 10%",
+   "result": "CONFIRMED to <1e-5 ETH: gross 125.82415, coinbase+gas 35.48275, net 90.34139; returned 81.307251 = 90.00% of net"
+  },
+  {
+   "claim": "Rekt: 'Both attacks were frontrun'",
+   "result": "Not as front-runs. ETH pool: a clone exploit after the first attacker's attempt had already reverted. crvUSD pool: Yoink copied after the attacker's tx had landed."
+  },
+  {
+   "claim": "CertiK: crvUSD loss was MEV arbitrage of an imbalance caused by the first exploit",
+   "result": "Not supported: the crvUSD pool was sandwiched by a separate Tornado-funded attacker with his own contract, flash loan and loop (DeFiHackLabs Conic02 PoC matches the trace); Yoink copied that."
+  },
+  {
+   "claim": "DL News/Conic: the bot 'unwittingly' traded against the imbalance",
+   "result": "Conic's own on-chain message says 'your bot has replicated an attack'. The calls are a replay; what Yoink 'knew' is not observable."
+  },
+  {
+   "claim": "DeFiHackLabs date 2023-07-22 for Conic02",
+   "result": "The tx is 2023-07-21T19:01:35Z (block 17743470)."
+  }
+ ],
+ "sources": [
+  "https://rekt.news/conic-finance-rekt/",
+  "https://dlnews.com/articles/defi/conic-finance-does-not-blame-auditor-peckshield-for-hack/",
+  "https://www.certik.com/resources/blog/conic-finance-incident-analysis",
+  "https://medium.com/@ConicFinance/post-mortem-eth-and-crvusd-omnipool-exploits-c9c7fa213a3d (Cloudflare-blocked when fetched; content via Rekt/DL News/CertiK)",
+  "https://github.com/SunWeb3Sec/DeFiHackLabs (src/test/2023-07/Conic02_exp.sol, Conic_exp.sol)",
+  "https://etherscan.io/tx/0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+  "https://etherscan.io/tx/0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
+  "https://etherscan.io/tx/0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4"
+ ],
+ "raw_refs": {
+  "crvusd_attacker_trace": "site/raw/rpc-conic/trace_0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882.json",
+  "yoink_first_trace": "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+  "eth_original_trace": "site/raw/rpc-conic/trace_0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16.json",
+  "eth_clone_trace": "site/raw/rpc-conic/trace_0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146.json",
+  "yoink_return_trace": "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json",
+  "web_rekt": "site/raw/web-conic/rekt.html",
+  "web_dlnews": "site/raw/web-conic/dlnews.html",
+  "web_certik": "site/raw/web-conic/certik.html",
+  "dhl_conic02_poc": "site/raw/web-conic/dhl_conic02.txt",
+  "dhl_conic_poc": "site/raw/web-conic/dhl_conic.txt"
+ },
+ "mempool_evidence": "in-block evidence only (mempool-dumpster starts 2023-08-07; blockrace.py recorded 'no data before' for every focus tx)",
+ "verdict_original": "related-not-frontrun",
+ "headline_text": "Yoink replayed the crvUSD-pool extraction after the attacker and later returned part of the proceeds under a bounty agreement.",
+ "sub_rows": [
+  {
+   "sub": "crvusd-pool",
+   "verdict": "related-not-frontrun",
+   "race_type": "late-copy",
+   "headline": false,
+   "bot": "Yoink",
+   "bot_tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+   "bot_block": 17743471,
+   "blocks_ahead": -1
+  },
+  {
+   "sub": "eth-pool",
+   "verdict": "related-not-frontrun",
+   "race_type": "post-failure-replay",
+   "headline": false,
+   "bot": "anon clone exploiter (not a known bot)",
+   "bot_tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+   "bot_block": 17740955,
+   "blocks_ahead": -54
+  }
+ ],
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": "late-copy",
+   "headline": false
+  },
+  "verdict_reason": "Yoink gen1 (bot 0xd050e0a4) replays the Conic crvUSD-pool attacker's sandwich in ten consecutive blocks 17743471-17743480 (idx 0, once idx 4). Call-by-call diff against the attacker's tx 0x37acd17a: same Balancer flash loan (12M USDC/80,000 WETH/9M USDT), same crvUSD create_loan(80,000 WETH, 93M, 10), same Curve swap and Conic deposit/withdraw sequence with identical round-number sizes; state-derived sizes differ ~0.1%. But the attacker's tx already landed at 17743470 idx 4 and succeeded (+11.56 ETH), so the first copy is one block AFTER it and nothing of the attacker's was pending (his next tx is 22 blocks later). Yoink took 125.82 ETH gross / 90.34 net (matches its on-chain message to <1e-5 ETH) against the attacker's 13.58 ETH, and returned 81.307 ETH (90.0% of net) to conicfinance.eth, keeping the 10% bounty. Not post-hack arbitrage of an imbalance (the earlier note) and not a front-run: a late copy.",
+  "headline_note": null,
+  "dataset_rows": [
+   "conic-2023/crvusd-pool",
+   "conic-2023/eth-pool"
+  ]
+ }
+}

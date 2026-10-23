@@ -1,0 +1,13 @@
+Ronin bridge (Ethereum side), 2024-08-06 - verdict: confirmed-onchain, three independent copies of users' pending withdrawals
+
+There is no hostile attacker. The governance upgrade tx 0x855dd3b1... (08:48:47) left the bridge accepting rewritten withdrawal receipts. Three searchers each saw a legitimate user withdrawal (receipt ids 166631-166633) in the public mempool and landed a modified copy first:
+- ETH leg: 0x26195700... (EOA 0x1a56abf4 -> bot 0x4ab12e7c), block 20468679 pos 0, 09:37:23. User tx 0xc78fb8cd... first seen 09:37:22.400 (0.35 WETH); the copy changes 2 of 76 calldata words (recipient, quantity) and takes 3,996.09375 ETH, tipping beaverbuild 3.996 ETH.
+- Racer 3: 0x77bb83dd... (0x00001b0b -> 0x02f3d391), block 20468790 pos 0, took the user's own 2.4173 ETH (1 word changed), paid the Titan builder via a 2.175 ETH priority fee.
+- Yoink: 0xbce5b854..., block 20468848 pos 1, 1,998,046.875 USDC. User tx 0xb7c3f85a... first seen 10:11:40.233; Yoink's builder bid 2.82 ETH 4.138 s later, ladder 5.85, 8.10, 11.043 (winning, 10:11:45.172); builder refunded 791.742 ETH to the bot.
+
+Pause tx landed 10:15:23. The users' own txs came after and reverted.
+
+Facts:
+1. All three bots were first in their block, one per user withdrawal; no further copier exists in the bridge logs.
+2. ETH leg returned 4,000 ETH at 10:00:59 and Yoink withdrew 800 ETH at 10:29:11, both before Ronin's first on-chain message (10:53:35). 3,991.097 ETH (15:04) and 792.4557 ETH (17:05) reached Safe 0x137f31b2...f488; about 8.9 and 7.5 ETH were not traced further.
+3. The $500K bounty is reported only; no on-chain payment found.

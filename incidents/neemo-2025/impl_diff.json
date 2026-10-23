@@ -1,0 +1,45 @@
+{
+ "schema": "bvh-impl-diff/1",
+ "method": "evmole 0.9.4 selector/argument extraction on eth_getCode of the two implementations (static; no source is verified for either 0x9b1f0379 is verified as StakingManagerL1, 0xbc4b1d58 is unverified)",
+ "old_impl": {
+  "address": "0x9b1f03796ca66240a8a3f159b836c69f951261c9",
+  "code_bytes": 17269,
+  "n_selectors": 40,
+  "raw_ref": "site/raw/rpc/code_0x9b1f0379_22855567.json",
+  "verified_name": "StakingManagerL1",
+  "source_ref": "site/raw/etherscan/getsource_0x9b1f03796ca66240a8a3f159b836c69f951261c9.json"
+ },
+ "new_impl": {
+  "address": "0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc",
+  "code_bytes": 17662,
+  "n_selectors": 43,
+  "raw_ref": "site/raw/rpc/code_0xbc4b1d58_22855568.json",
+  "verified": false,
+  "source_ref": "site/raw/etherscan/getsource_0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc.json"
+ },
+ "selectors_only_in_new": [
+  {
+   "selector": "0x03b79c24",
+   "args": "address",
+   "mutability": "nonpayable"
+  },
+  {
+   "selector": "0x53474b2c",
+   "args": "",
+   "mutability": "nonpayable"
+  },
+  {
+   "selector": "0x97e44edc",
+   "args": "address",
+   "mutability": "nonpayable"
+  }
+ ],
+ "selectors_only_in_old": [],
+ "selectors_in_both": 40,
+ "observed_behaviour": {
+  "0x03b79c24(address to)": "no msg.sender check: staticcall weETH.balanceOf(proxy) then weETH.transfer(to, thatBalance). Mainnet evidence: bot tx 0xa57ec56a (caller = a contract, not the key). Local-fork replay: attacker EOA, an unrelated fresh address and the bot's exact calldata all succeed (incidents/neemo-2025/attacker_replay_local_fork.json).",
+  "0x53474b2c()": "writes a constant into one storage slot, no external calls (attacker tx 0xc8c2c1e8 at block 22855612: gas 31,402, no logs).",
+  "0x97e44edc(address)": "external calls into an unverified contract 0x02c5b109 and then the Chainlink CCIP Router/OnRamp (0x80226fc0 / 0x093844bd; verified as Router / EVM2EVMOnRamp) paying the fee in the proxy's own WETH dust (attacker tx 0x6d5a765f at block 22855836). Not a weETH drain."
+ },
+ "note": "The new implementation equals the previous one plus exactly three selectors; every other selector is unchanged. The decompiled output was only used to read function bodies and is not saved."
+}

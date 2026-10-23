@@ -1,0 +1,244 @@
+[
+ {
+  "slug": "saddle-2022",
+  "name": "Saddle Finance sUSDv2 metapool exploit and BlockSec whitehat rescue",
+  "date_utc": "2022-04-30T08:04:55Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The rescue (block 14684434) came two blocks AFTER the attacker's attempt 2 reverted in 14684432 and replays that reverted attempt's exact swap amounts from a different address; no attacker tx is shown to be pending at 14684434 (attempt 3's contract was deployed 76 blocks later).",
+  "one_liner": "BlockSec's whitehat replayed the attacker's reverted second attempt two blocks later (near-identical contract, same amounts), swept 1,356.73 WETH the attacker had left behind and returned all of it.",
+  "attacker": {
+   "eoa": "0x63341ba917de90498f3903b199df5699b4a55ac0",
+   "eoas": [
+    "0x63341ba917de90498f3903b199df5699b4a55ac0"
+   ],
+   "contracts": [
+    "0x7336f819775b1d31ea472681d70ce7a903482191",
+    "0xcc9603cd5338e6d20eb72ba5172cf359dc2539f6",
+    "0x797418a5d9dad50ecc0851e0cc23c61ef4c1b9bf"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db",
+   "deploy_tx": "0xa2c41910680b72e5ea236304b89cf5af9630a6f440649f50653235f10bf17492",
+   "deploy_block": 14684421,
+   "deploy_note": "deploy of attack contract 2 (the reverted attempt the rescue replays); attack1/attack3 deploys: attack1 0x494b578bce7572e4fb8b1357ddf12754a28eec3439a62f6b14432dacda9cbb76 (block 14684300, idx 157), attack3 0x56cf6d3f402e521e3d8c369e4cc249a64c20b14eea47501ec82261f15e4a1475 (block 14684510, idx 170)",
+   "attack_txs": [
+    {
+     "hash": "0x2b023d65485c4bb68d781960c2196588d03b871dc9eb1c054f596b7ca6f7da56",
+     "block": 14684307,
+     "index": 212,
+     "status": "success",
+     "role": "attempt 1: swap loop, succeeded",
+     "weth_final_transfer_eth": 3375.6729006850605,
+     "weth_final_transfer_error": null,
+     "weth_received_by_attacker_eth": 3375.6729006850605,
+     "gas_used": 1804755
+    },
+    {
+     "hash": "0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3",
+     "block": 14684432,
+     "index": 202,
+     "status": "reverted",
+     "role": "attempt 2: swap loop, reverted (out of gas on the final WETH transfer)",
+     "weth_final_transfer_eth": 1356.728508715183,
+     "weth_final_transfer_error": "out of gas",
+     "weth_received_by_attacker_eth": 0,
+     "gas_used": 2153653
+    },
+    {
+     "hash": "0xe7e0474793aad11875c131ebd7582c8b73499dd3c5a473b59e6762d4e373d7b8",
+     "block": 14684518,
+     "index": 282,
+     "status": "success",
+     "role": "attempt 3: swap loop re-sized to the remaining pool, succeeded",
+     "weth_final_transfer_eth": 557.0908407524126,
+     "weth_final_transfer_error": null,
+     "weth_received_by_attacker_eth": 557.0908407524126,
+     "gas_used": 1807792
+    }
+   ],
+   "attempt_amounts_note": "attempt 1 took 3375.6729 WETH, attempt 3 took 557.0908 WETH (both received by 0x63341ba917de90498f3903b199df5699b4a55ac0); attempt 2 would have sent 1356.7285 WETH but its last WETH transfer ran out of gas and the tx reverted",
+   "attacker_total_weth_taken": 3932.763741437473,
+   "none_reason": null
+  },
+  "bot": {
+   "label": "BlockSec whitehat rescue (Phalcon)",
+   "eoa": "0x811929c3c17dd598172f8078a48540fa23f44b05",
+   "contract": "0x0462bee210c7ade1ebb095e5680d61561d86e7b1",
+   "tx": "0x9549c0cb48ec5a5a2c4703cbbbbea5638028b2d8c8adc103220ef1c7fe5e99a3",
+   "block": 14684434,
+   "position": 1,
+   "status": "success",
+   "priority_fee_gwei": 179.600003478,
+   "deploy_tx": "0xf1bc1ab21d717af71801633716f6866330333f5c091b1ed63eddf78325d433ee",
+   "deploy_position": 0,
+   "note": "contract deployed at idx 0 and called at idx 1 of the same block, both at 202.53 gwei gas price (179.6 gwei priority), no coinbase transfer"
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Merge incident (2022-04-30): mempool-dumpster starts 2023-08-07, Flashbots blocks API answers HTTP 410, so in-block evidence only; whether the rescue was a public-pool tx or a MEV-geth bundle cannot be told.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool first-seen exists (pre-archive); the trigger BlockSec reports acting on is the already-mined reverted attempt 2 (0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3, block 14684432); BlockSec writes that its system 'spotted the failed transaction' (blocksec_saddle_rescue.html)."
+  },
+  "attacker_block": 14684432,
+  "attacker_block_note": "block of the attacker's reverted attempt 2 (idx 202, status 0), whose parameters the rescue replays; the rescue landed 2 blocks / 25 s later (bot block - attacker block = +2: the bot is AFTER the attacker). The attacker's attempt 1 (14684307) succeeded earlier and attempt 3 (14684518) succeeded 84 blocks after the rescue.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 14684432,
+   "tx": "0xd9bc83688e8eddde39bd9073c363665b1419d475dd4498e81b52cce41d7c76b3"
+  },
+  "auction": {
+   "block": 14684434,
+   "slot": null,
+   "slot_start_utc_ms": null,
+   "relays_answered": [],
+   "n_bids": null,
+   "n_builders": null,
+   "bids_per_relay": null,
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": null,
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/saddle-2022/race_14684434.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 1356.7335721493866,
+   "gross_loot_method": "WETH Transfer event pool-side holder -> rescue contract -> whitehat EOA in the rescue call receipt (1 WETH = 1 ETH)",
+   "captured_native": {
+    "amount": 1356.7335721493866,
+    "unit": "WETH",
+    "desc": "WETH swept from the sUSDv2 metapool via the replayed swap loop and held by the whitehat EOA"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.6773784751176073,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 1356.056193674269,
+   "loot_note": "scope = the rescue call only for gross/captured; priority_fee_paid_eth covers BOTH the contract deploy (idx 0, 0.352081 ETH) and the rescue call (idx 1, 0.325297 ETH) paid to the poolin.com fee recipient; bot_net = gross - priority fees (base-fee burn excluded) held BEFORE the return. Net is nominal: the whole amount was returned. USD figure not recomputed (BlockSec says ~$3.8M)."
+  },
+  "fate": {
+   "return_status": "returned",
+   "returned_by_bot_eth": 1356.7335721493866,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 1356.7335721493866,
+   "returned_to": "0xd186540fbcc460f6a3a9e705dc6d2406cbcc1c47",
+   "returned_desc": "1356.7335721494 WETH, exactly the swept amount, sent by the whitehat EOA in 0x22efe4743cdbd6650e745e3e6ef4f611aa316e81b5b88d5413b0cd19205ab060 (block 14686088, 2022-04-30T14:22:29Z, about 6.6 h after the rescue). recipient 0xd186540fbcc460f6a3a9e705dc6d2406cbcc1c47 is a Gnosis Safe proxy (Etherscan getsourcecode: GnosisSafeProxy) that is NOT the metapool's owner (0x3f8e527af4e0c6e763e8f368ac679c44c45626ae); BlockSec states in its own words 'We returned all the rescued funds to Saddle Finance' (site/raw/web-saddle/blocksec_three_cases.html); on-chain ownership of the recipient Safe was not independently labelled.",
+   "bounty_kept_eth": 0.0,
+   "bounty_desc": "no bounty retained: the returned amount equals the swept amount to the wei and no other WETH movement out of the whitehat EOA appears in saddle_rescue_tokentx.json; BlockSec bore the ~0.68 ETH gas premium. Any bounty agreed off-chain would not show here.",
+   "kept_by_bot_eth": 0.0,
+   "returned_txs": [
+    {
+     "tx": "0x22efe4743cdbd6650e745e3e6ef4f611aa316e81b5b88d5413b0cd19205ab060",
+     "eth": 1356.7335721493866,
+     "note": "WETH transfer to 0xd186540fbcc460f6a3a9e705dc6d2406cbcc1c47",
+     "block": 14686088,
+     "time_utc": "2022-04-30T14:22:29Z"
+    }
+   ],
+   "public_statement": "BlockSec: 'We returned all the rescued funds to Saddle Finance.' (blocksec.com 'how-blocksec-rescued-stolen-funds-from-technical-perspectives-of-three-representative-cases', saved)",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_14684434.json",
+   "bot.position": [
+    "full cache only (not published)",
+    "site/raw/rpc/block_14684434.json"
+   ],
+   "attacker_block": [
+    "full cache only (not published)",
+    "site/raw/rpc/block_14684432.json"
+   ],
+   "loot.gross_loot_eth": [
+    "full cache only (not published)",
+    "site/raw/etherscan/saddle_rescue_tokentx.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_14684434.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/rpc/block_14684434.json"
+   ],
+   "loot.bot_net_eth": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/rpc/block_14684434.json",
+    "site/raw/etherscan/saddle_rescue_tokentx.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/saddle_rescue_tokentx.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/saddle_rescue_tokentx.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/saddle_rescue_tokentx.json",
+    "full cache only (not published)",
+    "site/raw/etherscan/saddle_rescue_txlist.json"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/saddle_rescue_tokentx.json",
+    "full cache only (not published)",
+    "site/raw/etherscan/saddle_rescue_txlist.json"
+   ],
+   "web:blocksec_saddle_rescue": "full cache only (not published)",
+   "web:blocksec_three_cases": "site/raw/web-saddle/blocksec_three_cases.html",
+   "web:rekt_saddle_rekt2": "full cache only (not published)",
+   "att.funding_tx": "site/raw/rpc/tx_0xfc5fb681f54ceb4b0b9db4fcb38204dee7ca89f5cde0ba94179bf1fae563d7db.json",
+   "attacker.attack_txs.weth_amounts": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "pool_owner_eth_call": "full cache only (not published)",
+   "etherscan.metapool_swap_loop_logs": "site/raw/etherscan/saddle_pool_logs_es.json"
+  },
+  "rawref_gaps": [],
+  "discrepancies": [
+   "incident.json says the 'attacker's next attempt' (attempt 3, block 14684518) was NOT pending at 14684434; confirmed: its contract (0x797418a5) was deployed in block 14684510 (idx 170), 76 blocks after the rescue. No attacker tx is evidenced as pending at 14684434.",
+   "Attempt 2 tried to send 1356.728509 WETH; the rescue moved 1356.733572 WETH (difference 0.005063 WETH, pool state moved between the blocks; not investigated further).",
+   "REKT lists 0xe7e04747 (14684518, success) as the 'second hack tx'; it is attacker attempt 3. The failed second attempt is 0xd9bc8368 (14684432)."
+  ],
+  "evidence_notes": [
+   "Rescue call 0x9549c0cb48 (14684434 idx 1) and all three attacker swap-loop txs have 403 call frames, the same top selector 0xaf8271f7 and 9 metapool swaps; the rescue's 9 swaps carry the same (tokenIn, tokenOut, dx, minDy) words as attempt 2 (9/9 identical) and none of attempt 1's or 3's (0/9, 0/9) (recomputed from site/raw/rpc/trace_<tx>.json).",
+   "Attempt 2 (14684432 idx 202) reverted: execution reverted on the final WETH transfer with 'out of gas' (gas used 2,153,653), so its WETH stayed in the pool; the rescue (2 blocks later, poolin.com block, 202.5 gwei) swept it. Per incident.json the rescue contract's runtime differs from attacker contract 2 in only 20 bytes (not re-diffed here).",
+   "Attacker's own takes: attempt 1 3375.6729 WETH (14684307 idx 212), attempt 3 557.0908 WETH (14684518 idx 282); attempt 3's contract was deployed in 14684510, 76 blocks after the rescue, so nothing of the attacker's was pending at 14684434.",
+   "Only three txs on the metapool emitted the swap-loop event (attempt 1, rescue, attempt 3) in Etherscan logs for 14684000-14686500 (site/raw/etherscan/saddle_pool_logs_es.json); reverted copies leave no logs and were not enumerated.",
+   "Return: 0x22efe4743c at block 14686088 moves exactly 1356.7335721494 WETH out of the whitehat EOA (saddle_rescue_tokentx.json). In-block evidence only, no mempool."
+  ],
+  "incident_dir": "incidents/saddle-2022"
+ }
+]

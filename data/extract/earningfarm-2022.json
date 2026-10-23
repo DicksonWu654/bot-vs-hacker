@@ -1,0 +1,391 @@
+[
+ {
+  "slug": "earningfarm-2022",
+  "name": "Earning.Farm EFLeverVault flash-loan callback exploit (bot '0xa57' vs attacker)",
+  "date_utc": "2022-10-14T11:58:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "The 0xa57 bot's tx is at index 0 of block 15746200 and makes vault-facing calls (deposit calldata and both Balancer flashLoan calldatas) byte-identical to the attacker's tx at index 7 of the same block, which then reverted. The attacker's nine earlier txs never touched the vault.",
+  "one_liner": "At block 15746200 the '0xa57' bot's tx (index 0, zero tip, 18.717 ETH to the builder) replayed the Earning.Farm exploit calls from the attacker's pending tx (index 7, reverted) and took 480.1 ETH; the attacker retried and got 268.9 ETH. No return to Earning.Farm found.",
+  "attacker": {
+   "eoa": "0xdf31f4c8dc9548eb4c416af26dc396a25fde4d5f",
+   "eoas": [
+    "0xdf31f4c8dc9548eb4c416af26dc396a25fde4d5f"
+   ],
+   "contracts": [
+    "0x140cca423081ed0366765f18fc9f5ed299699388",
+    "0x3b8ddbb0c2b1f7f152557568ec138033bd149704",
+    "0xde9b7b6f89b0ffc8693045069989026403d0d02a"
+   ],
+   "funding": "unknown",
+   "funding_tx": "0x7db3d6ecfb6fda4e49549ab94fb9f5911ee584c69c5dae324fc709f486c54c42",
+   "deploy_tx": "0x99c760442aecf00d46ecad7739f7935c41d76b2f850253f19eaa7c4e7a6d0045",
+   "deploy_block": 15624367,
+   "attack_txs": [
+    {
+     "hash": "0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d",
+     "block": 15746200,
+     "index": 7,
+     "status": "reverted",
+     "role": "first exploit attempt (27.9 gwei tip); reverted after the bot had emptied the vault at index 0"
+    },
+    {
+     "hash": "0x160c5950a01b88953648ba90ec0a29b0c5383e055d35a7835d905c53a3dda01e",
+     "block": 15746342,
+     "index": 2,
+     "status": "success",
+     "role": "retry after the failed attempt; vault -> helper 268.8968 ETH"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "0xa57",
+   "eoa": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e",
+   "contract": "0xa69babef1ca67a37ffaf7a485dfff3382056e78c",
+   "tx": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+   "block": 15746200,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: October 2022 is before the mempool-dumpster archive (starts 2023-08-07), so the attacker tx's first-seen time is unknown. The bot sits at index 0 with zero priority fee and an 18.717 ETH coinbase transfer, i.e. bundle-style inclusion (inferred; the Flashbots bundle API is gone).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen exists (pre-archive). The only visible source of the bot's call sequence is the attacker's pending tx 0x4be393b9 (idx 7 of the same block); nothing in the attacker's nine earlier txs touched the vault."
+  },
+  "attacker_block": 15746200,
+  "attacker_block_note": "Attacker's tx 0x4be393b9 was in the same block (index 7, priority fee 27.9 gwei) and reverted at the second flashLoan callback. His retry landed in block 15746342 (index 2) for 268.9 ETH.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 15746200,
+   "tx": "0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d"
+  },
+  "auction": {
+   "block": 15746200,
+   "slot": 4910392,
+   "slot_start_utc_ms": 1665748727000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 246,
+   "n_builders": 23,
+   "bids_per_relay": {
+    "flashbots": 246
+   },
+   "first_bid_ms_rel_slot": -10844,
+   "last_bid_ms_rel_slot": 5456,
+   "winning_bid_eth": 18.825385589123876,
+   "winning_builder": "builder0x69",
+   "winning_builder_pubkey": "0xb194b2b8ec91a71c18f8483825234679299d146495a08db3bf3fb955e1d85a5fca77e88de93a74f4e32320fc922d3027",
+   "winning_relays": [
+    "flashbots"
+   ],
+   "winning_first_submission_ms_rel_slot": 3593,
+   "winning_last_submission_ms_rel_slot": 3593,
+   "runner_up_eth": 18.8252597998514,
+   "runner_up_builder": "builder0x69",
+   "runner_up_ms_rel_slot": 3244,
+   "runner_up_other_builder_eth": 18.8164828304309,
+   "runner_up_other_builder": "\"\"",
+   "runner_up_other_builder_ms_rel_slot": 2854,
+   "n_higher_bids_after_winner": 3,
+   "max_bid_eth": 18.828847662457736,
+   "proposer_paid_eth": 18.825385589123876,
+   "proposer_payment_tx": "0x8f1d81a2b166a9c09c3f5bf907e3fd6c39f7e38a3cdaa940b7e25150e6147760",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10844,
+     0.005920781731128185
+    ],
+    [
+     -10842,
+     0.005956672751645445
+    ],
+    [
+     -10775,
+     0.006809637845086629
+    ],
+    [
+     -10209,
+     0.009901088934340309
+    ],
+    [
+     -9831,
+     0.009980042036553501
+    ],
+    [
+     -9778,
+     0.009998733669211302
+    ],
+    [
+     -9753,
+     0.011406368723354248
+    ],
+    [
+     -9351,
+     0.01163541249311572
+    ],
+    [
+     -8929,
+     0.10552757589187849
+    ],
+    [
+     -8889,
+     0.10586692886249686
+    ],
+    [
+     -8653,
+     0.10730447712338342
+    ],
+    [
+     -8203,
+     0.10963809532931772
+    ],
+    [
+     -7964,
+     0.11100056041690971
+    ],
+    [
+     -6967,
+     0.11141632416561385
+    ],
+    [
+     -6819,
+     0.11272759130756697
+    ],
+    [
+     -6740,
+     0.11610561108869856
+    ],
+    [
+     -6175,
+     0.11616869522873731
+    ],
+    [
+     -6126,
+     0.11813439516975695
+    ],
+    [
+     -5604,
+     0.11874896394446538
+    ],
+    [
+     -5386,
+     0.11895316932750419
+    ],
+    [
+     -5338,
+     0.11915431762911706
+    ],
+    [
+     -4459,
+     0.1197248104818419
+    ],
+    [
+     -4445,
+     0.12088763720255125
+    ],
+    [
+     -4420,
+     0.12142928871696315
+    ],
+    [
+     -4376,
+     0.12208712423560947
+    ],
+    [
+     -4116,
+     0.12258378847300616
+    ],
+    [
+     -3775,
+     0.12283530998300617
+    ],
+    [
+     -3626,
+     0.12423116618658467
+    ],
+    [
+     -3110,
+     0.12464782575094803
+    ],
+    [
+     -2862,
+     0.12589900400779894
+    ],
+    [
+     -2423,
+     0.12621412302999016
+    ],
+    [
+     -2121,
+     0.12697852892921374
+    ],
+    [
+     -2096,
+     18.80620050591015
+    ],
+    [
+     -2019,
+     18.808472942924926
+    ],
+    [
+     -1554,
+     18.808927229253666
+    ],
+    [
+     -890,
+     18.810803091283383
+    ],
+    [
+     -841,
+     18.814881332072808
+    ],
+    [
+     -536,
+     18.814986353072808
+    ],
+    [
+     136,
+     18.81629605940163
+    ],
+    [
+     1635,
+     18.81730003944672
+    ],
+    [
+     2318,
+     18.817827839450803
+    ],
+    [
+     2640,
+     18.818295486928115
+    ],
+    [
+     3244,
+     18.8252597998514
+    ],
+    [
+     3593,
+     18.825385589123876
+    ],
+    [
+     4465,
+     18.82723684255169
+    ],
+    [
+     4873,
+     18.82805040531774
+    ],
+    [
+     5412,
+     18.828847662457736
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/earningfarm-2022/race_15746200.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block15746200.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block15746200.json"
+   }
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 480.108083,
+   "gross_loot_method": "ETH sent by the vault 0xe39fd820 to the bot's helper 0x0e113904 in the withdraw leg of the bot tx (callTracer); includes the 0.1 ETH the helper had deposited",
+   "captured_native": {
+    "amount": 480.1080832658727,
+    "unit": "ETH",
+    "desc": "vault -> helper 0x0e113904, wrapped to WETH and returned to the capital wallet 0x56178a0d"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 18.71705485376855,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 461.257147,
+   "loot_note": "gross_loot_eth 480.1081 is the vault's payout to the helper; the helper had first put 0.1 ETH into the vault (deposit), so the net gain was 480.0081 ETH: the capital wallet 0x56178a0d lent 14,707.089 WETH to the helper and received 15,187.097 WETH back. bot_net_eth = 480.0081 - 18.7171 ETH coinbase - 0.0339 ETH gas (2,573,638 gas x 13.1648 gwei, all base fee since the tip is 0). The 18.717 ETH bribe was paid from the bot contract's own ETH balance (it received no ETH in the tx), not out of the loot. The builder (builder0x69) passed 18.8254 ETH to the proposer and kept almost nothing; no builder refund to the bot. USD value not stated in a saved file (a web3isgoinggreat figure of ~$623K is not saved)."
+  },
+  "fate": {
+   "return_status": "none",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 0.0,
+   "returned_to": null,
+   "returned_desc": "No return to Earning.Farm found. The 480.1 ETH went to the bot owner's capital wallet 0x56178a0d as WETH in the same tx. Scanning the vault's saved Etherscan lists after block 15746200 (txlist to block 15750296, internal to 15750296, token transfers to 24761303) finds no transfer from the bot EOA/contract/helper/capital wallet into the vault other than the 0.1 ETH deposit inside the exploit tx itself. No public statement from the bot or its owner was found. 'Unknown' is not 'none': an off-chain return or a payment from another address would not show here.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": 461.257147,
+   "returned_txs": [],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_15746200.json",
+   "bot.position": "site/raw/rpc/block_15746200.json",
+   "attacker_block": "site/raw/rpc/block_15746200.json",
+   "loot.gross_loot_eth": "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_15746200.json",
+   "loot.priority_fee_paid_eth": "site/raw/rpc/receipts_15746200.json",
+   "loot.builder_refund_to_bot_eth": "site/raw/rpc/block_15746200.json",
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json",
+    "site/raw/rpc/receipts_15746200.json",
+    "site/raw/rpc/trace_block_15746200.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json",
+    "site/raw/rpc/receipts_15746200.json",
+    "site/raw/rpc/trace_block_15746200.json"
+   ],
+   "fate.search": [
+    "full cache only (not published)",
+    "site/raw/etherscan/efvault_txlistinternal_after.json",
+    "full cache only (not published)"
+   ],
+   "capital_wallet_flow": "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json",
+   "attacker_landing_block_15746342": "full cache only (not published)",
+   "phase_c_counterfactual_replay": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "phase_c_secondary_sources": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.captured_usd",
+    "why": "no saved price file for the 2022-10-14 ETH price; not converted"
+   }
+  ],
+  "discrepancies": [
+   "Only the vault-facing calls were diffed (deposit + 2 flashLoan calldatas + callbacks identical, call_diff.json); the entry paths differ (bot: EOA -> 0xa69babef; attacker: EOA -> 0x140cca42 -> 0x8663fbfc).",
+   "Link of the 'a57' label to EOA 0x26bce6ec/contract 0xa69babef is circumstantial (incident.json bots[0].notes).",
+   "DeFiHackLabs 'MEVBOTa47b' (tx 0x35ecf595, block 15741333) is a DIFFERENT incident: a new EOA drained a different MEV bot (0x00000000000a47b1...) the day before; no relation to the 0xa57 bot found."
+  ],
+  "evidence_notes": [
+   "Victim calls in the bot tx and the attacker's reverted tx are byte-identical: vault.deposit(0.1 ETH) calldata 0xb6b55f25..., and both Balancer flashLoan calldatas (recipient = vault, 1000 ETH, userData '0x1'/'0x2') plus the callbacks (incidents/earningfarm-2022/call_diff.json).",
+   "The bot makes a third flashLoan + withdraw (0x2e1a7d4d) that the attacker's tx never reached; the attacker's tx reverted at its second flashLoan callback after the vault was emptied at index 0.",
+   "The attacker's nine earlier txs from the same contract never touched the vault, so the pending tx is the only visible source of the call sequence; the claim is in-block evidence only (no 2022 mempool archive).",
+   "Bid ladder: 246 relay bids from 23 builders; best bid was ~0.13 ETH until the bot tx appeared, then 18.8 ETH; builder0x69 won with 18.825 ETH, the bot's coinbase transfer 18.717 ETH being 99.4% of it (incidents/earningfarm-2022/race_15746200.json).",
+   "Attacker's retry landed in block 15746342 for 268.9 ETH (race_15746342.json); the MEVa47b clarification is a separate incident.",
+   "Phase C (EFLeverVault cross-check, 2026-10-21): debug_traceCall of the attacker's reverted tx 0x4be393b9 (same sender, calldata, 5M gas) on the state before block 15746200 succeeds and the vault pays 480.108 ETH to the attacker's helper, which is the bot's take; on the post-15746200 state the same call reverts. The attacker's withdraw argument in that replay (0.09498041404 EF) is within 2e-9 of the bot's. The attacker's tx used 2,111,774 of 5,000,000 gas and reverted inside the flashLoan callback, before withdraw (raw: site/raw/rpc/debug_traceCall_atkfailed_pre_block_15746199_state_v3.json, ..._post_block_15746200_state_v3.json).",
+   "Phase C: MevRefund (2022-10-14) wrote that the attacker's first transaction was front-run by 0xa57 while the second got through for 268 ETH, but its first link 0x1f1aba5b is the bot's tx (the attacker's actual first, reverted, tx is 0x4be393b9); Supremacy_CA: 480 ETH to the MEV bot and 268 ETH to the hackers; DeFiHackLabs lists 0x1f1aba5b as 'frontrun bot' and 0x160c5950 as 'exploiter'. Saved: site/raw/web/threadreader_mevrefund.html, threadreader_supremacy.html, threadreader_danielvf_1580936010556661761.html, web3isgoinggreat_earningfarm.html. The incident is also known as EFLeverVault; the event date is 2022-10-14 11:58:47 UTC (block 15746200)."
+  ],
+  "incident_dir": "incidents/earningfarm-2022"
+ }
+]

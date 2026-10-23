@@ -1,0 +1,140 @@
+{
+ "slug": "taopad-2024",
+ "evidence_level_mempool": "measured (operator's tx); Yoink's tx absent from archive",
+ "note": "Block-level times are block timestamps (12 s resolution); mempool times are mempool-dumpster first-seen.",
+ "events": [
+  {
+   "t_utc_ms": 1707915791000,
+   "kind": "fund",
+   "actor": "taopad.eth",
+   "detail": "operator wallet sends 0.12 ETH to fresh deployer 0x397c9e1c",
+   "tx": "0xbcfb472530332c7206c6cc0a32f99833c20092510a672d3a3c813cc46d167961",
+   "block": 19226381,
+   "raw_ref": "site/raw/rpc/tx_0xbcfb472530332c7206c6cc0a32f99833c20092510a672d3a3c813cc46d167961.json",
+   "t_utc": "2024-02-14T13:03:11.000Z"
+  },
+  {
+   "t_utc_ms": 1707915971000,
+   "kind": "deploy",
+   "actor": "0x397c9e1c",
+   "detail": "deploys helper contract 0x8ec2e9de (operator's execute() contract)",
+   "tx": "0xd0e8fc22b214c24f5dffadb6105aebc00fcd5927cf4c33ea8c7f27f390b329c5",
+   "block": 19226396,
+   "raw_ref": "site/raw/etherscan/taopad_creation_0x8ec2e9dee58efb69e9986d3a27d7f3810209c6cb.json",
+   "t_utc": "2024-02-14T13:06:11.000Z"
+  },
+  {
+   "t_utc_ms": 1707916043000,
+   "kind": "tx",
+   "actor": "taopad.eth",
+   "detail": "TPAD.setPoolFee(100)",
+   "tx": "0xe21e4f3d4eab52a62f203ec63b4a6496389c584e3ad683011075e05ba2ae88df",
+   "block": 19226402,
+   "raw_ref": "site/raw/rpc/tx_0xe21e4f3d4eab52a62f203ec63b4a6496389c584e3ad683011075e05ba2ae88df.json",
+   "t_utc": "2024-02-14T13:07:23.000Z"
+  },
+  {
+   "t_utc_ms": 1707916992276,
+   "kind": "mempool_seen",
+   "actor": "taopad.eth",
+   "detail": "operator's execute{1 ETH} first seen in the public mempool (6 sources; local first)",
+   "tx": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+   "raw_ref": "full cache only (not published)",
+   "t_utc": "2024-02-14T13:23:12.276Z",
+   "raw_refs": [
+    "full cache only (not published)",
+    "site/raw/rpc-quotecheck/tx_0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1707917003000,
+   "kind": "block",
+   "actor": "beaverbuild",
+   "detail": "block 19226482: operator's tx at index 0, REVERTED (out of gas in 2nd swap, gas limit 29,792,302); builder bid 0.1101 ETH",
+   "tx": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+   "block": 19226482,
+   "index": 0,
+   "raw_ref": "site/raw/rpc/block_19226482.json",
+   "t_utc": "2024-02-14T13:23:23.000Z"
+  },
+  {
+   "t_utc_ms": null,
+   "kind": "note",
+   "actor": "",
+   "detail": "slots 8424416-8424435 (20 blocks, 252 s): no operator tx pending, nobody else calls TPAD.distribute (trace_filter); Yoink tx not in mempool archive (private flow)",
+   "raw_ref": "site/raw/rpc/taopad_tf_token_19226300_19226700.json"
+  },
+  {
+   "t_utc_ms": 1707917255380,
+   "kind": "bid",
+   "actor": "blockbeelder",
+   "detail": "winning block submitted once at +380 ms in slot 8424436, 1.4032 ETH; best other bid 0.0222 ETH (beaverbuild, +320 ms)",
+   "raw_ref": "site/raw/relay-flashbots/bids_block19226503.json",
+   "t_utc": "2024-02-14T13:27:35.380Z"
+  },
+  {
+   "t_utc_ms": 1707917255000,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "block 19226503 index 0: Yoink replays the operator's call sequence with 30M gas, 29.5056 ETH in, 1.3968 ETH coinbase, 26.32 ETH net",
+   "tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+   "block": 19226503,
+   "index": 0,
+   "raw_ref": "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+   "t_utc": "2024-02-14T13:27:35.000Z",
+   "raw_refs": [
+    "site/raw/rpc-quotecheck/tx_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1707918215000,
+   "kind": "tx",
+   "actor": "taopad.eth",
+   "detail": "TPAD.setPoolFee(0) (message: so nobody could exploit TPAD again)",
+   "tx": "0xeaa5f727dd6e2467e6bd8f7a6f2625cd37a67e0552875756eb0b001f02df5a96",
+   "block": 19226577,
+   "raw_ref": "site/raw/rpc/tx_0xeaa5f727dd6e2467e6bd8f7a6f2625cd37a67e0552875756eb0b001f02df5a96.json",
+   "t_utc": "2024-02-14T13:43:35.000Z"
+  },
+  {
+   "t_utc_ms": 1707918899000,
+   "kind": "message",
+   "actor": "taopad.eth",
+   "detail": "on-chain message to Yoink: 'we have been frontran by your bot', quotes both txs, asks for return to taopad.eth",
+   "tx": "0x1c900a5c5d0aa25d2cc931682f470d38c158ad54b06d15e689f3d607e7545e84",
+   "block": 19226632,
+   "raw_ref": "site/raw/etherscan/taopad_yoink_txlist_19226000_19234000.json",
+   "t_utc": "2024-02-14T13:54:59.000Z"
+  },
+  {
+   "t_utc_ms": 1707943847000,
+   "kind": "message",
+   "actor": "Yoink",
+   "detail": "'Can you send me more details on Blockscan chat? Just want to make sure it wasn't a failed rug attempt.'",
+   "tx": "0x20d4929ea446a16473b90336c1f0a419f7be5744e2064c5bfb4c11a0868efc8f",
+   "block": 19228690,
+   "raw_ref": "site/raw/etherscan/taopad_yoink_txlist_19226000_19234000.json",
+   "t_utc": "2024-02-14T20:50:47.000Z"
+  },
+  {
+   "t_utc_ms": 1707989195000,
+   "kind": "message",
+   "actor": "taopad.eth",
+   "detail": "two further messages (explanation: operator extracting the 20% tax share itself)",
+   "tx": "0x13f4d83c0f4ed0fabdd88a90fe49774660166db637e8e3b89432ceb3f350f3b7",
+   "block": 19232427,
+   "raw_ref": "site/raw/etherscan/taopad_yoink_txlist_19226000_19234000.json",
+   "t_utc": "2024-02-15T09:26:35.000Z"
+  },
+  {
+   "t_utc_ms": 1708001615000,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "26.32 ETH sent to taopad.eth; 'Thanks for the explanation, sent back the entire bot profit.'",
+   "tx": "0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32",
+   "block": 19233454,
+   "raw_ref": "site/raw/rpc/tx_0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32.json",
+   "t_utc": "2024-02-15T12:53:35.000Z"
+  }
+ ]
+}

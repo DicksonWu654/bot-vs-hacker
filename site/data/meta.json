@@ -1,0 +1,104 @@
+{
+ "built": "2026-10-22T09:47:49Z",
+ "consolidated": true,
+ "evolution_version": "v2",
+ "n_rows": 43,
+ "n_headline": 19,
+ "n_headline_incidents": 15,
+ "n_incidents": 29,
+ "raw_files": 1353,
+ "raw_bytes": 235887481,
+ "raw_skipped": [],
+ "raw_mempool_days": 22,
+ "downloads": [
+  {
+   "path": "downloads/yoink/ronin_calldata_diff.json",
+   "bytes": 2480,
+   "desc": "Ronin: user vs Yoink calldata, word by word",
+   "origin": "research/bot-re/ronin_calldata_diff.json"
+  },
+  {
+   "path": "downloads/yoink/corpus_stats.json",
+   "bytes": 3203,
+   "desc": "Yoink: generations, revert rates, selectors",
+   "origin": "research/bot-re/corpus_stats.json"
+  },
+  {
+   "path": "downloads/yoink/blackbox_results.json",
+   "bytes": 1997,
+   "desc": "Yoink: local black-box tests of the profit guard and bribe rule",
+   "origin": "research/bot-re/blackbox_results.json"
+  },
+  {
+   "path": "downloads/yoink/fork_replay_results.json",
+   "bytes": 2529,
+   "desc": "Yoink: local-fork replays at Ronin",
+   "origin": "research/bot-re/fork_replay_results.json"
+  },
+  {
+   "path": "downloads/yoink/incident_txs.json",
+   "bytes": 5189,
+   "desc": "Yoink: decoded scripts of the incident txs",
+   "origin": "research/bot-re/incident_txs.json"
+  },
+  {
+   "path": "downloads/evolution/findings_v1.txt",
+   "bytes": 12071,
+   "desc": "Evolution study: findings text (v1)",
+   "origin": "data/evolution/findings.txt"
+  },
+  {
+   "path": "downloads/evolution/findings_v2.txt",
+   "bytes": 26560,
+   "desc": "Evolution study: findings text (v2, corrected)",
+   "origin": "data/evolution/findings_v2.txt"
+  },
+  {
+   "path": "downloads/evolution/by_era_v1.json",
+   "bytes": 40850,
+   "desc": "Evolution study: aggregates (v1)",
+   "origin": "data/evolution/by_era.json"
+  },
+  {
+   "path": "downloads/evolution/by_era_v2.json",
+   "bytes": 504718,
+   "desc": "Evolution study: aggregates (v2, corrected)",
+   "origin": "data/evolution/by_era_v2.json"
+  },
+  {
+   "path": "downloads/evolution/per_exploit_v1.json",
+   "bytes": 1386439,
+   "desc": "Evolution study: one row per exploit (v1)",
+   "origin": "data/evolution/per_exploit.json"
+  },
+  {
+   "path": "downloads/evolution/per_exploit_v2.json",
+   "bytes": 1841209,
+   "desc": "Evolution study: one row per exploit (v2, corrected)",
+   "origin": "data/evolution/per_exploit_v2.json"
+  },
+  {
+   "path": "downloads/evolution/calibration.json",
+   "bytes": 5006,
+   "desc": "Evolution study: heuristic calibration",
+   "origin": "data/evolution/calibration.json"
+  },
+  {
+   "path": "downloads/bibliography.json",
+   "bytes": 47350,
+   "desc": "Bibliography with verification status",
+   "origin": "research/explainer/bibliography.json"
+  },
+  {
+   "path": "downloads/comparison_table.csv",
+   "bytes": 30196,
+   "desc": "One row per race: the home-page table as CSV",
+   "origin": "data/comparison_table.csv"
+  }
+ ],
+ "file_sizes": {
+  "data/incidents.json": 149600,
+  "data/evolution.json": 86686,
+  "raw/MANIFEST.json": 609513
+ }
+}

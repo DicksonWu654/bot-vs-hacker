@@ -1,0 +1,11 @@
+Earning.Farm (EFLeverVault), 2022-10-14. Verdict: confirmed-onchain (in-block evidence only; no 2022 mempool archive).
+
+The attacker (EOA 0xdf31f4c8, contract 0x140cca42 deployed 2022-09-27) sent the exploit as tx 0x4be393b9 at block 15746200 (idx 7, 27.9 gwei tip). The "0xa57" bot (EOA 0x26bce6ec -> contract 0xa69babef) put tx 0x1f1aba5b at idx 0 of the same block with a zero priority fee and an 18.717 ETH transfer to the builder. Its victim calls are byte-identical to the attacker's: the vault deposit of 0.1 ETH and both Balancer flashLoan calldatas (1000 ETH, userData '0x1'/'0x2') match exactly. The bot then ran a third loan and withdrew 480.1 ETH. The attacker's tx reverted. The attacker retried and landed tx 0x160c5950 in block 15746342 for 268.9 ETH. The attacker's nine earlier txs never touched the vault, so the pending tx is the only visible source of the call sequence.
+
+Auction: slot 4910392, 246 flashbots-relay bids from 23 builders. The best bid was ~0.13 ETH until the bot's tx appeared; the first bid of 18.8 ETH came at -2.1 s. builder0x69 won with 18.825 ETH (162 tx), and the bot's bribe was 99.4% of it. The builder kept ~nothing.
+
+Relation to DeFiHackLabs 'MEVa47b' (tx 0x35ecf595, block 15741333): a different incident. A new EOA drained 186.6 ETH from a different MEV bot (0x00000000000a47b1...) the day before. It is not the 0xa57 bot being exploited.
+
+Funds: the 480.1 ETH went back to the bot owner's capital wallet 0x56178a0d as WETH. No return to Earning.Farm was found, and no public statement. The "0xa57 returns hack funds" claim is not supported here.
+
+Three facts: (1) identical flashLoan/deposit calldata in the same block, bot idx 0 vs attacker idx 7; (2) bot bribe 18.717 ETH = 99.4% of the 18.825 ETH winning bid; (3) the bot got 480.1 ETH and the attacker only 268.9 ETH.

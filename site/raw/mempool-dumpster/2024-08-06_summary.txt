@@ -1,0 +1,92 @@
+[Mempool Dumpster](https://mempool-dumpster.flashbots.net)
+==========================================================
+
+Date: 2024-08-06 
+
+- From: 2024-08-06 00:00:00 UTC 
+- To:   2024-08-06 23:59:59 UTC 
+
+Unique transactions:    972,826 
+
+- Included on-chain:    793,091 (81.5%) 
+- Not included:         179,735 (18.4%) 
+
+Sources: Bloxroute, Chainbound, Local, Mempoolguru 
+
+-----------------
+Transaction Stats
+-----------------
+
+| TX TYPE |       COUNT        |
+|---------|--------------------|
+|       0 |    287,811 (29.5%) |
+|       1 |      7,121 ( 0.7%) |
+|       2 |    666,101 (68.4%) |
+|       3 |     11,793 ( 1.2%) |
+
+------------
+Source Stats
+------------
+
+|   SOURCE    | TRANSACTIONS | INCLUDED ON-CHAIN  |    NOT INCLUDED    |
+|-------------|--------------|--------------------|--------------------|
+| Bloxroute   |      863,455 |    792,996 (91.8%) |     70,459 ( 8.1%) |
+| Chainbound  |      839,174 |    693,722 (82.6%) |    145,452 (17.3%) |
+| Local       |      862,701 |    789,095 (91.4%) |     73,606 ( 8.5%) |
+| Mempoolguru |      861,604 |    788,937 (91.5%) |     72,667 ( 8.4%) |
+
+----------------------
+Exclusive Transactions
+----------------------
+
+389 of 74,606 exclusive transactions were included on-chain (0.52%). 
+
+|   SOURCE    | TRANSACTIONS | INCLUDED ON-CHAIN  |    NOT INCLUDED     |
+|-------------|--------------|--------------------|---------------------|
+| Bloxroute   |       16,997 |        342 ( 2.0%) |     16,655 ( 97.9%) |
+| Chainbound  |       55,392 |         47 ( 0.0%) |     55,345 ( 99.9%) |
+| Local       |        1,308 |          0 ( 0.0%) |      1,308 (100.0%) |
+| Mempoolguru |          909 |          0 ( 0.0%) |        909 (100.0%) |
+
+------------------
+Latency Comparison
+------------------
+
+### Bloxroute - Local 
+
+789,047 shared included transactions. 
+
+|         | BLOXROUTE FIRST | LOCAL FIRST |
+|---------|-----------------|-------------|
+|   count |         754,308 |      28,530 |
+| percent |          95.5 % |       3.6 % |
+|  median |           17 ms |        5 ms |
+|     p90 |           53 ms |      239 ms |
+|     p95 |           92 ms |    1,793 ms |
+|     p99 |          493 ms |    4,499 ms |
+
+### Chainbound - Local 
+
+690,118 shared included transactions. 
+
+|         | CHAINBOUND FIRST | LOCAL FIRST |
+|---------|------------------|-------------|
+|   count |          616,836 |      59,666 |
+| percent |           89.3 % |       8.6 % |
+|  median |            18 ms |        3 ms |
+|     p90 |            56 ms |       16 ms |
+|     p95 |            96 ms |    1,393 ms |
+|     p99 |           794 ms |   12,767 ms |
+
+### Bloxroute - Chainbound 
+
+693,649 shared included transactions. 
+
+|         | BLOXROUTE FIRST | CHAINBOUND FIRST |
+|---------|-----------------|------------------|
+|   count |         426,294 |          244,666 |
+| percent |          61.4 % |           35.2 % |
+|  median |            7 ms |            12 ms |
+|     p90 |           15 ms |            30 ms |
+|     p95 |           17 ms |           284 ms |
+|     p99 |          193 ms |         1,077 ms |

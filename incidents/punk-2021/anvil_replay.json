@@ -1,0 +1,74 @@
+{
+ "schema": "bvh-anvil/1",
+ "fork_block": 12995894,
+ "note": "Block 12995895 contains no other tx touching the three Punk CompoundModel pools (trace_filter, site/raw/rpc/punk_tf_test.json), so the fork state at the end of 12995894 is the pre-state for both txs. Gas price 0, senders impersonated; token movements are read from the receipts' Transfer logs. Anvil mined the second tx of the two-tx scenarios in the following block (12995896), so the attacker's dust figure for DAI differs from the chain in the 10th decimal (interest accrual); every other figure matches the chain exactly.",
+ "attacker_tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+ "bot_tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+ "attacker_alone": [
+  {
+   "onchain_tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+   "status": 1,
+   "gasUsed": 871020,
+   "block": 12995895,
+   "net_token_received_by_eoa": {
+    "attacker EOA": {
+     "USDC": 2995824.725654,
+     "USDT": 3000022.823079,
+     "DAI": 2954191.5744333267
+    }
+   }
+  }
+ ],
+ "bot_then_attacker": [
+  {
+   "onchain_tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+   "status": 1,
+   "gasUsed": 772690,
+   "block": 12995895,
+   "net_token_received_by_eoa": {
+    "attacker EOA": {
+     "USDC": 2995824.696852
+    },
+    "bot EOA": {
+     "USDT": 3000022.7862,
+     "DAI": 2954191.544042759
+    }
+   }
+  },
+  {
+   "onchain_tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+   "status": 1,
+   "gasUsed": 862320,
+   "block": 12995896,
+   "net_token_received_by_eoa": {
+    "attacker EOA": {
+     "USDC": 0.028802,
+     "USDT": 0.036879,
+     "DAI": 0.030390567585556225
+    }
+   }
+  }
+ ],
+ "attacker_then_bot": [
+  {
+   "onchain_tx": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
+   "status": 1,
+   "gasUsed": 871020,
+   "block": 12995895,
+   "net_token_received_by_eoa": {
+    "attacker EOA": {
+     "USDC": 2995824.725654,
+     "USDT": 3000022.823079,
+     "DAI": 2954191.5744333267
+    }
+   }
+  },
+  {
+   "onchain_tx": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+   "status": 0,
+   "gasUsed": 253762,
+   "block": 12995896,
+   "net_token_received_by_eoa": {}
+  }
+ ]
+}

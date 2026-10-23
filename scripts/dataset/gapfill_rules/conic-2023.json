@@ -1,0 +1,20 @@
+[
+ {
+  "slug": "conic-2023",
+  "sub": "crvusd-pool",
+  "verdict": "related-not-frontrun",
+  "race_type": "late-copy",
+  "why": "Yoink gen1 (bot 0xd050e0a4) replays the Conic crvUSD-pool attacker's sandwich in ten consecutive blocks 17743471-17743480 (idx 0, once idx 4). Call-by-call diff against the attacker's tx 0x37acd17a: same Balancer flash loan (12M USDC/80,000 WETH/9M USDT), same crvUSD create_loan(80,000 WETH, 93M, 10), same Curve swap and Conic deposit/withdraw sequence with identical round-number sizes; state-derived sizes differ ~0.1%. But the attacker's tx already landed at 17743470 idx 4 and succeeded (+11.56 ETH), so the first copy is one block AFTER it and nothing of the attacker's was pending (his next tx is 22 blocks later). Yoink took 125.82 ETH gross / 90.34 net (matches its on-chain message to <1e-5 ETH) against the attacker's 13.58 ETH, and returned 81.307 ETH (90.0% of net) to conicfinance.eth, keeping the 10% bounty. Not post-hack arbitrage of an imbalance (the earlier note) and not a front-run: a late copy.",
+  "strength": ["high", "Traces of attacker tx and all ten Yoink txs, block positions, receipts, Etherscan getLogs scan of the pool (only attacker 2 + Yoink 10 ran the pattern), return trace and the four on-chain messages are saved. In-block evidence only (no mempool archive before 2023-08-07): whether Yoink saw the attacker's tx pending is unknowable, but its first inclusion is after the attacker's anyway."],
+  "headline_note": null
+ },
+ {
+  "slug": "conic-2023",
+  "sub": "eth-pool",
+  "verdict": "related-not-frontrun",
+  "race_type": "post-failure-replay",
+  "why": "ETH omnipool read-only reentrancy. The first attacker 0x10db234e deployed 0xdac434f8 (block 17740893) and its attack tx 0x97a8315e (17740901 idx 4) reverted out of gas. 51 blocks (~10 min) later 0x8d67db0b deployed a clone: creation code identical except one 20-byte beneficiary address (offset 1370 of 21,970 bytes), identical attack calldata (0x52558bb0; 19700/240/3000/180) and a 29.5M instead of 27.64M gas limit, and took 1,724.175 ETH at idx 0 of 17740955. The original had nothing pending (two txs ever), so the clone replays after a failed attempt rather than beating a pending one. The operator is an anonymous exploiter (BlockSec label 'LadyPepe Token Exploiter' per Rekt), not a returning bot; funds were not returned. Clone operator assumed distinct from the first attacker (a same-operator second wallet is not excluded).",
+  "strength": ["high", "Both attack traces (6,265 vs 6,362 frames, type/target/selector similarity 0.99), both creation txs, receipts, block positions, Etherscan getLogs scan of the ETH pool (only the clone tx emits the pattern), Conic's messages and the onward transfers are saved. In-block evidence only (no mempool archive). Cause of the original failure (nested OOG) is read from the trace, not fork-replayed."],
+  "headline_note": null
+ }
+]

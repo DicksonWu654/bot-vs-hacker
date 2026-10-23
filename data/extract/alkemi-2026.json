@@ -1,0 +1,830 @@
+[
+ {
+  "slug": "alkemi-2026",
+  "sub": "wbtc-yoink",
+  "name": "Alkemi Earn (Ethereum) - WBTC pool (Yoink)",
+  "date_utc": "2026-03-10T12:50:59Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "Yoink's tx (block 24627181, idx 0) contains the same 16 state-changing Alkemi calls (+2 withdraws) as the deploy+attack tx 0x726bd90c of EOA 0x46c403e3, which was mined one block earlier (24627180, idx 226) and reverted out of gas. Nothing of that actor's was pending when Yoink landed; Yoink retried with a higher gas limit. The on-chain message sender 0x8366d87b ran a different program (replay_diff.json: 0 shared calls) and its attack tx landed in 24627185, after Yoink's.",
+  "one_liner": "Yoink drained Alkemi's WBTC pool (0.299 WBTC, 10.24 ETH) one block after another attacker's identical-call tx ran out of gas; a different bot-hunter later complained Flashbots leaked his tx, but Yoink replayed the reverted one.",
+  "attacker": {
+   "eoa": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+   "eoas": [
+    "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72"
+   ],
+   "contracts": [
+    "0xd211ddce0592f2f56633ec5b053f828408c49e3b (nested, caller of Alkemi)",
+    "0x09e9db97 (top-level CREATE of the tx)"
+   ],
+   "funding": null,
+   "funding_tx": null,
+   "deploy_tx": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+   "deploy_block": 24627180,
+   "attack_txs": [
+    {
+     "hash": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+     "block": 24627180,
+     "index": 226,
+     "status": "reverted",
+     "role": "deploy+attack in the constructor, gas limit 14,974,454, tip 37 wei; runs out of gas in the 7th self-liquidation (14,344,401 gas used)"
+    }
+   ],
+   "none_reason": null,
+   "first_exploiter_of_alkemi": {
+    "eoa": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+    "tx": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+    "block": 24626979,
+    "note": "ETH-vault drain 43.45395 ETH, 40 min earlier; a different pool and a different call sequence; see sub-row eth-vault-copiers"
+   }
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+   "block": 24627181,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "message sender (third party WBTC hunter)",
+    "eoa": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+    "contract": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+    "tx": "0xd4ec3e344fe270f34078e8cabc7f7bee36204049bc9c61febce3c1668b8df42c",
+    "block": 24627185,
+    "position": 305,
+    "status": "success",
+    "role": "deployed at 24627180 idx 2, attack tx landed 4 blocks after Yoink with borrow(WBTC, 0) because the pool was empty; fork replay on the pre-Yoink state takes all 29,980,756 sat WBTC. On-chain message to Yoink at block 24627239 (tx 0x325a67f8): 'Fuck you flashbots. Why did you leak my attack transaction to yoink?'. Different call program from Yoink's."
+   },
+   {
+    "label": "0x5af00b07 (same helper bytecode as the message sender)",
+    "eoa": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+    "tx": "0xdc32b0cf4268172ab3683b4ee617dbaaab0d8fc81324e8a1f229565a821f7b81",
+    "block": 24627182,
+    "position": 2,
+    "status": "success",
+    "role": "took the last 55,199 sat WBTC the block after Yoink (tip 1.5 gwei)"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-03-10 (csv; no source log in 2026). None of the 10 Alkemi-touching txs, the 4 deploy txs or the message tx appears in it, while 55-63% of the txs of the same blocks do (incidents/alkemi-2026/mempool_coverage.json). So the reverted attacker tx, the message sender's pending tx and Yoink's tx are all private flow or missed: when Yoink first saw anything is unknown, not none.",
+  "trigger": {
+   "kind": "attacker-tx-landed-reverted",
+   "tx": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "The reverted tx was mined at 12:50:47Z (block 24627180). Yoink's builder 'I can haz block?' put the 5-tx block (Yoink tx at idx 0) into its first bid for the next slot at -1178 ms (12:50:57.8Z), i.e. 10.8 s after the block time, and won at -1041 ms. No bid from that builder exists for the slot of block 24627180. A Yoink reaction to the message sender's pending tx cannot be excluded or shown."
+  },
+  "attacker_block": 24627180,
+  "attacker_block_note": "The attacker's tx landed in the block immediately before Yoink's (BuilderNet block, idx 226 of 332) and reverted.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 24627180,
+   "tx": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2"
+  },
+  "auction": {
+   "block": 24627181,
+   "slot": 13860253,
+   "slot_start_utc_ms": 1773147059000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "titan"
+   ],
+   "n_bids": 271,
+   "n_builders": 18,
+   "bids_per_relay": {
+    "flashbots": 24,
+    "titan": 247
+   },
+   "first_bid_ms_rel_slot": -2983,
+   "last_bid_ms_rel_slot": 1843,
+   "winning_bid_eth": 1.0352742376921276,
+   "winning_builder": "I can haz block?",
+   "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "winning_relays": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": -1041,
+   "winning_last_submission_ms_rel_slot": -1041,
+   "runner_up_eth": 0.94115133936551,
+   "runner_up_builder": "I can haz block?",
+   "runner_up_ms_rel_slot": -1057,
+   "runner_up_other_builder_eth": 0.7502682711144629,
+   "runner_up_other_builder": "BuilderNet",
+   "runner_up_other_builder_ms_rel_slot": -1085,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 1.0352742376921276,
+   "proposer_paid_eth": 1.0352742376921276,
+   "proposer_payment_tx": "0xec8340c29bc285163b08f66288d9ad611e6112726c437fe578d9c899d48eb44b",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -2983,
+     0.002726566638682071
+    ],
+    [
+     -2481,
+     0.00274643520299642
+    ],
+    [
+     -2185,
+     0.00274676071256696
+    ],
+    [
+     -1968,
+     0.00274780021256696
+    ],
+    [
+     -1477,
+     0.013364460005317266
+    ],
+    [
+     -1477,
+     0.013364894770807469
+    ],
+    [
+     -1452,
+     0.01336918438343736
+    ],
+    [
+     -1436,
+     0.013369189363080784
+    ],
+    [
+     -1375,
+     0.013369191581761752
+    ],
+    [
+     -1354,
+     0.013370653374206502
+    ],
+    [
+     -1320,
+     0.01337065676461664
+    ],
+    [
+     -1313,
+     0.013370656764706688
+    ],
+    [
+     -1304,
+     0.013370661199336688
+    ],
+    [
+     -1295,
+     0.013370662558533112
+    ],
+    [
+     -1277,
+     0.013370665904115253
+    ],
+    [
+     -1269,
+     0.013796050179674668
+    ],
+    [
+     -1220,
+     0.013796994697452589
+    ],
+    [
+     -1193,
+     0.013796995320052588
+    ],
+    [
+     -1178,
+     0.10507210191851583
+    ],
+    [
+     -1169,
+     0.116010803799356
+    ],
+    [
+     -1169,
+     0.23489402423015038
+    ],
+    [
+     -1152,
+     0.3421539283299521
+    ],
+    [
+     -1122,
+     0.44108416963041686
+    ],
+    [
+     -1113,
+     0.5503124396601305
+    ],
+    [
+     -1107,
+     0.6471606260910396
+    ],
+    [
+     -1098,
+     0.6512951071505694
+    ],
+    [
+     -1095,
+     0.7471335189830023
+    ],
+    [
+     -1090,
+     0.7502682711143729
+    ],
+    [
+     -1085,
+     0.7502682711144629
+    ],
+    [
+     -1078,
+     0.845117369570646
+    ],
+    [
+     -1057,
+     0.94115133936551
+    ],
+    [
+     -1041,
+     1.0352742376921276
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/alkemi-2026/race_24627181.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block24627181.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block24627181.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block24627181.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block24627181.json"
+   },
+   "auction_note": "Winning builder 'I can haz block?' (fee recipient 0x229b8325) built a 5-tx block, bid 1.0353 ETH vs a normal ~0.01 ETH, via the Flashbots relay (single submission at -1041 ms, 10 escalating bids from -1178 ms); delivered by Flashbots and Ultra Sound. Titan answered with 247 bids (none for that block hash); Ultra Sound/Agnostic/Aestus hold no bids this old."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 10.235881010725,
+   "gross_loot_method": "ETH delivered to the Yoink contract by WETH.withdraw after swapping 29,884,523 sat WBTC on Uniswap V3 (WBTC taken from Alkemi: 1.29925557 withdrawn minus 1.0 supplied = 0.29925557; 41,034 sat swapped separately for 0.014 ETH that went back into the Alkemi vault)",
+   "captured_native": {
+    "amount": "0.29925557",
+    "unit": "WBTC",
+    "desc": "WBTC taken from Alkemi's WBTC pool via 7 self-liquidations; 0.29884523 swapped to ETH on UniV3"
+   },
+   "captured_usd": 20999.0,
+   "captured_usd_source": "gross ETH x DefiLlama ETH price 2051.49 at 1773147060 (block time)",
+   "coinbase_paid_eth": 10.225645129714577,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 9.190671700387883,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 9.200908,
+   "loot_note": "bot_net = gross 10.235881 - coinbase 10.225645 + builder refund 9.190672 (block idx 3 from 0x229b8325 to the Yoink contract); tip 0, base fee ~0.078 gwei x 12.88M gas ~ 0.001 ETH not deducted. Coinbase = 999 per mille of gross (msg.value 999 wei). The builder passed 1.0353 ETH to the proposer, so the 10.2256 ETH coinbase minus 1.0353 proposer minus 9.1907 refund ~ 0 (the remaining ~0.0003 ETH is other txs' fees). Yoink's tx was only the WBTC leg; the 43.45 ETH ETH-vault drain 40 minutes earlier is the DHL attacker's."
+  },
+  "fate": {
+   "return_status": "none",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 0.0,
+   "returned_to": null,
+   "returned_desc": "No return found: Yoink EOA tx list 24627181-26239901 and Yoink contract internal txs 24627181-24700000 show no transfer to Alkemi's admin 0x5bea205a or to the proxy; Alkemi's admin has no transactions 24626979-26300000. The only on-chain message is the complaint to Yoink (block 24627239). Unknown != none.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [
+    {
+     "tx": "0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64",
+     "eth": null,
+     "block": 24627239,
+     "time_utc": "2026-03-10T13:02:35Z",
+     "note": "on-chain message from 0x8366d87b to Yoink's EOA (not a return)"
+    }
+   ],
+   "public_statement": "none found (BlockSec's roundup covers only the 43.45 ETH attack; DeFiHackLabs cites a Blockaid X post, not fetched)",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_24627181.json",
+   "bot.position": [
+    "site/raw/rpc/block_24627181.json",
+    "site/raw/rpc/receipts_24627181.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_24627180.json",
+    "site/raw/rpc/receipts_24627180.json"
+   ],
+   "loot.gross_loot_eth": "full cache only (not published)",
+   "loot.captured_usd": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_24627181.json",
+    "full cache only (not published)"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_24627181.json",
+    "site/raw/rpc/block_24627181.json"
+   ],
+   "loot.builder_refund_to_bot_eth": "site/raw/rpc/block_24627181.json",
+   "loot.bot_net_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/block_24627181.json",
+    "site/raw/rpc/trace_block_24627181.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "incidents/alkemi-2026/mempool_coverage.json"
+   ],
+   "returns_message": "site/raw/rpc/tx_0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64.json"
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "no tx of this race is in mempool-dumpster; first-seen unknown"
+   }
+  ],
+  "discrepancies": [
+   "Prior lead (research/launch-gap/part_2026.json) linked the complaint to 'Alkemi' only by inference and listed Yoink as copying the DHL attacker; the DHL attack tx 0xa17001eb is in a different pool and shares no call with Yoink's tx."
+  ],
+  "evidence_notes": [
+   "incidents/alkemi-2026/replay_diff.json: 16 of 16 state-changing Alkemi calls of the reverted tx 0x726bd90c equal Yoink's first 16 (supply 1 WBTC, supply 2.5 ETH, 7x borrow 2 ETH + liquidateBorrow(self) 2.002 ETH); Yoink adds 2 withdraws.",
+   "Fork replay (local anvil, block 24627180 state): the reverted tx at its own 14,974,454 gas limit reverts with exactly the on-chain gas used (14,344,401); with a 30M limit it succeeds and sends 29,884,523 sat WBTC to the attacker EOA = the amount Yoink swapped.",
+   "The message sender's own attack tx replayed on state after block 24627180 (traceCall) moves all 29,980,756 sat WBTC to 0x460eba8f; on the real state after Yoink it moves 55,199. Its calls share nothing with Yoink's.",
+   "Alkemi balances (end of block): WBTC 0.29980756 until 24627180, 0.00055199 after 24627181, 0 after 24627182; ETH vault 44.17125 before 24626979, 0.7173 after, 0 from 24627055.",
+   "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+  ],
+  "incident_dir": "incidents/alkemi-2026"
+ },
+ {
+  "slug": "alkemi-2026",
+  "sub": "eth-vault-copiers",
+  "name": "Alkemi Earn (Ethereum) - ETH vault copiers",
+  "date_utc": "2026-03-10T12:25:23Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "late-copy",
+  "race_type_reason": "The DHL-listed attacker's deploy (idx 2) and attack (idx 3) landed together in block 24626979 and drained 43.45395 ETH from the ETH vault. Every other caller of the same sequence landed later: two no-gain copies one block later (24626980, idx 114/115), and 0x4c452e82 took the 0.7173 ETH left in the vault 76 blocks (15 min) after. Nobody was ahead of the attacker and none of these is Yoink.",
+  "one_liner": "The 43.45 ETH Alkemi ETH-vault drain (block 24626979) was never front-run: all 7 later txs running the self-liquidation call sequence landed 1 to 444 blocks later, the best taking 0.72 ETH of leftovers. Yoink was not involved.",
+  "attacker": {
+   "eoa": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+   "eoas": [
+    "0x0ed1c01b8420a965d7bd2374db02896464c91cd7"
+   ],
+   "contracts": [
+    "0xe408b52aefb27a2fb4f1cd760a76daa4bf23794b"
+   ],
+   "funding": null,
+   "funding_tx": "0xcec7c8eb14e78f1cabc635db28631b9c95b7b61cb18308bde326dafda68eda9f",
+   "deploy_tx": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+   "deploy_block": 24626979,
+   "funding_note": "0.09975 ETH from 0xac9f360a... at block 24625237 (2026-03-10T06:19:11Z); source not classified",
+   "attack_txs": [
+    {
+     "hash": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+     "block": 24626979,
+     "index": 2,
+     "status": "success",
+     "role": "deploy attack contract 0xe408b52a"
+    },
+    {
+     "hash": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+     "block": 24626979,
+     "index": 3,
+     "status": "success",
+     "role": "flash loan 51 WETH, supply 50, borrow 39.5, self-liquidate 39.5395, withdraw; +43.45395 ETH to the EOA"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "anon searcher (0x4c452e82)",
+   "eoa": "0x4c452e829748e34e11d010e338596433d638f03c",
+   "contract": "0xbf65507df61a410a47be755399ab72ba60cdca44",
+   "tx": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+   "block": 24627055,
+   "position": 5,
+   "status": "success",
+   "priority_fee_gwei": 0.2
+  },
+  "bots_other": [
+   {
+    "label": "0xb180ef1b -> 0x3dfb97ff (copy 1)",
+    "eoa": "0xb180ef1bf6fb3e9a0b5db4460e4db804e946cc8a",
+    "tx": "0x4054e1d69035afc993ef80774cc83f5feb0b5d2542f9ff7fa1bbf254a6c79ea6",
+    "block": 24626980,
+    "position": 114,
+    "status": "success",
+    "role": "same sequence with a 1 ETH supply; gained nothing"
+   },
+   {
+    "label": "0x6bc22cd3 -> 0x3dfb97ff (copy 2)",
+    "eoa": "0x6bc22cd3705b86c1d423d80001721b9c8101d2e1",
+    "tx": "0x7c65ddf1f49c336739d49cc8321346621c2de562448d1a1afdc10a15ac44c4fc",
+    "block": 24626980,
+    "position": 115,
+    "status": "success",
+    "role": "same contract, next index; gained nothing"
+   },
+   {
+    "label": "0xc9a5643e",
+    "eoa": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+    "tx": "0x5460ffcd02735127d35e7bddba6eff1e719f6459a04db0b23c9e8e7ef7491b57",
+    "block": 24627182,
+    "position": 0,
+    "status": "success",
+    "role": "copy that collected the 0.014 ETH Yoink had paid into the vault"
+   },
+   {
+    "label": "0x000040d6c85a",
+    "eoa": "0x000040d6c85a13a1aa74565fde87e499dc023c6f",
+    "tx": "0x0331c45048016884067e9d0003068a11ac799a197a78e74aa0b87f3d6989159f",
+    "block": 24627423,
+    "position": 106,
+    "status": "reverted",
+    "role": "last copy, 13:39Z"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2026-03-10 but neither the attacker's deploy/attack txs nor any copy appears in it (55-63% of the txs of the same blocks do). Private flow or missed; first-seen unknown.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no pre-inclusion first-seen exists for the attacker or any copier"
+  },
+  "attacker_block": 24626979,
+  "attacker_block_note": "Attacker's deploy and attack landed together in Titan's block 24626979 (idx 2 and 3), delivered by Ultra Sound.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 24626979,
+   "tx": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d"
+  },
+  "auction": {
+   "block": 24627055,
+   "slot": 13860125,
+   "slot_start_utc_ms": 1773145523000,
+   "relays_answered": [
+    "flashbots",
+    "aestus",
+    "titan"
+   ],
+   "n_bids": 1064,
+   "n_builders": 39,
+   "bids_per_relay": {
+    "flashbots": 241,
+    "aestus": 470,
+    "titan": 353
+   },
+   "first_bid_ms_rel_slot": -7515,
+   "last_bid_ms_rel_slot": 2324,
+   "winning_bid_eth": 0.01228786992770897,
+   "winning_builder": "Titan (titanbuilder.xyz)",
+   "winning_builder_pubkey": "0x8a85062118e29045e8b199723d9af519b0c071d9e7586fa89733e798536d4637f8545a169012cc1b76005d9453603273",
+   "winning_relays": [
+    "titan"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.013643262146100274,
+   "proposer_paid_eth": 0.01228786992770897,
+   "proposer_payment_tx": "0x14043469ac40941db61455fc827c06a269cab1abca949fb868a2959eaa8dac8b",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -7515,
+     0.001450136574697629
+    ],
+    [
+     -7493,
+     0.002064112435536738
+    ],
+    [
+     -7488,
+     0.003532874188076289
+    ],
+    [
+     -3970,
+     0.003579810276721799
+    ],
+    [
+     -2198,
+     0.004122424765375731
+    ],
+    [
+     -1483,
+     0.004784388296336878
+    ],
+    [
+     -1404,
+     0.005439612837375978
+    ],
+    [
+     -1356,
+     0.006085351778251102
+    ],
+    [
+     -1225,
+     0.006102064193082863
+    ],
+    [
+     -1179,
+     0.00614470913714487
+    ],
+    [
+     -1133,
+     0.006190311745688536
+    ],
+    [
+     -1069,
+     0.006192581614595806
+    ],
+    [
+     -960,
+     0.006492160927034223
+    ],
+    [
+     -414,
+     0.006929888849837752
+    ],
+    [
+     -370,
+     0.006932797342423964
+    ],
+    [
+     -368,
+     0.006960160927034223
+    ],
+    [
+     -359,
+     0.006963403915025562
+    ],
+    [
+     -349,
+     0.006997523330712087
+    ],
+    [
+     -315,
+     0.007746178231540283
+    ],
+    [
+     -296,
+     0.008119237696994835
+    ],
+    [
+     -277,
+     0.009209638605531216
+    ],
+    [
+     -217,
+     0.009294427072898364
+    ],
+    [
+     137,
+     0.009302281467488346
+    ],
+    [
+     146,
+     0.009896994454595172
+    ],
+    [
+     168,
+     0.010453216435894187
+    ],
+    [
+     184,
+     0.01096884017706674
+    ],
+    [
+     202,
+     0.011129056986238658
+    ],
+    [
+     251,
+     0.011147055933930025
+    ],
+    [
+     284,
+     0.011155096748005
+    ],
+    [
+     328,
+     0.011160174317607664
+    ],
+    [
+     397,
+     0.011180695093283993
+    ],
+    [
+     468,
+     0.011191150186864316
+    ],
+    [
+     495,
+     0.011195446925322046
+    ],
+    [
+     514,
+     0.011197874084366307
+    ],
+    [
+     522,
+     0.011242685660708357
+    ],
+    [
+     757,
+     0.011250827030517642
+    ],
+    [
+     760,
+     0.01132963901766848
+    ],
+    [
+     765,
+     0.011342524648737943
+    ],
+    [
+     767,
+     0.01172023272673847
+    ],
+    [
+     783,
+     0.011746158004607732
+    ],
+    [
+     797,
+     0.011754547842815308
+    ],
+    [
+     800,
+     0.0119444555000592
+    ],
+    [
+     801,
+     0.01195525734871343
+    ],
+    [
+     834,
+     0.012104827518329721
+    ],
+    [
+     854,
+     0.012261081662552454
+    ],
+    [
+     884,
+     0.012263383240740972
+    ],
+    [
+     890,
+     0.012283542944917123
+    ],
+    [
+     1026,
+     0.0122938173702335
+    ],
+    [
+     1081,
+     0.012807064304202956
+    ],
+    [
+     1094,
+     0.012999380231091075
+    ],
+    [
+     1137,
+     0.013230806210322228
+    ],
+    [
+     1177,
+     0.013239022138736537
+    ],
+    [
+     1177,
+     0.013272092484138107
+    ],
+    [
+     1192,
+     0.013289418840100284
+    ],
+    [
+     1207,
+     0.013562398942226576
+    ],
+    [
+     1261,
+     0.013566800443825215
+    ],
+    [
+     1280,
+     0.013589940020437698
+    ],
+    [
+     1417,
+     0.01359606265880107
+    ],
+    [
+     1497,
+     0.013600834275811515
+    ],
+    [
+     1637,
+     0.013643262146100274
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/alkemi-2026/race_24627055.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block24627055.json",
+    "relay_bids:aestus": "site/raw/relay-aestus/bids_block24627055.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block24627055.json",
+    "relay_delivered:titan": "site/raw/relay-titan/delivered_block24627055.json"
+   },
+   "auction_note": "Block 24627055 (Titan builder). The attacker's own block 24626979 has 450 bids (Flashbots 197, Titan 253), winner Titan 0.01125 ETH via Ultra Sound: a routine auction, no bot involved."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 0.717294486649,
+   "gross_loot_method": "net ETH leaving the Alkemi vault 0x8125afd0 in the successful frames of the tx trace (vault payouts minus ETH paid into the vault, which includes the copier's own 50 ETH supply); incidents/alkemi-2026/calls_table.json",
+   "captured_native": {
+    "amount": "0.71729449",
+    "unit": "ETH",
+    "desc": "leftover ETH in the Alkemi vault after the 43.45 ETH drain"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.0008100784,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 0.715921,
+   "loot_note": "bot_net = gross - gas (gas used 4050392 x 0.3391 gwei = 0.001374 ETH, incl. 0.2 gwei tip); Balancer flash loan of 51 WETH repaid in the tx. Attacker's own take: 43.45395 ETH."
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "No return or message found for the copiers or the attacker (attacker EOA scanned to block 24627400 only, it sent 3 ETH to look-alike addresses). Unknown != none.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [],
+   "public_statement": "BlockSec roundup (loss ~$89K, root cause: self-liquidation + storage overwrite)",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_24627055.json",
+   "bot.position": [
+    "site/raw/rpc/block_24627055.json",
+    "site/raw/rpc/receipts_24627055.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_24626979.json",
+    "site/raw/rpc/receipts_24626979.json"
+   ],
+   "loot.gross_loot_eth": [
+    "full cache only (not published)",
+    "incidents/alkemi-2026/calls_table.json"
+   ],
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_24627055.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_24627055.json",
+    "site/raw/rpc/block_24627055.json"
+   ],
+   "loot.bot_net_eth": [
+    "full cache only (not published)",
+    "site/raw/rpc/receipts_24627055.json",
+    "site/raw/rpc/block_24627055.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "incidents/alkemi-2026/mempool_coverage.json"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "no tx in mempool-dumpster"
+   }
+  ],
+  "discrepancies": [],
+  "evidence_notes": [
+   "BlockSec weekly roundup (site/raw/web-alkemi/blocksec_roundup_mar9_mar15_2026.html) names tx 0xa170...6d9d as the attack: flash loan 51 WETH, supply, borrow 39.5, self-liquidate 39.5395, withdraw 93.5, profit 43.4 ETH.",
+   "trace_filter (toAddress = Alkemi proxy, blocks 24600000-24650000) lists exactly 10 txs; the DHL attack is the first and no earlier call to the proxy exists in 24600000-24626978.",
+   "Vault ETH at block ends: 44.17125 (24626978), 0.7173 (24626979), 0 from 24627055."
+  ],
+  "incident_dir": "incidents/alkemi-2026"
+ }
+]

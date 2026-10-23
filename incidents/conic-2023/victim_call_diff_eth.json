@@ -1,0 +1,79 @@
+{
+ "schema": "conic-2023/victim_call_diff_eth/1",
+ "original": {
+  "eoa": "0x10db234e02c3889d8e408c7084e8ce10892bdad7",
+  "contract": "0xdac434f8011e9588f39fa43c3f7cdbbcb3e5cd1f",
+  "deploy_tx": "0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74",
+  "attack_tx": "0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16",
+  "block": 17740901,
+  "index": 4,
+  "status": "reverted",
+  "gas_limit": 27643354,
+  "gas_used": 24047482,
+  "max_priority_fee_gwei": 20.0
+ },
+ "clone": {
+  "eoa": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
+  "contract": "0x743599ba5cfa3ce8c59691af5ef279aaafa2e4eb",
+  "deploy_tx": "0x16718a6df144de749035e4763946ad56d3dfaeb5d151a82f913698fa4ae28c3d",
+  "attack_tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+  "block": 17740955,
+  "index": 0,
+  "status": "success",
+  "gas_limit": 29500000,
+  "gas_used": 20141058,
+  "max_priority_fee_gwei": 3.0
+ },
+ "creation_code_bytes": [
+  21970,
+  21970
+ ],
+ "creation_code_differing_bytes": 20,
+ "creation_code_diff_runs": [
+  {
+   "byte_offset": 1370,
+   "length": 20,
+   "original": "10db234e02c3889d8e408c7084e8ce10892bdad7",
+   "clone": "8d67db0b205e32a5dd96145f022fa18aae7dc8aa"
+  }
+ ],
+ "creation_code_diff_reading": "Exactly one 20-byte address differs, at byte offset 1370: the original attacker's EOA (0x10db234e...) is replaced by the clone's EOA (0x8d67db0b...). The other 21,950 bytes are identical.",
+ "attack_calldata_identical": true,
+ "attack_selector": "0x52558bb0",
+ "attack_args": [
+  "19700",
+  "240",
+  "3000",
+  "180"
+ ],
+ "trace_frames": [
+  6265,
+  6362
+ ],
+ "frame_sequence_similarity_type_target_selector": 0.9917,
+ "frames_only_in_original": 4,
+ "frames_only_in_clone": 101,
+ "identical_leading_frames": 242,
+ "frames_equal_at_same_position": 5300,
+ "trace_reading": "Top-level call, the Aave/Balancer flash loans, the Curve add_liquidity / remove_liquidity and the re-entrant ConicEthPool.withdraw all appear in both traces with the same targets and selectors; amounts that derive from live state differ in low digits.",
+ "original_failure": {
+  "deepest_failing_frame": {
+   "type": "CALL",
+   "to": "0xdc24316b9ae028f1497c275eb9192a3ea0f67022",
+   "selector": "0x3df02124",
+   "error": "out of gas"
+  },
+  "reading": "Original reverted with out-of-gas inside a nested Curve call (gas limit 27.64M, 24.05M burned). The clone ran the same sequence with a 29.5M gas limit and finished using 20.14M.",
+  "caveat": "Cause is inferred from the trace (OOG in a nested frame); we did not fork-replay the original with a higher limit."
+ },
+ "raw_refs": {
+  "original_attack_trace": "site/raw/rpc-conic/trace_0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16.json",
+  "clone_attack_trace": "site/raw/rpc-conic/trace_0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146.json",
+  "original_deploy_tx": "site/raw/rpc-conic/conic_tx_0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74.json",
+  "clone_deploy_tx": "full cache only (not published)",
+  "original_attack_tx": "full cache only (not published)",
+  "clone_attack_tx": "full cache only (not published)",
+  "original_receipt": "full cache only (not published)",
+  "clone_receipt": "full cache only (not published)"
+ }
+}

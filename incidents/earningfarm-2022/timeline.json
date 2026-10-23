@@ -1,0 +1,125 @@
+[
+ {
+  "t_utc_ms": null,
+  "block": 15580691,
+  "kind": "fund",
+  "actor": "attacker EOA 0xdf31f4c8",
+  "detail": "receives 0.3824 ETH (internal from 0xba8da9dc..., 2022-09-21T08:49Z)",
+  "tx": "0x7db3d6ecfb6fda4e49549ab94fb9f5911ee584c69c5dae324fc709f486c54c42",
+  "raw_ref": "site/raw/etherscan/efatt_txlistinternal_0_15710400.json"
+ },
+ {
+  "t_utc_ms": 1664277803000,
+  "block": 15624367,
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "deploys attack contract 0x140cca42 (constructor creates 0x8663fbfc)",
+  "tx": "0x99c760442aecf00d46ecad7739f7935c41d76b2f850253f19eaa7c4e7a6d0045",
+  "raw_ref": "site/raw/etherscan/ef_contractcreation.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": 15710375,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "2022-10-09T11:55Z test calls to the attack contract (selector 0xb8bb98a7); none of the attacker's txs before 15746200 touch the vault",
+  "tx": "0x142ab632c8f7e06315b3390d59543120463c79ce5cf441d676637ca65334e5eb",
+  "raw_ref": "site/raw/etherscan/efatt_txlist_0_15710400.json"
+ },
+ {
+  "t_utc_ms": 1665748127000,
+  "block": 15746150,
+  "kind": "fund",
+  "actor": "attacker",
+  "detail": "sends 0.15 ETH to 0x5367857c (idx 91), 50 blocks before the race",
+  "tx": "0x4b6f796398e63231a30f73be3f85d9527c0b99ec552602df99f86786352c15d9",
+  "raw_ref": "site/raw/etherscan/ef_att_txlist_15700000_15760000.json"
+ },
+ {
+  "t_utc_ms": 1665748716156,
+  "block": 15746200,
+  "kind": "bid",
+  "actor": "builders (flashbots relay)",
+  "detail": "first of 246 bids; best bid before the bot's tx ~0.13 ETH",
+  "raw_ref": "site/raw/relay-flashbots/bids_block15746200.json"
+ },
+ {
+  "t_utc_ms": 1665748724904,
+  "block": 15746200,
+  "kind": "bid",
+  "actor": "unnamed builder",
+  "detail": "first bid >= 10 ETH: 18.806 ETH, 108 txs (value jump 0.13 -> 18.8 ETH = bot's coinbase payment arrives; inferred)",
+  "raw_ref": "site/raw/relay-flashbots/bids_block15746200.json"
+ },
+ {
+  "t_utc_ms": 1665748730593,
+  "block": 15746200,
+  "kind": "bid",
+  "actor": "builder0x69",
+  "detail": "submits the winning block 0x4662b74e.. (162 tx, 18.8254 ETH); later, higher bids (max 18.8288 ETH at +5412 ms) were not delivered",
+  "raw_ref": "incidents/earningfarm-2022/race_15746200.json"
+ },
+ {
+  "t_utc_ms": 1665748727000,
+  "block": 15746200,
+  "kind": "block",
+  "actor": "slot clock",
+  "detail": "slot 4910392 starts (2022-10-14T11:58:47Z). In-block evidence only: no mempool archive for 2022.",
+  "raw_ref": "site/raw/rpc/block_15746200.json"
+ },
+ {
+  "t_utc_ms": 1665748727000,
+  "block": 15746200,
+  "kind": "tx",
+  "actor": "bot 0x26bce6ec",
+  "detail": "idx 0, priority fee 0, coinbase transfer 18.717 ETH; replays attacker's deposit+flashLoan sequence; vault -> helper 480.108 ETH",
+  "tx": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+  "raw_ref": "site/raw/rpc/trace_0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1.json"
+ },
+ {
+  "t_utc_ms": 1665748727000,
+  "block": 15746200,
+  "kind": "tx",
+  "actor": "attacker 0xdf31f4c8",
+  "detail": "idx 7, priority 27.9 gwei, REVERTED (vault already drained)",
+  "tx": "0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d",
+  "raw_ref": "site/raw/rpc/trace_0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d.json",
+  "raw_refs": [
+   "site/raw/rpc/eth_getTransactionByHash_0x4be393b9e3936383710c27dc422fb657aeeae266af67ea63ca6c08f062e40b5d.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1665749519000,
+  "block": 15746266,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "re-deposits 0.1 ETH into the vault (idx 96)",
+  "tx": "0xa59c6b0f288dcc2ba897436620af404f1443635862e555f8ece8e31f3541c5e4",
+  "raw_ref": "site/raw/etherscan/ef_vault_txlistinternal_15740000_15750000.json"
+ },
+ {
+  "t_utc_ms": 1665750431000,
+  "block": 15746342,
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "second attempt lands (idx 2): vault -> helper 268.897 ETH",
+  "tx": "0x160c5950a01b88953648ba90ec0a29b0c5383e055d35a7835d905c53a3dda01e",
+  "raw_ref": "site/raw/rpc/trace_0x160c5950a01b88953648ba90ec0a29b0c5383e055d35a7835d905c53a3dda01e.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": "15746484-15746737",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "10/100 ETH deposits to Tornado Cash router 0xd90e2f92 (selector 0x13d98d13)",
+  "raw_ref": "site/raw/etherscan/ef_att_txlist_15700000_15760000.json"
+ },
+ {
+  "t_utc_ms": null,
+  "block": "15746200-latest",
+  "kind": "return",
+  "actor": "bot",
+  "detail": "no return to the vault or to Earning.Farm users observed (checked vault inbound transfers to latest)",
+  "raw_ref": "site/raw/etherscan/efvault_txlistinternal_after.json"
+ }
+]

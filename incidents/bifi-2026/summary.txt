@@ -1,0 +1,5 @@
+BiFi Lending idle USDT market (0x808c3ba9...) drain
+One block after an attacker deployed a purpose-built BiFi USDT-market drain contract, and before it was ever called, c0ffeebabe.eth's tx emptied the market (netting 165,574.51 USDT, 68.06 WETH) and paid 0.9868 ETH to the builder.
+The attacker EOA 0x7c78a049 deployed a purpose-built contract (0x8c0d729d) in block 26210255 (position 333) and never sent a call to it; the EOA's next transaction, in block 26210307, is unrelated. c0ffeebabe.eth's transaction 0x756c6805... landed in the next block, 26210256, at position 1, and emptied the market (USDT balance 170,038.086 -> 4,462.937), paying 0.9868 ETH to the builder. We count it as a deploy-window copy, by the same rule as Makina and Kelp: the transaction is counted from its ordering, funds and public block evidence. No attacker transaction was ever seen pending (the deploy and anything later are private flow, or absent from the mempool dump), so this rests on in-block and bytecode evidence.
+
+Source: the incident page on the site; every figure links its saved raw response there.

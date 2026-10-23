@@ -1,0 +1,9 @@
+Transit Swap, Ethereum leg, 2022-10-01. Verdict: confirmed-onchain (in-block evidence only; no 2022 mempool archive, and the block was not built through MEV-Boost).
+
+The Ethereum attacker (sender EOA 0x5f0b31aa, contract 0x17ff6c94 deployed in block 15655094) drained approvals through Transit's router 0xc8d7899f in 9 txs between blocks 15655118 and 15655281, then sold the loot for 5,183 ETH through EOA 0x75f2aba6. The last tx, 0x6f7d546a (block 15655281, idx 43, tip 3.0 gwei), reverted. Yoink's tx 0x9f43b61d from the older generation-0 contract 0x6c6b87d4 (created 2022-09-07; the gen1 contract of 2022-12-02 did not yet exist) sits at idx 24 of the same block with a tip of 3.000000002 gwei. It makes the same 21 router calls on the same 21 victims, with only the recipient changed, and took 5,974.5 UNI, which it swapped to 29.3065 WETH. The 2-wei tip bump put it ahead of the whole 3.0-gwei tier. Yoink did not front-run the attacker's earlier 8 successful txs.
+
+The BSC story (BlockSec, profanity bot 0x00000000 38b8...) is a different bot on a different chain.
+
+Funds: Transit messaged Yoink on-chain on 2022-10-04, 10-06 and 10-07. Yoink replied on 2022-10-23 (tx 0x57a98ef2) offering 90% of 26.505 ETH. Transit accepted on 2023-05-22 (0x3edd298a). Yoink sent exactly 26.505 ETH to Transit's receiver on 2023-09-06 (tx 0x074acda8). The attacker had separately returned 3,180 ETH on 2022-10-02.
+
+Three facts: (1) 21/21 router calls match the attacker's after swapping the recipient; (2) a 2-wei tip edge beat the attacker, whose tx then reverted; (3) the return was paid 11 months later, exactly 26.505 ETH.

@@ -1,0 +1,463 @@
+{
+ "slug": "defiplaza-2024",
+ "name": "DeFi Plaza (DefiPlaza V2 DEX, Ethereum)",
+ "date": "2024-07-05",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "The real attacker is EOA 0x14b362d2... (attack contract 0xa4e8969b..., deployed in tx 0x8f029510... at 13:15:29.185 UTC first-seen together with its run() tx 0xe00b0998...). Yoink's tx 0xa245deda... sits at position 0 of block 20240539 and drains the same pool with 25 DeFi Plaza state-changing calls whose calldata and ETH values are byte-identical to what the attacker's own contract issues when its deploy+run() are replayed on a local fork of block 20240538; the attacker's deploy landed at position 3 of the same block, but its run() tx never made it into block 20240539 and landed one block later (20240540, position 27) reverting on an empty pool. Ordering evidence: attacker txs seen in the public mempool 5.8 s before the slot and 3.0 s before Yoink's builder's first bid; Yoink's own tx never appears in the public mempool.",
+ "era": "post-Merge, mempool-dumpster sourcelog + Flashbots relay bids available (other relays: delivered-payload only)",
+ "protocol_loss_usd": 216831.0,
+ "attacker": {
+  "eoas": [
+   "0x14b362d2e38250604f21a334d71c13e2ed478467"
+  ],
+  "possible_second_eoa": {
+   "eoa": "0x907f85291cb5d5ac5a76bb90ef8b62f2ddf69591",
+   "evidence": "tx 0xbb5dffb0... deployed byte-identical initcode (26,794 hex chars, same 0x5f805460 wrapper selector) with nonce 0, first seen 1,201 ms BEFORE the attacker's own deploy; funded 0.1 ETH at 13:08:11 (tx 0x795f04e8345e...); only ever deployed (contract 0xd2a63475e4207f286f45586ae8d2200f4e64e41b never called). Relationship to 0x14b362d2 is unproven (label: inferred, same tooling)."
+  },
+  "contracts": [
+   "0xa4e8969bba1e1d48c30c948de0884cdff43e2d54"
+  ],
+  "deploy_tx": "0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0",
+  "funding_tx": {
+   "tx": "0x4c27e806ded2db44ae20aeb55aab332f427366bbcffefbb31e4016851ada1e1c",
+   "block": 19161592,
+   "utc": "2024-02-05T10:50:59Z",
+   "amount_eth": 0.9856861958564,
+   "source": "0x47ce0c6ed5b0ce3d3a51fdb1c52dc66a7c3c2936 (Tornado Cash 1 ETH pool, address matches the published pool list; second 0.98729 ETH at tx 0xef98b5256c9dced844cfed17774b3bd14ec9428fc4c09fd1e0a7e42f8a63de8d)"
+  },
+  "history": "EOA active since 2024-04-05 with many failed 'attack()/pullTokens()/execute()' contract attempts (Etherscan txlist) - a serial exploit hunter, not a one-off",
+  "txs": [
+   {
+    "hash": "0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0",
+    "block": 20240539,
+    "index": 3,
+    "status": 1,
+    "nonce": 12,
+    "first_seen_ms": 1720185329185,
+    "first_seen_utc": "2024-07-05T13:15:29.185Z",
+    "priority_fee_gwei": 9.32,
+    "role": "deploy attack contract (13,396-byte initcode)"
+   },
+   {
+    "hash": "0xe00b0998d71b0e657379be196babd1637a653c100e8162853ca6616c3970790d",
+    "block": 20240540,
+    "index": 27,
+    "status": 0,
+    "nonce": 13,
+    "first_seen_ms": 1720185329185,
+    "first_seen_utc": "2024-07-05T13:15:29.185Z",
+    "priority_fee_gwei": 8.94,
+    "role": "run() - 'execution reverted' on the drained pool; fork replay shows it succeeds on the pre-Yoink state"
+   },
+   {
+    "hash": "0xc1509590b77dc5d3f68b8e61886017e57bbea64e1d725808b8899b893f25c2e6",
+    "block": null,
+    "status": "never mined",
+    "nonce": 12,
+    "first_seen_ms": 1720185329789,
+    "role": "lower-fee version of the deploy (seen 604 ms after the original)"
+   },
+   {
+    "hash": "0x9b840783793438e5c0395dcf5d59e7f273bde8fc8bac64c4f7a4844c11d18275",
+    "block": null,
+    "status": "never mined",
+    "nonce": 13,
+    "first_seen_ms": 1720185329789,
+    "role": "lower-fee version of run()"
+   }
+  ]
+ },
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "vault": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0 (an EOA: it signs the swap/transfer txs)",
+   "txs": [
+    {
+     "hash": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+     "block": 20240539,
+     "index": 0,
+     "status": 1,
+     "msg_value": 663180915,
+     "gas_used": 7878567,
+     "in_public_mempool": false
+    },
+    {
+     "hash": "0x69b0f8b91914c5a2a5c49aaca4bf35ec3cad888c94b9e491b26946748540517c",
+     "block": 20240539,
+     "index": 11,
+     "status": 1,
+     "msg_value": 996,
+     "note": "second Yoink tx in the block (coinbase 0.9463 ETH); not analysed for this incident"
+    }
+   ],
+   "captured": {
+    "token": "6 assets swept to vault + ETH (profit split not decomposed)",
+    "amount": "13,504.30 USDT, 0.24367467 WBTC, 13,409.07 USDC, 13,413.80 DAI, 257,253.14 DFP2, 121,266.68 eXRD swept; fixed bribe 66.3181 ETH paid out of the ETH proceeds",
+    "usd": 62493,
+    "usd_note": "value of the 6 swept assets only (DefiLlama 2024-07-05 13:15), excluding the ETH proceeds the 66.3181 ETH bribe was paid from"
+   },
+   "coinbase_paid_eth": 66.3180915,
+   "priority_fee_gwei": 0.0,
+   "replay_evidence": {
+    "method": "local anvil fork at block 20240538; attacker's deploy tx input + run() tx input replayed from the attacker EOA (impersonated); DeFi Plaza ('0xe68c1d72...') calls extracted with callTracer from both runs",
+    "attacker_run_on_fork": {
+     "status": 1,
+     "plaza_eth_after": 1e-18,
+     "plaza_eth_before": 4.546186764390328,
+     "calls_to_plaza": 26
+    },
+    "yoink_calls_to_plaza": 25,
+    "diff": "after dropping one STATICCALL balanceOf(0x70a08231) that only the attacker's contract makes, the two call lists match 25/25: same selectors (23 x 0xfe029156, 1 x 0xce359797 with 32,732.54 ETH, 1 x 0xc4ccdeea), same calldata bytes, same ETH values; only msg.sender differs (attacker contract 0xa4e8969b -> Yoink bot 0x6980a47b). Funding differs: Yoink wraps it in a Balancer flashLoan (9 tokens) and an Aave V3 flashLoan; sweeps proceeds to its vault.",
+    "files": [
+     "research/defiplaza-ronin/defiplaza_fork_replay.json",
+     "research/defiplaza-ronin/defiplaza_plaza_calls.json",
+     "scripts/bot_re/defiplaza_replay.py"
+    ],
+    "yoink_script_decode": "research/bot-re/incident_txs.json['defiplaza']: 19 approvals, Balancer flashLoan, 12 swap ops, unwrap, 6 sweeps; bribe rule msg.value>=1000 -> fixed v*1e11 wei (analysis.md section 3 and 4.3)"
+   },
+   "notes": "No Yoink tx hash is in the public mempool (0 rows in dumpster csv + sourcelog): the bot reacted to the attacker's pending txs, built its block through its own builder, and was delivered via Flashbots + Ultra Sound relays."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "unresolved: whoever sent the bundle behind the Flashbots-builder 60.26-62.49 ETH bids",
+   "evidence": "relays hide bid contents. At 13:15:32.739-.821 three Flashbots-builder pubkeys jumped from 6.36 ETH to 60.26-62.49 ETH including a 3-tx, 11.09M-gas 62.4326 ETH block. A rival copier OR Yoink's own bundle also routed to Flashbots builders both fit; it lost by 0.0481 ETH to Yoink's final 62.5409 ETH (best 62.4928).",
+   "unknown": true
+  },
+  {
+   "label": "builder0x69",
+   "evidence": "13:15:32.527 18.1124 ETH, 111 tx, block 0xbf839e76...; contents unknown (inferred a competing copier or an unrelated arb-heavy block)"
+  },
+  {
+   "label": "0x907f8529... deploy of identical initcode",
+   "tx": "0xbb5dffb00d103d5b9ef3a29eb01c166cd766265fe251e0bd89863d7f2d96ff2a",
+   "block": 20240540,
+   "index": 219,
+   "first_seen_ms": 1720185327984
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "fixed bribe (coinbase.transfer) from Yoink tx to builder fee recipient",
+   "tx": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+   "amount": "66.3180915 ETH (msg.value 663180915 x 1e11)",
+   "to": "0x229b8325bb9ac04602898b7e8989998710235d5f ('I can haz block?')"
+  },
+  {
+   "what": "builder pays proposer (= winning bid)",
+   "tx": "0x454219fb25d36590279fd9c17fccb5b5a29acbbb3f90f318a3e4d9d2ad104e7c",
+   "amount": "62.540934666 ETH",
+   "to": "0x388c818ca8b9251b393131c08a736a67ccb19297 (Lido Execution Layer Rewards Vault, per Lido forum post)"
+  },
+  {
+   "what": "builder refund to Yoink bot contract (block position 12)",
+   "tx": "0x2fc1684935de935bf8daf035fb8a70b0e396af334e328c76b5ad6569dd618ef8",
+   "amount": "4.761056907 ETH",
+   "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0"
+  },
+  {
+   "what": "sweep to Yoink vault in the incident tx",
+   "tx": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+   "amount": "13,504.30 USDT, 0.24367467 WBTC, 13,409.07 USDC, 13,413.80 DAI, 257,253.14 DFP2, 121,266.68 eXRD",
+   "to": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0"
+  },
+  {
+   "what": "USDT swept to vault 0xc70f00cd then sold (Universal Router)",
+   "tx": "0xd7ceb45c4205312a557ac05844d92e302d2e03652a62ee236ac7ae116880159c",
+   "amount": "13,504.300602 USDT -> 4.519460 ETH",
+   "to": "vault EOA 0xc70f00cd7e461686b04b0e912e309beca8b80ea0 (ETH kept)",
+   "utc": "2024-07-05T19:35:47Z"
+  },
+  {
+   "what": "WBTC swept to vault then sold",
+   "tx": "0x8db1e512b06b38cae784cd68646a538f6c383056387d56f3cb89f12710c22111",
+   "amount": "0.24367467 WBTC -> 4.612157 ETH",
+   "to": "vault (ETH kept)",
+   "utc": "2024-07-05T19:37:11Z"
+  },
+  {
+   "what": "USDC swept to vault then sold (12,808.734214 of 13,409.070847)",
+   "tx": "0x50001c27ca5f4a5a89ad85cd48b240e7cfa4fd9be1a012139fb239ca79659c31",
+   "amount": "12,808.734214 USDC -> 4.286220 ETH",
+   "to": "vault (ETH kept)",
+   "utc": "2024-07-05T19:39:35Z"
+  },
+  {
+   "what": "RETURN to DeFi Plaza deployer 0x0422afb5481a21b3fea2c94e08dfad45da1975b7",
+   "tx": "0xb1ddf7e262ceec136f39dcc36509e0203b1536938a6f3c5ae1a26bd0aeba39f0",
+   "amount": "600.336633 USDC",
+   "to": "0x0422afb5481a21b3fea2c94e08dfad45da1975b7",
+   "utc": "2024-07-05T19:42:23Z"
+  },
+  {
+   "what": "RETURN",
+   "tx": "0xd52bc63c573ad8395635e5616576a1f111073e2c232b4ead0cbfb155aaede382",
+   "amount": "13,413.796570 DAI",
+   "to": "0x0422afb5481a21b3fea2c94e08dfad45da1975b7",
+   "utc": "2024-07-05T19:44:23Z"
+  },
+  {
+   "what": "RETURN",
+   "tx": "0xfab945a043d69dcc9c13a39a0ac06b69baed071f205942ea04d7100d172e6c7b",
+   "amount": "257,253.140376 DFP2",
+   "to": "0x0422afb5481a21b3fea2c94e08dfad45da1975b7",
+   "utc": "2024-07-05T19:45:59Z"
+  },
+  {
+   "what": "RETURN",
+   "tx": "0x140d107887461556deaa0839875a8417b5e8abcff9a12e37fd647ea95ee9f533",
+   "amount": "121,266.679431 eXRD",
+   "to": "0x0422afb5481a21b3fea2c94e08dfad45da1975b7",
+   "utc": "2024-07-05T19:47:35Z"
+  },
+  {
+   "what": "message from DeFi Plaza deployer to Yoink owner EOA (on-chain input data)",
+   "tx": "0x1e34998e96183aa6c0e3eae0dc242008e5ce8d19ee4f5b48d169297d42981f60",
+   "amount": "0 ETH, 762 hex chars of text",
+   "to": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "utc": "2024-07-05T19:00:23Z"
+  },
+  {
+   "what": "NOT FOUND on chain: any ETH return. DeFi Plaza says (research.lido.fi, 2024-08-31) the front-runner 'promptly returned their profits'; observed returns are the 4 token transfers above (about $22.8K at 2024-07-05 prices) while ~13.42 ETH from the sold tokens and the 4.76 ETH builder refund stayed with Yoink's addresses",
+   "tx": null,
+   "amount": "-",
+   "to": "-"
+  }
+ ],
+ "auction": {
+  "race_file": "incidents/defiplaza-2024/race_20240539.json",
+  "slot": null,
+  "relays_answered": {
+   "flashbots": {
+    "delivered_n": 1,
+    "bids_n": 73
+   },
+   "ultrasound": {
+    "delivered_n": 1,
+    "bids_n": 0
+   },
+   "bloxroute-regulated": {
+    "delivered_n": 0,
+    "bids_n": 0
+   },
+   "agnostic": {
+    "delivered_n": 0,
+    "bids_n": 0
+   },
+   "aestus": {
+    "delivered_n": 0,
+    "bids_n": 0
+   },
+   "titan": {
+    "delivered_n": 0,
+    "bids_n": 0
+   },
+   "ethgas": {
+    "delivered_n": 0,
+    "bids_n": 0
+   },
+   "btcs": {
+    "delivered_n": 0,
+    "bids_n": 0
+   }
+  },
+  "relays_unavailable": [
+   "blocknative",
+   "bloxroute-ethical",
+   "bloxroute-max-profit",
+   "eden",
+   "manifold",
+   "relayooor",
+   "wenmerge"
+  ],
+  "n_bids_flashbots_relay": 73,
+  "n_builders": 9,
+  "first_bid_t_rel_slot_ms": -9901,
+  "last_bid_t_rel_slot_ms": -1997,
+  "max_bid_eth": 62.540934666002705,
+  "winner": {
+   "builder_name": "I can haz block?",
+   "builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+   "bid_value_eth": 62.540934666002705,
+   "delivered_by_relays": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "proposer_fee_recipient": "0x388C818CA8B9251b393131C08a736A67ccB19297"
+  },
+  "proposer_payment_tx": {
+   "hash": "0x454219fb25d36590279fd9c17fccb5b5a29acbbb3f90f318a3e4d9d2ad104e7c",
+   "index": 13,
+   "value_wei": "62540934666002699134",
+   "matches_bid_value": true
+  },
+  "runner_up": {
+   "builder_name": "Flashbots",
+   "builder_pubkey": "0xa01a00479f1fa442a8ebadb352be69091d07b0c0a733fae9166dae1b83179e326a968717da175c7363cd5a13e8580e8d",
+   "value_eth": 62.49284235051011,
+   "t_rel_slot_ms": -2186,
+   "block_hash": "0x1916a2e663e6d3cb4ed7e4f92ac130803b2cc94fd3329f7e3680c280790a9323",
+   "num_tx": 140
+  },
+  "note": "runner_up = highest bid of any other builder name in the Flashbots-relay record; it can exceed the delivered bid when it arrived too late / was never requested",
+  "story": {
+   "attacker_txs_first_seen_ms": 1720185329185,
+   "attacker_first_seen_rel_slot_ms": -5815,
+   "yoink_builder_first_bid_ms": 1720185332198,
+   "yoink_first_bid_delay_after_first_seen_ms": 3013,
+   "yoink_builder_first_bid_eth": 6.982928692226401,
+   "yoink_builder_first_bid_num_tx": 14,
+   "yoink_bid_ladder_eth": [
+    6.9829,
+    18.6043,
+    18.6043,
+    62.4813,
+    62.5409
+   ],
+   "yoink_bid_ladder_t_rel_slot_ms": [
+    -2802,
+    -2339,
+    -2318,
+    -2102,
+    -1997
+   ],
+   "winning_bid_eth": 62.540934666002705,
+   "winning_bid_t_rel_slot_ms": -1997,
+   "other_builders_jump_to_60eth": [
+    {
+     "t_rel_slot_ms": -2261,
+     "builder": "Flashbots",
+     "eth": 60.2643,
+     "num_tx": 33,
+     "gas_used": 22680531,
+     "block_hash": "0x36e8d48f35381af73c5ea84987f24786a72feeb2e66d86d0ba5a47d6575c258d"
+    },
+    {
+     "t_rel_slot_ms": -2260,
+     "builder": "Flashbots",
+     "eth": 60.2664,
+     "num_tx": 39,
+     "gas_used": 23676154,
+     "block_hash": "0xce91642cf18117b6865ff910cb0491d4e988ebe2942ebab996773f72839a059f"
+    },
+    {
+     "t_rel_slot_ms": -2202,
+     "builder": "Flashbots",
+     "eth": 62.4326,
+     "num_tx": 3,
+     "gas_used": 11088283,
+     "block_hash": "0xde367dbef64d499cd4fd9b707c72ba859e25144c9e389e14620fef895878676e"
+    },
+    {
+     "t_rel_slot_ms": -2198,
+     "builder": "Flashbots",
+     "eth": 60.2736,
+     "num_tx": 116,
+     "gas_used": 29995117,
+     "block_hash": "0x387060e59606581698f5d5adbfc5946b180d485d10b4198acf38c84593563242"
+    },
+    {
+     "t_rel_slot_ms": -2186,
+     "builder": "Flashbots",
+     "eth": 62.4928,
+     "num_tx": 140,
+     "gas_used": 29987564,
+     "block_hash": "0x1916a2e663e6d3cb4ed7e4f92ac130803b2cc94fd3329f7e3680c280790a9323"
+    },
+    {
+     "t_rel_slot_ms": -2179,
+     "builder": "Flashbots",
+     "eth": 60.2738,
+     "num_tx": 140,
+     "gas_used": 29987564,
+     "block_hash": "0x9d8af6fa02dbe9642f04ad95a078a8e3dc220e2703e73fb639af312bc5ff0801"
+    }
+   ],
+   "builder0x69_bids_over_10eth": [
+    {
+     "t_rel_slot_ms": -2473,
+     "eth": 18.1124,
+     "num_tx": 111,
+     "block_hash": "0xbf839e76c0e2d36db55d80c820513afd3c8d52947482b1562e16d0fa9a8d09da"
+    }
+   ],
+   "winner_margin_eth_over_best_other_builder": 0.0481,
+   "winning_block_contains_yoink_tx": true,
+   "winning_block_contains_attacker_run_tx": false,
+   "winning_block_contains_attacker_deploy_tx": true,
+   "losing bids' contents": "unknown (relays publish hash/num_tx/gas_used/value only). Between 13:15:32.739 and .821 three Flashbots-builder pubkeys (0xa03a000b, 0xa02a0054, 0xa01a0047) jumped from 6.36 ETH to 60.26-62.49 ETH, including a 3-tx 62.4326 ETH block: some bundle paying ~the whole profit reached the Flashbots builders. Whether it is a rival searcher or Yoink's own bundle also sent to Flashbots is NOT determinable from public data (unknown)"
+  },
+  "builder_accounting": {
+   "builder_fee_recipient": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+   "builder_extra_data": "I can haz block?",
+   "revenue_from_block_eth": 67.302338628,
+   "of_which_yoink_tx0_coinbase": 66.3180915,
+   "of_which_yoink_tx11_coinbase": 0.946322818,
+   "refund_to_bot_eth": 4.761056907491175,
+   "refund_tx": "0x2fc1684935de935bf8daf035fb8a70b0e396af334e328c76b5ad6569dd618ef8",
+   "refund_tx_index": 12,
+   "proposer_payment_eth": 62.540934666002705,
+   "proposer_payment_tx": "0x454219fb25d36590279fd9c17fccb5b5a29acbbb3f90f318a3e4d9d2ad104e7c",
+   "proposer_payment_index": 13,
+   "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+   "proposer_fee_recipient_note": "0x388C818C... is the Lido Execution Layer Rewards Vault per the DeFi Plaza post on research.lido.fi",
+   "builder_net_after_payouts_eth": 0.000347
+  }
+ },
+ "sources": [
+  "https://research.lido.fi/t/defiplaza-exploit-request-for-comment/8241",
+  "https://defiplaza.net/blog/post-mortem-of-defiplaza-ethereum-exploit/ (HTTP 404 on 2024-10-21; a mirror was reachable only via search summary)",
+  "https://fairyproof.substack.com/p/weekly-blockchain-security-watch-78c",
+  "research/bot-re/analysis.md",
+  "research/bot-re/incident_txs.json"
+ ],
+ "raw_refs": {
+  "yoink_trace": "site/raw/rpc/trace_0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a.json",
+  "yoink_receipt": "site/raw/rpc/rcpt_0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a.json",
+  "attacker_deploy_tx": "site/raw/rpc/tx_0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0.json",
+  "attacker_run_tx": "site/raw/rpc/tx_0xe00b0998d71b0e657379be196babd1637a653c100e8162853ca6616c3970790d.json",
+  "attacker_run_trace": "site/raw/rpc/trace_0xe00b0998d71b0e657379be196babd1637a653c100e8162853ca6616c3970790d.json",
+  "attacker_txlist": "site/raw/etherscan/p2_atk_txlist.json",
+  "attacker_internal": "site/raw/etherscan/p2_atk_txlistinternal.json",
+  "mempool_csv": "full cache only (not published)",
+  "mempool_sourcelog": "full cache only (not published)",
+  "race_blocks": [
+   "incidents/defiplaza-2024/race_20240539.json",
+   "incidents/defiplaza-2024/race_20240540.json"
+  ],
+  "relay_bids_flashbots": "site/raw/relay-flashbots/bids_block20240539.json",
+  "relay_delivered_flashbots": "site/raw/relay-flashbots/delivered_block20240539.json",
+  "vault_txlist": "site/raw/etherscan/p2_vault_txlist_20240539_20400000.json",
+  "vault_tokentx": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json",
+  "bot_txlist": "site/raw/etherscan/p2_bot_txlist_20240539_20400000.json",
+  "deployer_0422_tokentx": "site/raw/etherscan/p2_0422_tokentx.json",
+  "deployer_0422_txlist": "site/raw/etherscan/p2_0422_txlist.json",
+  "second_eoa_txlist": "site/raw/etherscan/p2_907f_txlist.json",
+  "pool_net_flows": "research/defiplaza-ronin/defiplaza_plaza_net_flows.json",
+  "prices": "site/raw/defillama/p2_defiplaza_prices_1720185335.json",
+  "lido_thread": "site/raw/web-p2/lido_defiplaza_rfc.json",
+  "fairyproof": "site/raw/web-p2/fairyproof_78c.html",
+  "fork_replay": "research/defiplaza-ronin/defiplaza_fork_replay.json"
+ },
+ "protocol_loss_basis": "net outflow of 15 ERC-20s (16 assets with ETH) from pool 0xe68c1d72... in the Yoink tx, DefiLlama prices at 13:15:35 UTC; DeFi Plaza and Fairyproof say 'all funds' / ~$200K",
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-pending-attack",
+ "headline": true,
+ "headline_text": "Yoink drained DeFi Plaza (~$217K) at block 20240539 position 0, replaying the attacker's pending deploy+run() pair; the attacker's run() reverted a block later. Yoink bribed 66.3 ETH; only ~$23K of tokens came back, no ETH.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Yoink idx 0 of 20240539 replays the attacker's 25 DeFi Plaza calls byte for byte while the attacker's still-pending run() landed in 20240540 and reverted.",
+  "headline_note": null,
+  "dataset_rows": [
+   "defiplaza-2024"
+  ]
+ }
+}

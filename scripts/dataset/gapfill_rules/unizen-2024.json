@@ -1,0 +1,18 @@
+[
+ {"slug":"unizen-2024","sub":"pending-ads","verdict":"confirmed-onchain","race_type":"beat-pending-attack",
+  "why":"Yoink's tx (block 19393726, index 0) calls the Unizen proxy with the same 23 calldata words as the pending public tx 0x44ca0e6b of 0x13a99ecc except the recipient word. That tx was first seen 23:39:57.990Z (mempool-dumpster, 6 sources), 1.0 s before the slot, and landed one block later (19393727 index 53) and reverted because the victim's ADS was gone.",
+  "strength":["high","calldata identical bar recipient; attacker tx measured pending 1.0 s before the slot; its tx reverted one block later"],
+  "headline_note":null},
+ {"slug":"unizen-2024","sub":"pending-usdt","verdict":"confirmed-onchain","race_type":"beat-pending-attack",
+  "why":"Attacker 0x4e2ce48f's pending creation tx 0xba300ca5 (public 21:52:55.749Z, 3.25 s before the slot) pulls from five wallets; Yoink's tx at 19393223 index 0 makes the same-shape proxy calls (same victims and info block, different recipient and amount tail) for the two wallets still holding USDT (13,565.69 USDT). The pending tx landed at 19393224 and pulled 0 everywhere. Adapted rather than byte-copied.",
+  "strength":["medium","pending tx measured and victim wallets match, but Yoink's calls are an adaptation of two of five calls, not a byte copy"],
+  "headline_note":null},
+ {"slug":"unizen-2024","sub":"pending-xi","verdict":"confirmed-onchain","race_type":"beat-pending-attack",
+  "why":"Attacker 0x2ad8aed8 pulled exactly half of wallet 0xd04b7023's XI at 19393297 and its second-half tx (nonce 17) with identical calldata bar the recipient landed at 19393300 index 62 and reverted; Yoink's copy took the other half at 19393298 index 0. Whether nonce 17 was already pending is inferred from consecutive nonces, not measured (neither tx is in the mempool archive), and Yoink's call equally matches the landed first half.",
+  "strength":["medium","weakest of the three: pending-ness inferred, not measured; the maintainer may demote to late-copy"],
+  "headline_note":"Weakest beat-pending row: no mempool record of the attacker's second-half tx; verdict rests on nonce sequence and calldata identity."},
+ {"slug":"unizen-2024","sub":"half-copies","verdict":"related-not-frontrun","race_type":"late-copy",
+  "why":"Four Yoink txs (19393262, 19393264, 19393342, 19393363, all index 0) pull the same wallet, token and amount as an attacker 0x2ad8aed8 tx that had already landed 1-2 blocks earlier, calldata identical except the recipient. The attacker took exactly 50% each time, leaving the other half. None of the attacker txs was seen pending.",
+  "strength":["high","copied txs were already mined; calldata and wallet balances match tx by tx"],
+  "headline_note":null}
+]

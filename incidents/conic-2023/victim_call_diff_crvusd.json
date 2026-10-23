@@ -1,0 +1,750 @@
+{
+ "schema": "conic-2023/victim_call_diff_crvusd/1",
+ "attacker_tx": "0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
+ "attacker_contract": "0x486cb3f61771ed5483691dd65f4186da9e37c68e",
+ "yoink_tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+ "yoink_bot_contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+ "attacker_block": 17743470,
+ "attacker_index": 4,
+ "yoink_block": 17743471,
+ "yoink_index": 0,
+ "n_direct_calls_attacker_contract": 63,
+ "n_direct_calls_yoink_bot": 42,
+ "direct_call_sequence_similarity": 0.6857,
+ "non_matching_blocks": [
+  {
+   "op": "replace",
+   "attacker_idx": [
+    0,
+    1
+   ],
+   "yoink_idx": [
+    0,
+    5
+   ],
+   "attacker": [
+    "0xa4b284e1:0x70a50f0d"
+   ],
+   "yoink": [
+    "0xf939e0a0:0x095ea7b3",
+    "0xa0b86991:0x095ea7b3",
+    "0xf939e0a0:0x095ea7b3",
+    "0xc02aaa39:0x095ea7b3",
+    "0xf939e0a0:0x095ea7b3"
+   ]
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    2,
+    3
+   ],
+   "yoink_idx": [
+    6,
+    6
+   ],
+   "attacker": [
+    "0xc02aaa39:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    4,
+    5
+   ],
+   "yoink_idx": [
+    7,
+    7
+   ],
+   "attacker": [
+    "0xf939e0a0:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    7,
+    8
+   ],
+   "yoink_idx": [
+    9,
+    9
+   ],
+   "attacker": [
+    "0xf939e0a0:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    9,
+    11
+   ],
+   "yoink_idx": [
+    10,
+    10
+   ],
+   "attacker": [
+    "0xa0b86991:0x70a08231",
+    "0xdac17f95:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    13,
+    14
+   ],
+   "yoink_idx": [
+    12,
+    12
+   ],
+   "attacker": [
+    "0xb569bd86:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    17,
+    18
+   ],
+   "yoink_idx": [
+    15,
+    15
+   ],
+   "attacker": [
+    "0xf939e0a0:0x70a08231"
+   ],
+   "yoink": []
+  },
+  {
+   "op": "delete",
+   "attacker_idx": [
+    19,
+    21
+   ],
+   "yoink_idx": [
+    16,
+    16
+   ],
+   "attacker": [
+    "0xa0b86991:0x70a08231",
+    "0xdac17f95:0x70a08231"
+   ],
+   "yoink": []
+  }
+ ],
+ "difference_summary": "The only differences in the direct-call sequence are (a) attacker-side balanceOf STATICCALLs that Yoink does not make, (b) Yoink's five up-front approve() calls (the attacker made them in the separate setup tx 0xc8603387), and (c) the final ETH hand-off (attacker EOA vs Yoink's builder payment). Every state-changing call to the Conic pool, crvUSD controller, both Curve pools and the tricrypto exit has the same target and selector, in the same order.",
+ "per_victim_contract": {
+  "0x369cbc5c6f139b1132d3b91b87241b37fc5b971f": {
+   "label": "Conic crvUSD omnipool (victim)",
+   "n_attacker": 8,
+   "n_yoink": 8,
+   "n_identical_calldata": 1,
+   "calls": [
+    {
+     "selector": "0x43a0d066",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "47000000000000000000000000",
+      "0",
+      "0"
+     ],
+     "yoink_args": [
+      "47000000000000000000000000",
+      "0",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x441a3e70",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46899358149942271423430570",
+      "0"
+     ],
+     "yoink_args": [
+      "46972807003596108648151067",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x43a0d066",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46993926028521139059418832",
+      "0",
+      "0"
+     ],
+     "yoink_args": [
+      "46995929473795085298909946",
+      "0",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x441a3e70",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46910394885176859071833011",
+      "0"
+     ],
+     "yoink_args": [
+      "46987514716177366253759035",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x43a0d066",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46999926758661999645518914",
+      "0",
+      "0"
+     ],
+     "yoink_args": [
+      "47001932940342169074119691",
+      "0",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x441a3e70",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46935171522866520294297614",
+      "0"
+     ],
+     "yoink_args": [
+      "47012369533946873833924564",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x43a0d066",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "47005922602688286604808663",
+      "0",
+      "0"
+     ],
+     "yoink_args": [
+      "47007931502509285139402274",
+      "0",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x441a3e70",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "46959959448429816084300283",
+      "0"
+     ],
+     "yoink_args": [
+      "47037235684810247337411463",
+      "0"
+     ]
+    }
+   ]
+  },
+  "0xa920de414ea4ab66b97da1bfe9e6eca7d4219635": {
+   "label": "crvUSD LlamaLend/controller (create_loan, repay)",
+   "n_attacker": 2,
+   "n_yoink": 2,
+   "n_identical_calldata": 2,
+   "calls": [
+    {
+     "selector": "0x23cfed03",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "80000000000000000000000",
+      "93000000000000000000000000",
+      "10"
+     ],
+     "yoink_args": [
+      "80000000000000000000000",
+      "93000000000000000000000000",
+      "10"
+     ]
+    },
+    {
+     "selector": "0x37671f93",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "93000000000000000000000000",
+      "<SELF>",
+      "57896044618658097711785492504343953926634992332820282019728792003956564819967",
+      "0"
+     ],
+     "yoink_args": [
+      "93000000000000000000000000",
+      "<SELF>",
+      "57896044618658097711785492504343953926634992332820282019728792003956564819967",
+      "0"
+     ]
+    }
+   ]
+  },
+  "0x4dece678ceceb27446b35c672dc7d61f30bad69e": {
+   "label": "Curve crvUSD/USDC pool",
+   "n_attacker": 11,
+   "n_yoink": 11,
+   "n_identical_calldata": 5,
+   "calls": [
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "27000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "27000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "38913939969450",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "38914271428061",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "38918809848398",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "38918479084002",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "38918797861739",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "38918467020027",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "39000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "38918785864522",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "38918454945494",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "12000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "12000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "4303904148",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "4275938177",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "1",
+      "0",
+      "22021279201078190713626",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "24010294542502897892160",
+      "0"
+     ]
+    }
+   ]
+  },
+  "0x390f3595bca2df7d23783dfd126427cceb997bf4": {
+   "label": "Curve crvUSD/USDT pool",
+   "n_attacker": 10,
+   "n_yoink": 10,
+   "n_identical_calldata": 5,
+   "calls": [
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "19000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "19000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "27942197043941",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "27945068111053",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "27950819181004",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "27950799850382",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "27950814353549",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "27950795017136",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "28000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "27950809518326",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "27950790176254",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": true,
+     "attacker_args": [
+      "1",
+      "0",
+      "9000000000000000000000000",
+      "0"
+     ],
+     "yoink_args": [
+      "1",
+      "0",
+      "9000000000000000000000000",
+      "0"
+     ]
+    },
+    {
+     "selector": "0x3df02124",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "1",
+      "5804071458",
+      "0"
+     ],
+     "yoink_args": [
+      "0",
+      "1",
+      "5809447406",
+      "0"
+     ]
+    }
+   ]
+  },
+  "0x7f86bf177dd4f3494b841a37e810a34dd56c829b": {
+   "label": "Curve tricrypto (USDC -> ETH exit)",
+   "n_attacker": 1,
+   "n_yoink": 1,
+   "n_identical_calldata": 0,
+   "calls": [
+    {
+     "selector": "0xce7d6503",
+     "same_selector": true,
+     "calldata_identical_after_self_address_normalisation": false,
+     "attacker_args": [
+      "0",
+      "2",
+      "22015317517",
+      "0",
+      "1"
+     ],
+     "yoink_args": [
+      "0",
+      "2",
+      "24003738475",
+      "0",
+      "1"
+     ]
+    }
+   ]
+  }
+ },
+ "balancer_flashloan_tokens_and_amounts_identical": true,
+ "full_trace_call_counts_attacker_vs_yoink": {
+  "0x369cbc5c6f139b1132d3b91b87241b37fc5b971f:0x43a0d066": [
+   4,
+   4
+  ],
+  "0x369cbc5c6f139b1132d3b91b87241b37fc5b971f:0x441a3e70": [
+   4,
+   4
+  ],
+  "0x47fb2585d2c56fe188d0e6ec628a38b74fceeedf:0xd2edb6dd": [
+   632,
+   632
+  ],
+  "0x013a3da6591d3427f164862793ab4e388f9b587e:0x9f82b217": [
+   573,
+   572
+  ],
+  "0x4dece678ceceb27446b35c672dc7d61f30bad69e:0x3df02124": [
+   11,
+   11
+  ],
+  "0x390f3595bca2df7d23783dfd126427cceb997bf4:0x3df02124": [
+   10,
+   10
+  ]
+ },
+ "gas_used": {
+  "attacker": 21658306,
+  "yoink": 21474586
+ },
+ "eth_out_of_tricrypto_exit": {
+  "attacker": 0.0,
+  "note": "attacker's 11.5626 ETH profit arrives as internal value from the tricrypto exit; Yoink's equivalent is 12.5835 ETH (yoink_10txs.json)"
+ },
+ "reading": "Same Balancer flash loan (12,000,000 USDC / 80,000 WETH / 9,000,000 USDT), same create_loan(80,000 WETH, 93,000,000 crvUSD, 10), same round-number Curve swap sizes (19M/27M/28M/39M/12M/9M crvUSD) and same first Conic deposit (47,000,000 crvUSD); the amounts that derive from live balances (swap outputs fed into the next leg, later Conic deposit/withdraw sizes, final USDC leg) differ in the 3rd-4th significant digit because the pool state differs. This is the attacker's strategy replayed with re-derived amounts, not a generic arbitrage.",
+ "raw_refs": {
+  "attacker_trace": "site/raw/rpc-conic/trace_0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882.json",
+  "yoink_trace": "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json",
+  "attacker_receipt": "full cache only (not published)",
+  "yoink_receipt": "full cache only (not published)",
+  "dhl_poc": "site/raw/web-conic/dhl_conic02.txt"
+ }
+}

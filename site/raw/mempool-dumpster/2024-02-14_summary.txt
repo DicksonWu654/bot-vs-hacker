@@ -1,0 +1,111 @@
+[Mempool Dumpster](https://mempool-dumpster.flashbots.net)
+==========================================================
+
+Date: 2024-02-14 
+
+- From: 2024-02-14 00:00:00 UTC 
+- To:   2024-02-14 23:59:59 UTC 
+
+Unique transactions:  1,185,994 
+
+- Included on-chain:  1,018,379 (85.8%) 
+- Not included:         167,615 (14.1%) 
+
+Sources: Apool, Bloxroute, Chainbound, Eden, Local, Mempoolguru 
+
+-----------------
+Transaction Stats
+-----------------
+
+|   SOURCE    | TRANSACTIONS | INCLUDED ON-CHAIN  |    NOT INCLUDED    |
+|-------------|--------------|--------------------|--------------------|
+| Apool       |    1,100,096 |  1,015,125 (92.2%) |     84,971 ( 7.7%) |
+| Bloxroute   |    1,077,878 |  1,017,794 (94.4%) |     60,084 ( 5.5%) |
+| Chainbound  |    1,053,404 |  1,013,295 (96.1%) |     40,109 ( 3.8%) |
+| Eden        |    1,043,058 |  1,014,433 (97.2%) |     28,625 ( 2.7%) |
+| Local       |    1,106,017 |  1,015,624 (91.8%) |     90,393 ( 8.1%) |
+| Mempoolguru |    1,102,031 |  1,014,573 (92.0%) |     87,458 ( 7.9%) |
+
+----------------------
+Exclusive Transactions
+----------------------
+
+61 of 67,904 exclusive transactions were included on-chain (0.08%). 
+
+|   SOURCE    | TRANSACTIONS | INCLUDED ON-CHAIN  |    NOT INCLUDED     |
+|-------------|--------------|--------------------|---------------------|
+| Apool       |        6,621 |          0 ( 0.0%) |      6,621 (100.0%) |
+| Bloxroute   |       30,185 |         51 ( 0.1%) |     30,134 ( 99.8%) |
+| Chainbound  |       15,035 |          9 ( 0.0%) |     15,026 ( 99.9%) |
+| Eden        |        1,026 |          0 ( 0.0%) |      1,026 (100.0%) |
+| Local       |        7,856 |          1 ( 0.0%) |      7,855 ( 99.9%) |
+| Mempoolguru |        7,181 |          0 ( 0.0%) |      7,181 (100.0%) |
+
+------------------
+Latency Comparison
+------------------
+
+### Bloxroute - Local 
+
+1,015,050 shared included transactions. 
+
+|         | BLOXROUTE FIRST | LOCAL FIRST |
+|---------|-----------------|-------------|
+|   count |         445,453 |     522,530 |
+| percent |          43.8 % |      51.4 % |
+|  median |            6 ms |        4 ms |
+|     p90 |           30 ms |        7 ms |
+|     p95 |           60 ms |        9 ms |
+|     p99 |          374 ms |       19 ms |
+
+### Chainbound - Local 
+
+1,010,830 shared included transactions. 
+
+|         | CHAINBOUND FIRST | LOCAL FIRST |
+|---------|------------------|-------------|
+|   count |          487,908 |     489,627 |
+| percent |           48.2 % |      48.4 % |
+|  median |             8 ms |        6 ms |
+|     p90 |            25 ms |       11 ms |
+|     p95 |            51 ms |       12 ms |
+|     p99 |           306 ms |       18 ms |
+
+### Bloxroute - Chainbound 
+
+1,012,841 shared included transactions. 
+
+|         | BLOXROUTE FIRST | CHAINBOUND FIRST |
+|---------|-----------------|------------------|
+|   count |         530,102 |          425,664 |
+| percent |          52.3 % |           42.0 % |
+|  median |            4 ms |             7 ms |
+|     p90 |           13 ms |            18 ms |
+|     p95 |           17 ms |            23 ms |
+|     p99 |           51 ms |            67 ms |
+
+### Bloxroute - Eden 
+
+1,013,984 shared included transactions. 
+
+|         | BLOXROUTE FIRST | EDEN FIRST |
+|---------|-----------------|------------|
+|   count |         909,153 |     60,875 |
+| percent |          89.6 % |      6.0 % |
+|  median |            7 ms |       2 ms |
+|     p90 |           16 ms |      18 ms |
+|     p95 |           22 ms |      36 ms |
+|     p99 |           59 ms |   1,196 ms |
+
+### Chainbound - Eden 
+
+1,009,561 shared included transactions. 
+
+|         | CHAINBOUND FIRST | EDEN FIRST |
+|---------|------------------|------------|
+|   count |          757,037 |    194,797 |
+| percent |           74.9 % |     19.2 % |
+|  median |             9 ms |       3 ms |
+|     p90 |            21 ms |       8 ms |
+|     p95 |            27 ms |      11 ms |
+|     p99 |            68 ms |      35 ms |

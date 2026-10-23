@@ -1,0 +1,213 @@
+{
+ "slug": "shoco-2023",
+ "name": "SHOCO token (reflection deliver()+skim exploit) - bot tx at block position 0, attacker tx at position 15 reverted",
+ "date": "2023-01-19",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "Bot EOA 0xE71A... (different address, same block, position 0) executed the same victim-call pattern as the attacker's reverted tx 0x2f2c3c1c (position 15): router swap WETH->SHOCO on pair 0x806b6c68, SHOCO.deliver(uint256) (0x3bd5d173), pair.skim(address) (0xbc25cf77), WETH->ETH. Adapted not verbatim (self-funded 1.4676 ETH instead of Balancer flash loan; 12 pair.skim rounds with 19 deliver() calls of different amounts). Local anvil fork at block 16440978: attacker tx alone SUCCEEDS and nets 4.158888932826055 ETH; bot tx first then attacker tx reproduces the revert; bot's gross WETH->ETH gain is identical to the wei (4.158888932826055 ETH) to what the attacker's tx would have captured. Ordering: bot tx at index 0 vs attacker at 15; bot paid 0.0921 ETH via coinbase transfer (effective gas price 15.61 gwei < attacker's 16.61 gwei, so the bot was not ordered by gas price -> bundle-like placement, inferred). In-block evidence only (no mempool archive for 2023-01-19); whether the bot saw the attacker's pending tx or independently found the bug from the attack contract deployed 4 minutes earlier (block 16440959) is not knowable.",
+ "era": "2022-23 post-Merge, MEV-boost (Flashbots relay bids available; no mempool archive: in-block evidence only)",
+ "protocol_loss_usd": null,
+ "protocol_loss_note": "4.158888932826055 ETH drained from the SHOCO/WETH Uniswap V2 pair (all of it captured by the bot; USD not computed, ETH was roughly $1.5-1.6k on 2023-01-19 -> ~$6.5k, approximate and not sourced)",
+ "victim": {
+  "protocol": "SHOCO token (reflection token, Uniswap V2 pair)",
+  "token": "0x31a4f372aa891b46ba44dc64be1d8947c889e9c6",
+  "pair": "0x806b6c6819b1f62ca4b66658b669f0a98e385d18",
+  "router": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+  "bug_note": "SHOCO.deliver(uint256) (selector 0x3bd5d173, reflection burn from sender) then pair.skim(address) (0xbc25cf77) extracts excess; selector names from verified source / 4byte"
+ },
+ "attacker": {
+  "eoas": [
+   "0x14d8ada7a0ba91f59dc0cb97c8f44f1d177c2195"
+  ],
+  "contracts": [
+   "0x15d684b4ecdc0ece8bc9aec6bce3398a9a4c7611 (attack contract, used in the race)",
+   "0xb2af6dda3e321247458cd0e6ba12c83922a220f9 (earlier contract, deployed 16440388, not used in the SHOCO tx)"
+  ],
+  "deploy_tx": "0xf656affcd5c11ca07fb141043d85dba9d9682c08eef020ac6b724ad240ed2be8",
+  "deploy_block": 16440959,
+  "deploy_index": 38,
+  "deploy_time_utc": "2023-01-19T12:50:11Z",
+  "funding_tx": {
+   "txs": [
+    "0xd21f079724082fec1f09a11382b6a8e30460e55cdf5f2d999a3ae3faed570e3b",
+    "0xfe26afb82ab74b2dfb865918f0a47dade6d399c2d7d29a618c2e237ec445e25e"
+   ],
+   "amount_eth_each": "0.049875",
+   "via": "unverified contract 0x4025ee6512dbbda97049bcf5aa5d38c54af6be8a (selector 0x28223a77, called by 0xcf0306ae... and 0xbb3e8458...), blocks 16440312 and 16440529",
+   "origin": "not traced further (likely a swap/mixer-type payout; do not assume Tornado)"
+  },
+  "txs": [
+   {
+    "hash": "0x8f194bd80afa9aa825b491327e072e552b6b513f42bf9320ddfe47b579770cef",
+    "block": 16440388,
+    "index": 31,
+    "status": 1,
+    "note": "contract creation 0xb2af6dda..."
+   },
+   {
+    "hash": "0xf656affcd5c11ca07fb141043d85dba9d9682c08eef020ac6b724ad240ed2be8",
+    "block": 16440959,
+    "index": 38,
+    "status": 1,
+    "note": "creation of attack contract 0x15d684b4"
+   },
+   {
+    "hash": "0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f",
+    "block": 16440979,
+    "index": 15,
+    "status": 0,
+    "note": "attack call 0xb05f303c(uint) -> reverted 'ds-math-sub-underflow' at pair.skim; Balancer flash loan 133,444 WETH (in replay); effective gas price 16.61 gwei, max_priority 3 gwei; first_seen: not available (in-block evidence only)",
+    "gas_used": 316184,
+    "gas_cost_eth": 0.005252
+   }
+  ],
+  "attacker_loss": {
+   "gas_eth_reverted_tx": 0.005252,
+   "forgone_eth": "4.158888932826055"
+  },
+  "later_activity": "same EOA hit TINU on 2023-01-26 (tx 0x6200bf5c43c214caa1177c3676293442059b4f39eb5dbae6cfd4e6ad16305668, block 16489409, +22.11 ETH) - an unrelated later incident"
+ },
+ "bots": [
+  {
+   "label": "generic searcher bot (not c0ffeebabe, not Yoink)",
+   "eoa": "0xe71aca93c0e0721f8250d2d0e4f883aa1c020361",
+   "contract": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "txs": [
+    "0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b"
+   ],
+   "block": 16440979,
+   "index": 0,
+   "status": 1,
+   "gas_used": 922911,
+   "calldata_bytes": 7780,
+   "captured": {
+    "token": "ETH (via WETH)",
+    "amount": "4.158888932826055 gross (5.62647573504009 WETH->ETH minus 1.4675868022140353 ETH wrapped as working capital); net 4.0524 ETH after coinbase payment and gas",
+    "usd": null
+   },
+   "coinbase_paid_eth": 0.09206209868255019,
+   "coinbase_recipient": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5 (block.miner = Flashbots builder)",
+   "priority_fee_gwei": 2.0,
+   "max_fee_gwei": 63.610307148,
+   "effective_gas_price_gwei": 15.610307148,
+   "gas_cost_eth": 0.014407,
+   "bribe_share_of_gross_profit": 0.0221,
+   "builder_revenue_eth": 0.09390792068255019,
+   "builder_revenue_share_of_winning_bid": 0.7077,
+   "net_profit_eth": 4.0524,
+   "notes": "Only two txs in the block touched the pair/token (the bot's and the attacker's reverted one). Bot contract balance rose 1.4676 -> 5.5344 ETH at this block; no outflow seen at sampled blocks through 16445000 (shared contract, later balances not attributable)."
+  }
+ ],
+ "other_racers": [],
+ "funds_fate": [
+  {
+   "what": "bot gross gain WETH->ETH credited to bot contract",
+   "tx": "0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b",
+   "amount_eth": "5.62647573504009 out, 1.4675868022140353 in",
+   "to": "0x000000000000660def84e69995117c0176ba446e"
+  },
+  {
+   "what": "bot coinbase payment to builder (block.miner)",
+   "tx": "0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b",
+   "amount_eth": "0.09206209868255019",
+   "to": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5"
+  },
+  {
+   "what": "proposer payment by builder (winning bid)",
+   "tx": "0x1d077443eab3009ea22bbc2b93b26269f44f2c34c1bfdaec7f678e05940a9fbf",
+   "amount_eth": "0.132702014624626602",
+   "to": "0x388c818ca8b9251b393131c08a736a67ccb19297 (Lido execution-layer rewards vault)"
+  },
+  {
+   "what": "no return to the protocol / no bounty seen; funds stayed with the bot contract at sampled blocks",
+   "tx": null,
+   "amount_eth": null,
+   "to": null
+  }
+ ],
+ "auction": {
+  "block": 16440979,
+  "slot": 5609069,
+  "slot_start_utc": "2023-01-19T12:54:11Z",
+  "relays_answered": {
+   "flashbots": "delivered 1, bids 540",
+   "ultrasound": "0/0 (retention)",
+   "bloxroute-regulated": "0/0",
+   "agnostic": "0/0",
+   "aestus": "0/0",
+   "titan": "0/0",
+   "ethgas": "0/0",
+   "btcs": "0/0"
+  },
+  "n_bids": 540,
+  "n_builders": 45,
+  "first_bid_t_rel_slot_ms": -10375,
+  "last_bid_t_rel_slot_ms": 679,
+  "bid_ladder_eth": {
+   "by_-10s": 0.00858,
+   "by_-5s": 0.11629,
+   "by_-2s": 0.1301,
+   "by_-1s": 0.13176,
+   "by_0": 0.1379
+  },
+  "winning": {
+   "builder": "Flashbots (extraData 'Illuminate Dmocratize Dstribute'; builder/miner 0xdafea492...)",
+   "builder_pubkey": "0xa1dead01e65f0a0eee7b5170223f20c8f0cbf122eac3324d61afbdb33a8885ff8cab2ef514ac2c7698ae0d6289ef27fc",
+   "value_eth": 0.1327020146246266,
+   "block_hash": "0x49a9af71a8a747db97868548098da19f211eddc840930842561571e32529706d",
+   "relay": "flashbots",
+   "block_first_received_t_rel_slot_ms": -843,
+   "num_tx": 140,
+   "contains_bot_tx": true,
+   "contains_attacker_tx": true,
+   "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+   "proposer_payment_tx": "0x1d077443eab3009ea22bbc2b93b26269f44f2c34c1bfdaec7f678e05940a9fbf",
+   "proposer_payment_eth": 0.1327020146246266
+  },
+  "runner_up_note": "12 later-arriving bids were higher (max 0.13936 ETH, Flashbots and builder0x69) but the delivered block was the one received at -843 ms; proposer getHeader time unknown. Contents of losing bids unknown (relay API shows hashes/num_tx only).",
+  "bot_tx_share_of_winning_bid": 0.7077,
+  "builder_refund_to_bot": "none seen (no builder->bot transfer in block)",
+  "ordering_inference": "INFERRED: bot tx at index 0 with effective gas price (15.61 gwei) BELOW the attacker tx (16.61 gwei) and a 0.092 ETH coinbase transfer -> bundle-style placement ahead of the public mempool txs; Flashbots blocks API (bundle data) is decommissioned so not confirmed. Mempool first-seen: none (archive starts 2023-08-07)."
+ },
+ "evidence_limits": "in-block evidence only: no mempool archive for 2023-01-19; bundle/mempool arrival of either tx unknowable; losing-bid contents unknowable.",
+ "sources": [
+  "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2023-01/SHOCO_exp.sol",
+  "https://etherscan.io/tx/0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b",
+  "https://etherscan.io/tx/0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f",
+  "https://boost-relay.flashbots.net/relay/v1/data/bidtraces/builder_blocks_received?block_number=16440979"
+ ],
+ "raw_refs": {
+  "block": "site/raw/rpc/block_16440979.json",
+  "receipts": "site/raw/rpc/receipts_16440979.json",
+  "block_trace": "site/raw/rpc/trace_block_16440979.json",
+  "bot_tx_trace": "site/raw/rpc/trace_tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json",
+  "attacker_tx_trace": "site/raw/rpc/trace_tx_0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f.json",
+  "bot_tx": "site/raw/rpc/tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json",
+  "attacker_tx": "site/raw/rpc/tx_0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f.json",
+  "flashbots_bids": "site/raw/relay-flashbots/bids_block16440979.json",
+  "flashbots_delivered": "site/raw/relay-flashbots/delivered_block16440979.json",
+  "attacker_txlist": "site/raw/etherscan/txlist_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json",
+  "bot_eoa_txlist": "full cache only (not published)",
+  "bot_contract_balance": "full cache only (not published)",
+  "anvil_replay": "incidents/shoco-2023/anvil_replay.json",
+  "anvil_attacker_alone_trace": "incidents/shoco-2023/anvil_attacker_alone_trace.json",
+  "shoco_token_source": "site/raw/etherscan/gs_shoco_token.json"
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-pending-attack",
+ "headline": true,
+ "headline_text": "At block 16440979 a generic searcher bot (index 0, 0.092 ETH coinbase) ran the SHOCO deliver/skim exploit calls ahead of the attacker's tx (index 15, reverted) and kept 4.1589 ETH gross, about 4.05 ETH net. Fork replay: the attacker alone would have got the same 4.1589 ETH.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Bot idx 0 vs attacker idx 15 in the same block; the same victim calls adapted (not byte-copied); bot gain equals the attacker's counterfactual gain to the wei; the attacker's tx reverted.",
+  "headline_note": "Calls adapted rather than copied; whether the bot saw the pending tx or the deployed contract is unknowable (in-block evidence only).",
+  "dataset_rows": [
+   "shoco-2023"
+  ]
+ }
+}

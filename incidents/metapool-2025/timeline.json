@@ -1,0 +1,156 @@
+{
+ "note": "Mempool coverage: mempool-dumpster 2025-06-17 is present but none of the exploit txs (Yoink, attacker tests/main, c0ffeebabe) is in it (private flow), so all times are block timestamps. Order Yoink -> attacker is proved by blocks 22722394 < 22722643 < 22722911. 'precision: day' = date from a news article.",
+ "events": [
+  {
+   "t_utc": "2023-12-23T21:55:59Z",
+   "block": 18851324,
+   "kind": "deploy",
+   "actor": "Meta Pool admin EOA 0x8c895693",
+   "detail": "deploys the mpETH implementation 0x37474845 (proxy upgraded to it at block 18851457); the mint() path is unchanged until after the attack",
+   "tx": "0xc9aafccf502703834c4d9b01e62b1117383a1efd09dc52d8c02697b9144356fd",
+   "raw_ref": "site/raw/etherscan/mp_creation.json"
+  },
+  {
+   "t_utc": "2025-02-08T23:26:11Z",
+   "block": 21805063,
+   "kind": "deploy",
+   "actor": "Yoink operator",
+   "detail": "creates the Yoink gen3 contract 0x80bf7db6 (first-ever call 2025-02-09)",
+   "raw_ref": "site/raw/etherscan/mp_0x80bf7d_txlist_0_99999999.json"
+  },
+  {
+   "t_utc": "2025-04-06T15:02:35Z",
+   "block": 22210636,
+   "kind": "fund",
+   "actor": "unlabelled EOA 0xb0086e13",
+   "detail": "sends 0.0298 ETH to attacker-cluster EOA 0xd08559ce (its first funding)",
+   "tx": "0x41d191fc56023ee3a387864e3cc922c3fabc9ba71f6ff3c062288b28b786e3d1",
+   "raw_ref": "site/raw/etherscan/mp_d085_txlist.json"
+  },
+  {
+   "t_utc": "2025-04-29T09:55:59Z",
+   "block": 22373958,
+   "kind": "fund",
+   "actor": "0xd08559ce",
+   "detail": "sends 0.001 ETH to 0x48f1d0f5 (the EOA that later sends the main tx)",
+   "tx": "0x005e52eaf440a1ea7268a1b67fe608f26efec80c5cca2950d5baf35d4e80c0e3",
+   "raw_ref": "site/raw/etherscan/mp_d085_txlist.json"
+  },
+  {
+   "t_utc": "2025-06-17T06:18:59Z",
+   "block": 22722394,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0 of 176 in a Titan block: 90 ETH v4 flash loan -> depositETH -> mint (0 ETH) -> 5 pool swaps -> V3 swap; gross 50.7663 ETH, 98 per mille (4.9751 ETH) to the builder; nothing of the attacker exists on chain yet",
+   "tx": "0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9",
+   "raw_ref": "site/raw/rpc/mp_trace_0x4f43fc6d674e85f7d306debb4a3d48e7688c2fe5a6332dd9ad57558a15c86ef9.json"
+  },
+  {
+   "t_utc": "2025-06-17T06:18:59Z",
+   "block": 22722394,
+   "kind": "block",
+   "actor": "Titan / bloXroute-regulated",
+   "detail": "winning bid 5.0133 ETH; Yoink's payment is 99.2% of it; no refund to the bot",
+   "raw_ref": "site/raw/rpc/block_22722394.json"
+  },
+  {
+   "t_utc": "2025-06-17T07:08:59Z",
+   "block": 22722643,
+   "kind": "tx",
+   "actor": "attacker cluster (EOA 0xd08559ce)",
+   "detail": "TEST 1: creates two contracts, mint 1.6429 mpETH with 0 ETH -> pool swap -> 1.6429 ETH to 0x48f1d0f5. First attacker-cluster use of the bug, 50 min 00 s after Yoink",
+   "tx": "0x691c8070749f00a5a5be3135d3912ff97d0dad05a0fb2b77b235aaa13260f002",
+   "raw_ref": "site/raw/rpc/mp_trace_0x691c8070749f00a5a5be3135d3912ff97d0dad05a0fb2b77b235aaa13260f002.json"
+  },
+  {
+   "t_utc": "2025-06-17T07:10:59Z",
+   "block": 22722653,
+   "kind": "tx",
+   "actor": "attacker cluster (EOA 0xd08559ce)",
+   "detail": "TEST 2: same pattern with 0.0298 ETH",
+   "tx": "0x4858abc51876e1de9f506f34799d4f1852b4255f467b9e1f40951c631ddfa747",
+   "raw_ref": "site/raw/rpc/mp_trace_0x4858abc51876e1de9f506f34799d4f1852b4255f467b9e1f40951c631ddfa747.json"
+  },
+  {
+   "t_utc": "2025-06-17T07:43:35Z",
+   "block": 22722814,
+   "kind": "tx",
+   "actor": "third-party user 0x404f6c6a",
+   "detail": "swaps 10 WETH into the UniV3 mpETH/WETH pool (liquidity the attacker later takes out)",
+   "tx": "0x960e4b8644e101e1f6560c182b6a558b534f537b57410b9f3bd99acca8b33896",
+   "raw_ref": "site/raw/rpc/mp_v3_logs_22722814.json"
+  },
+  {
+   "t_utc": "2025-06-17T08:02:59Z",
+   "block": 22722911,
+   "kind": "tx",
+   "actor": "attacker cluster (EOA 0x48f1d0f5)",
+   "detail": "MAIN: creation tx at index 0 of a 61-tx Titan block; Balancer 200 WETH flash loan -> depositETH 107 -> mint 9,701.95 mpETH -> 2 pool swaps -> V3 leg (10 WETH) -> 8.89 ETH to EOA",
+   "tx": "0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69",
+   "raw_ref": "site/raw/rpc/mp_trace_0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69.json"
+  },
+  {
+   "t_utc": "2025-06-17T08:03:11Z",
+   "block": 22722912,
+   "kind": "tx",
+   "actor": "c0ffeebabe.eth (public facts)",
+   "detail": "next block, index 0: mint -> pool swap, ~0.0285 ETH net; late small copy of the bug",
+   "tx": "0x22a4bdce5c1dd68b3106fc488b1c3e1353f6af35243214170c9258c4bd34505a",
+   "raw_ref": ""
+  },
+  {
+   "t_utc": "2025-06-17T09:05:59Z",
+   "block": 22723221,
+   "kind": "message",
+   "actor": "Meta Pool admin EOA 0x8c895693",
+   "detail": "toggleWhitelistEnabled() on mpETH (first protocol response on chain, ~1 h after the main tx)",
+   "tx": "0x23a00334a6cb0c03c2b4dc9c4a3d19a4ada944f6fd16e7b82b76f164ec59c3a5",
+   "raw_ref": "site/raw/etherscan/mp_M_txlist.json"
+  },
+  {
+   "t_utc": "2025-06-17T11:05:47Z",
+   "block": 22723816,
+   "kind": "message",
+   "actor": "Meta Pool Safe",
+   "detail": "mpETH proxy Upgraded event to implementation 0x56c517308ec9dcbe1db9d38e8b42bc7a948f7ffa (SolidityScan: transfer functionality disabled); an earlier Upgraded event at block 22723682 names the unchanged implementation 0x37474845",
+   "tx": "0xf61344c448b1aaa263d0759251f806c5a47458daa5891f8bd7a6371b626b9618",
+   "raw_ref": "site/raw/etherscan/mp_upgraded_logs.json"
+  },
+  {
+   "t_utc": "2025-06-19T19:33:47Z",
+   "block": 22740644,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "withdrawTo(Yoink EOA, 45.79 ETH) from the Yoink contract",
+   "tx": "0xd1e3ab7353626a273f62ce26378317a20cf12923450ca7279620344f45075949",
+   "raw_ref": "site/raw/etherscan/mp2_0xfde0d1_txlist.json"
+  },
+  {
+   "t_utc": "2025-06-19T19:39:23Z",
+   "block": 22740672,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "sends 45.79 ETH to Meta Pool admin EOA 0x8c895693",
+   "tx": "0x3a21cb34c7ca1b0a662f3105a57305bd5d4b8ba7faafc1e05070b370b28ce035",
+   "raw_ref": "site/raw/etherscan/mp2_0xfde0d1_txlist.json"
+  },
+  {
+   "t_utc": "2025-06-20T12:23:59Z",
+   "block": 22745667,
+   "kind": "return",
+   "actor": "Meta Pool admin EOA 0x8c895693",
+   "detail": "sends 5 ETH reward to Yoink",
+   "tx": "0xbd02fdab07f42ed0a21cc4e1464642f3b51805ea4d66aac1fa4cb4ea57e73ccc",
+   "raw_ref": "site/raw/etherscan/mp_M_txlist.json"
+  },
+  {
+   "t_utc": "2025-06-21T00:00:00Z",
+   "block": null,
+   "kind": "message",
+   "actor": "Meta Pool",
+   "detail": "X post 'From Exploit to Recovery: How 45 ETH Were Saved Thanks to Ethical Hackers' (date per Territorio Bitcoin; quoted second-hand)",
+   "raw_ref": "site/raw/web-metapool/territoriobitcoin_metapool.html",
+   "precision": "day"
+  }
+ ]
+}

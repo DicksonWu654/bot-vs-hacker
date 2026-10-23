@@ -1,0 +1,975 @@
+{
+ "slug": "ronin-2024",
+ "name": "Ronin Bridge (Ethereum side), 2024-08-06",
+ "date": "2024-08-06",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "There is no hostile attacker. A governance upgrade of the bridge proxy (tx 0x855dd3b1..., 08:48:47) left withdrawals checked in a way that let a modified receipt pass; the first post-upgrade user withdrawals became bot bait. Three independent searchers each saw a legitimate user withdrawal (receipt ids 166631-166633) in the public mempool and sent a copy with the recipient (and for two of them the quantity) rewritten, ahead of it: ETH leg 0x26195700 (block 20468679 pos 0, 3,996.09375 ETH), a third racer 0x77bb83dd (block 20468790 pos 0, 2.4173 ETH, quantity unchanged) and Yoink 0xbce5b854 (block 20468848 pos 1, 1,998,046.875 USDC). Calldata diffs: ETH leg differs from the user's tx in 2 of 76 words, racer 3 in 1 of 67, Yoink in 3 of 61. All three were placed ahead of the user's tx, which stayed pending and later reverted.",
+ "era": "post-Merge, mempool-dumpster sourcelog + Flashbots relay bids",
+ "protocol_loss_usd": 11802848,
+ "protocol_loss_basis": "3,996.09375 ETH + 1,998,046.875 USDC + 2.4173 ETH at DefiLlama ETH $2,452.9 (09:37:23); The Block/Ronin quote ~$12M",
+ "attacker": {
+  "note": "no adversarial attacker; the three 'originals' below are users' legitimate pending withdrawals that the searchers copied. The enabling change is the upgrade tx.",
+  "enabler_tx": {
+   "hash": "0x855dd3b1194e3b889f4667b6a0996220e350e034d35d3eab29b4f23bc205767e",
+   "block": 20468438,
+   "index": 127,
+   "first_seen_ms": 1722934127379,
+   "utc": "2024-08-06T08:48:47Z",
+   "sender": "0xe880802580a1fbdef67ace39d1b21c5b2c74f059",
+   "to": "0xa71456fa88a5f6a4696d0446e690db4a5913fab0 (calls proxy upgrade to implementation 0xfc274ec92bbb1a1472884558d1b5caac6f8220ee)",
+   "source": "bridge proxy Upgraded(address) log, site/raw/etherscan/p2_ronin_upgraded_logs_etherscan.json; Ronin statement: update 'introduced an issue leading the bridge to misinterpret the required bridge operators vote threshold'"
+  },
+  "eoas": [
+   "0x441e6581d1b4869abb80188b9cf5223e77ab0302",
+   "0xfbbf14eaec015bca5a4d1e934ae1796638a17919",
+   "0x5f494a30f1b71b748b71939c18446288168cdaab"
+  ],
+  "contracts": [],
+  "deploy_tx": null,
+  "funding_tx": null,
+  "txs": [
+   {
+    "hash": "0xc78fb8cd5f7813a3d8abebdc5351aafd5011e8e13c5f6740837eeef9308d1faf",
+    "role": "user withdrawal id 166631, 0.35 WETH (copied by the ETH-leg searcher)",
+    "first_seen_ms": 1722937042400,
+    "first_seen_utc": "2024-08-06T09:37:22.400Z",
+    "per_source": [
+     {
+      "source": "chainbound",
+      "first_seen_ms": 1722937042400
+     },
+     {
+      "source": "bloxroute",
+      "first_seen_ms": 1722937042409
+     },
+     {
+      "source": "local",
+      "first_seen_ms": 1722937042423
+     },
+     {
+      "source": "mempoolguru",
+      "first_seen_ms": 1722937042584
+     }
+    ],
+    "landed_block": 20468888,
+    "index": 144,
+    "status": 0,
+    "gas_price_gwei": 2.0
+   },
+   {
+    "hash": "0x56439cf9427a9188d12b35ef4c8b80fc94a8a1dd205789999c000d8035f27afe",
+    "role": "user withdrawal id 166632, 2.4173 WETH (copied by racer 3)",
+    "first_seen_ms": 1722938411284,
+    "first_seen_utc": "2024-08-06T10:00:11.284Z",
+    "per_source": [
+     {
+      "source": "chainbound",
+      "first_seen_ms": 1722938411284
+     },
+     {
+      "source": "bloxroute",
+      "first_seen_ms": 1722938411291
+     },
+     {
+      "source": "local",
+      "first_seen_ms": 1722938411303
+     },
+     {
+      "source": "mempoolguru",
+      "first_seen_ms": 1722938411377
+     }
+    ],
+    "landed_block": 20468790,
+    "index": 258,
+    "status": 0
+   },
+   {
+    "hash": "0xb7c3f85abd0b9ede7b64868eeb6778ea4731adb1d49f8640b7e7234e470e96c1",
+    "role": "user withdrawal id 166633, 2,640.820595 USDC (copied by Yoink)",
+    "first_seen_ms": 1722939100233,
+    "first_seen_utc": "2024-08-06T10:11:40.233Z",
+    "per_source": [
+     {
+      "source": "chainbound",
+      "first_seen_ms": 1722939100233
+     },
+     {
+      "source": "bloxroute",
+      "first_seen_ms": 1722939100239
+     },
+     {
+      "source": "local",
+      "first_seen_ms": 1722939100280
+     },
+     {
+      "source": "mempoolguru",
+      "first_seen_ms": 1722939100407
+     }
+    ],
+    "landed_block": 20468849,
+    "index": 112,
+    "status": 0
+   }
+  ]
+ },
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "txs": [
+    {
+     "hash": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+     "block": 20468848,
+     "index": 1,
+     "status": 1,
+     "msg_value": 999,
+     "in_public_mempool": false
+    }
+   ],
+   "captured": {
+    "token": "USDC -> WETH -> ETH",
+    "amount": "1,998,046.875 USDC (swapped inside the tx to 796.4115 ETH)",
+    "usd": 1994900
+   },
+   "coinbase_paid_eth": 795.615040934472,
+   "priority_fee_gwei": 0.0,
+   "replay_evidence": {
+    "diff_file": "research/bot-re/ronin_calldata_diff.json (bot analysis) + research/defiplaza-ronin/ronin_copies_diff.json",
+    "differing_words": [
+     {
+      "word": 2,
+      "victim": "0000000000000000000000005f494a30f1b71b748b71939c18446288168cdaab",
+      "copy": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+     },
+     {
+      "word": 5,
+      "victim": "0000000000000000000000005f494a30f1b71b748b71939c18446288168cdaab",
+      "copy": "0000000000000000000000006980a47bee930a4584b09ee79ebe46484fbdbdd0"
+     },
+     {
+      "word": 10,
+      "victim": "000000000000000000000000000000000000000000000000000000009d67b973",
+      "copy": "000000000000000000000000000000000000000000000000000001d134dfcd78"
+     }
+    ],
+    "identical_words": "58 of 61",
+    "fork_replay": "research/bot-re/fork_replay_results.json (bot analysis)"
+   },
+   "notes": "builder is Yoink's own; 21 bot txs in the 24-tx block; builder refunded 791.742 ETH to the bot"
+  },
+  {
+   "label": "ETH-leg searcher (general MEV bot 'mmmmMEV')",
+   "eoa": "0x1a56abf4fe95e21c1704cbd5ffc79ea1effa3cc1",
+   "contract": "0x4ab12e7ce31857ee022f273e8580f73335a73c0b",
+   "txs": [
+    {
+     "hash": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+     "block": 20468679,
+     "index": 0,
+     "status": 1,
+     "msg_value_wei": 1,
+     "selector": "0x972547d7",
+     "in_public_mempool": false
+    }
+   ],
+   "captured": {
+    "token": "ETH",
+    "amount": "3,996.09375 ETH (= 4000 x (1 - 2^-10))",
+    "usd": 9802018
+   },
+   "coinbase_paid_eth": 3.996093266077822,
+   "priority_fee_gwei": 0.0,
+   "replay_evidence": {
+    "diff": [
+     {
+      "word": 2,
+      "victim": "000000000000000000000000441e6581d1b4869abb80188b9cf5223e77ab0302",
+      "copy": "0000000000000000000000004ab12e7ce31857ee022f273e8580f73335a73c0b"
+     },
+     {
+      "word": 10,
+      "victim": "00000000000000000000000000000000000000000000000004db732547630000",
+      "copy": "0000000000000000000000000000000000000000000000d8a0f0ed69b4a16000"
+     }
+    ],
+    "identical_words": "74 of 76",
+    "call_tree": "EOA -> 0x4ab12e7c -> bridge submitWithdrawal 0x4d0d6673 (delegatecall to implementation 0xfc274ec9...), bridge pays 3,996.09375 ETH to 0x4ab12e7c, which pays 3.99609 ETH to coinbase 0x95222290 (beaverbuild)"
+   },
+   "notes": "the calldata rewrite changes only the recipient (word 2) and quantity (word 10); the Ronin-side address word is left as the user's"
+  },
+  {
+   "label": "racer 3 (vanity EOA 0x00001b0b)",
+   "eoa": "0x00001b0bcca9bc88774000692def9dd6452afb9f",
+   "contract": "0x02f3d3912f8bd97c4791970aa4cf96dedd05772c",
+   "txs": [
+    {
+     "hash": "0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b",
+     "block": 20468790,
+     "index": 0,
+     "status": 1,
+     "selector": "0x64558356",
+     "priority_fee_gwei": 0.901569502,
+     "note": "same tip as the victim's gasTipCap 901569502"
+    },
+    {
+     "hash": "0x72a4daca1f06caf585f45482bbef2a97701525b59ea96f06494796f00b084ea6",
+     "block": 20468790,
+     "index": 1,
+     "status": 1,
+     "note": "self-transfer of 19.29 ETH with gas price ~103,573 gwei: pays 2.175 ETH of priority fee to the builder"
+    }
+   ],
+   "captured": {
+    "token": "ETH",
+    "amount": "2.417311 ETH (the user's own withdrawal amount, quantity NOT inflated)",
+    "usd": 5929
+   },
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_gwei": 103573.17,
+   "builder_payment_via_priority_fee_eth": 2.175036667,
+   "replay_evidence": {
+    "diff": [
+     {
+      "word": 2,
+      "victim": "000000000000000000000000fbbf14eaec015bca5a4d1e934ae1796638a17919",
+      "copy": "00000000000000000000000002f3d3912f8bd97c4791970aa4cf96dedd05772c"
+     }
+    ],
+    "identical_words": "66 of 67"
+   },
+   "notes": "no return of the 2.4173 ETH found in the EOA/contract histories through 2024-08-06 22:00 (Etherscan txlist/internal); the vanity EOA was messaged by 0x01bf1d7c at 11:02:59"
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "no further copier found",
+   "evidence": "all Withdrew events of the bridge proxy between the upgrade and the pause (Etherscan getLogs 20468438-20475000): 3 incident txs + 6 small ordinary withdrawals to relayer 0xc9a5643e...; ETH out of the bridge (txlistinternal) and USDC out (tokentx) in 20468300-20470500 match exactly those 3",
+   "raw": "site/raw/etherscan/p2_ronin_bridge_alllogs_20468438_20475000.json"
+  },
+  {
+   "label": "Yoink-builder 5.0329 ETH, 7-tx bid on the ETH-leg slot (+649 ms)",
+   "evidence": "highest bid in the Flashbots-relay record; contents unknown, so no claim that Yoink also copied the ETH-leg withdrawal"
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "ETH-leg: bridge -> bot contract",
+   "tx": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+   "amount": "3,996.09375 ETH",
+   "to": "0x4ab12e7c...",
+   "utc": "2024-08-06T09:37:23Z"
+  },
+  {
+   "what": "ETH-leg: coinbase tip",
+   "tx": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+   "amount": "3.996093266 ETH",
+   "to": "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5 (beaverbuild)"
+  },
+  {
+   "what": "ETH-leg: builder -> proposer",
+   "tx": "0x65c9d305a6152cfe3d64b4c41ec8961f8b28773fd8557e6ef41ba6d5187e75f3",
+   "amount": "4.043882228 ETH",
+   "to": "0x4e9cc05f7f944d618de85396e669922c2cf6813e"
+  },
+  {
+   "what": "ETH-leg: test return from bot contract (withdrawTo)",
+   "tx": "0x017e91606e015b441c1fa8b82929d685b99637896ebf96a81c323a32abe8974c",
+   "amount": "1.0 ETH",
+   "to": "0xc6aec68dd6272efcbc74fb5308fe7f070437465e",
+   "utc": "2024-08-06T10:00:11Z"
+  },
+  {
+   "what": "ETH-leg: main return (withdrawTo), 22 min after the take, before any contact",
+   "tx": "0xacd5202dd0b372bc76a1659524e3899ec4efa4782e98718fd9593b1077be9953",
+   "amount": "4,000.0 ETH",
+   "to": "0xc6aec68dd6272efcbc74fb5308fe7f070437465e",
+   "utc": "2024-08-06T10:00:59Z"
+  },
+  {
+   "what": "ETH-leg: 0xc6aec68d -> Safe 0x137f31b2...f488 (test)",
+   "tx": "0xf0e1fc14223f7ce20cbcf87c77da8d9ad7ae8b54c409a8270ef6db7ec7bdd272",
+   "amount": "1.0 ETH",
+   "to": "0x137f31b23f9991df465a1d16eccbcaa11ab9f488",
+   "utc": "2024-08-06T15:00:47Z"
+  },
+  {
+   "what": "ETH-leg: 0xc6aec68d -> Safe 0x137f31b2...f488",
+   "tx": "0xf8f097982bc0f9a8f4279d4132dc91cfe17ab2d4fc70e7f740bc3ed752165601",
+   "amount": "3,991.097 ETH",
+   "to": "0x137f31b23f9991df465a1d16eccbcaa11ab9f488",
+   "utc": "2024-08-06T15:04:23Z"
+  },
+  {
+   "what": "ETH-leg: kept at 0xc6aec68d (4001 received - 3992.097 forwarded)",
+   "tx": null,
+   "amount": "8.903 ETH (not traced further; press: 'remaining 5 ETH not returned', Cointelegraph/PeckShield)",
+   "to": "0xc6aec68d..."
+  },
+  {
+   "what": "racer 3: bridge -> contract -> its EOA",
+   "tx": "0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b",
+   "amount": "2.417311 ETH",
+   "to": "0x00001b0bcca9bc88774000692def9dd6452afb9f",
+   "utc": "2024-08-06T10:00:11Z"
+  },
+  {
+   "what": "racer 3: builder payment via priority fee of tx#2",
+   "tx": "0x72a4daca1f06caf585f45482bbef2a97701525b59ea96f06494796f00b084ea6",
+   "amount": "2.175036667 ETH",
+   "to": "Titan builder 0x4838b106..."
+  },
+  {
+   "what": "Yoink: bridge -> bot as USDC",
+   "tx": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+   "amount": "1,998,046.875 USDC",
+   "to": "0x6980a47b...",
+   "utc": "2024-08-06T10:11:47Z"
+  },
+  {
+   "what": "Yoink: USDC -> 796.4115 ETH inside the tx; coinbase tip",
+   "tx": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+   "amount": "795.615040934 ETH",
+   "to": "0x229b8325bb9ac04602898b7e8989998710235d5f (builder)"
+  },
+  {
+   "what": "Yoink: builder refund to bot at block pos 22",
+   "tx": "0x43354f3f541e2df3d600b54670fd8e38f28f0850f517b53e5b7d222c34c89bb2",
+   "amount": "791.742284675 ETH",
+   "to": "0x6980a47b..."
+  },
+  {
+   "what": "Yoink: builder -> proposer (= winning bid) at pos 23",
+   "tx": "0xc5eaed361ca3b40863477d1a33b55f630bad5e69ff7364706aa4ade19c35f961",
+   "amount": "11.04299088 ETH",
+   "to": "0x498fe6625628053e4f97246161fab24aea3dec36"
+  },
+  {
+   "what": "Yoink: bot withdrawTo by owner, 17 min after landing, 24 min before Ronin's first message",
+   "tx": "0x8369cdc42b86ea9bbff28eec3d24d4a05bcd3273f5c69c7c76e7dc0858952ff8",
+   "amount": "800.0 ETH",
+   "to": "0x796f09c9667a49bdb2bac2c8f1c2ee3c7576a93f",
+   "utc": "2024-08-06T10:29:11Z"
+  },
+  {
+   "what": "Yoink: 0x796f09c9 -> Safe 0x137f31b2...f488",
+   "tx": "0x21df45bd48f17cb97f1f2b7f12e298da6ecb418ceedb69c345c934ecaca48d9c",
+   "amount": "792.4557 ETH",
+   "to": "0x137f31b23f9991df465a1d16eccbcaa11ab9f488",
+   "utc": "2024-08-06T17:05:59Z"
+  },
+  {
+   "what": "Yoink: left at 0x796f09c9 (800 - 792.4557); no onward tx through block 20490000",
+   "tx": null,
+   "amount": "7.5443 ETH",
+   "to": "0x796f09c9..."
+  },
+  {
+   "what": "Ronin message to Yoink owner (input data): 'Hey, thanks a lot for white hat saving user funds today. Can we chat over Blockscan chat?'",
+   "tx": "0x8d3b20fb3fd22b44c7719a03a6fa33487718db33b258191da3d27a3d9ca1070c",
+   "amount": "0",
+   "to": "0xfde0d157...",
+   "from": "0x01bf1d7c5e192313c26414e134584275f46271cf",
+   "utc": "2024-08-06T10:53:35Z"
+  },
+  {
+   "what": "same message to the ETH-leg EOA",
+   "tx": "0x945a71565b8d09ba4681c9d77bab4b105eb668d98c86961d277552b166f0f7f7",
+   "amount": "0",
+   "to": "0x1a56abf4...",
+   "from": "0x01bf1d7c5e...",
+   "utc": "2024-08-06T10:54:59Z"
+  },
+  {
+   "what": "same message to racer 3's EOA",
+   "tx": "0x9a52f1d44f269abc548b523f58688eb1ae6367cd8adc1f633e65d274caacdf4b",
+   "amount": "0",
+   "to": "0x00001b0b...",
+   "from": "0x01bf1d7c5e...",
+   "utc": "2024-08-06T11:02:59Z"
+  },
+  {
+   "what": "Bounty USD 500K: REPORTED only (Ronin statement via press: 'bug bounty program will reward the white hats'; EigenPhi: Yoink and the other whitehat 'shared $500K'). No on-chain bounty payment identified; 0x137f31b2...f488 is a Safe (execTransaction) that received the returns - label 'Ronin-controlled' is inferred from the flow, not from a public tag",
+   "tx": null,
+   "amount": "$500,000",
+   "to": "-"
+  },
+  {
+   "what": "Safe re-converted: 785 ETH out to 0x199b51f2c5... (2024-08-08 11:21:35) and 1,954,372 USDC back in (12:50:47) - consistent with Ronin restoring the USDC leg (inferred)",
+   "tx": "0xfb5a52287cf2 / 0x7796ee36f527",
+   "amount": "785 ETH -> 1,954,372 USDC",
+   "to": "0x137f31b2..."
+  }
+ ],
+ "auction": {
+  "20468679 (ETH leg, slot 9676085)": {
+   "race_file": "incidents/ronin-2024/race_20468679.json",
+   "slot": null,
+   "relays_answered": {
+    "flashbots": {
+     "delivered_n": 0,
+     "bids_n": 1076
+    },
+    "ultrasound": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "bloxroute-regulated": {
+     "delivered_n": 1,
+     "bids_n": 0
+    },
+    "agnostic": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "aestus": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "titan": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "ethgas": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "btcs": {
+     "delivered_n": 0,
+     "bids_n": 0
+    }
+   },
+   "relays_unavailable": [
+    "blocknative",
+    "bloxroute-ethical",
+    "bloxroute-max-profit",
+    "eden",
+    "manifold",
+    "relayooor",
+    "wenmerge"
+   ],
+   "n_bids_flashbots_relay": 1076,
+   "n_builders": 41,
+   "first_bid_t_rel_slot_ms": -4592,
+   "last_bid_t_rel_slot_ms": 2063,
+   "max_bid_eth": 5.03289828015145,
+   "winner": {
+    "builder_name": "beaverbuild.org",
+    "builder_pubkey": "0xa21a2f4807a2bcb6b07c10cea241322e0910c30869c1e4eda686b0d69bdcb74d2a140ef994afcf0bb38e0b960df4d2ee",
+    "bid_value_eth": 4.043882228230118,
+    "delivered_by_relays": [
+     "bloxroute-regulated"
+    ],
+    "proposer_fee_recipient": "0x4e9Cc05F7F944D618DE85396e669922c2CF6813E"
+   },
+   "proposer_payment_tx": {
+    "hash": "0x65c9d305a6152cfe3d64b4c41ec8961f8b28773fd8557e6ef41ba6d5187e75f3",
+    "index": 137,
+    "value_wei": "4043882228230118357",
+    "matches_bid_value": true
+   },
+   "runner_up": {
+    "builder_name": "I can haz block?",
+    "builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+    "value_eth": 5.03289828015145,
+    "t_rel_slot_ms": 649,
+    "block_hash": "0x05e9b8777253b21446baf02be1fe5a99064c8b8f1df3bb8d53976c56515e2d41",
+    "num_tx": 7
+   },
+   "note": "runner_up = highest bid of any other builder name in the Flashbots-relay record; it can exceed the delivered bid when it arrived too late / was never requested",
+   "story": {
+    "victim_tx_first_seen_ms": 1722937042400,
+    "victim_first_seen_rel_slot_ms": -600,
+    "first_flashbots_relay_bid_carrying_about_4_ETH": {
+     "t_rel_slot_ms": -71,
+     "builder": "Flashbots",
+     "eth": 4.0209,
+     "num_tx": 132
+    },
+    "builder_bid_start_by_builder_ge_3.9ETH": {
+     "Flashbots": -71,
+     "Titan": 116,
+     "beaverbuild.org": 192,
+     "rsync-builder.xyz": 266,
+     "builder0x69": 717
+    },
+    "winning_bid": "beaverbuild.org 4.043882 ETH delivered by bloXroute regulated (that relay keeps no bid history, so the winning bid's time is unknown); proposer payment tx idx 137 = bid value exactly",
+    "yoink_builder_bids": "'I can haz block?' (Yoink's builder pubkey) submitted the highest Flashbots-relay bid of the slot, 5.0329 ETH with only 7 txs, at +649 ms and +757 ms after slot start, i.e. after beaverbuild/Titan/rsync were already bidding ~4.03 ETH; its contents are unknown, and a 7-tx block cannot be a copy of the 100+ tx beaverbuild block (no claim made that it contains an ETH-leg copy)",
+    "bribe": "ETH-leg bot paid 3.996093266 ETH (0.1% of 3,996.09375) via coinbase.transfer to beaverbuild fee recipient 0x95222290...; builder passed 4.0439 ETH to proposer 0x4e9Cc05F... ; no refund tx in the block",
+    "winning_block_contains_copy_tx": true
+   }
+  },
+  "20468790 (copy of user withdrawal id 166632, slot 9676199)": {
+   "race_file": "incidents/ronin-2024/race_20468790.json",
+   "slot": null,
+   "relays_answered": {
+    "flashbots": {
+     "delivered_n": 0,
+     "bids_n": 593
+    },
+    "ultrasound": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "bloxroute-regulated": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "agnostic": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "aestus": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "titan": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "ethgas": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "btcs": {
+     "delivered_n": 0,
+     "bids_n": 0
+    }
+   },
+   "relays_unavailable": [
+    "blocknative",
+    "bloxroute-ethical",
+    "bloxroute-max-profit",
+    "eden",
+    "manifold",
+    "relayooor",
+    "wenmerge"
+   ],
+   "n_bids_flashbots_relay": 593,
+   "n_builders": 36,
+   "first_bid_t_rel_slot_ms": -3893,
+   "last_bid_t_rel_slot_ms": 4559,
+   "max_bid_eth": 2.3041877260553028,
+   "winner": {
+    "builder_name": null,
+    "builder_pubkey": null,
+    "bid_value_eth": null,
+    "delivered_by_relays": [],
+    "proposer_fee_recipient": null
+   },
+   "proposer_payment_tx": null,
+   "runner_up": null,
+   "note": "winner not identifiable from the queried relays; runner_up omitted",
+   "story": {
+    "victim_tx_first_seen_ms": 1722938411284,
+    "victim_first_seen_rel_slot_ms": 284,
+    "note": "victim tx was first seen 284 ms AFTER the block timestamp, yet the racer's copy is at idx 0 of that block and the victim's own tx is in it at idx 258 reverting: the racer saw the tx earlier than the dumpster's four sources",
+    "block_builder": "Titan (extraData 'Titan (titanbuilder.xyz)'), fee recipient 0x4838b106...; Titan's relay (titanrelay.xyz) has no history for 2024, so the delivered bid time/hash is unknown",
+    "builder_payment_tx": "0x8306cb9b9ed89788b73f54855eb18a00f5daa60e2512be16d4bc4a358144b5d3",
+    "builder_payment_eth": 2.213169569,
+    "racer_bribe": "racer tx #2 (idx 1, 0x72a4daca...) is a self-transfer of 19.29 ETH with gas price ~103,573 gwei x 21,000 gas = 2.175 ETH of priority fee to the builder (90% of the 2.4173 ETH taken)",
+    "first_flashbots_relay_bids_ge_2ETH_rel_slot_ms": {
+     "Flashbots": 456,
+     "beaverbuild": 596,
+     "Titan": 645,
+     "I can haz block?": 641
+    },
+    "winning_block_contains_copy_tx": true
+   }
+  },
+  "20468848 (USDC leg, Yoink, slot 9676257)": {
+   "race_file": "incidents/ronin-2024/race_20468848.json",
+   "slot": null,
+   "relays_answered": {
+    "flashbots": {
+     "delivered_n": 1,
+     "bids_n": 58
+    },
+    "ultrasound": {
+     "delivered_n": 1,
+     "bids_n": 0
+    },
+    "bloxroute-regulated": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "agnostic": {
+     "delivered_n": 1,
+     "bids_n": 0
+    },
+    "aestus": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "titan": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "ethgas": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "btcs": {
+     "delivered_n": 0,
+     "bids_n": 0
+    }
+   },
+   "relays_unavailable": [
+    "blocknative",
+    "bloxroute-ethical",
+    "bloxroute-max-profit",
+    "eden",
+    "manifold",
+    "relayooor",
+    "wenmerge"
+   ],
+   "n_bids_flashbots_relay": 58,
+   "n_builders": 8,
+   "first_bid_t_rel_slot_ms": -6654,
+   "last_bid_t_rel_slot_ms": -1823,
+   "max_bid_eth": 11.04299088234891,
+   "winner": {
+    "builder_name": "I can haz block?",
+    "builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+    "bid_value_eth": 11.04299088234891,
+    "delivered_by_relays": [
+     "agnostic",
+     "flashbots",
+     "ultrasound"
+    ],
+    "proposer_fee_recipient": "0x498Fe6625628053E4F97246161Fab24aEa3DEC36"
+   },
+   "proposer_payment_tx": {
+    "hash": "0xc5eaed361ca3b40863477d1a33b55f630bad5e69ff7364706aa4ade19c35f961",
+    "index": 23,
+    "value_wei": "11042990882348909780",
+    "matches_bid_value": true
+   },
+   "runner_up": {
+    "builder_name": null,
+    "builder_pubkey": "0x87d7fb5c1b6e76550d8960b48a12505bc7b6478723db006fb659761ccde41500d951ef1457874ab1875f5f869f761b6b",
+    "value_eth": 1.084536149646349,
+    "t_rel_slot_ms": -2711,
+    "block_hash": "0x36f17e7df367b1836df46ed231bef71de880f10a0aaac85fa7e3f5986d3461cb",
+    "num_tx": 73
+   },
+   "note": "runner_up = highest bid of any other builder name in the Flashbots-relay record; it can exceed the delivered bid when it arrived too late / was never requested",
+   "story": {
+    "victim_tx_first_seen_ms": 1722939100233,
+    "victim_first_seen_rel_slot_ms": -6767,
+    "yoink_builder_first_bid_ms": 1722939104371,
+    "yoink_first_bid_delay_after_first_seen_ms": 4138,
+    "yoink_bid_ladder": [
+     {
+      "utc": "2024-08-06T10:11:44.371Z",
+      "t_rel_slot_ms": -2629,
+      "eth": 2.8198,
+      "num_tx": 23,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.613Z",
+      "t_rel_slot_ms": -2387,
+      "eth": 5.8531,
+      "num_tx": 23,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.618Z",
+      "t_rel_slot_ms": -2382,
+      "eth": 5.8531,
+      "num_tx": 23,
+      "pubkey": "0xad251e6b90",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.725Z",
+      "t_rel_slot_ms": -2275,
+      "eth": 5.8531,
+      "num_tx": 25,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.727Z",
+      "t_rel_slot_ms": -2273,
+      "eth": 5.8531,
+      "num_tx": 27,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.739Z",
+      "t_rel_slot_ms": -2261,
+      "eth": 5.8531,
+      "num_tx": 28,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.756Z",
+      "t_rel_slot_ms": -2244,
+      "eth": 5.8531,
+      "num_tx": 29,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.758Z",
+      "t_rel_slot_ms": -2242,
+      "eth": 5.8531,
+      "num_tx": 30,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.859Z",
+      "t_rel_slot_ms": -2141,
+      "eth": 8.1001,
+      "num_tx": 30,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.865Z",
+      "t_rel_slot_ms": -2135,
+      "eth": 8.1001,
+      "num_tx": 25,
+      "pubkey": "0xad251e6b90",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.870Z",
+      "t_rel_slot_ms": -2130,
+      "eth": 8.1001,
+      "num_tx": 24,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.889Z",
+      "t_rel_slot_ms": -2111,
+      "eth": 8.1001,
+      "num_tx": 27,
+      "pubkey": "0xad251e6b90",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:44.913Z",
+      "t_rel_slot_ms": -2087,
+      "eth": 8.1001,
+      "num_tx": 24,
+      "pubkey": "0x81476ce973",
+      "win": false
+     },
+     {
+      "utc": "2024-08-06T10:11:45.172Z",
+      "t_rel_slot_ms": -1828,
+      "eth": 11.043,
+      "num_tx": 24,
+      "pubkey": "0x81476ce973",
+      "win": true
+     },
+     {
+      "utc": "2024-08-06T10:11:45.177Z",
+      "t_rel_slot_ms": -1823,
+      "eth": 11.043,
+      "num_tx": 24,
+      "pubkey": "0xad251e6b90",
+      "win": true
+     }
+    ],
+    "earlier_competing_bids_eth": {
+     "highest_non_yoink": 1.0845,
+     "builder": "0x87d7fb5c... (73 tx) at 10:11:44.289"
+    },
+    "bot_txs_in_block": 21,
+    "bot_coinbase_total_eth": 802.785253666,
+    "builder_refund_to_bot_eth": 791.742284675237,
+    "refund_tx": "0x43354f3f541e2df3d600b54670fd8e38f28f0850f517b53e5b7d222c34c89bb2",
+    "proposer_payment_eth": 11.04299088234891,
+    "proposer_payment_tx": "0xc5eaed361ca3b40863477d1a33b55f630bad5e69ff7364706aa4ade19c35f961",
+    "identity_of_builder": "EigenPhi (site/raw/web-p2/eigenphi_yoink_aug2024.html) names the builder as Yoink's own; extraData 'I can haz block?', fee recipient 0x229b8325...; two pubkeys 0x81476ce9 and 0xad251e6b used",
+    "winning_block_contains_copy_tx": true
+   }
+  },
+  "20468849 (next block, slot 9676258)": {
+   "race_file": "incidents/ronin-2024/race_20468849.json",
+   "slot": null,
+   "relays_answered": {
+    "flashbots": {
+     "delivered_n": 1,
+     "bids_n": 234
+    },
+    "ultrasound": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "bloxroute-regulated": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "agnostic": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "aestus": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "titan": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "ethgas": {
+     "delivered_n": 0,
+     "bids_n": 0
+    },
+    "btcs": {
+     "delivered_n": 0,
+     "bids_n": 0
+    }
+   },
+   "relays_unavailable": [
+    "blocknative",
+    "bloxroute-ethical",
+    "bloxroute-max-profit",
+    "eden",
+    "manifold",
+    "relayooor",
+    "wenmerge"
+   ],
+   "n_bids_flashbots_relay": 234,
+   "n_builders": 24,
+   "first_bid_t_rel_slot_ms": -9791,
+   "last_bid_t_rel_slot_ms": 1895,
+   "max_bid_eth": 1.2366582416565313,
+   "winner": {
+    "builder_name": null,
+    "builder_pubkey": "0x840c9dafb68f5cd460b5d5677b85114e89187e7c890f11a8c5fc4a3e4f4aa74136ef0fcd62cf7de9741afcf7d4d3360d",
+    "bid_value_eth": 1.1956477251510955,
+    "delivered_by_relays": [
+     "flashbots"
+    ],
+    "proposer_fee_recipient": "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263"
+   },
+   "proposer_payment_tx": {
+    "hash": "0xf877aa8eff38843d9a52a11c1545cf50c143de9e562fd31c66c26ceefb99af3b",
+    "index": 190,
+    "value_wei": "1195647725151095524",
+    "matches_bid_value": true
+   },
+   "runner_up": {
+    "builder_name": "rsync-builder.xyz",
+    "builder_pubkey": "0x945fc51bf63613257792926c9155d7ae32db73155dc13bdfe61cd476f1fd2297b66601e8721b723cef11e4e6682e9d87",
+    "value_eth": 1.2266237844637589,
+    "t_rel_slot_ms": 958,
+    "block_hash": "0x463c45600c575a9c849baac70b0e03957adeddbfdb0f38d8283a89f18b83960f",
+    "num_tx": 19
+   },
+   "note": "runner_up = highest bid of any other builder name in the Flashbots-relay record; it can exceed the delivered bid when it arrived too late / was never requested",
+   "story": {
+    "victim_tx_landed": "0xb7c3f85abd0b9ede7b64868eeb6778ea4731adb1d49f8640b7e7234e470e96c1",
+    "index": 112,
+    "status": 0,
+    "note": "the user's own USDC withdrawal lands 12 s later and reverts (withdrawal id 166633 already used); built by 0x840c9daf (Flashbots relay), bid 1.1956 ETH"
+   }
+  }
+ },
+ "sources": [
+  "https://www.theblock.co/post/309707/ronin-bridge-pauses",
+  "https://www.bleepingcomputer.com/news/security/ronin-network-hacked-12-million-returned-by-white-hat-hackers/",
+  "https://cointelegraph.com/news/ronin-white-hat-attacker-returns-10-million-eth-apparent-accidental-front-run",
+  "https://eigenphi.substack.com/p/mev-maestro-yoink-netting-265m-on-59-blocks-in-aug",
+  "research/bot-re/analysis.md section 4.1"
+ ],
+ "raw_refs": {
+  "upgrade_logs": "site/raw/etherscan/p2_ronin_upgraded_logs_etherscan.json",
+  "bridge_all_logs": "site/raw/etherscan/p2_ronin_bridge_alllogs_20468438_20475000.json",
+  "bridge_txlist": "site/raw/etherscan/p2_ronin_bridge_txlist_20468300_20469600.json",
+  "bridge_internal": "site/raw/etherscan/p2_ronin_bridge_txlistinternal_20468300_20470500.json",
+  "bridge_tokentx": "site/raw/etherscan/p2_ronin_bridge_tokentx_20468300_20470500.json",
+  "mempool_lookup": "research/defiplaza-ronin/ronin_mempool_lookup.json",
+  "mempool_csv": "full cache only (not published)",
+  "mempool_sourcelog": "full cache only (not published)",
+  "calldata_diffs": "research/defiplaza-ronin/ronin_copies_diff.json",
+  "eth_leg_trace": "site/raw/rpc/trace_0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb.json",
+  "racer3_trace": "site/raw/rpc/trace_0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b.json",
+  "yoink_trace": "site/raw/rpc/trace_0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8.json",
+  "race_blocks": [
+   "incidents/ronin-2024/race_20468438.json",
+   "incidents/ronin-2024/race_20468679.json",
+   "incidents/ronin-2024/race_20468790.json",
+   "incidents/ronin-2024/race_20468848.json",
+   "incidents/ronin-2024/race_20468849.json"
+  ],
+  "ethleg_contract_internal": "site/raw/etherscan/p2_ronin_ethleg_contract_txlistinternal_20468600_20480000.json",
+  "ethleg_recv_c6ae": "site/raw/etherscan/p2_ronin_ronin_recv_c6ae_txlist_20468000_20480000.json",
+  "yoink_bot_after": "site/raw/etherscan/p2_ronin_yoink_bot_after_txlistinternal_20468849_20475000.json",
+  "yoink_dest_796f": "site/raw/etherscan/p2_ronin_yoink_dest_796f_txlist_20468000_20490000.json",
+  "safe_137f31": "site/raw/etherscan/p2_ronin_ronin_137f31_txlist_20470000_20520000.json",
+  "racer3_eoa": "site/raw/etherscan/p2_ronin_racer3_eoa_txlist_20468000_20472000.json",
+  "yoink_owner_txlist": "site/raw/etherscan/p2_ronin_yoink_owner_txlist_20468848_20472000.json",
+  "prices": "site/raw/defillama/p2_ronin_prices_1722937043.json",
+  "press": [
+   "site/raw/web-p2/bleeping_ronin.html",
+   "site/raw/web-p2/cointelegraph_ronin.html",
+   "full cache only (not published)",
+   "site/raw/web-p2/cryptonews_ronin.html"
+  ]
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-whitehat-or-user",
+ "headline": false,
+ "headline_text": "A searcher copied a user's pending 0.35 WETH Ronin bridge withdrawal after a faulty upgrade, rewriting recipient and amount to take 3,996 ETH, then sent 4,001 ETH back 23 minutes later; no hostile attacker.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "sub_rows": [
+  {
+   "sub": "eth-leg",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false,
+   "bot": "ETH-leg searcher (mmmmMEV)",
+   "bot_tx": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+   "bot_block": 20468679,
+   "blocks_ahead": 209
+  },
+  {
+   "sub": "racer3",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false,
+   "bot": "racer 3 (vanity EOA 0x00001b0b)",
+   "bot_tx": "0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b",
+   "bot_block": 20468790,
+   "blocks_ahead": 0
+  },
+  {
+   "sub": "yoink-usdc",
+   "verdict": "confirmed-onchain",
+   "race_type": "beat-whitehat-or-user",
+   "headline": false,
+   "bot": "Yoink",
+   "bot_tx": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+   "bot_block": 20468848,
+   "blocks_ahead": 1
+  }
+ ],
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Bot copied a legitimate user's pending withdrawal (2 of 76 calldata words changed) and landed first; there is no hostile attacker (bots were the exploiters, then returned).",
+  "headline_note": null,
+  "dataset_rows": [
+   "ronin-2024/eth-leg",
+   "ronin-2024/racer3",
+   "ronin-2024/yoink-usdc"
+  ]
+ }
+}

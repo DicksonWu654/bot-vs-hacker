@@ -1,0 +1,67 @@
+{
+ "coverage": {
+  "date": "2023-09-05",
+  "covered": true,
+  "files": [
+   "csv.zip",
+   "parquet",
+   "sourcelog.csv.zip",
+   "summary.txt"
+  ],
+  "index_raw": "site/raw/mempool-dumpster/index_2023-09.html"
+ },
+ "txs": {
+  "0x1274b32d4dfacd2703ad032e8bd669a83f012dde9d27ed92e4e7da0387adafe4": {
+   "first_seen_ms": 1693898715315,
+   "first_seen_utc": "2023-09-05T07:25:15.315000+00:00",
+   "sources": [
+    "bloxroute",
+    "apool"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "blx",
+     "first_seen_ms": 1693898715315
+    },
+    {
+     "source": "apool",
+     "first_seen_ms": 1693898715325
+    }
+   ],
+   "included_at_block": 18068773,
+   "included_block_timestamp_ms": 1693898711000,
+   "inclusion_delay_ms": -4315,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "full cache only (not published)"
+   }
+  },
+  "0x7514a063098e323d2f0eb6c99b7e57e7b1389ce0ab4b05f38823a89ebac810b4": {
+   "first_seen_ms": 1693907848523,
+   "first_seen_utc": "2023-09-05T09:57:28.523000+00:00",
+   "sources": [
+    "bloxroute"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "blx",
+     "first_seen_ms": 1693907848523
+    }
+   ],
+   "included_at_block": 18069527,
+   "included_block_timestamp_ms": 1693907843000,
+   "inclusion_delay_ms": -5523,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "full cache only (not published)"
+   }
+  },
+  "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834": null
+ }
+}

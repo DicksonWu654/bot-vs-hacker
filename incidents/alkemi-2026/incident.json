@@ -1,0 +1,730 @@
+{
+ "slug": "alkemi-2026",
+ "name": "Alkemi Earn (Ethereum)",
+ "date": "2026-03-10",
+ "chain": "ethereum",
+ "verdict": "related-not-frontrun",
+ "race_type": "post-failure-replay",
+ "headline": false,
+ "verdict_reason": "Two different pools of the same Alkemi self-liquidation bug were drained by different parties. (1) ETH vault: the DHL-listed attacker 0x0ed1c01b took 43.45395 ETH at block 24626979 (12:10:11Z); Yoink never touched this pool and no copier beat him (first copy 12 s later, 0.7173 ETH of leftovers 15 min later). (2) WBTC pool (0.29980756 WBTC): an unrelated EOA 0x46c403e3 sent a deploy+attack tx at block 24627180 idx 226 that reverted out of gas; Yoink's tx at block 24627181 idx 0 contains the same 16 state-changing Alkemi calls (+2 withdraws) from its own contract and took 0.29925557 WBTC (10.2359 ETH gross, 10.2256 ETH to the coinbase). That is a replay after a failed, already-mined tx, not a pre-emption of a pending one. The message sender 0x8366d87b ('Why did you leak my attack transaction to yoink?') is a third party whose own WBTC attack tx (0xd4ec3e34, block 24627185) landed after Yoink's and found the pool empty; its program differs from Yoink's, so Yoink did not replay it, but my fork replay shows it would have taken the whole WBTC pool had it landed first, so Yoink did take the pool it was about to drain. Whether Yoink saw that tx (the 'leak') cannot be shown: none of the 10 Alkemi-touching txs is in mempool-dumpster.",
+ "era": "mature-pbs-2024-26",
+ "protocol_loss_usd": 89000,
+ "protocol_loss_usd_source": "BlockSec weekly roundup Mar 9-15 2026: 'Alkemi Incident ... ~$89K' (site/raw/web-alkemi/blocksec_roundup_mar9_mar15_2026.html); covers the ETH-vault attack only",
+ "protocol_loss_detail": {
+  "alkemi_eth_vault_0x8125afd0_before_block_24626979_eth": 44.17125,
+  "after_block_24626979_eth": 0.7173,
+  "alkemi_wbtc_before_block_24627181": 0.29980756,
+  "alkemi_wbtc_after_block_24627182": 0.0,
+  "eth_price_usd_defillama_1773147060": 2051.4919328574656,
+  "computed_total_usd_approx": 111683,
+  "note": "balances read with eth_getBalance / WBTC.balanceOf at the end of each block (site/raw/rpc/bal_vault_*, bal_alkemi_*, wbtc_alkemi_*)."
+ },
+ "actors": {
+  "first_exploiter_eth_vault": {
+   "eoa": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+   "contract": "0xe408b52aefb27a2fb4f1cd760a76daa4bf23794b",
+   "deploy_tx": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+   "attack_tx": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+   "funding": "0.09975 ETH from 0xac9f360a... at block 24625237 (2026-03-10T06:19:11Z); source not classified (0.1 ETH less 0.25%, consistent with a privacy-pool withdrawal, unverified)"
+  },
+  "wbtc_attacker_replayed_by_yoink": {
+   "eoa": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+   "tx": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+   "created_contracts": [
+    "0x09e9db97... (top-level CREATE)",
+    "0xd211ddce0592f2f56633ec5b053f828408c49e3b (nested, the caller of Alkemi)"
+   ]
+  },
+  "message_sender": {
+   "eoa": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+   "funded_by": "0x5babe600b9fcd5fb7b66c0611bf4896d967b23a1 (0.04875 ETH, block 24627159)",
+   "contract": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+   "deploy_tx": "0xfa64b1d97d9c136e7da3375c3d06d10854a5bae57690fb1fedc4d75a60eed6c2",
+   "attack_tx": "0xd4ec3e344fe270f34078e8cabc7f7bee36204049bc9c61febce3c1668b8df42c",
+   "message_tx": "0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64"
+  },
+  "yoink": {
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18"
+  },
+  "c0ffeebabe": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+ },
+ "attacker": {
+  "eoas": [
+   "0x0ed1c01b8420a965d7bd2374db02896464c91cd7"
+  ],
+  "contracts": [
+   "0xe408b52aefb27a2fb4f1cd760a76daa4bf23794b"
+  ],
+  "deploy_tx": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+  "funding_tx": "0xcec7c8eb14e78f1cabc635db28631b9c95b7b61cb18308bde326dafda68eda9f",
+  "txs": [
+   {
+    "hash": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+    "block": 24626979,
+    "index": 2,
+    "status": "success"
+   },
+   {
+    "hash": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+    "block": 24626979,
+    "index": 3,
+    "status": "success"
+   }
+  ]
+ },
+ "alkemi_touching_txs": [
+  {
+   "hash": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+   "block": 24626979,
+   "index": 3,
+   "time_utc": "2026-03-10T12:10:11Z",
+   "from": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+   "to": "0xe408b52aefb27a2fb4f1cd760a76daa4bf23794b",
+   "nonce": 1,
+   "status": 1,
+   "gas_used": 2768747,
+   "effective_gas_price_gwei": 0.379991959,
+   "max_priority_fee_wei": 300000000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 43.45395,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.001052101596505373,
+   "role": "DHL 'attack tx': flash loan 51 WETH, supply 50, borrow 39.5, self-liquidate, withdraw; +43.45395 ETH to EOA 0x0ed1c01b (first exploit of Alkemi in the scanned range)",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x4054e1d69035afc993ef80774cc83f5feb0b5d2542f9ff7fa1bbf254a6c79ea6",
+   "block": 24626980,
+   "index": 114,
+   "time_utc": "2026-03-10T12:10:23Z",
+   "from": "0xb180ef1bf6fb3e9a0b5db4460e4db804e946cc8a",
+   "to": "0x3dfb97ff705d693a2626bfcf6ebd144332d1f28a",
+   "nonce": 60,
+   "status": 1,
+   "gas_used": 3988065,
+   "effective_gas_price_gwei": 0.099989948,
+   "max_priority_fee_wei": 99989948,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 1.1001e-06,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00039876641197062,
+   "role": "copy of the DHL call sequence from contract 0x3dfb97ff (supply 1 ETH); vault already empty of what it asked for: nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x7c65ddf1f49c336739d49cc8321346621c2de562448d1a1afdc10a15ac44c4fc",
+   "block": 24626980,
+   "index": 115,
+   "time_utc": "2026-03-10T12:10:23Z",
+   "from": "0x6bc22cd3705b86c1d423d80001721b9c8101d2e1",
+   "to": "0x3dfb97ff705d693a2626bfcf6ebd144332d1f28a",
+   "nonce": 9,
+   "status": 1,
+   "gas_used": 2694343,
+   "effective_gas_price_gwei": 0.099989948,
+   "max_priority_fee_wei": 99989948,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 1.1001e-06,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000269407216464164,
+   "role": "same contract 0x3dfb97ff, EOA 0x6bc22cd3, next index; nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+   "block": 24627055,
+   "index": 5,
+   "time_utc": "2026-03-10T12:25:23Z",
+   "from": "0x4c452e829748e34e11d010e338596433d638f03c",
+   "to": "CREATE->0x5ef689e1a644514d8d617414e5bdc042ea95d8cb",
+   "nonce": 37,
+   "status": 1,
+   "gas_used": 4050392,
+   "effective_gas_price_gwei": 0.339131904,
+   "max_priority_fee_wei": 200000000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.7172944866490211,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.001373617150906368,
+   "role": "deploy+attack in one tx (flash loan 51 WETH); takes the 0.7173 ETH left in the vault after the DHL drain",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+   "block": 24627180,
+   "index": 226,
+   "time_utc": "2026-03-10T12:50:47Z",
+   "from": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+   "to": "CREATE->0x09e9db97f29ba3ac9835881bd770c00e60dceeb0",
+   "nonce": 30,
+   "status": 0,
+   "gas_used": 14344401,
+   "effective_gas_price_gwei": 0.07275579,
+   "max_priority_fee_wei": 37,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00104363822683179,
+   "role": "WBTC-pool attack (supply 1 WBTC + 2.5 ETH, 7x borrow/self-liquidate), deploy+attack in one tx; REVERTED out of gas (gas limit 14,974,454)",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+   "block": 24627181,
+   "index": 0,
+   "time_utc": "2026-03-10T12:50:59Z",
+   "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "nonce": 45346,
+   "status": 1,
+   "gas_used": 12877009,
+   "effective_gas_price_gwei": 0.078265332,
+   "max_priority_fee_wei": 0,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": -0.014,
+   "wbtc_sat_out_of_alkemi_net": 29925557,
+   "gas_cost_eth": 0.001007823384551988,
+   "role": "Yoink: replays the 0x726bd90c call sequence (+2 withdraws) from its own contract; takes 0.29925557 WBTC, pays 10.2256 ETH coinbase",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x5460ffcd02735127d35e7bddba6eff1e719f6459a04db0b23c9e8e7ef7491b57",
+   "block": 24627182,
+   "index": 0,
+   "time_utc": "2026-03-10T12:51:11Z",
+   "from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+   "to": "0x8050a2155477f121bd62199490602232be0192fb",
+   "nonce": 2533,
+   "status": 1,
+   "gas_used": 3862046,
+   "effective_gas_price_gwei": 0.072708871,
+   "max_priority_fee_wei": 72708871,
+   "tx_type": "0x0",
+   "eth_out_of_alkemi_vault_net": 0.014,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000280805004410066,
+   "role": "DHL-style copy by 0xc9a5643e (50 ETH flash loan); returns the 0.014 ETH Yoink had left in the vault to itself",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xdc32b0cf4268172ab3683b4ee617dbaaab0d8fc81324e8a1f229565a821f7b81",
+   "block": 24627182,
+   "index": 2,
+   "time_utc": "2026-03-10T12:51:11Z",
+   "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+   "to": "0x6110b7a5e63288c6f718419389883778f3a6d3af",
+   "nonce": 85,
+   "status": 1,
+   "gas_used": 3807630,
+   "effective_gas_price_gwei": 1.572708871,
+   "max_priority_fee_wei": 1500000000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 55199,
+   "gas_cost_eth": 0.00598829347848573,
+   "role": "helper+main program (same helper bytecode as the message sender's); borrows the last 55,199 sat WBTC; tip 1.5 gwei",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xd4ec3e344fe270f34078e8cabc7f7bee36204049bc9c61febce3c1668b8df42c",
+   "block": 24627185,
+   "index": 305,
+   "time_utc": "2026-03-10T12:51:47Z",
+   "from": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+   "to": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+   "nonce": 1,
+   "status": 1,
+   "gas_used": 3740389,
+   "effective_gas_price_gwei": 0.076574654,
+   "max_priority_fee_wei": 37,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000286418993500406,
+   "role": "MESSAGE SENDER's attack tx: same program as 0xdc32b0cf; WBTC pool already empty (borrow(WBTC, 0)); nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x0331c45048016884067e9d0003068a11ac799a197a78e74aa0b87f3d6989159f",
+   "block": 24627423,
+   "index": 106,
+   "time_utc": "2026-03-10T13:39:35Z",
+   "from": "0x000040d6c85a13a1aa74565fde87e499dc023c6f",
+   "to": "0xc5d30c23be06183104818d4a29a7b1bf8cce9213",
+   "nonce": 1340,
+   "status": 0,
+   "gas_used": 2811545,
+   "effective_gas_price_gwei": 0.188172272,
+   "max_priority_fee_wei": 10360000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00052905481048024,
+   "role": "DHL-style copy by 0x000040d6c85a; REVERTED",
+   "in_mempool_dump": false
+  }
+ ],
+ "bots": [
+  {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "txs": [
+    "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18"
+   ],
+   "captured": {
+    "token": "WBTC->ETH",
+    "amount": "0.29925557 WBTC taken from Alkemi (0.29884523 swapped on UniV3 for 10.2358810 ETH, 41,034 sat swapped for 0.014 ETH paid into the Alkemi vault)",
+    "usd": 20999
+   },
+   "coinbase_paid_eth": 10.225645129714577,
+   "priority_fee_gwei": 0.0,
+   "builder_refund_eth": 9.190671700387883,
+   "net_eth_est": 9.20090758139861,
+   "replay_evidence": "replay_diff.json: 16/16 state-changing Alkemi calls identical to reverted tx 0x726bd90c; 0 shared with DHL's or the message sender's tx",
+   "notes": "Yoink tx input selector 0x9846cd9e, msg.value 999 wei = 999 per mille of profit to the coinbase (research/bot-re/analysis.md); 10.2256/10.2359 = 0.999."
+  }
+ ],
+ "other_racers": [
+  {
+   "hash": "0x4054e1d69035afc993ef80774cc83f5feb0b5d2542f9ff7fa1bbf254a6c79ea6",
+   "block": 24626980,
+   "index": 114,
+   "time_utc": "2026-03-10T12:10:23Z",
+   "from": "0xb180ef1bf6fb3e9a0b5db4460e4db804e946cc8a",
+   "to": "0x3dfb97ff705d693a2626bfcf6ebd144332d1f28a",
+   "nonce": 60,
+   "status": 1,
+   "gas_used": 3988065,
+   "effective_gas_price_gwei": 0.099989948,
+   "max_priority_fee_wei": 99989948,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 1.1001e-06,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00039876641197062,
+   "role": "copy of the DHL call sequence from contract 0x3dfb97ff (supply 1 ETH); vault already empty of what it asked for: nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x7c65ddf1f49c336739d49cc8321346621c2de562448d1a1afdc10a15ac44c4fc",
+   "block": 24626980,
+   "index": 115,
+   "time_utc": "2026-03-10T12:10:23Z",
+   "from": "0x6bc22cd3705b86c1d423d80001721b9c8101d2e1",
+   "to": "0x3dfb97ff705d693a2626bfcf6ebd144332d1f28a",
+   "nonce": 9,
+   "status": 1,
+   "gas_used": 2694343,
+   "effective_gas_price_gwei": 0.099989948,
+   "max_priority_fee_wei": 99989948,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 1.1001e-06,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000269407216464164,
+   "role": "same contract 0x3dfb97ff, EOA 0x6bc22cd3, next index; nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+   "block": 24627055,
+   "index": 5,
+   "time_utc": "2026-03-10T12:25:23Z",
+   "from": "0x4c452e829748e34e11d010e338596433d638f03c",
+   "to": "CREATE->0x5ef689e1a644514d8d617414e5bdc042ea95d8cb",
+   "nonce": 37,
+   "status": 1,
+   "gas_used": 4050392,
+   "effective_gas_price_gwei": 0.339131904,
+   "max_priority_fee_wei": 200000000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.7172944866490211,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.001373617150906368,
+   "role": "deploy+attack in one tx (flash loan 51 WETH); takes the 0.7173 ETH left in the vault after the DHL drain",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+   "block": 24627180,
+   "index": 226,
+   "time_utc": "2026-03-10T12:50:47Z",
+   "from": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+   "to": "CREATE->0x09e9db97f29ba3ac9835881bd770c00e60dceeb0",
+   "nonce": 30,
+   "status": 0,
+   "gas_used": 14344401,
+   "effective_gas_price_gwei": 0.07275579,
+   "max_priority_fee_wei": 37,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00104363822683179,
+   "role": "WBTC-pool attack (supply 1 WBTC + 2.5 ETH, 7x borrow/self-liquidate), deploy+attack in one tx; REVERTED out of gas (gas limit 14,974,454)",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x5460ffcd02735127d35e7bddba6eff1e719f6459a04db0b23c9e8e7ef7491b57",
+   "block": 24627182,
+   "index": 0,
+   "time_utc": "2026-03-10T12:51:11Z",
+   "from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+   "to": "0x8050a2155477f121bd62199490602232be0192fb",
+   "nonce": 2533,
+   "status": 1,
+   "gas_used": 3862046,
+   "effective_gas_price_gwei": 0.072708871,
+   "max_priority_fee_wei": 72708871,
+   "tx_type": "0x0",
+   "eth_out_of_alkemi_vault_net": 0.014,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000280805004410066,
+   "role": "DHL-style copy by 0xc9a5643e (50 ETH flash loan); returns the 0.014 ETH Yoink had left in the vault to itself",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xdc32b0cf4268172ab3683b4ee617dbaaab0d8fc81324e8a1f229565a821f7b81",
+   "block": 24627182,
+   "index": 2,
+   "time_utc": "2026-03-10T12:51:11Z",
+   "from": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+   "to": "0x6110b7a5e63288c6f718419389883778f3a6d3af",
+   "nonce": 85,
+   "status": 1,
+   "gas_used": 3807630,
+   "effective_gas_price_gwei": 1.572708871,
+   "max_priority_fee_wei": 1500000000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 55199,
+   "gas_cost_eth": 0.00598829347848573,
+   "role": "helper+main program (same helper bytecode as the message sender's); borrows the last 55,199 sat WBTC; tip 1.5 gwei",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0xd4ec3e344fe270f34078e8cabc7f7bee36204049bc9c61febce3c1668b8df42c",
+   "block": 24627185,
+   "index": 305,
+   "time_utc": "2026-03-10T12:51:47Z",
+   "from": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+   "to": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+   "nonce": 1,
+   "status": 1,
+   "gas_used": 3740389,
+   "effective_gas_price_gwei": 0.076574654,
+   "max_priority_fee_wei": 37,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.000286418993500406,
+   "role": "MESSAGE SENDER's attack tx: same program as 0xdc32b0cf; WBTC pool already empty (borrow(WBTC, 0)); nothing gained",
+   "in_mempool_dump": false
+  },
+  {
+   "hash": "0x0331c45048016884067e9d0003068a11ac799a197a78e74aa0b87f3d6989159f",
+   "block": 24627423,
+   "index": 106,
+   "time_utc": "2026-03-10T13:39:35Z",
+   "from": "0x000040d6c85a13a1aa74565fde87e499dc023c6f",
+   "to": "0xc5d30c23be06183104818d4a29a7b1bf8cce9213",
+   "nonce": 1340,
+   "status": 0,
+   "gas_used": 2811545,
+   "effective_gas_price_gwei": 0.188172272,
+   "max_priority_fee_wei": 10360000,
+   "tx_type": "0x2",
+   "eth_out_of_alkemi_vault_net": 0.0,
+   "wbtc_sat_out_of_alkemi_net": 0,
+   "gas_cost_eth": 0.00052905481048024,
+   "role": "DHL-style copy by 0x000040d6c85a; REVERTED",
+   "in_mempool_dump": false
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "Yoink bribe to builder fee recipient 0x229b8325 (coinbase)",
+   "tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+   "amount_eth": 10.225645129714577
+  },
+  {
+   "what": "builder refund to Yoink contract (block idx 3)",
+   "tx": "0x3533647ba3607b1d7d27cee78f642bc0985cd347e2fc81d7ff671df02a50eac2",
+   "amount_eth": 9.190671700387883,
+   "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4"
+  },
+  {
+   "what": "proposer payment by builder 'I can haz block?'",
+   "tx": "0xec8340c29bc285163b08f66288d9ad611e6112726c437fe578d9c899d48eb44b",
+   "amount_eth": 1.0352742376921276
+  },
+  {
+   "what": "no return to Alkemi seen: Yoink EOA txlist 24627181-26239901 and Yoink contract internal txs 24627181-24700000 contain no transfer to Alkemi's admin 0x5bea205a or the proxy; no public statement found",
+   "tx": null
+  },
+  {
+   "what": "DHL attacker kept 43.45395 ETH; sent 3 ETH each to look-alike addresses from block 24627136 (scan to 24627400 only); Alkemi admin 0x5bea205a has no transactions 24626979-26300000",
+   "tx": null
+  }
+ ],
+ "mempool": {
+  "archive": "mempool-dumpster 2026-03-10 (csv present, no sourcelog for 2026)",
+  "alkemi_txs_found": [],
+  "block_coverage_txs_in_dump_of_block_txs": {
+   "24626979": {
+    "txs": 366,
+    "in_dump": 199
+   },
+   "24626980": {
+    "txs": 397,
+    "in_dump": 221
+   },
+   "24627055": {
+    "txs": 244,
+    "in_dump": 125
+   },
+   "24627180": {
+    "txs": 332,
+    "in_dump": 209
+   },
+   "24627181": {
+    "txs": 5,
+    "in_dump": 2
+   },
+   "24627182": {
+    "txs": 465,
+    "in_dump": 271
+   },
+   "24627185": {
+    "txs": 372,
+    "in_dump": 232
+   }
+  },
+  "reading": "none of the 10 Alkemi-touching txs nor the 4 deploy txs nor the message tx is in the dump, while 55-63% of all txs in the same blocks are: private flow or missed (unknown != none). Only the DHL attacker's later plain 3 ETH transfers appear."
+ },
+ "auction": {
+  "block": 24627181,
+  "slot": 13860253,
+  "slot_start_utc_ms": 1773147059000,
+  "relays_answered": [
+   "flashbots",
+   "ultrasound",
+   "titan"
+  ],
+  "n_bids": 271,
+  "n_builders": 18,
+  "bids_per_relay": {
+   "flashbots": 24,
+   "titan": 247
+  },
+  "first_bid_ms_rel_slot": -2983,
+  "last_bid_ms_rel_slot": 1843,
+  "winning_bid_eth": 1.0352742376921276,
+  "winning_builder": "I can haz block?",
+  "winning_builder_pubkey": "0x81476ce973b358648ef2b990ed3fe9e9b264030116e5f6aa12c1b9f573b7a19ef75b9142426ec3a4e56719659940d224",
+  "winning_relays": [
+   "flashbots",
+   "ultrasound"
+  ],
+  "winning_first_submission_ms_rel_slot": -1041,
+  "winning_last_submission_ms_rel_slot": -1041,
+  "runner_up_eth": 0.94115133936551,
+  "runner_up_builder": "I can haz block?",
+  "runner_up_ms_rel_slot": -1057,
+  "runner_up_other_builder_eth": 0.7502682711144629,
+  "runner_up_other_builder": "BuilderNet",
+  "runner_up_other_builder_ms_rel_slot": -1085,
+  "n_higher_bids_after_winner": 0,
+  "max_bid_eth": 1.0352742376921276,
+  "proposer_paid_eth": 1.0352742376921276,
+  "proposer_payment_tx": "0xec8340c29bc285163b08f66288d9ad611e6112726c437fe578d9c899d48eb44b",
+  "bot_tx_in_winning_block": true,
+  "escalation": [
+   [
+    -2983,
+    0.002726566638682071
+   ],
+   [
+    -2481,
+    0.00274643520299642
+   ],
+   [
+    -2185,
+    0.00274676071256696
+   ],
+   [
+    -1968,
+    0.00274780021256696
+   ],
+   [
+    -1477,
+    0.013364460005317266
+   ],
+   [
+    -1477,
+    0.013364894770807469
+   ],
+   [
+    -1452,
+    0.01336918438343736
+   ],
+   [
+    -1436,
+    0.013369189363080784
+   ],
+   [
+    -1375,
+    0.013369191581761752
+   ],
+   [
+    -1354,
+    0.013370653374206502
+   ],
+   [
+    -1320,
+    0.01337065676461664
+   ],
+   [
+    -1313,
+    0.013370656764706688
+   ],
+   [
+    -1304,
+    0.013370661199336688
+   ],
+   [
+    -1295,
+    0.013370662558533112
+   ],
+   [
+    -1277,
+    0.013370665904115253
+   ],
+   [
+    -1269,
+    0.013796050179674668
+   ],
+   [
+    -1220,
+    0.013796994697452589
+   ],
+   [
+    -1193,
+    0.013796995320052588
+   ],
+   [
+    -1178,
+    0.10507210191851583
+   ],
+   [
+    -1169,
+    0.116010803799356
+   ],
+   [
+    -1169,
+    0.23489402423015038
+   ],
+   [
+    -1152,
+    0.3421539283299521
+   ],
+   [
+    -1122,
+    0.44108416963041686
+   ],
+   [
+    -1113,
+    0.5503124396601305
+   ],
+   [
+    -1107,
+    0.6471606260910396
+   ],
+   [
+    -1098,
+    0.6512951071505694
+   ],
+   [
+    -1095,
+    0.7471335189830023
+   ],
+   [
+    -1090,
+    0.7502682711143729
+   ],
+   [
+    -1085,
+    0.7502682711144629
+   ],
+   [
+    -1078,
+    0.845117369570646
+   ],
+   [
+    -1057,
+    0.94115133936551
+   ],
+   [
+    -1041,
+    1.0352742376921276
+   ]
+  ],
+  "bid_data_note": null,
+  "raw_refs": {
+   "race_file": "incidents/alkemi-2026/race_24627181.json",
+   "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block24627181.json",
+   "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block24627181.json",
+   "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block24627181.json",
+   "relay_bids:titan": "site/raw/relay-titan/bids_block24627181.json"
+  },
+  "_missing_raw": []
+ },
+ "sources": [
+  "https://blocksec.com/blog/weekly-web3-security-incident-roundup-mar-9-mar-15-2026",
+  "https://x.com/blockaid_/status/2031351883470676048 (cited by DeFiHackLabs; not fetched)",
+  "DeFiHackLabs src/test/2026-03/AlkemiEarn_exp.sol (local clone)"
+ ],
+ "raw_refs": {
+  "alkemi_txs": "incidents/alkemi-2026/calls_table.json",
+  "trace_filter": "site/raw/rpc/alkemi_trace_filter_24626000_24627400.json",
+  "blocksec": "site/raw/web-alkemi/blocksec_roundup_mar9_mar15_2026.html"
+ },
+ "verdict_original": "related-not-frontrun",
+ "headline_text": "Yoink drained Alkemi's WBTC pool (0.299 WBTC, 10.24 ETH) one block after another attacker's identical-call tx ran out of gas; a different bot-hunter later complained Flashbots leaked his tx, but Yoink replayed the reverted one.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "sub_rows": [
+  {
+   "sub": "wbtc-yoink",
+   "verdict": "related-not-frontrun",
+   "race_type": "post-failure-replay",
+   "headline": false,
+   "bot": "Yoink",
+   "bot_tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+   "bot_block": 24627181,
+   "blocks_ahead": -1
+  },
+  {
+   "sub": "eth-vault-copiers",
+   "verdict": "related-not-frontrun",
+   "race_type": "late-copy",
+   "headline": false,
+   "bot": "anon searcher (0x4c452e82)",
+   "bot_tx": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+   "bot_block": 24627055,
+   "blocks_ahead": -76
+  }
+ ],
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": "post-failure-replay",
+   "headline": false
+  },
+  "verdict_reason": "Alkemi Earn's self-liquidation bug (BlockSec) was used on two pools. The 'attack tx' DeFiHackLabs lists (0xa17001eb, block 24626979, +43.45395 ETH, ETH vault) is not what Yoink touched. Yoink's tx 0x7acef470 (block 24627181 idx 0) hits the WBTC pool and contains the same 16 state-changing Alkemi calls (+2 withdraws) as the deploy+attack tx 0x726bd90c of EOA 0x46c403e3, which was mined one block earlier (24627180 idx 226) and reverted out of gas at its 14,974,454 gas limit. A fork replay of that tx at 30M gas succeeds and pays the attacker exactly the 29,884,523 sat WBTC Yoink swapped. So Yoink retried a failed, already-mined tx; nothing of that actor's was pending. The on-chain complainant 0x8366d87b ('Why did you leak my attack transaction to yoink?', block 24627239) is a third party: its program differs (0 shared calls), its attack tx landed in 24627185 after Yoink's and found the pool empty. A traceCall of its tx on the pre-Yoink state would have taken the whole 29,980,756 sat, so Yoink did take what it was about to drain, but the leak itself is neither shown nor refuted (none of the 15 relevant txs is in mempool-dumpster although 55-63% of other txs in those blocks are). Yoink paid 10.2256 ETH coinbase (999 per mille), builder refunded 9.19 ETH, net about 9.20 ETH, no return found.",
+  "headline_note": null,
+  "dataset_rows": [
+   "alkemi-2026/wbtc-yoink",
+   "alkemi-2026/eth-vault-copiers"
+  ]
+ }
+}

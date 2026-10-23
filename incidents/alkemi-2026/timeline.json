@@ -1,0 +1,155 @@
+[
+ {
+  "t_utc": "2026-03-10T06:19:11Z",
+  "kind": "fund",
+  "actor": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+  "detail": "EOA receives 0.09975 ETH from 0xac9f360a (block 24625237)",
+  "tx": "0xcec7c8eb14e78f1cabc635db28631b9c95b7b61cb18308bde326dafda68eda9f",
+  "block": 24625237,
+  "raw_ref": "site/raw/etherscan/alkemi2026_txlistinternal_0x0ed1c01b8420a965d7bd2374db02896464c91cd7.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:10:11Z",
+  "kind": "deploy",
+  "actor": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+  "detail": "attack contract 0xe408b52a deployed (block 24626979 idx 2)",
+  "tx": "0xcb59da3af2d08e7823e923bd2d3f048c4dce1ed65e6e56c5ad4969b3c2700fe1",
+  "block": 24626979,
+  "raw_ref": "site/raw/rpc/trace_block_24626979.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:10:11Z",
+  "kind": "tx",
+  "actor": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+  "detail": "attack tx idx 3: Balancer flash loan 51 WETH, supply 50 / borrow 39.5 / self-liquidate / withdraw; +43.45395 ETH. Block built by Titan, delivered by Ultra Sound (bid 0.0113 ETH)",
+  "tx": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+  "block": 24626979,
+  "raw_ref": "site/raw/rpc/trace_0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:10:23Z",
+  "kind": "tx",
+  "actor": "0xb180ef1b / 0x6bc22cd3",
+  "detail": "two copies of the DHL sequence at idx 114/115 of the next block, nothing gained (vault holds 0.7173 ETH, they did not take it)",
+  "tx": "0x4054e1d69035afc993ef80774cc83f5feb0b5d2542f9ff7fa1bbf254a6c79ea6",
+  "block": 24626980,
+  "raw_ref": "site/raw/rpc/block_24626980.json",
+  "raw_refs": [
+   "site/raw/rpc/trace_block_24626980.json"
+  ]
+ },
+ {
+  "t_utc": "2026-03-10T12:25:23Z",
+  "kind": "tx",
+  "actor": "0x4c452e829748e34e11d010e338596433d638f03c",
+  "detail": "deploy+attack in one tx takes the 0.7173 ETH left in the vault (idx 5)",
+  "tx": "0xef75d0e580a610a7ffa3db20f20a89af0a329e1801fa1642548d8cce9f2b06cc",
+  "block": 24627055,
+  "raw_ref": "site/raw/rpc/block_24627055.json",
+  "raw_refs": [
+   "site/raw/rpc/trace_block_24627055.json"
+  ]
+ },
+ {
+  "t_utc": "2026-03-10T12:46:35Z",
+  "kind": "fund",
+  "actor": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+  "detail": "message sender's EOA funded with 0.04875 ETH by 0x5babe600 (its first inbound)",
+  "tx": "0x47863f373832fbe307b2585526836713637d511ac45361f6f65445af7dfb37cf",
+  "block": 24627159,
+  "raw_ref": "site/raw/etherscan/alkemi2026_txlist_0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:50:47Z",
+  "kind": "deploy",
+  "actor": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+  "detail": "message sender deploys contract 0x54ad6754 (idx 2, 0.5 gwei tip, BuilderNet block)",
+  "tx": "0xfa64b1d97d9c136e7da3375c3d06d10854a5bae57690fb1fedc4d75a60eed6c2",
+  "block": 24627180,
+  "raw_ref": "site/raw/rpc/block_24627180.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:50:47Z",
+  "kind": "tx",
+  "actor": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+  "detail": "deploy+attack tx (idx 226, tip 37 wei) for the WBTC pool reverts out of gas after 14,344,401 of 14,974,454 gas, in its 7th self-liquidation",
+  "tx": "0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2",
+  "block": 24627180,
+  "raw_ref": "site/raw/rpc/trace_0x726bd90c84cd7e1a3dafd54ce968f038f1fe22d0d439bd8a55fbab60f0e5aad2.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:50:57.822Z",
+  "kind": "bid",
+  "actor": "I can haz block? (Yoink's builder)",
+  "detail": "first of 11 bids for slot 13860253 with the 5-tx block (0.105 ETH at -1178 ms); rises to 1.0353 ETH at -1041 ms, Flashbots relay only",
+  "tx": null,
+  "block": 24627181,
+  "raw_ref": "site/raw/relay-flashbots/bids_block24627181.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:50:59Z",
+  "kind": "tx",
+  "actor": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+  "detail": "Yoink tx idx 0 (5-tx block): flash loans 1 WBTC + 5 WETH, replays the 0x726bd90c sequence, withdraws 1.29925557 WBTC, swaps 0.29884523 WBTC -> 10.2359 ETH, pays 10.2256 ETH to the coinbase",
+  "tx": "0x7acef47065602187de04861aed2cd997111c3e29c8134d370bb0d035f395ec18",
+  "block": 24627181,
+  "raw_ref": "site/raw/rpc/block_24627181.json",
+  "raw_refs": [
+   "site/raw/rpc/trace_block_24627181.json"
+  ]
+ },
+ {
+  "t_utc": "2026-03-10T12:50:59Z",
+  "kind": "return",
+  "actor": "builder 0x229b8325",
+  "detail": "builder refunds 9.1907 ETH to the Yoink contract (idx 3), pays proposer 1.0353 ETH (idx 4)",
+  "tx": "0x3533647ba3607b1d7d27cee78f642bc0985cd347e2fc81d7ff671df02a50eac2",
+  "block": 24627181,
+  "raw_ref": "site/raw/rpc/block_24627181.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:51:11Z",
+  "kind": "tx",
+  "actor": "0xc9a5643e / 0x5af00b07",
+  "detail": "idx 0: DHL-style copy returns 0.014 ETH to itself; idx 2 (after its deploy at idx 1): helper program borrows the last 55,199 sat WBTC",
+  "tx": "0xdc32b0cf4268172ab3683b4ee617dbaaab0d8fc81324e8a1f229565a821f7b81",
+  "block": 24627182,
+  "raw_ref": "site/raw/rpc/block_24627182.json"
+ },
+ {
+  "t_utc": "2026-03-10T12:51:47Z",
+  "kind": "tx",
+  "actor": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+  "detail": "message sender's attack tx (idx 305, tip 37 wei): borrow(WBTC, 0), nothing gained, pool already empty",
+  "tx": "0xd4ec3e344fe270f34078e8cabc7f7bee36204049bc9c61febce3c1668b8df42c",
+  "block": 24627185,
+  "raw_ref": "site/raw/rpc/block_24627185.json"
+ },
+ {
+  "t_utc": "2026-03-10T13:02:35Z",
+  "kind": "message",
+  "actor": "0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76",
+  "detail": "to Yoink EOA: 'Fuck you flashbots. Why did you leak my attack transaction to yoink?'",
+  "tx": "0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64",
+  "block": 24627239,
+  "raw_ref": "site/raw/rpc/tx_0x325a67f87a49405154bc7d83e236539143d96381a16611a6bc1ea0b71592ed64.json"
+ },
+ {
+  "t_utc": "2026-03-10T13:09:59Z",
+  "kind": "message",
+  "actor": "0x101a2279",
+  "detail": "to the message sender: 'only an idiot would do a 2 step attack, when you can do it all at once'",
+  "tx": "0xbc1ebbea7a35db0e49f7639323e34e89b379318b17653086ccdb0ea466fc7535",
+  "block": 24627276,
+  "raw_ref": "site/raw/etherscan/alkemi2026_txlist_0x8366d87bfb60e4f9574bf0f7e3f42744e79c7b76.json"
+ },
+ {
+  "t_utc": "2026-03-10T13:39:35Z",
+  "kind": "tx",
+  "actor": "0x000040d6c85a",
+  "detail": "last DHL-style copy, reverted",
+  "tx": "0x0331c45048016884067e9d0003068a11ac799a197a78e74aa0b87f3d6989159f",
+  "block": 24627423,
+  "raw_ref": "site/raw/rpc/trace_0x0331c45048016884067e9d0003068a11ac799a197a78e74aa0b87f3d6989159f.json"
+ }
+]

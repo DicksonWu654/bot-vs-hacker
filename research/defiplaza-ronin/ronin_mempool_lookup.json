@@ -1,0 +1,173 @@
+{
+ "coverage": {
+  "date": "2024-08-06",
+  "covered": true,
+  "files": [
+   "csv.zip",
+   "parquet",
+   "sourcelog.csv.zip",
+   "summary.txt"
+  ],
+  "index_raw": "site/raw/mempool-dumpster/index_2024-08.html"
+ },
+ "txs": {
+  "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb": null,
+  "0x77bb83dd9b25a0af12c0092993ddf1a2f54b77fbcd1dbf1bf33a965ec707268b": null,
+  "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8": null,
+  "0xb7c3f85abd0b9ede7b64868eeb6778ea4731adb1d49f8640b7e7234e470e96c1": {
+   "first_seen_ms": 1722939100233,
+   "first_seen_utc": "2024-08-06T10:11:40.233000+00:00",
+   "sources": [
+    "chainbound",
+    "bloxroute",
+    "local",
+    "mempoolguru"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1722939100233
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1722939100239
+    },
+    {
+     "source": "local",
+     "first_seen_ms": 1722939100280
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1722939100407
+    }
+   ],
+   "included_at_block": 20468849,
+   "included_block_timestamp_ms": 1722939119000,
+   "inclusion_delay_ms": 18767,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "site/raw/mempool-dumpster/2024-08-06_summary.txt"
+   }
+  },
+  "0xc78fb8cd5f7813a3d8abebdc5351aafd5011e8e13c5f6740837eeef9308d1faf": {
+   "first_seen_ms": 1722937042400,
+   "first_seen_utc": "2024-08-06T09:37:22.400000+00:00",
+   "sources": [
+    "chainbound",
+    "bloxroute",
+    "local",
+    "mempoolguru"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1722937042400
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1722937042409
+    },
+    {
+     "source": "local",
+     "first_seen_ms": 1722937042423
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1722937042584
+    }
+   ],
+   "included_at_block": 20468888,
+   "included_block_timestamp_ms": 1722939587000,
+   "inclusion_delay_ms": 2544600,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "site/raw/mempool-dumpster/2024-08-06_summary.txt"
+   }
+  },
+  "0x56439cf9427a9188d12b35ef4c8b80fc94a8a1dd205789999c000d8035f27afe": {
+   "first_seen_ms": 1722938411284,
+   "first_seen_utc": "2024-08-06T10:00:11.284000+00:00",
+   "sources": [
+    "chainbound",
+    "bloxroute",
+    "local",
+    "mempoolguru"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1722938411284
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1722938411291
+    },
+    {
+     "source": "local",
+     "first_seen_ms": 1722938411303
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1722938411377
+    }
+   ],
+   "included_at_block": 20468790,
+   "included_block_timestamp_ms": 1722938411000,
+   "inclusion_delay_ms": -284,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "site/raw/mempool-dumpster/2024-08-06_summary.txt"
+   }
+  },
+  "0x855dd3b1194e3b889f4667b6a0996220e350e034d35d3eab29b4f23bc205767e": {
+   "first_seen_ms": 1722934127379,
+   "first_seen_utc": "2024-08-06T08:48:47.379000+00:00",
+   "sources": [
+    "chainbound",
+    "bloxroute",
+    "mempoolguru",
+    "local"
+   ],
+   "per_source_first_seen": [
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1722934127379
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1722934127398
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1722934127688
+    },
+    {
+     "source": "local",
+     "first_seen_ms": 1722934127998
+    }
+   ],
+   "included_at_block": 20468438,
+   "included_block_timestamp_ms": 1722934127000,
+   "inclusion_delay_ms": -379,
+   "in_tx_file": true,
+   "in_sourcelog": true,
+   "raw_refs": {
+    "tx_csv": "full cache only (not published)",
+    "sourcelog": "full cache only (not published)",
+    "summary": "site/raw/mempool-dumpster/2024-08-06_summary.txt"
+   }
+  },
+  "0x8369cdc42b86ea9bbff28eec3d24d4a05bcd3273f5c69c7c76e7dc0858952ff8": null,
+  "0x017e91606e015b441c1fa8b82929d685b99637896ebf96a81c323a32abe8974c": null,
+  "0xacd5202dd0b372bc76a1659524e3899ec4efa4782e98718fd9593b1077be9953": null
+ }
+}

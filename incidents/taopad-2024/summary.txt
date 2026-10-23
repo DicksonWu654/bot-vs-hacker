@@ -1,0 +1,19 @@
+TaoPad (TPAD) - Yoink replays the operator's failed tx - 2024-02-14, Ethereum mainnet
+Verdict: related-not-frontrun | race_type: post-failure-replay | headline: no
+
+WHAT HAPPENED
+The "victim" in the on-chain message to Yoink is the TaoPad team itself. The TPAD token (0x5483dc6a) holds the ETH it collects from trading taxes (29.18 ETH that day), and its public distribute(minOut) swaps that whole balance through Uniswap V3 at an operator-set fee tier with a caller-chosen minimum. TaoPad says a third party had exploited this weeks earlier, and that it planned to extract the remaining tax share itself "taking advantage of this vulnerability". Its operator wallet taopad.eth (0x98915686) deployed a helper contract (block 19226396), set poolFee to 100 (19226402) and sent execute() with 1 ETH. The tx was public (mempool first seen 13:23:12.276Z by six sources) and landed at block 19226482, index 0 - and reverted: out of gas inside its second swap (gas limit 29,792,302).
+
+Yoink's tx 0x5853b7a0 landed 21 blocks later (block 19226503, index 0, 13:27:35Z; 252 s after the failure; not in the mempool archive, so private flow). Its trace repeats the operator's calls on the same targets (4 of 9 paired calls byte-identical after normalising the two contracts, the others differing only in deadline, one amount bound and approve amounts; same 0.6667 + 0.3333 ETH, same distribute argument), with a 30,000,000 gas limit, and finishes: 29.5056 ETH in, 1.0 ETH working capital out, 1.3968 ETH to the coinbase (49 per-mille bribe), 0.7847 ETH gas, 26.3242 ETH net. No builder refund. Nobody else called distribute() in blocks 19226300-19226700, and the operator sent nothing in between (its next tx, setPoolFee(0), came after Yoink). So there was no pending tx to beat and no attacker: a replay of a non-hacker's already-failed tx.
+
+AFTERMATH
+TaoPad wrote to Yoink 27 min later ("we have been frontran"). Yoink asked whether it was "a failed rug attempt", got an explanation, and on 2024-02-15 12:53:35Z sent exactly 26.32 ETH to taopad.eth ("sent back the entire bot profit"): 99.98% of its net.
+
+THREE FACTS
+1. The project's own tx failed by running out of gas; Yoink's identical call path with a 30M limit succeeded 4 minutes later.
+2. Yoink's block was a single 1.403 ETH submission at +380 ms, 63x the next best bid; 99.5% of it was Yoink's coinbase payment.
+3. Yoink returned 26.32 ETH - essentially all of its net - within 23 hours of the first message.
+
+LIMITS
+Yoink's trigger is unknown (private flow). TaoPad's account of the earlier exploit is unverified. No web search was possible (budget exhausted); built from chain data and on-chain messages.
+Files: incident.json, timeline.json, call_diff.json, race_19226482.json, race_19226503.json, scripts/build_incident.py

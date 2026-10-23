@@ -1,0 +1,359 @@
+[
+ {
+  "slug": "sushi-rp2-2023",
+  "name": "SushiSwap RouteProcessor2 approval exploit (0xsifu) - rescue-turned-feeding-frenzy",
+  "date_utc": "2023-04-09T02:35:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-whitehat-or-user",
+  "race_type_reason": "There is no hostile attacker: the tx all reports call the original (0x43ff7e01...) was a white-hat rescue by Trust. Yoink pulled 100 WETH in 17007838 using the same route bytes (only the 20-byte fake-pool address differs), one block before Trust's still-pending tx could be included (its max fee was below that block's base fee).",
+  "one_liner": "Yoink copied the white hat Trust's still-pending RouteProcessor2 rescue one block early (17007838 idx 23); the copy frenzy then sent 44.8% of the 1,800 WETH pulled to the block auction, and 875 ETH was later returned.",
+  "attacker": {
+   "eoa": null,
+   "eoas": [],
+   "contracts": [],
+   "funding": "n/a",
+   "funding_tx": null,
+   "deploy_tx": null,
+   "deploy_block": null,
+   "attack_txs": [
+    {
+     "hash": "0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9",
+     "block": 17007839,
+     "index": 54,
+     "status": "success",
+     "role": "white-hat rescue tx by Trust (0x869238b1...), pending when Yoink pulled in 17007838; NOT a hostile attack"
+    }
+   ],
+   "none_reason": "No hostile attacker tx exists in public history: the first pull by anyone is Yoink's (17007838 idx 23), and the tx reports call the original is the white hat Trust's rescue of the victim's approved WETH (incident.json attacker.role). In-block evidence only: no mempool archive before 2023-08-07, so whether anyone else saw the vulnerability earlier is unknown."
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+   "tx": "0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386",
+   "block": 17007838,
+   "position": 23,
+   "status": "success",
+   "priority_fee_gwei": 2.0
+  },
+  "bots_other": [
+   {
+    "label": "searcher 0x719cdb61",
+    "eoa": "0x719cdb61e217de6754ee8fc958f2866d61d565cf",
+    "tx": "0xea3480f1f1d1f0b32283f8f282ce16403fe22ede35c0b71a732193e56c5c45e8",
+    "block": 17007839,
+    "position": 0,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 91.9962 ETH"
+   },
+   {
+    "label": "Yoink",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0x8e28bc58897f35e71b727f3066ae57b4d597014db6778bbf70838347c112e0e1",
+    "block": 17007839,
+    "position": 1,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 10.0000 ETH"
+   },
+   {
+    "label": "searcher 0xc9c5b869",
+    "eoa": "0xc9c5b86993b1a72dca6082b2d34210afe19c7ccf",
+    "tx": "0x542838429f32b49d71264cc1036bb7cfd66824613ba0c437f7ce4269edb58f74",
+    "block": 17007839,
+    "position": 2,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 5.1000 ETH"
+   },
+   {
+    "label": "BlockSec rescue",
+    "eoa": "0xcff8bdf57f4e62c1d4f82420b8a1cad70d5bf383",
+    "tx": "0x3610d3e3f2381c73f4bd128df9be90de87482802f30712dd555619b8bf3462a4",
+    "block": 17007839,
+    "position": 9,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 0.0000 ETH"
+   },
+   {
+    "label": "Trust (white hat)",
+    "eoa": "0x869238b19ea39a1943ef8ebbc10f25682dc7c47a",
+    "tx": "0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9",
+    "block": 17007839,
+    "position": 54,
+    "status": "success",
+    "role": "white-hat rescue tx that every report calls the original; pulled 100 WETH one block AFTER Yoink's first pull; max fee 18.8724 gwei was below 17007838 base fee 18.8779 gwei, so it was pending and could not be included in 17007838; Trust returned 90 WETH"
+   },
+   {
+    "label": "c0ffeebabe.eth",
+    "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "tx": "0xbb9aac794415b2fbe2c947fe37ebb29c75526c150d33dd408ccddbcb52534828",
+    "block": 17007840,
+    "position": 1,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 10.0000 ETH"
+   },
+   {
+    "label": "Yoink",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0x6ac2d60c8f48144f2adb10ab161efdd491a791c6a666c450d4b33c6889fc0925",
+    "block": 17007840,
+    "position": 34,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 0.0000 ETH"
+   },
+   {
+    "label": "c0ffeebabe.eth",
+    "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "tx": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
+    "block": 17007842,
+    "position": 0,
+    "status": "success",
+    "role": "pulled 8 x 100 WETH from the victim; coinbase transfer 678.8800 ETH"
+   },
+   {
+    "label": "Yoink",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0x40be81f859227aa952e70fe1f5e8c84feed6aa3c2a4d6bf38125cd6bc222560a",
+    "block": 17007842,
+    "position": 1,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 10.0000 ETH"
+   },
+   {
+    "label": "c0ffeebabe.eth",
+    "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+    "tx": "0x11d069cbe4490cc483b1ae2e77c9c79493213347b42a8dec2ded25724e2f1835",
+    "block": 17007856,
+    "position": 2,
+    "status": "success",
+    "role": "pulled 1 x 100 WETH from the victim; coinbase transfer 0.0000 ETH"
+   }
+  ],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: no mempool archive exists before 2023-08-07 and Trust's pending tx has no public first-seen time. That the tx was pending is inferred from its max fee (18.8724 gwei) being below the 17007838 base fee (18.8779 gwei), which makes it unincludable in that block.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "Trigger is presumably Trust's pending rescue tx 0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9 but no first-seen time exists (pre-archive); not filled."
+  },
+  "attacker_block": 17007839,
+  "attacker_block_note": "Block in which the copied white-hat tx (Trust 0x43ff7e01..., idx 54) landed: 17007839, one block after Yoink's first pull; its max fee (18.87241 gwei) < 17007838 base fee (18.87787 gwei), so it could not land in 17007838. Not a hostile attacker's block.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17007839,
+   "tx": "0x43ff7e01423044cfb501b4fe9ef1386725c0ddc117dadd6e6620cb68bdeaf4f9"
+  },
+  "auction": {
+   "block": 17007838,
+   "slot": 6181974,
+   "slot_start_utc_ms": 1681007711000,
+   "relays_answered": [],
+   "n_bids": 0,
+   "n_builders": 0,
+   "bids_per_relay": {},
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": [],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/sushi-rp2-2023/race_17007838.json"
+   },
+   "auction_note": "Bot block 17007838 (slot 6181974) is a vanilla non-MEV-Boost block: no relay delivered it and relays hold no bid history, so there is no auction for Yoink's first pull itself. The copy auction started in the next blocks. Block 17007839 (builder0x69, delivered via agnostic): 574 bids on the Flashbots relay, winning bid 107.13 ETH, of which 107.096 ETH was the three searchers' direct coinbase payments (0x719cdb61 92.00, Yoink 10, 0xc9c5b869 5.1) paid straight to the proposer fee recipient 0x388c818c (the block fee recipient). Block 17007842 (beaverbuild.org, delivered via agnostic): 331 bids, winning bid 689.02 ETH (proposer payment tx 0xcf3cd767...), made of c0ffeebabe's idx 0 tx (coinbase transfer 678.88 ETH) and Yoink's idx 1 tx (10 ETH), 688.88 ETH in total to the beaverbuild fee recipient. These figures are other blocks' race files and are NOT part of this block's auction fields."
+  },
+  "loot": {
+   "scope": "all-bots-in-incident",
+   "gross_loot_eth": 1800.0,
+   "gross_loot_method": "sum of the 18 WETH Transfer logs out of the victim 0x31d3243c in blocks 17007838-17007856 (11 txs), WETH counted 1:1 as ETH",
+   "captured_native": {
+    "amount": 1800.0,
+    "unit": "WETH",
+    "desc": "18 pulls of 100 WETH from one wallet's RouteProcessor2 approval across 11 txs by 6 actors"
+   },
+   "captured_usd": 3300000.0,
+   "captured_usd_source": "BlockSec blog 'about $3.3 million' total loss (reported; saved page site/raw/web-curve-sushi/blocksec_sushi_incident_8.html)",
+   "coinbase_paid_eth": 805.9761955032506,
+   "priority_fee_paid_eth": 1.004347972357656,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 993.0194565243918,
+   "loot_note": "Scope: all bots in the incident (11 pulling txs), not just Yoink's first tx. Payments to the auction 806.981 ETH = 44.8% of 1,800 (BlockSec's reported 44.5% reproduces): coinbase transfers 805.976 + priority fees on the 11 pulling txs 0.00435 + 1.0 ETH gas-price payment tx 0x09f4af54 (c0ffeebabe, 17007856 idx 4). bot_net_eth = 1800 - payments, before gas base fees and before any later return. Per actor: Yoink pulled 400 WETH (4 txs) and paid 20.0 ETH to coinbase (10 in 17007839 idx 1, 10 in 17007842 idx 1) plus 0.00088 priority fee; the first tx (17007838) paid 0 coinbase and 0.00044 priority fee. c0ffeebabe.eth pulled 1,000 WETH (10 pulls in 3 txs) and paid 688.88 ETH to coinbase (10 in 17007840 idx 1, 678.88 in 17007842 idx 0) + 1.0 ETH gas-price payment. searcher 0x719cdb61 pulled 100, coinbase 91.996; searcher 0xc9c5b869 pulled 100, coinbase 5.1; BlockSec rescue pulled 100 (priority fee 0.00289); Trust pulled 100 (priority fee 0.000146). kept_by_bot_eth is c0ffeebabe.eth's arithmetic remainder (1000 pulled - 688.88 coinbase - 1.0 gas-price payment - 305.31898 returned = 4.80102 ETH), which may be gas/dust and is not a claim of retention; Yoink's remainder is about -0.0009 ETH (its priority fees). No builder->bot refund transfers in blocks 17007838-17007856 (block + trace scan). In 17007842 beaverbuild.org took 689.235 ETH gross and paid the proposer 689.017 (margin 0.218); about 99.9% of the auction money reached proposers."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 685.3189807209931,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 875.0,
+   "returned_to": "victim 0x31d3243c (directly: Trust, BlockSec; via Sushi multisig 0x19b3eb3a: Yoink + c0ffeebabe.eth)",
+   "returned_desc": "875 ETH of 1,800 reached the victim (48.6%): Trust 90 WETH (10 + 80, 2023-04-09 03:37:59 and 03:40:35Z), BlockSec 100 ETH (2023-04-09 09:48:11Z), and 685 ETH from the Sushi multisig on 2023-04-17 15:39:35Z. Not returned in saved data: searcher 0x719cdb61 (about 8.0 ETH kept after 92.0 paid), searcher 0xc9c5b869 (about 94.9 ETH kept after 5.1 paid), Trust's 10 WETH difference. Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "Trust pulled 100 WETH and returned 90; the 10 WETH difference is not labelled a bounty in any saved source, so not recorded as one.",
+   "kept_by_bot_eth": 4.801019279006994,
+   "returned_txs": [
+    {
+     "tx": "0x6fda1a6de9a5a1f6e96572d55a75d2d5517c24d4d1fcebf0a008e6e584d2e585",
+     "eth": 10.0,
+     "note": "Trust (white hat) returns 10 WETH to the victim",
+     "block": 17008145,
+     "time_utc": "2023-04-09T03:37:59Z"
+    },
+    {
+     "tx": "0xb76b11ae23c4697d8379de5c50e5efcb775036090b0a0f73cd0cf29820770923",
+     "eth": 80.0,
+     "note": "Trust (white hat) returns 80 WETH to the victim (total 90 of 100 pulled)",
+     "block": 17008158,
+     "time_utc": "2023-04-09T03:40:35Z"
+    },
+    {
+     "tx": "0xe9af60755f17894c6dc95a1c8f2663da1d8daa9a37cbbf04d3e88b349aec19e6",
+     "eth": 100.0,
+     "note": "BlockSec rescue returns 100 ETH to the victim (sender 0x00000035...)",
+     "block": 17009958,
+     "time_utc": "2023-04-09T09:48:11Z"
+    },
+    {
+     "tx": "0x8de62a5549250390567d409bc7cdaf7881eff3c78ac6e1445b84f5868296f1e8",
+     "eth": 1.0,
+     "note": "c0ffeebabe.eth sends 1.0 ETH to the Sushi multisig 0x19b3eb3a",
+     "block": 17011152,
+     "time_utc": "2023-04-09T13:51:59Z"
+    },
+    {
+     "tx": "0x09f2e3864e35b96af096c4d1b4800de28d7e57059c2a0db384a739ada7c059b6",
+     "eth": 304.318980720993,
+     "note": "c0ffeebabe.eth sends 304.31898 ETH to the Sushi multisig (total 305.31898)",
+     "block": 17011166,
+     "time_utc": "2023-04-09T13:54:47Z"
+    },
+    {
+     "tx": "0xbefe5711e7096ce51ab3e6edab757808f34dc58d949f77e74b2131e99f5eb734",
+     "eth": 380.0,
+     "note": "Yoink sends 380 ETH to the Sushi multisig (an identical earlier send 0x7b6eb36aacdc210a35818a7a5a44ad9aea3e18b2bdc82db300b7b89c6c504f64 at block 17019730 reverted)",
+     "block": 17019747,
+     "time_utc": "2023-04-10T19:07:59Z"
+    },
+    {
+     "tx": "0x9d729a4903016b8523e060cfc3fc244fa862a169ff346f16b4c7725e843365e6",
+     "eth": 685.0,
+     "note": "Sushi multisig pays 685 ETH to the victim (internal call; equals the 305.319 + 380 received, rounded)",
+     "block": 17067434,
+     "time_utc": "2023-04-17T15:39:35Z"
+    }
+   ],
+   "public_statement": "BlockSec (saved forklog page): about 44.5% of the lost funds went to block builders; 'One bot owned by c0ffeebabe.eth even bribed 678 Eth to the builder in one transaction'. Trust (@trust__90) described the tx as a rescue attempt.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_17007838.json",
+   "bot.position": "site/raw/rpc/block_17007838.json",
+   "attacker_block": [
+    "site/raw/rpc/block_17007839.json",
+    "site/raw/rpc/block_17007838.json"
+   ],
+   "loot.gross_loot_eth": "site/raw/rpc/sushi_weth_transfers_from_victim_31d3_17007830_17007900.json",
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_17007838.json",
+    "site/raw/rpc/trace_block_17007839.json",
+    "site/raw/rpc/trace_block_17007840.json",
+    "full cache only (not published)",
+    "site/raw/rpc/trace_block_17007842.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_17007838.json",
+    "site/raw/rpc/receipts_17007839.json",
+    "site/raw/rpc/receipts_17007840.json",
+    "site/raw/rpc/receipts_17007842.json",
+    "full cache only (not published)",
+    "site/raw/rpc/block_17007838.json",
+    "site/raw/rpc/block_17007839.json",
+    "site/raw/rpc/block_17007840.json",
+    "site/raw/rpc/block_17007842.json",
+    "full cache only (not published)"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_17007838.json",
+    "site/raw/rpc/block_17007839.json",
+    "site/raw/rpc/block_17007840.json",
+    "full cache only (not published)",
+    "site/raw/rpc/block_17007842.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/rpc/trace_block_17007839.json",
+    "site/raw/rpc/trace_block_17007842.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/sushi_weth_transfers_from_victim_31d3_17007830_17007900.json",
+    "site/raw/rpc/trace_block_17007839.json",
+    "site/raw/rpc/trace_block_17007840.json",
+    "site/raw/rpc/trace_block_17007842.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.captured_usd": "full cache only (not published)",
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/txlist_0x19b3eb3a_17007838_17200000.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/tokentx_0x31d3243c_17007838_17030000.json",
+    "site/raw/etherscan/txlist_0x31d3243c_17007700_17030000.json",
+    "site/raw/etherscan/txlistinternal_0x19b3eb3a_17011000_17100000.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/sushi_weth_transfers_from_victim_31d3_17007830_17007900.json",
+    "site/raw/etherscan/txlist_0x19b3eb3a_17007838_17200000.json",
+    "site/raw/rpc/trace_block_17007840.json",
+    "site/raw/rpc/trace_block_17007842.json",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.builder_payout_to_victim_eth",
+    "why": "no builder -> victim pass-through exists in this incident (set null, not 0)"
+   },
+   {
+    "field": "fate.returned_by_builder_eth",
+    "why": "no builder return was seen in the victim's inbound lists to block 17030000, but the saved lists do not cover builder-side flows afterwards; left null"
+   },
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "no mempool archive before 2023-08-07; Trust's pending tx has no public first-seen time"
+   },
+   {
+    "field": "attacker.funding_tx",
+    "why": "Trust is a white hat, not an attacker; funding tx 0x3dfaaf04... is listed in incident.json only for completeness and is not part of the race"
+   }
+  ],
+  "discrepancies": [
+   "incident.json lists c0ffeebabe at 689.88 ETH (688.88 coinbase + 1.0 gas-price payment tx 0x09f4af54 at 17007856 idx 4); the coinbase-only figure is 688.88 (10 at 17007840 + 678.88 at 17007842 idx 0). Both reproduce from traces; coinbase_paid_eth here (805.976) excludes the 1.0 ETH gas-price payment, which is in priority_fee_paid_eth (1.0043 = 1.0 + 0.00435 on the 11 pulling txs).",
+   "incident.json funds_fate says c0ffeebabe returned 305.31898 ETH in 'tx 0x8de62a55... + 0x09f2e386...': verified (1.0 + 304.31898 ETH to the Sushi multisig). The multisig then paid the victim 685.0, so 0.319 ETH of the bots' 685.319 ETH stayed at the multisig in that tx.",
+   "BlockSec 100 ETH is native ETH from 0x00000035... into the victim (txlist, block 17009958); Trust's 90 is WETH (ERC-20). Both are counted 1:1 as ETH-equivalent."
+  ],
+  "evidence_notes": [
+   "Yoink's transaction preceded Trust's pending whitehat transaction; later transactions and returns are recorded by hash, block, position and funds."
+  ],
+  "incident_dir": "incidents/sushi-rp2-2023"
+ }
+]

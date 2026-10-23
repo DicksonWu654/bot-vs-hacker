@@ -1,0 +1,222 @@
+[
+ {
+  "t_utc": "2021-03-08T18:20:28Z",
+  "block": 11999427,
+  "kind": "deploy",
+  "actor": "Hippo",
+  "detail": "first test contract 0xaffc5f51 (its only call reverted at 11999454)",
+  "tx": "0x7ed0fa2d7c77f3b6b97dd8ac005c9022e3b5017d58f28c5ecf32c6439a54fb37",
+  "raw_ref": "site/raw/etherscan/dodo_hippo_txlist.json"
+ },
+ {
+  "t_utc": "2021-03-08T18:45:52Z",
+  "block": 11999548,
+  "kind": "deploy",
+  "actor": "Hippo",
+  "detail": "second contract 0x6d3bab04",
+  "tx": "0x916cc48c6202b785a4c84ab47495322c8686faba9f9046b1e83820ca5bd28f55",
+  "raw_ref": "site/raw/etherscan/dodo_hippo_txlist.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:01:47Z",
+  "block": 11999890,
+  "kind": "fund",
+  "actor": "Hippo",
+  "detail": "1.6 ETH from 0x5e457dd6 (source unresolved)",
+  "tx": "0xdd0dd8d6977cbf94bff941cecbccd44a76a080fa8208c3a2426636b30883f2e6",
+  "raw_ref": "site/raw/etherscan/dodo_hippo_txlist.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:03:46Z",
+  "block": 11999896,
+  "kind": "deploy",
+  "actor": "Hippo",
+  "detail": "main contract 0x7c41559c deployed, 150 gwei, index 89",
+  "tx": "0x02eb0b3be66f856d3ad8b9f3f8464c3d09006e3eeb5e1cd93a56414a42685cfa",
+  "raw_ref": "site/raw/rpc/block_11999896.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:24:32Z",
+  "block": 12000020,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "stage: fake tokens FDO/FUSDT moved into WSZO/USDT pool 0xfb609b68 (idx 117, 131 gwei)",
+  "tx": "0xfbf6d8305660a2cb2282b94299c51acfc51860a39b1f63a758615492ba40109d",
+  "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0xfbf6d8305660a2cb2282b94299c51acfc51860a39b1f63a758615492ba40109d.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:25:43Z",
+  "block": 12000022,
+  "kind": "tx",
+  "actor": "Antelope",
+  "detail": "idx 4 @243.1 gwei: flashLoan + init(FDO,FUSDT) on pool 1, takes 955,815.54 WSZO + 259,939.36 USDT",
+  "tx": "0xff9b3b2cb09d149762fcffc56ef71362bec1ef6a7d68727155c2d68f395ac1e8",
+  "raw_ref": "site/raw/etherscan/dodo_pool_0xfb609b_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:25:43Z",
+  "block": 12000022,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 176 @132 gwei: attack tx REVERTS (pool already re-initialised/drained)",
+  "tx": "0x4bc4ace313f2f5a411a5a560255ba0bba4f4913edb55ed882feaee84a3b1292e",
+  "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0x4bc4ace313f2f5a411a5a560255ba0bba4f4913edb55ed882feaee84a3b1292e.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:42:47Z",
+  "block": 12000096,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "stage on pool 2 (ETHA/USDT 0xfd87ab87)",
+  "tx": "0x611e9d9d0163a1b516c27dfe21a9362e6d694a9107814c00bed82df2b6a4effe",
+  "raw_ref": "site/raw/etherscan/dodo_h_0x368a65_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:43:41Z",
+  "block": 12000102,
+  "kind": "tx",
+  "actor": "Antelope",
+  "detail": "idx 0 @1883.1 gwei: takes 130,968.69 ETHA + 326,070.16 USDT (4 CHI burned)",
+  "tx": "0x0b062361e16a2ea0942cc1b4462b6584208c8c864609ff73aaa640aaa2d92428",
+  "raw_ref": "site/raw/etherscan/dodo_antelope_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:43:41Z",
+  "block": 12000102,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 4 @600 gwei: attack REVERTS",
+  "tx": "0x0430d5a2dcfb0f9530fe1699e0e86a9526825da5e2072a15c4be734710f56cdb",
+  "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0x0430d5a2dcfb0f9530fe1699e0e86a9526825da5e2072a15c4be734710f56cdb.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:47:05Z",
+  "block": 12000118,
+  "kind": "deploy",
+  "actor": "Hippo",
+  "detail": "bypass contract 0x910fd17b (stage+flashLoan+init in one tx)",
+  "tx": "0xb704a53483a05c0e82f9bfa51a18bc6a61a666df37cd5413277d26b678cb3958",
+  "raw_ref": "site/raw/etherscan/dodo_hcontract_0x910fd1_txlist.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:57:45Z",
+  "block": 12000165,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 3 @300 gwei: single-tx attack on wCRES/USDT pool 0x051ebd71 succeeds; 1,139,456.20 USDT + 133,548.94 wCRES into 0x910fd17b",
+  "tx": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e",
+  "raw_ref": "site/raw/etherscan/dodo_h_0x910fd1_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:58:34Z",
+  "block": 12000167,
+  "kind": "tx",
+  "actor": "Cheetah",
+  "detail": "idx 1 @684.25 gwei: calls 0x910fd17b.1c03650f(USDT) via executor 0x3a518964; takes 1,139,456.20 USDT",
+  "tx": "0x75d4765dd704d82f0bf539da88aff2568da38697f153b14d285abc8749da683f",
+  "raw_ref": "site/raw/etherscan/dodo_h_0x910fd1_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:58:34Z",
+  "block": 12000167,
+  "kind": "tx",
+  "actor": "Antelope",
+  "detail": "idx 4 @652.17 gwei: same withdraw call + transfer to own EOA; out of gas, fails",
+  "tx": "0xbfe6df9308df38661b817cb56da5cacca468e894472a291d6e17d2eb7ab4e24b",
+  "raw_ref": "site/raw/rpc/tx_0xbfe6df9308df38661b817cb56da5cacca468e894472a291d6e17d2eb7ab4e24b.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:58:34Z",
+  "block": 12000167,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 77 @142 gwei: own withdraw(USDT), receives 0",
+  "tx": "0x14084fba94df75cf8ebfbb62188aa06a29ec0e38181f73eab7b79eba750e4840",
+  "raw_ref": "site/raw/rpc/tx_0x14084fba94df75cf8ebfbb62188aa06a29ec0e38181f73eab7b79eba750e4840.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:59:01Z",
+  "block": 12000171,
+  "kind": "tx",
+  "actor": "Cheetah",
+  "detail": "idx 3 @559.17 gwei: withdraw(wCRES) replay; takes 133,548.94 wCRES",
+  "tx": "0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211",
+  "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0xa8d030494607e16b06dd0c7e97da2b78ebc5a072a8176b19ca57f17044c1a211.json"
+ },
+ {
+  "t_utc": "2021-03-08T20:59:01Z",
+  "block": 12000171,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 78 @152 gwei: own withdraw(wCRES), receives 0",
+  "tx": "0x021a2bd6ea7b502290be4c67be33be33c5b5582676d1c00ab59f1ed53a1b576b",
+  "raw_ref": "site/raw/rpc/tx_0x021a2bd6ea7b502290be4c67be33be33c5b5582676d1c00ab59f1ed53a1b576b.json"
+ },
+ {
+  "t_utc": "2021-03-08T21:29:45Z",
+  "block": 12000302,
+  "kind": "tx",
+  "actor": "Hippo",
+  "detail": "idx 186: successful smaller attack on pool 0x509ef8c6, 21,379.23 USDT + 9,437.95 DODO to EOA",
+  "tx": "0xc79dbe0aa48e0ba9f72bd74240cf50b653196ff00979bf367f11f8fa3d9b45ec",
+  "raw_ref": "site/raw/etherscan/dodo_h_0x328410_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-09T01:45:02Z",
+  "block": 12001452,
+  "kind": "tx",
+  "actor": "Antelope",
+  "detail": "idx 1 @93,148.7 gwei (8.13 ETH fee): flashLoan on pool 0x236116ff, 45.28 WETH + 324.26 vETH; Cheetah idx 3 @19,531 gwei captures nothing; EOA 0x3984e3a7's flashLoan idx 23 reverts",
+  "tx": "0x561f7ccb27b9928df33fa97c2fb99ea3750593e908f9f0f8baf22ec7ca0c5c4a",
+  "raw_ref": "site/raw/etherscan/dodo_pool236_tokentx.json",
+  "raw_refs": [
+   "site/raw/etherscan/dodo_antelope_txlist.json"
+  ],
+  "derived": [
+   {
+    "shown": "8.13 ETH",
+    "how": "gas price 93,148,748,523,502 wei x gas used 87,259 (Etherscan txlist row of this tx)",
+    "expr": "gp*gu/1e18",
+    "ops": {
+     "gp": {
+      "int": 93148748523502
+     },
+     "gu": {
+      "int": 87259
+     }
+    }
+   }
+  ]
+ },
+ {
+  "t_utc": "2021-03-09T02:21:36Z",
+  "block": 12001597,
+  "kind": "tx",
+  "actor": "Antelope",
+  "detail": "idx 0 @828 gwei: leftover 10,000 USDT + 1,000 wCRES from pool 0x051ebd71",
+  "tx": "0xa51440324c005c92eee1b5ae954366877372d342cdcede55d2ee6a2149384c81",
+  "raw_ref": "site/raw/etherscan/dodo_antelope_tokentx.json"
+ },
+ {
+  "t_utc": "2021-03-09T~13:00Z",
+  "kind": "message",
+  "actor": "Cheetah",
+  "detail": "reported: Cheetah returns ~$1.89M (postmortem, Beijing 21:00 Mar 9); on-chain tx not located",
+  "raw_ref": "site/raw/web/chaincatcher_2060103.html"
+ },
+ {
+  "t_utc": "2021-03-10T00:26:35Z",
+  "block": 12007525,
+  "kind": "return",
+  "actor": "Antelope",
+  "detail": "returns 955,815.54 WSZO to 0xdad3e839; further returns ETHA/wCRES/USDT/114.5 ETH until 00:39",
+  "tx": "0xf339a7081e2d14e9521ce8fdcf66200ff940a0ecb20d3d5381881ab4c5b81407",
+  "raw_ref": "site/raw/etherscan/dodo_recovery_tokentx.json",
+  "raw_refs": [
+   "site/raw/etherscan/dodo_antelope_txlist.json"
+  ]
+ },
+ {
+  "note": "in-block evidence only: no mempool or relay data for 2021; all times are block timestamps. Whether the bots saw the attacker's txs in the mempool or only the stage tx is not knowable; for pools 1-2 the bot's tx needed the fake tokens that the stage tx had put in the pool one block earlier."
+ }
+]

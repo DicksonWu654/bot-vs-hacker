@@ -1,0 +1,23 @@
+# Repository checks: Python, JSON and CSV parse, site links resolve, no local paths or keys, paper renders.
+name: checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      # actions pinned to full commit SHAs (checkout v4.2.2, setup-python v5.6.0); verified with `gh api repos/<action>/commits/<sha>`
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - run: pip install markdown==3.10.2
+      - run: python3 scripts/export_paper.py
+      - name: Paper page matches the committed one
+        run: git diff --exit-code -- site/paper.html
+      - run: python3 scripts/ci_check.py

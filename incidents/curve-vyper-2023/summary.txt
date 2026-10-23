@@ -1,0 +1,13 @@
+Curve/Vyper reentrancy: CRV/ETH pool, second wave - c0ffeebabe at position 7 pre-empts the adapter 0x19c7849d (CRV/ETH 2)
+c0ffeebabe.eth's transaction landed at position 7 of block 17808683, before the later actor's deployment at position 13. It took 2,879.66 ETH; 2,879.54 ETH was later returned to Curve's deployer.
+In-block evidence only. c0ffeebabe.eth's transaction 0xcd99fadd... landed at position 7 of block 17808683, before the later actor's deployment at position 13. Curve's deployer subsequently described the transaction in an on-chain message and requested a refund; 2,879.54 ETH was returned.
+
+Curve/Vyper reentrancy: msETH-ETH (Metronome) pool - c0ffeebabe at position 0 vs the adapter 0x19c7849d (msETH)
+c0ffeebabe.eth's transaction landed at position 0 of block 17806550, before the later actor's contract deployment at position 10. It took 866.73 ETH gross and paid the builder 0.173 ETH, leaving 866.55 ETH net before gas.
+In-block evidence only. c0ffeebabe.eth's transaction 0xc93eb238... landed at position 0 of block 17806550, before the later actor's deployment at position 10. That actor's transaction 0xe2eb61b1... landed in block 17806552 and received no net ETH. The earlier transaction took 866.73 ETH gross and paid the builder 0.173 ETH, leaving 866.55 ETH net before gas.
+
+Curve/Vyper reentrancy: pETH-ETH (JPEG'd) pool - byte-copy front-runner vs the real attacker (pETH)
+An unrelated address copied the pETH attacker's contract and landed at block position 0, ahead of the attacker's own deploy and attack at positions 90 and 91 (which reverted); it took 6,106.65 WETH and returned 90% to JPEG'd.
+In-block evidence only. The pETH front-runner at position 0 preceded the attacker at position 91 in block 17806056. The operator later returned 5,495.4 WETH to JPEG’d under an agreed 10% bounty.
+
+Source: the incident page on the site; every figure links its saved raw response there.

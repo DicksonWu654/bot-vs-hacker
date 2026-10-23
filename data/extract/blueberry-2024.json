@@ -1,0 +1,445 @@
+[
+ {
+  "slug": "blueberry-2024",
+  "name": "Blueberry Protocol oracle-decimals market drain (c0ffeebabe pre-emption)",
+  "date_utc": "2024-02-23T02:22:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "c0ffeebabe.eth landed at position 0 of block 19287289. The attacker transaction was public from 02:22:09.219 UTC, landed in block 19287290 and received nothing.",
+  "one_liner": "c0ffeebabe.eth's tx took the full market cash (457.68 ETH) one block before the attacker's public tx landed, which then got nothing; the builder passed 366.5 ETH to Blueberry's multisig and c0ffeebabe's EOA later sent it 70 ETH.",
+  "attacker": {
+   "eoa": "0x0512ac94e65f024471f18011719338c0e164b9b7",
+   "eoas": [
+    "0x0512ac94e65f024471f18011719338c0e164b9b7"
+   ],
+   "contracts": [
+    "0x70b96d021a585df77c66a1a16c28375fd51f714d"
+   ],
+   "funding": "unknown",
+   "funding_tx": "0x4e5f8906803327eddbe34d559f49d2378d124a35f8be2f620650375e3ce7c858",
+   "deploy_tx": "0x8e7b711ebca73ba583478cd7a55b0496fdfd9222f8b7d0245baee51816aee155",
+   "deploy_block": 19287269,
+   "attack_txs": [
+    {
+     "hash": "0x8e7b711ebca73ba583478cd7a55b0496fdfd9222f8b7d0245baee51816aee155",
+     "block": 19287269,
+     "index": 78,
+     "status": "success",
+     "role": "CREATE of attack contract 0x70b96d02 (first seen in mempool 02:16:22.769Z)"
+    },
+    {
+     "hash": "0xb6748899565cff6c01190f507ea83a7d2efdfba13e119fd0f487f74ce899d25f",
+     "block": 19287290,
+     "index": 218,
+     "status": "success",
+     "role": "attack tx (public mempool); succeeded but received 0 of every borrowed token because the markets were already empty"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0x3aa228a80f50763045bdfc45012da124bd0a6809",
+   "tx": "0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4",
+   "block": 19287289,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "measured",
+  "mempool_note": "mempool-dumpster + sourcelog cover 2024-02-23. The attacker's exploit tx has first-seen timestamps from 6 sources (earliest chainbound 02:22:09.219Z, then local +6 ms, bloxroute +8 ms, eden +14 ms, mempoolguru +154 ms, apool +190 ms); the attacker's deploy tx was first seen 02:16:22.769Z (bloxroute). c0ffeebabe's tx is not in the dump (private flow or missed).",
+  "trigger": {
+   "kind": "attacker-tx",
+   "tx": "0xb6748899565cff6c01190f507ea83a7d2efdfba13e119fd0f487f74ce899d25f",
+   "first_seen_utc_ms": 1708654929219,
+   "first_seen_utc": "2024-02-23T02:22:09.219Z",
+   "sources": [
+    "chainbound",
+    "local",
+    "bloxroute",
+    "eden",
+    "mempoolguru",
+    "apool"
+   ],
+   "note": "Attacker exploit tx first seen by chainbound at 02:22:09.219Z = -1781 ms relative to the start of slot 8485909 (02:22:11.000Z), 13.78 s before it was included in block 19287290. Its deploy tx (0x8e7b711e, block 19287269) was first seen earlier, 02:16:22.769Z (1708654582769 ms). Which of the two the bot reacted to is not shown; the first record bids >=10 ETH start 45 ms after the exploit tx's first-seen."
+  },
+  "attacker_block": 19287290,
+  "attacker_block_note": "Block in which the attacker's public tx 0xb6748899 landed (position 218) and succeeded with 0 proceeds; the bot's block 19287289 is one block earlier.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 19287290,
+   "tx": "0xb6748899565cff6c01190f507ea83a7d2efdfba13e119fd0f487f74ce899d25f"
+  },
+  "auction": {
+   "block": 19287289,
+   "slot": 8485909,
+   "slot_start_utc_ms": 1708654931000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 108,
+   "n_builders": 19,
+   "bids_per_relay": {
+    "flashbots": 108
+   },
+   "first_bid_ms_rel_slot": -9376,
+   "last_bid_ms_rel_slot": -587,
+   "winning_bid_eth": 91.03830031716615,
+   "winning_builder": "Ty For The Block",
+   "winning_builder_pubkey": "0x88cd924ca0bc4ab6fe838f323d79a932d13ae25239d8960c6246a5250ef85a8ab8ba96a8b6d8b207fe8a6e70f7d2c512",
+   "winning_relays": [
+    "flashbots"
+   ],
+   "winning_first_submission_ms_rel_slot": -587,
+   "winning_last_submission_ms_rel_slot": -587,
+   "runner_up_eth": 81.74846608806232,
+   "runner_up_builder": "I can haz block?",
+   "runner_up_ms_rel_slot": -690,
+   "runner_up_other_builder_eth": 81.74846608806232,
+   "runner_up_other_builder": "I can haz block?",
+   "runner_up_other_builder_ms_rel_slot": -690,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 91.03830031716615,
+   "proposer_paid_eth": 91.03830031716615,
+   "proposer_payment_tx": "0x6b6231c19ffde66d5a8810f06a61ce79d201c039a8460dba1b802fd76b3d3853",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9376,
+     0.003400330530719709
+    ],
+    [
+     -9344,
+     0.006901682406138385
+    ],
+    [
+     -9306,
+     0.007969775965202744
+    ],
+    [
+     -9253,
+     0.008007455972793886
+    ],
+    [
+     -8810,
+     0.008533750176994339
+    ],
+    [
+     -8333,
+     0.008779409245326409
+    ],
+    [
+     -8023,
+     0.008826045736675128
+    ],
+    [
+     -7831,
+     0.008847045736675128
+    ],
+    [
+     -7595,
+     0.009501490016177236
+    ],
+    [
+     -7397,
+     0.009917812797478236
+    ],
+    [
+     -7332,
+     0.010740677960080236
+    ],
+    [
+     -6845,
+     0.010810543460080237
+    ],
+    [
+     -6504,
+     0.01159501474965321
+    ],
+    [
+     -6318,
+     0.01184832016651156
+    ],
+    [
+     -5989,
+     0.0129450814216528
+    ],
+    [
+     -5482,
+     0.012945872069470576
+    ],
+    [
+     -5321,
+     0.012946825842707562
+    ],
+    [
+     -4960,
+     0.013214903239136728
+    ],
+    [
+     -4955,
+     0.013218706525566433
+    ],
+    [
+     -4868,
+     0.013219167896566433
+    ],
+    [
+     -4797,
+     0.013316566455566432
+    ],
+    [
+     -4460,
+     0.013362504736421432
+    ],
+    [
+     -4369,
+     0.013430490861324995
+    ],
+    [
+     -4297,
+     0.013431204142179996
+    ],
+    [
+     -3975,
+     0.013643273576034997
+    ],
+    [
+     -3944,
+     0.06166751364675415
+    ],
+    [
+     -3824,
+     0.06168741024608923
+    ],
+    [
+     -3709,
+     0.10512819782268913
+    ],
+    [
+     -3506,
+     0.10512976388175493
+    ],
+    [
+     -3404,
+     0.10514646237615492
+    ],
+    [
+     -3197,
+     0.10656922917615493
+    ],
+    [
+     -2989,
+     0.11201191454908448
+    ],
+    [
+     -2890,
+     0.11268535771429254
+    ],
+    [
+     -2850,
+     0.11271731871429254
+    ],
+    [
+     -2825,
+     0.11340587339102544
+    ],
+    [
+     -2799,
+     0.11343783439102544
+    ],
+    [
+     -2776,
+     0.11615917707749024
+    ],
+    [
+     -2741,
+     0.11622552194997555
+    ],
+    [
+     -2737,
+     0.11625748294997555
+    ],
+    [
+     -2633,
+     0.11625984973599794
+    ],
+    [
+     -2357,
+     0.11626307444559794
+    ],
+    [
+     -2234,
+     0.11626573841372835
+    ],
+    [
+     -2158,
+     0.11645172338897397
+    ],
+    [
+     -2124,
+     0.11645177764747397
+    ],
+    [
+     -2034,
+     0.1185916388624463
+    ],
+    [
+     -1799,
+     0.11990573144541741
+    ],
+    [
+     -1736,
+     10.106569225908602
+    ],
+    [
+     -1649,
+     10.10656923020357
+    ],
+    [
+     -1574,
+     10.106569234498547
+    ],
+    [
+     -1515,
+     22.991167975115186
+    ],
+    [
+     -844,
+     23.48981323745446
+    ],
+    [
+     -834,
+     71.74846608866056
+    ],
+    [
+     -690,
+     81.74846608806232
+    ],
+    [
+     -587,
+     91.03830031716615
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/blueberry-2024/race_19287289.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block19287289.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block19287289.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "Flashbots relay is the only relay holding bids for this slot (108 bids). Baseline ~0.11 ETH until the attacker's tx was first seen (-1781 ms rel. slot); first record bid >=10 ETH: 10.1066 ETH at -1736 ms (45 ms after the first-seen). Winner Ty For The Block 91.0383 ETH at -587 ms, a 3-tx block: the bot tx plus two payouts from the builder's fee recipient (366.5069 ETH to the Blueberry multisig = 80.1% of the 457.5473 ETH coinbase payment, 91.0383 ETH to the proposer). Bid contents are not public; that these bids carry the bot tx is inferred from value level and the winning block contents."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 457.684573172,
+   "gross_loot_method": "net WETH gained by the bot's contract in the bot tx (WETH Transfer logs in the receipt: 459.684573172 in - 2.000000000 out; the 1 WETH flash loan and 1 WETH collateral mint wash out) = swap proceeds of the OHM/USDC/WBTC taken from the Blueberry markets; matches the Blueberry post-mortem 'TX profit' 457.684573171942049193 ETH quoted in incident.json.",
+   "captured_native": {
+    "amount": "8,616.071267266 OHM + 913,262.603416 USDC + 6.866901 WBTC",
+    "unit": "OHM+USDC+WBTC",
+    "desc": "Market cash taken in the transaction, valued at 457.684573 ETH."
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 457.5472678,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": 366.506850348,
+   "bot_net_eth": 0.046399988,
+   "loot_note": "Bot tx only. bot_net = gross 457.684573 - coinbase 457.547268 - gas 0.090905 (gas = base fee only, 0 priority fee). The builder (Ty For The Block, fee recipient 0x25b71878) paid 366.506850 ETH to the Blueberry multisig and 91.038300 ETH to the proposer in the two txs that follow the bot tx in the block; no builder->bot refund."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 70.0,
+   "returned_by_builder_eth": 366.50685,
+   "returned_total_eth": 436.50685,
+   "returned_to": "Blueberry multisig 0x1a5b8ca288c7dbac0704a6d3e6bb1bf223ffc742",
+   "returned_desc": "In the same block (19287289, 2024-02-23T02:22:11Z) the builder's fee recipient sent 366.5069 ETH (80.1% of the coinbase payment) to the Blueberry multisig (tx idx 1) and 91.0383 ETH (19.9%) to the proposer's fee recipient (idx 2, the winning bid); the proposer share was not returned (incident.json: forwarded on-chain, no return seen to block 19300000). Later, c0ffeebabe's EOA sent 70.0 ETH to the same multisig (tx 0x55f8a7df, block 19287679, 2024-02-23T03:41:11Z); no source states the purpose, and the amount exceeds the bot tx's own net (0.0464 ETH), so it came from other funds. Total to the multisig 436.5069 ETH = 95.4% of the gross.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [
+    {
+     "tx": "0x0accfec96617d0cd3680403d564d9b956dbf5e662000fd7398f501b06015cce5",
+     "eth": 366.50685,
+     "note": "builder fee recipient -> Blueberry multisig (same block, idx 1)",
+     "block": 19287289,
+     "time_utc": "2024-02-23T02:22:11Z"
+    },
+    {
+     "tx": "0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434",
+     "eth": 70.0,
+     "note": "c0ffeebabe EOA -> Blueberry multisig; purpose not stated in any source seen (tx-level fact)",
+     "block": 19287679,
+     "time_utc": "2024-02-23T03:41:11Z"
+    }
+   ],
+   "public_statement": "Blueberry Foundation X post and post-mortem (https://medium.com/@blueberryprotocol/2-22-24-exploit-post-mortem-6f6be7c1dcc3) call it the 2/22/24 exploit and report ~$1.3M drained, 366.6 ETH recovered, ~91 ETH to the proposer (per incident.json; pages not saved locally).",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_19287289.json",
+   "bot.position": "site/raw/rpc/block_19287289.json",
+   "attacker_block": "site/raw/rpc/block_19287290.json",
+   "trigger.first_seen_utc_ms": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/mempool-dumpster/2024-02-23_summary.txt",
+    "incidents/blueberry-2024/race_19287290.json"
+   ],
+   "loot.gross_loot_eth": "site/raw/rpc/receipts_19287289.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_19287289.json",
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_19287289.json",
+    "site/raw/rpc/block_19287289.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_19287289.json",
+    "site/raw/rpc/trace_block_19287289.json"
+   ],
+   "loot.builder_payout_to_victim_eth": [
+    "site/raw/rpc/block_19287289.json",
+    "site/raw/rpc/trace_block_19287289.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/receipts_19287289.json",
+    "site/raw/rpc/trace_block_19287289.json"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/rpc/tx_0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434.json",
+    "full cache only (not published)",
+    "site/raw/etherscan/bb_multisig_1a5b8ca2_txlist.json"
+   ],
+   "fate.returned_by_builder_eth": [
+    "site/raw/rpc/block_19287289.json",
+    "site/raw/rpc/trace_block_19287289.json"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/rpc/block_19287289.json",
+    "site/raw/rpc/tx_0x55f8a7df75c02c9dca98f8749a0bd3d4b3f31fffce06c6e5f796e919ff42b434.json"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "fate.public_statement",
+    "why": "Blueberry post-mortem and X post are cited by incident.json but no saved copy exists under site/raw/"
+   },
+   {
+    "field": "auction.*",
+    "why": "only the Flashbots relay holds bids for this slot (108 bids)"
+   }
+  ],
+  "discrepancies": [
+   "incident.json: 'attacker tx pending in public mempool at the time of the bot block'; first-seen is 1.78 s before the bot block's slot start and the attacker tx was included 13.8 s after first-seen (race_19287290.json: inclusion_delay_ms 13781).",
+   "incident.json deploy 'contract deployed 02:18:11 UTC' is the block timestamp of 19287269; the deploy tx was first seen 02:16:22.769Z, i.e. 108 s before inclusion (race_19287269.json)."
+  ],
+  "evidence_notes": [
+   "c0ffeebabe.eth landed at position 0 of block 19287289. The attacker transaction was public from 02:22:09.219 UTC, landed in block 19287290 and received nothing.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/blueberry-2024"
+ }
+]

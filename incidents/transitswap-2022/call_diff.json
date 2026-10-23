@@ -1,0 +1,86 @@
+{
+ "purpose": "calls into Transit Swap router 0xc8d7899f22bc4995c8176e3f2a5ba3f5e87d95e5 (selector 0x006de4df, arbitrary-call -> transferFrom of approved UNI) in the attacker's reverted tx vs Yoink's tx, same block 15655281",
+ "attacker_reverted_tx": "0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342",
+ "yoink_tx": "0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c",
+ "n_router_calls": {
+  "attacker": 21,
+  "yoink": 21
+ },
+ "attacker_calls_succeeded": 0,
+ "yoink_calls_succeeded": 21,
+ "calldata_len_each": 1866,
+ "result": "All 21 router calls have the same selector, length and 20 identical victim addresses; the only differences, per call, are (a) the recipient address 0x75f2aba6..(attacker) replaced by 0x6c6b87d4..(Yoink contract) in one word, and (b) the trailing amount word, which is zero in the attacker's trace (victim balances already taken by the time it executed) and non-zero in Yoink's (the victims' UNI balances). After swapping the recipient, 20 of 21 calls differ only in the amount word (word 27); 1 differs in words 26-27 (same amount-field carry).",
+ "differing_words_per_call_after_recipient_swap": [
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   26,
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ],
+  [
+   27
+  ]
+ ],
+ "token": "UNI (0x1f9840a85d5af5bf1d1762f925bdaddc4201f984), total 5,974.521 UNI taken from 21 approvers, swapped to 29.3065 WETH",
+ "evidence_level": "confirmed-onchain (in-block evidence only; no 2022 mempool archive)",
+ "raw_refs": {
+  "attacker_trace": "site/raw/rpc/trace_0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342.json",
+  "yoink_trace": "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json",
+  "calls_json": "incidents/transitswap-2022/call_diff_calls.json"
+ }
+}

@@ -1,0 +1,1754 @@
+{
+ "definition": "candidates with a scan_copycats.categorize() category or score>=5; evidence level is 'candidate' until verified by hand",
+ "n_incidents_with_hits": 13,
+ "hits": [
+  {
+   "exploit": "MUS",
+   "date": "20260930",
+   "file": "src/test/2026-09/MUS_exp.sol",
+   "attack_tx": "0x905af4e8cdaf32c183605358c97181e9ad57393bd4ed1d945baf6d6eebe983fe",
+   "block": 26087602,
+   "index": 140,
+   "attacker_from": "0x1a083adf234a8f67ad65a9b9b616853acf5998e5",
+   "attack_to": "0xd1a7a2a3c27962e80e9b6b46d54094f93267e988",
+   "coinbase": "0xdadb0d80178819f2319190d340ce9a924f783711",
+   "victims": [
+    "0x9bdf81e6066d32764b7e75a1b5577237e06d9364"
+   ],
+   "attacker_priority_gwei": 0.0983,
+   "attacker_gas_price_gwei": 0.2068,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 4,
+   "name": "MUS",
+   "copycats": [
+    {
+     "tx": "0xe6d681771830bd298e31011aa641c99dd325a85a8ef181fb1e80a35e7d0f3936",
+     "block": 26087602,
+     "index": 107,
+     "relative": "same_block_before",
+     "from": "0xa18667289ce7798614d449054515f0c61fe0cf4d",
+     "to": "0x97630aa70ab14ed9883b41dafccbc11349723043",
+     "status": "success",
+     "gas_used": 46312,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 2.1085,
+     "priority_fee_gwei": 2.0,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 11
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "RsETHSafeModule",
+   "date": "20260915",
+   "file": "src/test/2026-09/RsETHSafeModule_exp.sol",
+   "attack_tx": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+   "block": 25980525,
+   "index": 0,
+   "attacker_from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "attack_to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "coinbase": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+   "victims": [
+    "0x000000000004444c5dc75cb358380d2e3de08a90",
+    "0x10605ee48ff962952c966277a5d2dac0a0705cb1",
+    "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e"
+   ],
+   "attacker_priority_gwei": 0.0,
+   "attacker_gas_price_gwei": 0.064,
+   "attacker_coinbase_paid_wei": 18931222433268340402,
+   "popularity_of_victims_in_window": 55,
+   "attacker_own_other_txs_in_window": 2,
+   "name": "RsETHSafeModule",
+   "copycats": [
+    {
+     "tx": "0x16b9ddf976b805e20e08ff49e3f1d01ac7605814fb489f8795c7d95fbc3eeb45",
+     "block": 25980525,
+     "index": 3,
+     "relative": "same_block_after",
+     "from": "0x492d255234c83f2ddc5aa904d8a9db6743e9f046",
+     "to": "0x492d255234c83f2ddc5aa904d8a9db6743e9f046",
+     "status": "success",
+     "gas_used": 1705060,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 3,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 0.064,
+     "priority_fee_gwei": 0.0,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 476,
+      "calls_to_victims": 20,
+      "signature_overlap": 1.0,
+      "signature_overlap_success": 0.556,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 319673434631469,
+      "top_level_error": null,
+      "top_level_value": 9999,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.6,
+       "exact_frac": 0.533,
+       "attacker_distinct_calls": 15
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x49edcc5aab2e349c1f71c27c98fe9c65b01745b1": "1019803693321084"
+     },
+     "net_eth_wei_internal": "267472773470368",
+     "score": 8,
+     "flags": [],
+     "why": [
+      "touches victim contract(s)",
+      "repeats 60% of attacker's victim calls with identical arguments",
+      "pays block.coinbase directly (bundle-style)"
+     ],
+     "categories": [
+      "replayed_attack_after"
+     ],
+     "strength": "strong"
+    }
+   ]
+  },
+  {
+   "exploit": "Truebit",
+   "date": "20260109",
+   "file": "src/test/2026-01/Truebit_exp.sol",
+   "attack_tx": "0x71496352b02f974a3898c1b743e9fc2befb935e6c2a3e421134ec09b63052f4b",
+   "block": 24191171,
+   "index": 12,
+   "attacker_from": "0xc0454e545a7a715c6d3627f77bed376a05182fbc",
+   "attack_to": "0x764c64b2a09b09acb100b80d8c505aa6a0302ef2",
+   "coinbase": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97",
+   "victims": [
+    "0xc186e6f0163e21be057e95aa135edd52508d14d3"
+   ],
+   "attacker_priority_gwei": 2.0,
+   "attacker_gas_price_gwei": 3.0118,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "Truebit",
+   "copycats": [
+    {
+     "tx": "0xb2ff08765c7a8f7a4e883c2c83a9bc2fc49be1fdd066dba6496601524a09195c",
+     "block": 24191170,
+     "index": 212,
+     "relative": "earlier_block",
+     "from": "0x6990e7e90ab50c12111f99b84183d3fe298bb3e4",
+     "to": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+     "status": "success",
+     "gas_used": 43362,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 2,
+     "gas_price_gwei": 1.0508,
+     "priority_fee_gwei": 0.002,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 1
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x6982508145454ce325ddbe47a25d4ec3d2311933": "-10000000000000000000000000"
+     },
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "FixedTokenBSwap",
+   "date": "20250615",
+   "file": "src/test/2025-06/FixedTokenBSwap_exp.sol",
+   "attack_tx": "0x5db22f0edc1a9eda5343573da27dd2168c8a36a7f948401db76e22ba1fab71ea",
+   "block": 22710988,
+   "index": 1,
+   "attacker_from": "0x5ff8645bbc6c8b4390aa228a3e8bf08240f333b4",
+   "attack_to": "",
+   "coinbase": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97",
+   "victims": [
+    "0x746b3d7e9953cdaa8c4d4fd3ee24fe133f459f32",
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+   ],
+   "attacker_priority_gwei": 5.0,
+   "attacker_gas_price_gwei": 6.9567,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 110,
+   "attacker_own_other_txs_in_window": 1,
+   "name": "FixedTokenBSwap",
+   "copycats": [
+    {
+     "tx": "0x9261b4bb9c7fb9dec340c77d9653da3c6eadc134c2742598fe68e15b20fff7ac",
+     "block": 22710989,
+     "index": 0,
+     "relative": "next_block",
+     "from": "0xcc3a5dc003b3a58621745a39f706ef9646d5c481",
+     "to": "0xb22a26c6da22cc4686560a45469bf1654bf4f3cd",
+     "status": "success",
+     "gas_used": 2979149,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 7.4636,
+     "priority_fee_gwei": 5.2624,
+     "tx_type": "0x0",
+     "trace": {
+      "calls": 26,
+      "calls_to_victims": 4,
+      "signature_overlap": 1.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 10000000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 1
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 5,
+     "flags": [
+      "victim_touched_by_many_txs"
+     ],
+     "why": [
+      "touches victim contract(s)",
+      "same victim-call selectors (100%) but different arguments",
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "medium"
+    }
+   ]
+  },
+  {
+   "exploit": "Scorch",
+   "date": "20250211",
+   "file": "src/test/2025-02/Scorch_exp.sol",
+   "attack_tx": "0x02dc4409af99de400b2427dad525c31467a8fd2ac6cb251f885d33c073510ba2",
+   "block": 21822424,
+   "index": 0,
+   "attacker_from": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+   "attack_to": "0x60e1a5714ab98f4ba55811c45899fb425433bb65",
+   "coinbase": "0x6adb3bab5730852eb53987ea89d8e8f16393c200",
+   "victims": [
+    "0xa3d0e72c8a2fe9127a77412bf34bee5e4945bd49",
+    "0x6adb3bab5730852eb53987ea89d8e8f16393c200"
+   ],
+   "attacker_priority_gwei": 0.0,
+   "attacker_gas_price_gwei": 0.9006,
+   "attacker_coinbase_paid_wei": 136083904602224528,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "Scorch",
+   "copycats": [
+    {
+     "tx": "0xb47223af1ff5ecdca4cefa770e30ef2197603bf0106e3777c11b5b6687728847",
+     "block": 21822424,
+     "index": 2,
+     "relative": "same_block_after",
+     "from": "0x14b362d2e38250604f21a334d71c13e2ed478467",
+     "to": "0x1981d9944f0add9629644e824b4af51fe942ee90",
+     "status": "reverted",
+     "gas_used": 305635,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 9.6066,
+     "priority_fee_gwei": 8.706,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 35,
+      "calls_to_victims": 7,
+      "signature_overlap": 1.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": "execution reverted",
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 2
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 2,
+     "flags": [
+      "no_argument_match (likely ordinary pool user / arb)"
+     ],
+     "why": [
+      "touches victim contract(s)",
+      "same victim-call selectors (100%) but different arguments",
+      "reverted tx aimed at the victim (lost gas war?)"
+     ],
+     "categories": [
+      "gas_war_loser_candidate"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "OMPxContract",
+   "date": "20240816",
+   "file": "src/test/2024-08/OMPxContract_exp.sol",
+   "attack_tx": "0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6",
+   "block": 20468780,
+   "index": 74,
+   "attacker_from": "0x40d115198d71cab59668b51dd112a07d273d5831",
+   "attack_to": "0xfaddf57d079b01e53d1fe3476cc83e9bcc705854",
+   "coinbase": "0xdf99a0839818b3f120ebac9b73f82b617dc6a555",
+   "victims": [
+    "0x09a80172ed7335660327cd664876b5df6fe06108"
+   ],
+   "attacker_priority_gwei": 0.1494,
+   "attacker_gas_price_gwei": 2.4705,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 1,
+   "attacker_own_other_txs_in_window": 1,
+   "name": "OMPxContract",
+   "copycats": [
+    {
+     "tx": "0xa7f0319bb32347a3088250deea117fcdc1f203d67ad658773446b1165554e48c",
+     "block": 20468781,
+     "index": 4,
+     "relative": "next_block",
+     "from": "0x719cdb61e217de6754ee8fc958f2866d61d565cf",
+     "to": "0x8d30500235e247ee3d3ac6dce43c12ebb9656644",
+     "status": "success",
+     "gas_used": 716686,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 35,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 2.5685,
+     "priority_fee_gwei": 0.2335,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 94,
+      "calls_to_victims": 14,
+      "signature_overlap": 1.0,
+      "signature_overlap_success": 1.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 8626807996136314,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [
+       "0xd203008a303581eb99897facea48752a4c1dd070"
+      ],
+      "victim_call_arg_match": {
+       "near_identical_frac": 1.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 2
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 7,
+     "flags": [],
+     "why": [
+      "touches victim contract(s)",
+      "repeats 100% of attacker's victim calls with near-identical arguments",
+      "pays block.coinbase directly (bundle-style)"
+     ],
+     "categories": [
+      "replayed_attack_after"
+     ],
+     "strength": "medium"
+    }
+   ]
+  },
+  {
+   "exploit": "Hopelend",
+   "date": "20231018",
+   "file": "src/test/2023-10/Hopelend_exp.sol",
+   "attack_tx": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392",
+   "block": 18377042,
+   "index": 0,
+   "attacker_from": "0xa8bbb3742f299b183190a9b079f1c0db8924145b",
+   "attack_to": "0xc74b72bbf904bac9fac880303922fc76a69f0bb4",
+   "coinbase": "0xce0babc8398144aa98d9210d595e3a9714910748",
+   "victims": [
+    "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+    "0x396856f04836aaeba30311e2903b43e565a4323e",
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "0x53fbcada1201a465740f2d64ecdf6fac425f9030",
+    "0xce0babc8398144aa98d9210d595e3a9714910748"
+   ],
+   "attacker_priority_gwei": 1.3167,
+   "attacker_gas_price_gwei": 11.8502,
+   "attacker_coinbase_paid_wei": 263913886768391276900,
+   "popularity_of_victims_in_window": 79,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "Hopelend",
+   "copycats": [
+    {
+     "tx": "0xa414de03bbf7baccea6b5c95af9ebfbed43b1c3151debd29673df979a0f4b0b0",
+     "block": 18377042,
+     "index": 5,
+     "relative": "same_block_after",
+     "from": "0x1f23eb80f0c16758e4a55d48097c343bd20be56f",
+     "to": "0x16ae74e51cc134fcb374be1f59fd7abc41816b96",
+     "status": "reverted",
+     "gas_used": 4068434,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 60.5335,
+     "priority_fee_gwei": 50.0,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1441,
+      "calls_to_victims": 125,
+      "signature_overlap": 0.444,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": "execution reverted",
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.04,
+       "exact_frac": 0.04,
+       "attacker_distinct_calls": 25
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 0,
+     "flags": [
+      "no_argument_match (likely ordinary pool user / arb)",
+      "victim_touched_by_many_txs"
+     ],
+     "why": [
+      "touches victim contract(s)",
+      "partial selector overlap 44%",
+      "reverted tx aimed at the victim (lost gas war?)"
+     ],
+     "categories": [
+      "gas_war_loser_candidate"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "Curve01",
+   "date": "20230730",
+   "file": "src/test/2023-07/Curve_exp01.sol",
+   "attack_tx": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+   "block": 17806056,
+   "index": 0,
+   "attacker_from": "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+   "attack_to": "0x9420f8821ab4609ad9fa514f8d2f5344c3c0a6ab",
+   "coinbase": "0x1f9090aae28b8a3dceadf281b0f12828e676c326",
+   "victims": [
+    "0x9848482da3ee3076165ce6497eda906e66bb85c5",
+    "0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e"
+   ],
+   "attacker_priority_gwei": 18.2765,
+   "attacker_gas_price_gwei": 33.3291,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 2,
+   "attacker_own_other_txs_in_window": 1,
+   "name": "Curve01",
+   "copycats": [
+    {
+     "tx": "0xb5d91f1e0afc96a52f8c6c28eae405eda7fcc5d34d6d03bdd8b16bd58089e939",
+     "block": 17806056,
+     "index": 91,
+     "relative": "same_block_after",
+     "from": "0x172f6fdefeb079e435f22c918a919540f4721e60",
+     "to": "0x6a1a7578e36cf0838c77f59d1f029873b8e0ff77",
+     "status": "reverted",
+     "gas_used": 400966,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 15.2026,
+     "priority_fee_gwei": 0.1501,
+     "tx_type": "0x0",
+     "trace": {
+      "calls": 26,
+      "calls_to_victims": 12,
+      "signature_overlap": 0.667,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": "execution reverted",
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.25,
+       "exact_frac": 0.25,
+       "attacker_distinct_calls": 4
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 2,
+     "flags": [
+      "no_argument_match (likely ordinary pool user / arb)"
+     ],
+     "why": [
+      "touches victim contract(s)",
+      "same victim-call selectors (66%) but different arguments",
+      "reverted tx aimed at the victim (lost gas war?)"
+     ],
+     "categories": [
+      "gas_war_loser_candidate"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "HODLCapital",
+   "date": "20230509",
+   "file": "src/test/2023-05/HODLCapital_exp.sol",
+   "attack_tx": "0xedc214a62ff6fd764200ddaa8ceae54f842279eadab80900be5f29d0b75212df",
+   "block": 17220893,
+   "index": 54,
+   "attacker_from": "0x4e998316ec31d2f3078f8f57b952bfae54728be1",
+   "attack_to": "0x6943e74d1109a728f25a2e634ba3d74e9e476aed",
+   "coinbase": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5",
+   "victims": [
+    "0x28e6cab57d87e6f85ff650fb0a7be9be5e1897d4",
+    "0xeda47e13fd1192e32226753dc2261c4a14908fb7"
+   ],
+   "attacker_priority_gwei": 1.0,
+   "attacker_gas_price_gwei": 57.8501,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "HODLCapital",
+   "copycats": [
+    {
+     "tx": "0xee9bfeff623673dd463a5590645a402a3a1eb3f0aa77600041d8acec707f672f",
+     "block": 17220892,
+     "index": 90,
+     "relative": "earlier_block",
+     "from": "0x82e8936b187d83fd6eb2b7dab5b19556e9deff1c",
+     "to": "0x6c0f9679de42ca516e0aaeb3a661d3acc1fc04a8",
+     "status": "success",
+     "gas_used": 46185,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.5299,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 43
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x1682388ad51bb759f45ba8ad287e44771209e661d4c7482f6016c582ca8d5fbb",
+     "block": 17220891,
+     "index": 104,
+     "relative": "earlier_block",
+     "from": "0xcf86b3a45654fd54810ea19ea31b9cf104da349e",
+     "to": "0xb4a7d131436ed8ec06ad696fa3bf8d23c0ab3acf",
+     "status": "success",
+     "gas_used": 46202,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.2963,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 43
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0xdfd75ce7828be03347ce8a8735dc3b08a6bc351eeea732d85a0f0e86a1ec54ae",
+     "block": 17220894,
+     "index": 163,
+     "relative": "next_block",
+     "from": "0x5089b9c218fa2e1bd136f8346eaced72dcb662df",
+     "to": "0x4a8c9d751eeabc5521a68fb080dd7e72e46462af",
+     "status": "success",
+     "gas_used": 46294,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.8515,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 43
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 2,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x162436d677cfbc9e357205801baed385d311058a8b6111cdeadce74b64174d89",
+     "block": 17220894,
+     "index": 188,
+     "relative": "next_block",
+     "from": "0xf7e49a598f95b43d7d0f62938c851370a2fffb5c",
+     "to": "0x3a40312a1c376aecf855ef784371d1fb1aa2d25d",
+     "status": "success",
+     "gas_used": 110595,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 1.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.8515,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 4,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 1777000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 43
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x3a40312a1c376aecf855ef784371d1fb1aa2d25d": "1"
+     },
+     "net_eth_wei_internal": "-777000000000000",
+     "score": 2,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 1.0"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x7072e5ba4701a04b0a4a29ecc766a9b6aa6c96f756a371eeb3731e2b13b8c1a1",
+     "block": 17220894,
+     "index": 189,
+     "relative": "next_block",
+     "from": "0xf1efb3b9b8804fbf9d0a57d489d68c134c153e05",
+     "to": "0x9980b3aa61114b07a7604ffdc7c7d04bb6d8d735",
+     "status": "success",
+     "gas_used": 68834,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.8515,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 3,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 43
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 2,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "MultiChainCapital",
+   "date": "20230509",
+   "file": "src/test/2023-05/MultiChainCapital_exp.sol",
+   "attack_tx": "0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26",
+   "block": 17221446,
+   "index": 83,
+   "attacker_from": "0x8a4571c3a618e00d04287ca6385b6b020ce7a305",
+   "attack_to": "0x52d74eb7c01c763219dce713da97ebae8b91728e",
+   "coinbase": "0xdafea492d9c6733ae3d56b7ed1adb60692c98bc5",
+   "victims": [
+    "0xdca79f1f78b866988081de8a06f92b5e5d316857",
+    "0x1a7981d87e3b6a95c1516eb820e223fe979896b3"
+   ],
+   "attacker_priority_gwei": 1.0,
+   "attacker_gas_price_gwei": 58.2697,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 2,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "MultiChainCapital",
+   "copycats": [
+    {
+     "tx": "0x7e2a264f984528650eab74aea682c811a4525264c73583ba9e0c2aaa6790ee3d",
+     "block": 17221444,
+     "index": 136,
+     "relative": "earlier_block",
+     "from": "0xae8560725bcfb2206ab19dae7cf603adc8e4d0a8",
+     "to": "0x4faab2f1851b58c26028ab7ba2873ff3c7b52d4c",
+     "status": "success",
+     "gas_used": 46193,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 60.6196,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 41
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x0ec0fdca5c98e51d73b352049efe26c6c8ac1571953887c3225621fbc99753ae",
+     "block": 17221444,
+     "index": 185,
+     "relative": "earlier_block",
+     "from": "0xd73c244e78013050f46f0d6169265ff3640b6a30",
+     "to": "0x6d98746c709ae0828fbb72e9f80cd89533ebba3f",
+     "status": "success",
+     "gas_used": 126879,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 60.6196,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 3,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 41
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x3238f635082495109a3928d184c88b2f9e092eb5": "1000000000000000000",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7": "-1000000000"
+     },
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x8e26a6c0a01c8c48cbf553c498a34f22f91adcf6b267f90a5d888a683d544077",
+     "block": 17221446,
+     "index": 131,
+     "relative": "same_block_after",
+     "from": "0xd06deb06de652c4ede20ca9733c15ee669c37f68",
+     "to": "0x159ce2060c42a427da7ca0c7f47848716918010c",
+     "status": "success",
+     "gas_used": 61661,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 1.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 57.3697,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 2,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 1000000000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 41
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "-1000000000000000000",
+     "score": 2,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 1.0"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    },
+    {
+     "tx": "0x5e5bf6709b72807181546a24d39c3fa2af7109675471168d1e12b28710dd762f",
+     "block": 17221447,
+     "index": 133,
+     "relative": "next_block",
+     "from": "0xf46be3321e7ddcb9334c56fa9b71cbc4e8ee0daa",
+     "to": "0x94b6d485ad62c6bfb5aedafa0ced89f04d155db1",
+     "status": "success",
+     "gas_used": 71991,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.5,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 60.6407,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 4,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 41
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 2,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 0.5"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "YearnFinance",
+   "date": "20230413",
+   "file": "src/test/2023-04/YearnFinance_exp.sol",
+   "attack_tx": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+   "block": 17036779,
+   "index": 0,
+   "attacker_from": "0x5bac20beef31d0eccb369a33514831ed8e9cdfe0",
+   "attack_to": "0x8102ae88c617deb2a5471cac90418da4ccd0579e",
+   "coinbase": "0xe688b84b23f322a994a53dbf8e15fa82cdb71127",
+   "victims": [
+    "0x45f783cce6b7ff23b2ab2d70e416cdb7d6055f51",
+    "0x000000000000000000636f6e736f6c652e6c6f67"
+   ],
+   "attacker_priority_gwei": 14.0408,
+   "attacker_gas_price_gwei": 40.0,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 1,
+   "name": "YearnFinance",
+   "copycats": [
+    {
+     "tx": "0xf5a6404980740966922d6426a2303f0f851ec324d0c25a60b9700ca121044e4d",
+     "block": 17036777,
+     "index": 164,
+     "relative": "earlier_block",
+     "from": "0x4f45ca4f0bd087f2e9f1ae7efb382ced06069468",
+     "to": "0x4fd182db7384c5e7173757f7f226c16949496956",
+     "status": "success",
+     "gas_used": 91012,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 1.0,
+      "embeds_attack_calldata": false,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 26.6959,
+     "priority_fee_gwei": 0.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 1,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 6
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x4fd182db7384c5e7173757f7f226c16949496956": "2"
+     },
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata word-similarity 1.0"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "weak"
+    }
+   ]
+  },
+  {
+   "exploit": "Kashi",
+   "date": "20221108",
+   "file": "src/test/2022-11/Kashi_exp.sol",
+   "attack_tx": "0x3d163bfbec5686d428a6d43e45e2626a220cc4fcfac7620c620b82c1f2537c78",
+   "block": 15928290,
+   "index": 29,
+   "attacker_from": "0xb7ea0f0f8c6df7a61bf024db21bbe85ac5688005",
+   "attack_to": "0x8c761066bc6c20e9c65ece9972a9eb6ed511fd4d",
+   "coinbase": "0xf0bafd58e23726785a1681e1dea0da15cb038c61",
+   "victims": [
+    "0xf5bce5077908a1b7370b9ae04adc565ebd643966"
+   ],
+   "attacker_priority_gwei": 1.5,
+   "attacker_gas_price_gwei": 33.9029,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 0,
+   "name": "Kashi",
+   "copycats": [
+    {
+     "tx": "0x7bd7356d7e02e3ab5ab88e5c65e5a7c1acb9f81316c81ac00a87da6394e4f386",
+     "block": 15928291,
+     "index": 8,
+     "relative": "next_block",
+     "from": "0xfa12323eb952568ca05085b9da9f66a4458dee27",
+     "to": "0x4a5296968bc617095c6a8de60e84dcb437cd5f54",
+     "status": "reverted",
+     "gas_used": 285751,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 1.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 200.0,
+     "priority_fee_gwei": 169.1408,
+     "tx_type": "0x0",
+     "trace": {
+      "calls": 20,
+      "calls_to_victims": 6,
+      "signature_overlap": 0.556,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": "execution reverted",
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.133,
+       "exact_frac": 0.067,
+       "attacker_distinct_calls": 15
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 7,
+     "flags": [],
+     "why": [
+      "touches victim contract(s)",
+      "same victim-call selectors (55%) but different arguments",
+      "calldata embeds the attacker's calldata",
+      "reverted tx aimed at the victim (lost gas war?)"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    }
+   ]
+  },
+  {
+   "exploit": "NomadBridge",
+   "date": "20220802",
+   "file": "src/test/2022-08/NomadBridge_exp.sol",
+   "attack_tx": "0x53fd92771d2084a9bf39a6477015ef53b7f116c79d98a21be723d06d79024cad",
+   "block": 15002481,
+   "index": 34,
+   "attacker_from": "0xa5bd5c661f373256c0ccfbc628fd52de74f9bb55",
+   "attack_to": "0xb92336759618f55bd0f8313bd843604592e27bd8",
+   "coinbase": "0xc365c3315cf926351ccaf13fa7d19c8c4058c8e1",
+   "victims": [],
+   "attacker_priority_gwei": 3.0656,
+   "attacker_gas_price_gwei": 34.1089,
+   "attacker_coinbase_paid_wei": 0,
+   "popularity_of_victims_in_window": 0,
+   "attacker_own_other_txs_in_window": 2,
+   "name": "NomadBridge",
+   "copycats": [
+    {
+     "tx": "0xafc5f7446bd2eb040d3447ae80130a378c6594be86908904d5d79e081df3cce0",
+     "block": 15002480,
+     "index": 67,
+     "relative": "earlier_block",
+     "from": "0x5192946fa7aff9eb22365f8d247898d30f7529c5",
+     "to": "0xc4e0302a9d840db3065210f65aad026e9d695c13",
+     "status": "success",
+     "gas_used": 276408,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 32.3049,
+     "priority_fee_gwei": 3.25,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 18,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x67992e63434f23d4c5c32f926f6b96451b4c2509": "75882887384"
+     },
+     "net_eth_wei_internal": "0",
+     "score": 4,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "medium"
+    },
+    {
+     "tx": "0x1d36eb379411c24d555949be4bb8b40bbf2b8c578f22267e48d79521881d7cf5",
+     "block": 15002481,
+     "index": 89,
+     "relative": "same_block_after",
+     "from": "0xff00d4fd6dcd4599fea5bed04cd4790d10e7cccc",
+     "to": "0x7f268357a8c2552623316e2562d90e642bb538e5",
+     "status": "success",
+     "gas_used": 81933,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 4,
+     "gas_price_gwei": 33.1433,
+     "priority_fee_gwei": 2.1,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 2,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0x0361807a5f0f493c73986db9e7c777015f5c7cb00ef0052efc43e7fdfb53c426",
+     "block": 15002481,
+     "index": 122,
+     "relative": "same_block_after",
+     "from": "0x64c4559e720873bdbbf2a4e51335c9a1864b7507",
+     "to": "0x7f268357a8c2552623316e2562d90e642bb538e5",
+     "status": "success",
+     "gas_used": 212232,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 4,
+     "gas_price_gwei": 32.5433,
+     "priority_fee_gwei": 1.5,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 17,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "1170125000000000278",
+      "0x75e95ba5997eb235f40ecf8347cdb11f18ff640b": "-1"
+     },
+     "net_eth_wei_internal": "0",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0x3e146be504bb1ba250d41b29960f7f63ffceb0c410c31f3b972275e930012236",
+     "block": 15002481,
+     "index": 147,
+     "relative": "same_block_after",
+     "from": "0xadf16c6b33c3a8d964bc4b94376b6ff71023cbb6",
+     "to": "0x83c8f28c26bf6aaca652df1dbbe0e1b56f8baba2",
+     "status": "success",
+     "gas_used": 1661590,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 32.5433,
+     "priority_fee_gwei": 1.5,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 86,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 401500000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x44102bd86bccb4efe8e90b4a4d5c4e43a895d22e": "11"
+     },
+     "net_eth_wei_internal": "-401500000000000000",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0x1835d6e827d100d73c809cf8f6e7fa745e669b330d2d44a3209d2c1982135411",
+     "block": 15002481,
+     "index": 155,
+     "relative": "same_block_after",
+     "from": "0xe635dfc74904e3ec71b95fd3b8b2a7dc5a9870a6",
+     "to": "0x7f268357a8c2552623316e2562d90e642bb538e5",
+     "status": "success",
+     "gas_used": 208704,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 4,
+     "gas_price_gwei": 32.5433,
+     "priority_fee_gwei": 1.5,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 13,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 200000000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x22674fd4ce74765c211eec01698fda36f57a650a": "1"
+     },
+     "net_eth_wei_internal": "-200000000000000000",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0xdaf531c18e80da9f7fd00c27966ea32b36cc4473b48d9c4d0e3684cbee0fcdf9",
+     "block": 15002481,
+     "index": 170,
+     "relative": "same_block_after",
+     "from": "0x09741ae603df1909b3b73f0a12827a27a3121ecd",
+     "to": "0x7f268357a8c2552623316e2562d90e642bb538e5",
+     "status": "success",
+     "gas_used": 209746,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 4,
+     "gas_price_gwei": 32.0773,
+     "priority_fee_gwei": 1.034,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 13,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 70000000000000000,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "-70000000000000000",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0x5390f4bfd8ecb578638fd99936dc5d29ac88fc228642186a3baec96a26c72803",
+     "block": 15002481,
+     "index": 177,
+     "relative": "same_block_after",
+     "from": "0xa4b10ac61e79ea1e150df70b8dda53391928fd14",
+     "to": "0x4c6f947ae67f572afa4ae0730947de7c874f95ef",
+     "status": "success",
+     "gas_used": 1180262,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 32.0433,
+     "priority_fee_gwei": 1.0,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 8,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {},
+     "net_eth_wei_internal": "37973388037388954",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "strong"
+    },
+    {
+     "tx": "0x37afa9575fedbea2b61660e80b94b0cf3a3e7a909355b64b29794f38d8aa80d6",
+     "block": 15002482,
+     "index": 10,
+     "relative": "next_block",
+     "from": "0x23df7d65617f4b40f4e12405466a5e1ffe6f38de",
+     "to": "0x1111111254fb6c44bac0bed2854e76f90643097d",
+     "status": "success",
+     "gas_used": 262258,
+     "signals": {
+      "to_in_V": false,
+      "to_attack_contract": false,
+      "logs_touch_V": 0,
+      "input_sim": 0.0,
+      "embeds_attack_calldata": true,
+      "embeds_attacker_addr": false
+     },
+     "label_from": null,
+     "label_to": null,
+     "txs_to_same_target_in_block": 1,
+     "gas_price_gwei": 37.5044,
+     "priority_fee_gwei": 5.0,
+     "tx_type": "0x2",
+     "trace": {
+      "calls": 18,
+      "calls_to_victims": 0,
+      "signature_overlap": 0.0,
+      "signature_overlap_success": 0.0,
+      "touches_attack_created_contracts": false,
+      "coinbase_payment_wei": 0,
+      "top_level_error": null,
+      "top_level_value": 0,
+      "created": [],
+      "victim_call_arg_match": {
+       "near_identical_frac": 0.0,
+       "exact_frac": 0.0,
+       "attacker_distinct_calls": 0
+      }
+     },
+     "victim_outflow_tokens": {},
+     "net_token_gain_raw": {
+      "0x2c33b28527a63cdf13c0b24ce4cf5bf9c9fb3bc6": "-46633312560799535"
+     },
+     "net_eth_wei_internal": "21360233965099221",
+     "score": 3,
+     "flags": [],
+     "why": [
+      "calldata embeds the attacker's calldata"
+     ],
+     "categories": [
+      "adapted_calldata"
+     ],
+     "strength": "medium"
+    }
+   ]
+  }
+ ]
+}

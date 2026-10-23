@@ -1,0 +1,155 @@
+{
+ "slug": "euler-copybot-2023",
+ "note": "in-block evidence only: no mempool archive for 2023-03-13. Block times are block timestamps. Bid timestamps are Flashbots-relay builder_blocks_received.",
+ "events": [
+  {
+   "t_utc": "block 16817962 (~2023-03-13T08:44:11Z, derived from block number)",
+   "kind": "fund",
+   "actor": "Tornado Cash 1 ETH pool -> hacker EOA 0xB2698",
+   "detail": "0.9681 ETH (relayer fee 0.0319)",
+   "tx": "0x4ec892aa820cee184b708749fbbdcf1c1d0a5b4867669bfaac3aa5713544a3fc",
+   "block": 16817962,
+   "raw_ref": "site/raw/etherscan/txlistinternal_0xB2698C2D99aD2C302a95A8Db26B08d17A77CEdd4_0_16817990_asc_1_10.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:50:23Z",
+   "kind": "deploy",
+   "actor": "hacker 0xB2698",
+   "detail": "CREATE exploit contract 0x036cec1a, idx 35, tip 3 gwei; Flashbots builder block (bids 572, winning 0.1172 ETH)",
+   "tx": "0x50dc9c9126519a70319cc312418488145bed4e2ef6e110eb864a97f5beaeca05",
+   "block": 16817993,
+   "raw_ref": "site/raw/rpc/block_16817993.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:50:35Z",
+   "kind": "deploy",
+   "actor": "copier 0x5F259D0b",
+   "detail": "CREATE of byte-identical creation code except 4x owner address swapped, idx 5, tip 37.07 gwei; rsync-builder block (552 bids, winning 0.2963 ETH). Copier tx was seen/broadcast at the latest within ~12 s of the hacker's deploy block; exact arrival unknown (in-block evidence only)",
+   "tx": "0x725db76cf4bf3bdc72be4f755ed72df4adbc8e4e803c044617cc11e34907ccdc",
+   "block": 16817994,
+   "raw_ref": "site/raw/rpc/block_16817994.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:50:48.570Z",
+   "kind": "bid",
+   "actor": "builders (Flashbots relay)",
+   "detail": "first of 342 bids for slot 5989453",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16817996.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:50:57.986Z",
+   "kind": "bid",
+   "actor": "Flashbots builder",
+   "detail": "winning block received: 155 tx, 0.09425 ETH, copier attack tx at idx 0 (later higher bids: 0.09428 @-897, 0.09434 @-536, 0.09693 @-228 ms)",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16817996.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:50:59Z",
+   "kind": "tx",
+   "actor": "copier 0x5F259D0b -> copy #1",
+   "detail": "idx 0 of 155: DAI-market exploit entry 0x863df8af. Aave flash loan 30M DAI, Euler -> 38,904,507.35 DAI, repay 30,027,000; net 8,877,507.35 DAI stays in the copy. tip 37.9 gwei, effective 56.82 gwei, no coinbase transfer. FIRST exploit tx of the whole Euler hack. Only Euler-touching tx in the block.",
+   "tx": "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+   "block": 16817996,
+   "raw_ref": "site/raw/rpc/trace_tx_0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d.json",
+   "raw_refs": [
+    "site/raw/rpc/receipts_16817996.json"
+   ],
+   "derived": [
+    {
+     "shown": "8,877,507.35 DAI",
+     "how": "DAI received from Euler 38,904,507.348 minus DAI repaid to Aave 30,027,000 (both Transfer amounts in the receipt/trace)",
+     "expr": "(a-b)/1e18",
+     "ops": {
+      "a": {
+       "int": 38904507348306697267428294
+      },
+      "b": {
+       "int": 30027000000000000000000000
+      }
+     }
+    }
+   ]
+  },
+  {
+   "t_utc": "2023-03-13T08:54:23Z",
+   "kind": "deploy",
+   "actor": "copier 0x5F259D0b",
+   "detail": "idx 19: second CREATE (identical code) -> 0xe4eb1f9f; never successfully called (copier's follow-up call did not land)",
+   "tx": "0x684f82f596f8d211b85893abf85a9e1d9d686bfd5c17131467f93eb782bd1d2d",
+   "block": 16818013,
+   "raw_ref": "site/raw/rpc/block_16818013.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:54:23Z",
+   "kind": "tx",
+   "actor": "hacker 0xB2698 -> 0x036cec1a",
+   "detail": "idx 44: FIRST call to its own contract (0xa91864d4(1), WETH market) -> OUT OF GAS (limit 2,048,770, used 1,986,829); tip 3 gwei",
+   "tx": "0xa476fad72c8f4ee15fd2d75ecda4701d8f3ac74431aa453521f13a01c8688142",
+   "block": 16818013,
+   "raw_ref": "site/raw/rpc/block_16818013.json"
+  },
+  {
+   "t_utc": "2023-03-13T08:56:35Z",
+   "kind": "tx",
+   "actor": "hacker 0xB2698",
+   "detail": "first successful hacker exploit (WETH variant): +8,080.5 WETH net",
+   "tx": "0x47ac3527d02e6b9631c77fad1cdee7bfa77a8a7bfd4880dccbda5146ace4088f",
+   "block": 16818024,
+   "raw_ref": "site/raw/rpc/receipt_0x47ac3527d02e6b9631c77fad1cdee7bfa77a8a7bfd4880dccbda5146ace4088f.json",
+   "raw_refs": [
+    "site/raw/rpc/block_16818024.json"
+   ],
+   "derived": [
+    {
+     "shown": "8,080.5 WETH",
+     "how": "WETH received by the hacker contract 28,994.3039 minus the flash-loan repayment 20,913.8055 (both WETH Transfer amounts in the receipt)",
+     "expr": "(a-b)/1e18",
+     "ops": {
+      "a": {
+       "int": 28994303891868396965958
+      },
+      "b": {
+       "int": 20913805500000000000000
+      }
+     }
+    }
+   ]
+  },
+  {
+   "t_utc": "2023-03-13T09:08:59Z",
+   "kind": "tx",
+   "actor": "hacker 0xB2698",
+   "detail": "last big exploit call (stETH 0x6d21d1e8) in block 16818085; USDC->DAI swap at 16818068, withdraw of 34.19M DAI to 0xb66cd966 at 16818102 (09:12:23Z)",
+   "tx": "0x298bde3f9e53f7a5d870f7f5d56ee2f5e41fa25e6eb5e74611ac97025405db55",
+   "block": 16818102,
+   "raw_ref": "site/raw/etherscan/txlist_0xB2698C2D99aD2C302a95A8Db26B08d17A77CEdd4_0_16830000_asc_1_60.json"
+  },
+  {
+   "t_utc": "2023-03-13T10:40:59Z",
+   "kind": "message",
+   "actor": "third party 0x915447 -> copier",
+   "detail": "inbound dust/message txs to the copier from other addresses begin (block 16818540)",
+   "tx": "0xbf295a011f0088d8a5cad4b9a15d3acebe3a4b5184f20af5ec69a07384b69a2c",
+   "block": 16818540,
+   "raw_ref": "site/raw/etherscan/txlist_0x5F259D0b76665c337c6104145894F4D1D2758B8c_16810000_16830000_asc_1_60.json"
+  },
+  {
+   "t_utc": "2023-03-13T11:38:11Z",
+   "kind": "return",
+   "actor": "copier 0x5F259D0b -> copy #1",
+   "detail": "withdraw(): 8,877,507.35 DAI to hard-coded 0xb66cd966 (hacker wallet)",
+   "tx": "0xdae809e4a1ddf77c39d44a4acfe6165bedbc19a385c4b241242cc9bd582a80b9",
+   "block": 16818823,
+   "raw_ref": "site/raw/rpc/trace_tx_0xdae809e4a1ddf77c39d44a4acfe6165bedbc19a385c4b241242cc9bd582a80b9.json"
+  },
+  {
+   "t_utc": "2023-03-13T12:08:35Z",
+   "kind": "message",
+   "actor": "copier 0x5F259D0b",
+   "detail": "on-chain self-transfer with text: 'I am the owner of a MEV bot that has accidentally frontrun the first tx of the hacker...' (full text in incident.json notes)",
+   "tx": "0x44b559c86ca8ccac5c16df507516ef19c06042a48cdbd865cb9db4c52d15ea17",
+   "block": 16818973,
+   "raw_ref": "site/raw/rpc/tx_0x44b559c86ca8ccac5c16df507516ef19c06042a48cdbd865cb9db4c52d15ea17.json"
+  }
+ ]
+}

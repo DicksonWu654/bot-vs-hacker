@@ -1,0 +1,288 @@
+{
+ "schema": "bvh-calldiff/1",
+ "slug": "taopad-2024",
+ "operator_tx": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+ "yoink_tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+ "method": "depth-1 calls of both callTracer traces (site/raw/rpc/trace_<tx>.json); the operator's helper contract 0x8ec2e9de and Yoink's contract 0x6980a47b are normalised to SELF and the two EOAs to EOA; calldata compared word by word. Yoink's own contract is described only by the victim-protocol calls visible in its trace, nothing deeper.",
+ "summary": "9 of Yoink's 18 depth-1 calls correspond to a call in the operator's 13-call trace on the same target and selector; 4 are byte-identical after normalisation; the rest differ only in the swap/mint deadline (= block timestamp of each tx), one amount-bound word, and the approve amounts (exact vs max). ETH values (0.6667 + 0.3333 ETH working capital) and the TPAD.distribute argument are identical.",
+ "pairs": [
+  {
+   "what": "SwapRouter.exactInputSingle{0.6667 ETH}",
+   "operator_call_index": 2,
+   "yoink_call_index": 2,
+   "target": "Uniswap V3 SwapRouter",
+   "target_addr": "0xe592427a0aece92de3edee1f18e0157c05861564",
+   "selector": "0x414bf389",
+   "value_wei_operator": 666666666666666666,
+   "value_wei_yoink": 666666666666666666,
+   "n_words": 8,
+   "calldata_identical": false,
+   "differing_words": [
+    {
+     "word": 4,
+     "operator": "0000000000000000000065ccbecb000000000000000000000000000000000000",
+     "yoink": "0000000000000000000065ccbfc7000000000000000000000000000000000000"
+    }
+   ],
+   "operator_error": null,
+   "yoink_gas_given": 29429765,
+   "operator_gas_given": 29285859
+  },
+  {
+   "what": "V3Factory.createPool",
+   "operator_call_index": 5,
+   "yoink_call_index": 3,
+   "target": "Uniswap V3 Factory",
+   "target_addr": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+   "selector": "0xa1671295",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 3,
+   "calldata_identical": true,
+   "differing_words": [],
+   "operator_error": null,
+   "yoink_gas_given": 29303719,
+   "operator_gas_given": 29152870
+  },
+  {
+   "what": "new pool .initialize",
+   "operator_call_index": 6,
+   "yoink_call_index": 4,
+   "target": "V3 pool created in-tx (CREATE2)",
+   "target_addr": "0x70749ea59d6ef55e35b0922a89f06f80c22cab76",
+   "selector": "0xf637731d",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 1,
+   "calldata_identical": true,
+   "differing_words": [],
+   "operator_error": null,
+   "yoink_gas_given": 24778180,
+   "operator_gas_given": 24629364
+  },
+  {
+   "what": "new pool 0x1a686502 (no args)",
+   "operator_call_index": 7,
+   "yoink_call_index": 5,
+   "target": "V3 pool created in-tx (CREATE2)",
+   "target_addr": "0x70749ea59d6ef55e35b0922a89f06f80c22cab76",
+   "selector": "0x1a686502",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 0,
+   "calldata_identical": true,
+   "differing_words": [],
+   "operator_error": null,
+   "yoink_gas_given": 24729430,
+   "operator_gas_given": 24580937
+  },
+  {
+   "what": "PositionManager.mint{0.3333 ETH}",
+   "operator_call_index": 9,
+   "yoink_call_index": 6,
+   "target": "Uniswap V3 PositionManager",
+   "target_addr": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+   "selector": "0x88316456",
+   "value_wei_operator": 333333333333333334,
+   "value_wei_yoink": 333333333333333334,
+   "n_words": 11,
+   "calldata_identical": false,
+   "differing_words": [
+    {
+     "word": 5,
+     "operator": "00000000000000000000000000000000000000000000000000000000592f4bcb",
+     "yoink": "00000000000000000000000000000000000000000000000000000000592a94e5"
+    },
+    {
+     "word": 10,
+     "operator": "0000000000000000000065ccbecb",
+     "yoink": "0000000000000000000065ccbfc7"
+    }
+   ],
+   "operator_error": null,
+   "yoink_gas_given": 24717299,
+   "operator_gas_given": 24542938
+  },
+  {
+   "what": "TPAD.distribute(0)",
+   "operator_call_index": 10,
+   "yoink_call_index": 7,
+   "target": "TPAD token",
+   "target_addr": "0x5483dc6abda5f094865120b2d251b5744fc2ecb5",
+   "selector": "0x91c05b0b",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 1,
+   "calldata_identical": true,
+   "differing_words": [],
+   "operator_error": null,
+   "yoink_gas_given": 24156112,
+   "operator_gas_given": 23981880
+  },
+  {
+   "what": "SwapRouter.exactInputSingle (second swap)",
+   "operator_call_index": 12,
+   "yoink_call_index": 8,
+   "target": "Uniswap V3 SwapRouter",
+   "target_addr": "0xe592427a0aece92de3edee1f18e0157c05861564",
+   "selector": "0x414bf389",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 8,
+   "calldata_identical": false,
+   "differing_words": [
+    {
+     "word": 4,
+     "operator": "0000000000000000000065ccbecb000000000000000000000000000000000000",
+     "yoink": "0000000000000000000065ccbfc7000000000000000000000000000000000000"
+    },
+    {
+     "word": 5,
+     "operator": "00000000000000000000592f4bcb000000000000000000000000000000000000",
+     "yoink": "00000000000000000000592a94e5000000000000000000000000000000000000"
+    }
+   ],
+   "operator_error": "execution reverted",
+   "yoink_gas_given": 10424036,
+   "operator_gas_given": 10226325
+  },
+  {
+   "what": "wTAO.approve",
+   "operator_call_index": 8,
+   "yoink_call_index": 0,
+   "target": "wTAO",
+   "target_addr": "0x77e06c9eccf2e797fd462a92b6d7642ef85b0a44",
+   "selector": "0x095ea7b3",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 2,
+   "calldata_identical": false,
+   "differing_words": [
+    {
+     "word": 1,
+     "operator": "00000000000000000000000000000000000000000000000000000000592f4bcb",
+     "yoink": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+   ],
+   "operator_error": null,
+   "yoink_gas_given": 29489905,
+   "operator_gas_given": 24577553
+  },
+  {
+   "what": "wTAO.approve",
+   "operator_call_index": 11,
+   "yoink_call_index": 1,
+   "target": "wTAO",
+   "target_addr": "0x77e06c9eccf2e797fd462a92b6d7642ef85b0a44",
+   "selector": "0x095ea7b3",
+   "value_wei_operator": 0,
+   "value_wei_yoink": 0,
+   "n_words": 2,
+   "calldata_identical": false,
+   "differing_words": [
+    {
+     "word": 1,
+     "operator": "00000000000000000000000000000000000000000000000000000000592f4bcb",
+     "yoink": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+   ],
+   "operator_error": null,
+   "yoink_gas_given": 29464377,
+   "operator_gas_given": 10251717
+  }
+ ],
+ "only_in_yoink": [
+  {
+   "yoink_call_index": 9,
+   "target": "Uniswap V3 PositionManager",
+   "selector": "0x0c49ccbe",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 10,
+   "target": "V3 pool created in-tx (CREATE2)",
+   "selector": "0x1a686502",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 11,
+   "target": "Uniswap V3 PositionManager",
+   "selector": "0xfc6f7865",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 12,
+   "target": "wTAO",
+   "selector": "0x70a08231",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 13,
+   "target": "pool (WETH leg of first swap)",
+   "selector": "0x128acb08",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 14,
+   "target": "WETH",
+   "selector": "0x2e1a7d4d",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 15,
+   "target": "WETH",
+   "selector": "0x70a08231",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 16,
+   "target": "WETH",
+   "selector": "0x2e1a7d4d",
+   "value_wei": 0
+  },
+  {
+   "yoink_call_index": 17,
+   "target": "0x7adc0e867ebc337e2d20c44db181c067fa08637b",
+   "selector": "0x",
+   "value_wei": 1396774176782019554
+  }
+ ],
+ "only_in_operator": [
+  {
+   "operator_call_index": 0,
+   "target": "TPAD token",
+   "selector": "0x570ca735"
+  },
+  {
+   "operator_call_index": 1,
+   "target": "TPAD token",
+   "selector": "0x089fe6aa"
+  },
+  {
+   "operator_call_index": 3,
+   "target": "wTAO",
+   "selector": "0x70a08231"
+  },
+  {
+   "operator_call_index": 4,
+   "target": "Uniswap V3 Factory",
+   "selector": "0x1698ee82"
+  }
+ ],
+ "operator_failure": {
+  "error": "out of gas: not enough gas for reentrancy sentry",
+  "frame": "0xe592427a0aece92de3edee1f18e0157c05861564 -> 0x70749ea59d6ef55e35b0922a89f06f80c22cab76 0x128acb08",
+  "gas_given": 10062073,
+  "gas_used": 10062073,
+  "tx_gas_limit": 29792302,
+  "top_level_error": "execution reverted",
+  "note": "the operator's tx ran out of gas inside the second SwapRouter swap (tx gas limit 29,792,302); Yoink's tx used gas limit 30,000,000 and its equivalent swap used 10,041,501 gas and succeeded."
+ },
+ "yoink_extra_steps_after_second_swap": "decreaseLiquidity, collect, pool burn-side calls, WETH.withdraw x2 (see trace); the operator's tx reverted before reaching them.",
+ "raw_refs": [
+  "full cache only (not published)",
+  "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+  "full cache only (not published)",
+  "full cache only (not published)"
+ ]
+}

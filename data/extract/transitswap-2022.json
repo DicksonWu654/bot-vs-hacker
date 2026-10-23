@@ -1,0 +1,259 @@
+[
+ {
+  "slug": "transitswap-2022",
+  "name": "Transit Swap, Ethereum leg: Yoink's bot front-ran the attacker's last tx",
+  "date_utc": "2022-10-01T19:06:35Z",
+  "chain": "ethereum",
+  "orig_verdict": "confirmed-onchain",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "Yoink's tx (index 24) makes the same 21 Transit Swap router calls on the same victims as the attacker's last pending exploit tx (index 43, reverted), with only the recipient changed; it won the block position by a 2-wei higher tip. Scope: only the attacker's last of nine Ethereum txs; the earlier eight landed.",
+  "one_liner": "Yoink replayed the Transit Swap attacker's last pending exploit tx (21/21 router calls, recipient swapped) one tier ahead at index 24 of block 15655281 and swapped 5,974.5 UNI to 29.3065 WETH; the attacker's tx reverted. Yoink returned 26.505 ETH 11 months later.",
+  "attacker": {
+   "eoa": "0x5f0b31aa37bce387a8b21554a8360c6b8698fbef",
+   "eoas": [
+    "0x5f0b31aa37bce387a8b21554a8360c6b8698fbef",
+    "0x75f2aba6a44580d7be2c4e42885d4a1917bffd46"
+   ],
+   "contracts": [
+    "0x17ff6c94ba3a49c72ef2f10782de8a6152f204ea"
+   ],
+   "funding": "unknown",
+   "funding_tx": "0xf749e50e2b41c4aeac1ae70ecadc14bec1800a8598d5c339300148cfe501900f",
+   "deploy_tx": "0x36b71a0f6a7ea0286befb20621191e22b750aebc8702af17e5bfb5af92e1a628",
+   "deploy_block": 15655094,
+   "attack_txs": [
+    {
+     "hash": "0xba75ad7a43e784f51fe777d749fc55ae10f1df2bcb01cde97641613b19acb6ec",
+     "block": 15655118,
+     "index": 79,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x19d45550a6d55128bad90d0f78f048bb9681b468c3a898dee210965130bdfa8d",
+     "block": 15655129,
+     "index": 31,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0xc261e210930f700f7ba1cb9ad5c166bdfee3046cdd7152b49f3de1ca529d1d48",
+     "block": 15655137,
+     "index": 34,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x929c1f7df40cb6bee424707f9a9feebabb9d81da1253857fa45252125e1ade1c",
+     "block": 15655146,
+     "index": 23,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0xb91f90c8886c024397bd463c9f4ddfc1c48e64a1093afb55b0a9aae1b5ea5c43",
+     "block": 15655155,
+     "index": 38,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x743e4ee2c478300ac768fdba415eb4a23ae66981c076f9bff946c0bf530be0c7",
+     "block": 15655226,
+     "index": 38,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x5064ee4a4a237bb09c203a76bec8ab22a1cd237cb590fb25ced2f14996837771",
+     "block": 15655236,
+     "index": 26,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x3be65eb18a59b6bbdf2f23de98d1092368c0c93f945b0859c820c67b3354a68f",
+     "block": 15655247,
+     "index": 40,
+     "status": "success",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens)"
+    },
+    {
+     "hash": "0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342",
+     "block": 15655281,
+     "index": 43,
+     "status": "reverted",
+     "role": "exploit tx (router arbitrary-call -> transferFrom of approved tokens) - the last, pending when Yoink's block was built; reverted"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+   "tx": "0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c",
+   "block": 15655281,
+   "position": 24,
+   "status": "success",
+   "priority_fee_gwei": 3.000000002
+  },
+  "bots_other": [
+   {
+    "label": "Yoink",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0xb7882cc1b71614cb106e15f3baea072ada9ccb4183a9ee1ea3897585e994ed6a",
+    "block": 15655307,
+    "position": 0,
+    "status": "success",
+    "role": "Yoink's second router tx (block 15655307, index 0): swept 3 further victims (MANA) for 0.869 WETH and paid 0.714 ETH to the builder; its attacker origin was not established, so it is not part of this race (per incident.json; trace in site/raw/rpc/trace_0xb7882cc1....json)"
+   }
+  ],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "In-block evidence only: October 2022 is before the mempool-dumpster archive (starts 2023-08-07), and the block has no MEV-Boost bid history. Yoink's tx looks like an ordinary public tx (type 2, no coinbase payment); whether it saw the attacker's tx pending or inferred the calls from the earlier eight is not shown. Yoink did not front-run the attacker's earlier eight txs.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "No mempool first-seen exists (pre-archive). The tx Yoink's calls mirror is the attacker's last tx 0x6f7d546a (index 43 of the same block), the only one of the attacker's nine Ethereum txs that Yoink front-ran."
+  },
+  "attacker_block": 15655281,
+  "attacker_block_note": "Attacker's last exploit tx 0x6f7d546a is in the same block, index 43 (tip 3.0 gwei), and reverted.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 15655281,
+   "tx": "0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342"
+  },
+  "auction": {
+   "block": 15655281,
+   "slot": 4818931,
+   "slot_start_utc_ms": 1664651195000,
+   "relays_answered": [],
+   "n_bids": 0,
+   "n_builders": 0,
+   "bids_per_relay": {},
+   "first_bid_ms_rel_slot": null,
+   "last_bid_ms_rel_slot": null,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": [],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": null,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/transitswap-2022/race_15655281.json"
+   },
+   "auction_note": "No MEV-Boost bid history for this block (no relay we can query reports it: vanilla or privately built block, fee recipient 0x4675c7e5, empty extraData). Ordering is explained by priority fee alone: Yoink's 3.000000002 gwei tip (+2 wei over the attacker's 3.0 gwei) puts it ahead of the 3.0-gwei tier, which holds the attacker's tx at index 43."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 29.306498908771,
+   "gross_loot_method": "WETH out of the UNI swap in the Yoink tx (callTracer): 5,974.521 UNI taken from 21 router approvals, swapped via a Uniswap pool to 29.3065 WETH, unwrapped to ETH",
+   "captured_native": {
+    "amount": "5,974.521 UNI -> 29.306499 WETH",
+    "unit": "UNI->WETH",
+    "desc": "UNI taken by 21 router calls (recipient = Yoink contract 0x6c6b87d4), sold for WETH inside the tx"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.003070008002,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 29.297222035,
+   "loot_note": "bot_net_eth = 29.306499 ETH - 0.009277 ETH gas (1,023,336 gas x 9.065325223 gwei, incl. 0.003070 ETH tip); there was no coinbase payment. This covers tx 0x9f43b61d only: Yoink's separate sweep in block 15655307 (0.869 WETH, 0.714 ETH to the builder) is excluded, and Yoink's offer of '90% of the profits (26.505 ETH)' implies a total profit of about 29.45 ETH that includes it. No USD figure is saved for 2022-10-01."
+  },
+  "fate": {
+   "return_status": "returned",
+   "returned_by_bot_eth": 26.505,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 26.505,
+   "returned_to": "Transit Swap funds receiver 0xd989f7b4320c6e69cea3d914444c19ab67d3a35e",
+   "returned_desc": "Transit messaged Yoink on-chain on 2022-10-04, 10-06 and 10-07. Yoink replied on-chain on 2022-10-23 (tx 0x57a98ef2, block 15807716): 'My bot frontran the real attacker. How about I return 90% of the profits (26.505 Eth) and keep 10% as a bounty?'. Transit accepted on 2023-05-22 (tx 0x3edd298a, block 17313155). Yoink sent exactly 26.505 ETH to 0xd989f7b4 on 2023-09-06T14:24:35Z (tx 0x074acda8, block 18077979), about 11 months after the offer. Separately, the attacker's recipient address 0x75f2aba6 returned 3,180 ETH to Transit's deployer at block 15658229 (about 2022-10-02, tx 0x2e9d1f3e); that is not Yoink's return.",
+   "bounty_kept_eth": 2.945,
+   "bounty_desc": "10% bounty Yoink proposed to keep and Transit accepted; derived from the message (26.505 ETH = 90% of profits, so about 2.945 ETH), not an on-chain transfer",
+   "kept_by_bot_eth": 2.792222,
+   "returned_txs": [
+    {
+     "tx": "0x074acda86089731f37e42abda7f970c606509419e557f31d9c8f793dd9981b2d",
+     "eth": 26.505,
+     "block": 18077979,
+     "time_utc": "2023-09-06T14:24:35Z",
+     "note": "Yoink EOA 0xfde0d157 -> Transit funds receiver 0xd989f7b4, exactly 26.505 ETH"
+    }
+   ],
+   "public_statement": "On-chain message from Yoink's EOA to Transit's receiver (tx 0x57a98ef2, 2022-10-23): Sorry, just saw your message. My bot frontran the real attacker. How about I return 90% of the profits (26.505 Eth) and keep 10% as a bounty? If that's acceptable, let me know, otherwise you can reach out to me here: [email redacted]",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_15655281.json",
+   "bot.position": "site/raw/rpc/block_15655281.json",
+   "attacker_block": "site/raw/rpc/block_15655281.json",
+   "loot.gross_loot_eth": "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json",
+   "loot.coinbase_paid_eth": "site/raw/rpc/trace_block_15655281.json",
+   "loot.priority_fee_paid_eth": "site/raw/rpc/receipts_15655281.json",
+   "loot.builder_refund_to_bot_eth": "site/raw/rpc/block_15655281.json",
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json",
+    "site/raw/rpc/receipts_15655281.json"
+   ],
+   "fate.returned_by_bot_eth": "site/raw/etherscan/d989_txlist_all.json",
+   "fate.returned_total_eth": "site/raw/etherscan/d989_txlist_all.json",
+   "fate.bounty_kept_eth": [
+    "full cache only (not published)",
+    "site/raw/etherscan/d989_txlist_all.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json",
+    "site/raw/rpc/receipts_15655281.json",
+    "site/raw/etherscan/d989_txlist_all.json"
+   ],
+   "router_call_comparison": [
+    "site/raw/rpc/trace_0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342.json",
+    "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json"
+   ],
+   "messages": [
+    "full cache only (not published)",
+    "site/raw/etherscan/d989_msg_17313155.json"
+   ],
+   "attacker_return": "full cache only (not published)"
+  },
+  "rawref_gaps": [
+   {
+    "field": "loot.captured_usd",
+    "why": "no saved ETH/UNI price for 2022-10-01; not converted (incident.json's ~$38K is a rough estimate)"
+   },
+   {
+    "field": "fate.returned_txs[].time_utc of messages",
+    "why": "dates of the three Transit messages (10-04/06/07) are from incident.json, not re-opened"
+   }
+  ],
+  "discrepancies": [
+   "initial incident notes phrased the offer as '90% of 26.505 ETH'; the on-chain message says 26.505 ETH IS the 90% share ('return 90% of the profits (26.505 Eth) and keep 10%'), implying total profits of about 29.45 ETH. Row kept_by_bot_eth is tx-level (gross 29.31 - gas - 26.505), so it differs from the 2.945 ETH bounty.",
+   "Yoink's 29.45 ETH profit basis includes a second Yoink tx (0xb7882cc1, block 15655307) whose attacker origin was not established; this row's tx alone is 29.3065 WETH."
+  ],
+  "evidence_notes": [
+   "21 of 21 router calls (selector 0x006de4df on 0xc8d7899f) in Yoink's tx and the attacker's reverted tx have the same length (1864 hex chars) and, after swapping the recipient 0x75f2aba6 -> 0x6c6b87d4, differ only in words [26, 27] (the trailing amount field; incidents/transitswap-2022/call_diff.json says it is zero in the attacker's trace because the victim balances were already gone, and the victim's UNI balance in Yoink's); recomputed from site/raw/rpc/trace_<tx>.json, see incidents/transitswap-2022/call_diff.json.",
+   "Block 15655281: Yoink index 24, tip 3.000000002 gwei (effective 9.065325223 gwei); attacker index 43, tip 3.0 gwei (9.065325221); block order follows descending tip: the three 3.000000002-gwei txs sit at indexes 23-25, the 3.0-gwei tier follows (incidents/transitswap-2022/race_15655281.json).",
+   "The attacker's earlier eight Ethereum txs (blocks 15655118-15655247) all succeeded and were not front-run; Yoink's txs in blocks 15655000-15655400 touch the router only in 15655281 and 15655307.",
+   "Yoink took 5,974.52 UNI via the router and sold it for 29.3065 WETH in one tx; no coinbase payment, no relay bid history for the block.",
+   "Return: exactly 26.505 ETH on 2023-09-06T14:24:35Z (tx 0x074acda8) after offering 90% of profits on 2022-10-23 (tx 0x57a98ef2); the attacker's own 3,180 ETH return to Transit (about 2022-10-02) is separate."
+  ],
+  "incident_dir": "incidents/transitswap-2022"
+ }
+]

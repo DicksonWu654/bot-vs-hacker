@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods and data | The Bot Beat the Hacker</title>
+<meta name="description" content="Where every number comes from, how we judged a race, what we could not see, and the files to download.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main id="main" class="wrap">
+  <header class="ihead">
+    <h1>Methods and data</h1>
+    <p class="lede" style="margin-top:20px">What we looked at, how we decided a bot had beaten a hacker, and where the evidence stops.</p>
+    <p class="small mono muted" id="built"></p>
+  </header>
+
+  <section class="sec" id="headline-numbers" aria-labelledby="hn-h">
+    <h2 id="hn-h">About the headline numbers</h2>
+    <div class="prose">
+      <p>The four numbers at the top of the home page, with the fine print. All four are read from <a href="data/headline_stats.json">headline_stats.json</a>, which is rebuilt from the per-race rows in <a href="data/incidents.json">incidents.json</a>; each row links its saved sources in <a href="index.html#table">the race table</a>.</p>
+      <dl class="defs" id="hn-list"><dt>Loading&hellip;</dt></dl>
+      <p>Mempool exposure, block position and exploits that ran entirely inside a constructor are summarised on <a href="evolution.html">Has it evolved?</a></p>
+    </div>
+  </section>
+
+  <section class="sec" id="raw">
+    <h2>How the "raw" links work</h2>
+    <div class="prose">
+      <p>Every timestamp and number on a race page carries a small <a class="raw" href="#raw">raw</a> tag. It opens the saved response the number was read from: an RPC block, a set of receipts, a block trace, a relay's bid stream, a payload-delivered record, or a mempool archive extract. Responses were saved when we fetched them, with a checksum and the source address, listed in <a href="raw/MANIFEST.json">raw/MANIFEST.json</a>.</p>
+      <p>Where a number is derived (a delay, a share, a sum), the tag points at the response it was derived from and the arithmetic is shown. Where no single response backs a value, the tag says <span class="raw-none">no raw</span> instead of linking something unrelated.</p>
+      <p>Blocks that contain c0ffeebabe.eth's transactions are saved at block level only, with no per-transaction traces or decodes of those transactions, by publication policy. The mempool archive files are far too large to host. For those we publish only the rows that concern each incident (a <code>.rows.csv</code> extract), plus a pointer to the original day file. Saved third-party web pages use link-only stubs; MANIFEST notes describe every reduction and redaction. Absent rows are not evidence of absence: see the limits below.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="sources">
+    <h2>Sources</h2>
+    <div style="overflow-x:auto"><table class="ops"><thead><tr><th>what</th><th>source</th><th>used for</th></tr></thead><tbody>
+      <tr><td>Blocks, receipts, traces</td><td>Ethereum JSON-RPC: blocks, block receipts, and block and transaction traces</td><td>transaction order, coinbase transfers, call trees, builder payouts</td></tr>
+      <tr><td>Builder bids</td><td>Relay data APIs: Flashbots, Ultrasound, Aestus, Agnostic, bloXroute (regulated), Titan, Relayooor, BTCS, EthGas, Wenmerge (<code>builder_blocks_received</code>)</td><td>bid-escalation curves, winning builder, first qualifying bid</td></tr>
+      <tr><td>Proposer payment</td><td>Relay <code>proposer_payload_delivered</code></td><td>what the proposer was actually paid</td></tr>
+      <tr><td>Public mempool</td><td>Flashbots mempool-dumpster (daily files and source logs, from 2023-08-07)</td><td>when a transaction was first seen, who saw it</td></tr>
+      <tr><td>Contract and label data</td><td>Etherscan, DefiLlama prices, EigenPhi labels where cited</td><td>names, token prices at the time of the race</td></tr>
+      <tr><td>Exploit list</td><td>DeFiHackLabs reproduction repository (Ethereum mainnet entries)</td><td>the sample for the evolution study</td></tr>
+      <tr><td>Postmortems and statements</td><td>Protocol and security-firm write-ups, linked on each race page</td><td>what happened to the money afterwards</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="sec" id="evidence">
+    <h2>Evidence levels</h2>
+    <dl class="defs">
+      <dt>confirmed-onchain</dt><dd>The same or adapted calldata sent from a different address, in the same or an earlier block than the attacker's own transaction, shown in the traces. Or the bot used the attacker's setup (a deployed contract or a <code>prepare()</code> call) before the attacker's own call. For c0ffeebabe.eth rows our call-level comparison is withheld by publication policy; anyone can compare the public traces. Public transaction hashes, blocks and positions are listed on each page.</dd>
+      <dt>reported</dt><dd>A postmortem or press report says a bot did it, and we have not yet verified that on chain. Not counted in any headline.</dd>
+      <dt>related-not-frontrun</dt><dd>A bot or whitehat was involved, but not as a front-run of a pending attack: it replayed a failed attack, found the bug first, or copied a long time after.</dd>
+      <dt>rejected</dt><dd>Checked and not a race. The reason is given in the table. These rows are on the home page under "All races" because they are instructive: DeFiHackLabs often lists the bot's transaction as "the attack", and arbitrage bots touch the same pools by coincidence.</dd>
+    </dl>
+    <div class="prose"><p><b>The headline count</b> is the rows with verdict <em>confirmed-onchain</em> and race type <em>beat a pending attack</em> or <em>used the attacker's setup</em>. Euler is excluded because the copier may be the attacker’s own second account. <span id="sensitivity-summary"></span></p>
+    <p><b>Before August 2023</b> there is no public mempool archive. For those races the lane that would show the mempool says "in-block evidence only" and the claim rests on block order and traces.</p></div>
+  </section>
+
+  <section class="sec" id="delay">
+    <h2>Builder bid response (ms)</h2>
+    <div class="prose">
+      <p>Builder bid response (ms) measures the gap between the first public sighting of the trigger (the hacker's transaction, their contract deployment, or a user's withdrawal) and the first big step-up bid from the builder that went on to win the block. A step-up is a bid at least twice that builder's own best earlier bid and at least 0.5 ETH.</p>
+      <p>Bid <em>contents</em> are never visible, only the amount and the time. So the bid we pick might not contain the bot's transaction, and a bot that reacted earlier with a smaller bid would be missed. Where a second estimate exists we show it as an upper bound. The response can be timed only when the trigger was seen before inclusion. <span id="timing-summary"></span></p>
+    </div>
+  </section>
+
+  <section class="sec" id="limits">
+    <h2>Limits</h2>
+    <ul class="prose">
+      <li><b>Relay retention.</b> In our fetches only the Flashbots relay returned old bid data; the others returned data for roughly the last 90 days. For older races, bid curves come from whichever relay still has them, and some slots have none.</li>
+      <li><b>Bids never reveal contents.</b> We see an amount, a builder and a time. We cannot say what was in a losing bid.</li>
+      <li><b>The Flashbots blocks API is gone.</b> It now returns HTTP 410 (&ldquo;this website has been decommissioned&rdquo;). Bundles from before the Merge are inferred from traces and labelled <em>inferred</em>.</li>
+      <li><b>The mempool archive is a sample.</b> It starts on 2023-08-07 and aggregates several sources whose coverage drifts: it saw 89% of ordinary transactions in 2023 Q3 and about half in 2025 and 2026. A transaction absent from the archive is <em>not seen</em>, which can reflect private flow or a missed observation. That is why every exposure number is shown beside its control group.</li>
+      <li><b>Sample of exploits.</b> The evolution study covers reproduced public incidents on Ethereum mainnet, not all attacks.</li>
+      <li><b>Yoink’s executor is decoded from its on-chain code; other operators are described through their public transactions.</b> We do not analyse the internals of one bot, by decision. The Yoink explainer describes that operator’s public transaction behaviour.</li>
+      <li><b>Money afterwards</b> comes from on-chain transfers we could trace plus public statements. &ldquo;No return found&rdquo; means we found none.</li>
+    </ul>
+  </section>
+
+  <section class="sec" id="prior">
+    <h2>Prior work</h2>
+    <p class="prose small">Four works measured parts of this problem. Our contribution is different in kind: per-race reconstructions from relay bid streams and traces, rather than a system or a prevalence estimate.</p>
+    <div style="overflow-x:auto"><table class="ops"><thead><tr><th>work</th><th>what it did</th><th>how it relates</th></tr></thead><tbody>
+      <tr><td><a href="https://arxiv.org/abs/2409.06213">BACKRUNNER</a> (2024)</td><td>Built a system that copies attacks to rescue funds. Measured 158 attack transactions between January 2023 and May 2024: 17 were visible in the public mempool, 18 were intercepted by its own bots. 50 of 54 attacks had the exploit contract deployed at least a second before the trigger.</td><td>Its 17 of 158 (10.8%, per transaction) is the closest comparison to our 4.5% (per exploit, a longer period). The two use different units and windows; over the shared window our attacker-only count is 8 of 67 (11.9%). It reports four constructor attacks in 1.5 years, against 62% of our 2025 exploits.</td></tr>
+      <tr><td><a href="https://www.usenix.org/conference/usenixsecurity23/presentation/zhang-zhuo-exploit">STING</a> (2023)</td><td>Synthesises counterattack contracts from a pending exploit. Found that almost all attacks carry access control (<code>msg.sender</code> or <code>tx.origin</code> equal to a constant). General bots handled 12 of 62 exploits in its set.</td><td>Explains why a bot cannot always copy, which is why only some incidents here are races. It cannot see private transactions.</td></tr>
+      <tr><td><a href="https://www.usenix.org/conference/usenixsecurity23/presentation/qin">APE</a> (2023)</td><td>Automated whitehat rescue by replaying attacks. Found that 10 of the 12 whitehat attack transactions it identified were privately propagated.</td><td>Shows the same private-flow shift from the rescue side.</td></tr>
+      <tr><td><a href="https://www.paradigm.xyz/writing/ethereum-is-a-dark-forest">Ethereum is a Dark Forest</a> (2020)</td><td>An early and widely read public account of generalized front-runners copying other people's transactions, including a rescue.</td><td>The framing of this piece. The full list, with how well we verified each source, is in <a href="downloads/bibliography.json">bibliography.json</a>.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="sec" id="downloads">
+    <h2>Return status</h2><p class="prose">Returned means everything went back to the victim side except a bounty the victim agreed to or offered. Partial means some came back, otherwise; none means known zero within the documented search window; unknown means unresolved. Priced pooled returns include known zeros. <span id="returns-summary"></span></p>
+    <h2>Download the data</h2>
+    <p class="small muted prose">All files are static JSON, CSV or text. Nothing here is generated at view time.</p>
+    <table class="dltable" id="t-dl"></table>
+    <p class="small muted">The race pages read <code>data/incident/&lt;id&gt;.json</code>; the complete set can be browsed from the <a href="data/incidents.json">incidents list</a>.</p>
+  </section>
+</main>
+<script src="assets/common.js"></script>
+<script src="assets/methods.js"></script>
+</body>
+</html>

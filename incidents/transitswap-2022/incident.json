@@ -1,0 +1,238 @@
+{
+ "slug": "transitswap-2022",
+ "name": "Transit Swap, Ethereum leg: Yoink's bot front-ran the attacker's last tx",
+ "date": "2022-10-01",
+ "chain": "ethereum",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "Block 15655281: Yoink's tx (idx 24) replays the attacker's last pending exploit tx (idx 43) call for call: the same 21 Transit Swap router calls on the same 21 victims, with only the recipient swapped to Yoink's contract; Yoink's tip is 3.000000002 gwei vs the attacker's 3.0 gwei, which put it ahead of the whole 3.0-gwei tier; the attacker's tx then reverted. Yoink publicly said it front-ran the attacker (on-chain message 2022-10-23) and sent exactly 26.505 ETH to Transit on 2023-09-06. Scope: this is the LAST of the attacker's 9 exploit txs on Ethereum (8 successful, then this one, which reverted); the earlier 8 were not front-run by Yoink (Yoink txs in blocks 15655000-15655400 touch the router only in 15655281 and 15655307). In-block evidence only: no mempool archive for 2022.",
+ "era": "post-Merge (3 weeks after), pre-mempool-dumpster, vanilla (non-MEV-Boost) block",
+ "protocol_loss_usd": "Transit Swap ~21M across chains (Rekt/The Block). Ethereum leg: attacker swapped stolen tokens into 5,183.7 ETH (internal ETH in at blocks 15655184 and 15655265); 3,180 ETH later sent to Transit (tx 0x2e9d1f3e). Yoink's front-run took 5,974.5 UNI -> 29.3065 WETH.",
+ "attacker": {
+  "eoas": [
+   "0x5f0b31aa37bce387a8b21554a8360c6b8698fbef (sends the exploit txs)",
+   "0x75f2aba6a44580d7be2c4e42885d4a1917bffd46 (recipient/swapper, the 'exploiter' address in Rekt; funded 0.1 ETH by 0x5f0b31aa; same address on BSC)"
+  ],
+  "contracts": [
+   "0x17ff6c94ba3a49c72ef2f10782de8a6152f204ea"
+  ],
+  "deploy_tx": "0x36b71a0f6a7ea0286befb20621191e22b750aebc8702af17e5bfb5af92e1a628 (block 15655094 idx 124, 2022-10-01T18:28:59Z)",
+  "funding_tx": {
+   "hash": "0xf749e50e2b41c4aeac1ae70ecadc14bec1800a8598d5c339300148cfe501900f",
+   "note": "0x5f0b31aa receives 2.0167 ETH from 0x8d056d45... on 2022-10-01 08:27Z (block 15652112); origin not traced"
+  },
+  "victim_contracts": {
+   "router": "0xc8d7899f22bc4995c8176e3f2a5ba3f5e87d95e5 (created by Transit deployer 0xfab745c5, 2021-12-21)",
+   "approve_proxy": "0x13ebe7f59e87fe12850c26eaf27812736104d3f9"
+  },
+  "txs": [
+   {
+    "hash": "0xba75ad7a43e784f51fe777d749fc55ae10f1df2bcb01cde97641613b19acb6ec",
+    "block": 15655118,
+    "index": 79,
+    "status": "success",
+    "gas_price_gwei": 14.421046711,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x19d45550a6d55128bad90d0f78f048bb9681b468c3a898dee210965130bdfa8d",
+    "block": 15655129,
+    "index": 31,
+    "status": "success",
+    "gas_price_gwei": 13.188865851,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0xc261e210930f700f7ba1cb9ad5c166bdfee3046cdd7152b49f3de1ca529d1d48",
+    "block": 15655137,
+    "index": 34,
+    "status": "success",
+    "gas_price_gwei": 11.243644239,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x929c1f7df40cb6bee424707f9a9feebabb9d81da1253857fa45252125e1ade1c",
+    "block": 15655146,
+    "index": 23,
+    "status": "success",
+    "gas_price_gwei": 10.147093911,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0xb91f90c8886c024397bd463c9f4ddfc1c48e64a1093afb55b0a9aae1b5ea5c43",
+    "block": 15655155,
+    "index": 38,
+    "status": "success",
+    "gas_price_gwei": 8.812782304,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x743e4ee2c478300ac768fdba415eb4a23ae66981c076f9bff946c0bf530be0c7",
+    "block": 15655226,
+    "index": 38,
+    "status": "success",
+    "gas_price_gwei": 11.027678347,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x5064ee4a4a237bb09c203a76bec8ab22a1cd237cb590fb25ced2f14996837771",
+    "block": 15655236,
+    "index": 26,
+    "status": "success",
+    "gas_price_gwei": 11.623862352,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x3be65eb18a59b6bbdf2f23de98d1092368c0c93f945b0859c820c67b3354a68f",
+    "block": 15655247,
+    "index": 40,
+    "status": "success",
+    "gas_price_gwei": 10.885410768,
+    "first_seen_ms": null,
+    "time_utc": null
+   },
+   {
+    "hash": "0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342",
+    "block": 15655281,
+    "index": 43,
+    "status": "reverted",
+    "gas_price_gwei": 9.065325221,
+    "first_seen_ms": null,
+    "time_utc": null
+   }
+  ],
+  "swap_txs": []
+ },
+ "bots": [
+  {
+   "label": "Yoink (generation 0 contract, pre-gen1)",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e (created 2022-09-07, block 15490950, tx 0x400589c8e84345645558860a7f8723c92a61182eb136de36dbb831d013bdbc2f; predates gen1 0xd050e0a4 of 2022-12-02)",
+   "txs": [
+    "0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c",
+    "0xb7882cc1b71614cb106e15f3baea072ada9ccb4183a9ee1ea3897585e994ed6a"
+   ],
+   "captured": {
+    "token": "UNI -> WETH",
+    "amount": 29.306498908770862,
+    "usd": "~38000 at ~1,300 USD/ETH (estimate)",
+    "note": "tx 1 = 29.3065 WETH; follow-up tx 2 (block 15655307, idx 0) swept 3 further victims (MANA) for 0.8690 WETH and paid 0.7143 ETH to the builder; 29.3065+0.8690-0.7143 minus gas ~29.456, consistent with the 26.505 = 90% of ~29.45 ETH in Yoink's message"
+   },
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_gwei": 3.000000002,
+   "gas_price_gwei": 9.065325223,
+   "replay_evidence": "call_diff.json: 21/21 router calls match the attacker's after substituting the recipient; the attacker's tx had max priority fee 3.0 gwei and effective gas price 9.065325221 gwei; Yoink's is 3.000000002 and 9.065325223 (+2 wei).",
+   "notes": "Yoink's tx was a normal public-mempool style tx (no coinbase payment, type-2). Its second tx (0xb7882cc1, idx 0, tip 0, 0.714 ETH to builder 0xdafea492) is a separate sweep whose attacker origin was not established ('unknown')."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "BSC leg only (not this incident): profanity-address bot 0x0000000038b8889b6ab9790e20fc16fdc5714922, recovered by BlockSec",
+   "note": "BlockSec's account covers BSC only and names no Ethereum bot; the Ethereum front-runner is Yoink. Different bot, different chain."
+  }
+ ],
+ "auction": {
+  "slot": 4818931,
+  "slot_start_utc": "2022-10-01T19:06:35Z",
+  "relays_answered": [
+   "flashbots (0 bids, 0 delivered for this slot)"
+  ],
+  "n_bids": 0,
+  "winner": null,
+  "block_fee_recipient": "0x4675c7e5baafbffbca748158becba61ef3b0a263",
+  "extra_data": "(empty)",
+  "note": "No relay we can query shows this block: a vanilla (non-MEV-Boost) block, or served by a relay whose data has expired (~90-day retention; only Flashbots keeps old bids). Ordering is explained by priority fee alone: block order = descending tip (3.000000002 gwei txs at idx 23-25, then the 3.0 gwei tier idx 26-43+).",
+  "race_files": [
+   "race_15655094.json",
+   "race_15655118.json",
+   "race_15655281.json"
+  ]
+ },
+ "funds_fate": [
+  {
+   "what": "Yoink's front-run profit (tx 1)",
+   "tx": "0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c",
+   "amount": "29.3065 WETH",
+   "to": "Yoink contract 0x6c6b87d4"
+  },
+  {
+   "what": "Transit contacted Yoink (on-chain messages)",
+   "tx": "0x375c7ab98db737ca3ce72b4d08f5c9496186bcdc63b32ce9faa90d4d8ac9d454 (2022-10-04, link to SlowMist tweet), 0xc03c3d3606993c81a53ce624ed1fc6ea4b905d1c115cef45ed7da3e3c55ef0f9 (2022-10-06, to contract), 0x387ff75c106b0ba57bee8d6f9d5a3b61f2b55db938ebe753651be5014bc99cd5 (2022-10-07, to EOA)",
+   "amount": "0",
+   "to": "from 0xd989f7b4 (Transit funds receiver)"
+  },
+  {
+   "what": "Yoink's reply: 'My bot frontran the real attacker. How about I return 90% of the profits (26.505 Eth) and keep 10% as a bounty?'",
+   "tx": "0x57a98ef275569be4727b2e4109e90aa083a875e2f56983275522a1b74d8130d5 (2022-10-23T02:06:59Z, block 15807716)",
+   "amount": "0",
+   "to": "0xd989f7b4320c6e69cea3d914444c19ab67d3a35e"
+  },
+  {
+   "what": "Transit accepts and gives return address",
+   "tx": "0x3edd298ae34b4dbe5bde5f7f5115d10290cf2006cdcb63c6b626cc9529d21857 (2023-05-22, block 17313155)",
+   "amount": "0",
+   "to": "Yoink EOA"
+  },
+  {
+   "what": "RETURN: Yoink sends exactly 26.505 ETH to Transit",
+   "tx": "0x074acda86089731f37e42abda7f970c606509419e557f31d9c8f793dd9981b2d (2023-09-06T14:24:35Z, block 18077979)",
+   "amount": "26.505 ETH",
+   "to": "0xd989f7b4320c6e69cea3d914444c19ab67d3a35e"
+  },
+  {
+   "what": "bounty kept by Yoink",
+   "tx": null,
+   "amount": "~2.945 ETH (10% of 29.45)",
+   "to": "Yoink"
+  },
+  {
+   "what": "attacker's own return (not Yoink)",
+   "tx": "0x2e9d1f3ef02f1e3dc944b62976427a83f85ad280a42e6eb5b37bb366f6c017d8 (block 15658229)",
+   "amount": "3,180 ETH",
+   "to": "0xfab745c5 (Transit deployer) then 0xfc6ef9665bba2ff39fbeca295106bac043178091ff01044792f4e27f392ff50b to 0xd989f7b4 at block 15658818"
+  }
+ ],
+ "sources": [
+  "https://etherscan.io/tx/0x57a98ef275569be4727b2e4109e90aa083a875e2f56983275522a1b74d8130d5",
+  "https://rekt.news/transit-swap-rekt/",
+  "https://blocksec.com/blog/how-we-recover-the-stolen-funds-for-transitswap-and-babyswap",
+  "https://raw.githubusercontent.com/SunWeb3Sec/DeFiHackLabs/main/past/2022/README.md",
+  "https://web3isgoinggreat.com/single/transit-swap-hacked-for-21-million-hacker-returns-large-portion"
+ ],
+ "raw_refs": {
+  "yoink_trace": "site/raw/rpc/trace_0x9f43b61d85af2694976554ad75b295df45ff73f736bda66b8850bcee7c7aa95c.json",
+  "attacker_reverted_trace": "site/raw/rpc/trace_0x6f7d546a4e86baa276141c94f58bef2365fdfb0523478d2c4f13398f49616342.json",
+  "attacker_main_trace": "site/raw/rpc/trace_0xba75ad7a43e784f51fe777d749fc55ae10f1df2bcb01cde97641613b19acb6ec.json",
+  "attacker_txlist": "site/raw/etherscan/ts_att2_txlist.json",
+  "exploiter_txlist": "site/raw/etherscan/ts_att_eth_txlist.json",
+  "yoink_txlist": "full cache only (not published)",
+  "yoink_contract_internal": "full cache only (not published)",
+  "transit_receiver_txlist": "site/raw/etherscan/d989_txlist_all.json",
+  "acceptance_msg": "site/raw/etherscan/d989_msg_17313155.json",
+  "race_281": "incidents/transitswap-2022/race_15655281.json",
+  "call_diff": "incidents/transitswap-2022/call_diff.json"
+ },
+ "verdict_original": "confirmed-onchain",
+ "race_type": "beat-pending-attack",
+ "headline": true,
+ "headline_text": "Yoink replayed the Transit Swap attacker's last pending exploit tx (21/21 router calls, recipient swapped) one tier ahead at index 24 of block 15655281 and swapped 5,974.5 UNI to 29.3065 WETH; the attacker's tx reverted. Yoink returned 26.505 ETH 11 months later.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "confirmed-onchain",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Yoink idx 24 (3.000000002 gwei) replays the attacker's last pending tx (idx 43, reverted) with 21/21 router calls identical bar the recipient. It did not front-run the attacker's 8 earlier successful txs.",
+  "headline_note": "Front-ran only the attacker's last (9th) tx; the 8 earlier successful txs were not front-run.",
+  "dataset_rows": [
+   "transitswap-2022"
+  ]
+ }
+}

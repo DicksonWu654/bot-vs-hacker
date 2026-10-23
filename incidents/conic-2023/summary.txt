@@ -1,0 +1,9 @@
+Conic Finance omnipools, 2023-07-21 - verdict: related-not-frontrun (not a headline race). In-block evidence only (no mempool archive before 2023-08-07).
+
+Two separate attacks, two separate answers.
+
+crvUSD pool (the Yoink lead). A Tornado-funded attacker (EOA 0xb6369f59, contract 0x486cb3f6) ran a Balancer-flash-loan sandwich on the Conic crvUSD omnipool in tx 0x37acd17a (block 17743470, idx 4, 2023-07-21T19:01:35Z, +11.56 ETH). Yoink gen1 (bot 0xd050e0a4) then replayed that exact strategy in ten consecutive blocks, 17743471-17743480, at idx 0 (once idx 4). A call-by-call diff shows the same flash loan, crvUSD loan, Curve swaps and Conic deposit/withdraw sequence with the same round-number sizes; only balance-derived amounts differ by ~0.1%. But the copy starts one block AFTER the attacker had already landed, and the attacker had nothing pending, so this is a late copy, not a front-run, and not a mere arbitrage of leftover imbalance. Yoink took 125.824 ETH gross (coinbase 21.440, gas 14.043, net 90.341), matching its own on-chain message to 1e-5 ETH, versus 13.58 ETH for the attacker. It returned 81.307 ETH (90.0% of net) to conicfinance.eth on 2023-07-23 and kept the agreed 10%.
+
+ETH pool (read-only reentrancy). The first attacker (0x10db234e) deployed 0xdac434f8 and its attack tx reverted out of gas (block 17740901). 51 blocks later 0x8d67db0b redeployed the same creation code with one 20-byte address changed, sent identical calldata, and took 1,724.175 ETH at idx 0 of block 17740955. Post-failure replay by an anonymous exploiter; not returned.
+
+Three facts: (1) both clones are exact: 20 bytes of 21,970 differ (ETH pool); identical round-number parameters (crvUSD). (2) Yoink's ten ~21M-gas txs filled 70% of each block and pushed the base fee from 35.6 to 103.5 gwei. (3) Yoink's accounting matches the chain to 1e-5 ETH, while the 'MEV arbitrage of an imbalance' story in CertiK/DL News does not fit the traces.

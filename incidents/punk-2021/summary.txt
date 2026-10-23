@@ -1,0 +1,15 @@
+Punk Protocol fair-launch pools - a white-hat bot copies the attacker's takeover and lands two slots ahead - 2021-08-10, Ethereum mainnet
+Verdict: confirmed-onchain | race_type: beat-pending-attack | headline: yes | era: mev-geth-2021-22 (in-block evidence only)
+
+WHAT HAPPENED
+Punk's three CompoundModel pools (USDC, USDT, DAI) had a public initialize() with no initializer guard, so anyone could re-set the "forge" that may withdraw. The attacker (EOA 0x1d5a5640, funded from Tornado Cash) deployed his contract in block 12994067 and called it in tx 0x7604c7dd, block 12995895, index 52, at 40.00 gwei (maxFee 40, so his effective tip was capped at 9.97 gwei). A front-running bot (EOA 0x3aa27ab2, contract 0x00000000b2ff..., deployed six days earlier) landed tx 0x597d11c0 at index 50 of the same block at 43.33 gwei (tip 13.30), with no coinbase payment and no bundle pattern: a plain gas-price auction in the public pool.
+
+The trace diff shows the same nine victim calls in the same pool order (initialize, invest, withdrawToForge per pool) with identical initialize arguments except the new forge, which is the bot's contract. The bot drained 2,995,824.70 USDC + 3,000,022.79 USDT + 2,954,191.54 DAI (= $8.95M) but left the attacker's own EOA as the recipient of the USDC leg. The attacker's tx still succeeded and took 0.03 of each token. An anvil replay of the attacker's tx alone gives him the full $8.95M; run second it gives dust; run first, the bot's tx reverts.
+
+AFTERMATH
+The attacker sold the USDC for 960.3 ETH and moved 968 ETH to Tornado, and hit the DAI pool again at block 12996594 for 45,100 DAI of fresh deposits. Punk first messaged the bot's EOA; the bot answered "I frontran the real attacker", sold 1,000,000 DAI for 319.18 ETH as its finder's fee, and returned 3,000,058.38 USDT + 1,954,191.54 DAI ($4.954M) to Punk at 19:20-19:21Z. It then told the attacker it had fixed "the bug in my bot which kept your USDC transfer in place".
+
+THREE FACTS
+1. The bot's mistake is the proof: the USDC transfer still pays the attacker's EOA, an address that exists only in the attacker's tx. The bot kept $5.95M of the $8.95M in play, returned $4.95M, kept $1M; the attacker still got $3.0M.
+2. The attacker lost the ordering by his own fee cap: maxPriorityFee 25 gwei, but maxFee 40 gwei, so he was priced below a 43.33 gwei bot.
+3. No mempool archive exists for 2021, so we cannot time when the bot saw the pending tx; only the block order, gas prices and the copied call tree are measured.

@@ -1,0 +1,10 @@
+Paraswap Augustus V6, 2024-03-19/20. Verdict: related-not-frontrun (no racing attacker; Yoink was the first exploiter).
+
+Yoink's tx 0x35a73969... (block 19470561, index 0, 2024-03-19 18:25:35 UTC, private) calls Augustus V6's callback entry (0xfa461e33) directly. Augustus swaps in V3 pool 0x45f4d604 on behalf of an approving wallet (0x0cc396f5), pulling 12,479.44 OPSEC for 6.4633 WETH to Yoink. A trace_filter over every block from the contract's first code (19426044, 2024-03-13) to 19482000 finds NO earlier or same-block call of this kind; the next one is 11 h 13 min later (block 19473885, 2024-03-20 05:38:47), then independent actors with other victims (the larger "follow-up" drains from 11:13 UTC). No direct callback tx appears in the 2024-03-19 mempool-dumpster. The DeFiHackLabs "attack tx" is therefore the bot's own, and its "$24K" equals this single tx (6.46 ETH).
+
+Auction: block delivered by Ultrasound, builder "I can haz block?" (Yoink-affiliated per bot analysis), bid 2.2229 ETH to the proposer. Flashbots has no bids for this slot (proposer not registered there) and Ultrasound's old bids have expired: no bid timeline exists. Yoink paid 6.4504 ETH (99.8%) to the coinbase and received a 4.3369 ETH builder refund (index 13); a second Yoink tx (index 1) arbitraged the moved V3/V2 price. Yoink net: 4.36 ETH. Return (corrected 2026-10-21): after Paraswap's on-chain message Yoink sent 4.342 ETH (tx 0xa1b1ea50..., block 19508275, 2024-03-25 01:33 UTC) to the Safe Paraswap named: 67.2% of the 6.46 ETH sale, 99.8% of its 4.35 ETH net. Paraswap asked for the remaining ~2.12 ETH; Yoink declined, citing the 2.22 ETH validator payment.
+
+Three most interesting facts:
+1. First exploit of the bug on chain, 11 h before anyone else.
+2. Builder refund of 4.34 ETH, the same mechanism as Ronin.
+3. "Whitehat" label unsupported by on-chain behaviour.

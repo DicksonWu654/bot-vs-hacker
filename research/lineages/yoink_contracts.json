@@ -1,0 +1,513 @@
+{
+ "deployer_eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+ "method": "Etherscan v2 txlist of the EOA (to==\"\" rows, contractAddress), 49,250 txs 2022-08-25..2026-10-21; per-contract txlist; eth_getCode latest; cast selectors. Internal/factory deployments by the bot contracts are not covered.",
+ "n_contracts": 17,
+ "contracts": [
+  {
+   "address": "0x7309742879fc1ece640345f8231aaef6e789f131",
+   "label": "proto-A",
+   "created_utc": "2022-08-25T23:14:27Z",
+   "created_block": 15411910,
+   "creation_tx": "0xb9e6e2d08ee268bae4078dd68f540de9cfd6634b5042a14f8fbd917a143347b2",
+   "runtime_size_bytes": 6002,
+   "code_sha256_16": "d94e59f0e0eb3335",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-08-25T23:14:27Z",
+   "last_tx_utc": "2022-08-25T23:14:27Z",
+   "reverted_txs": 0,
+   "characterization": "Earliest deployment (first tx of the EOA, 2022-08-25): 6,002 B, 3 selectors 0x9846cd9e (main entry), 0x5b2e9917 withdrawERCTo, 0x205c2878 withdrawTo. No calls in txlist: a test/discarded deploy.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x8b25d2e6cbbaea59748fd0f62bac3e99cbaa56c4",
+   "label": "proto-B",
+   "created_utc": "2022-08-25T23:21:39Z",
+   "created_block": 15411944,
+   "creation_tx": "0x707e93baf5f5c8d900bc8a9897cbfa3b2ec66cd7f396447f0e66be6800b5c5d4",
+   "runtime_size_bytes": 6002,
+   "code_sha256_16": "17ce2611f76f55fe",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-08-25T23:21:39Z",
+   "last_tx_utc": "2022-08-25T23:21:39Z",
+   "reverted_txs": 0,
+   "characterization": "Second deploy the same day (blk +34): 6,002 B, same 3 selectors, different bytecode hash than proto-A (vanity/constant tweak). No calls in txlist (creation tx only).",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x8788a7cfd63cf06d0d7716c6a66f54b58248c896",
+   "label": "gen0a",
+   "created_utc": "2022-08-25T23:51:58Z",
+   "created_block": 15412084,
+   "creation_tx": "0xa7e59846dad54e78153d0c20d68f940460561e5ce03169ae9aefb460a217a46c",
+   "runtime_size_bytes": 6314,
+   "code_sha256_16": "263c28d8a2da0a8c",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x8122835d",
+    "0x93f8c897",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 700,
+   "calls_excluding_creation": 699,
+   "calls_by_year": {
+    "2022": 699
+   },
+   "txs_to_contract_total": 700,
+   "txs_from_yoink_eoa": 700,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-08-25T23:51:58Z",
+   "last_tx_utc": "2022-09-07T15:36:09Z",
+   "reverted_txs": 177,
+   "characterization": "First used bot, 2022-08-25: 6,314 B, adds 0x8122835d and 0x93f8c897 drain(bytes) to the 3 core selectors. ~700 txs.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x6c6b87d44d239b3750bf9badce26a9a0a3d2364e",
+   "label": "gen0b",
+   "created_utc": "2022-09-07T14:59:13Z",
+   "created_block": 15490950,
+   "creation_tx": "0x400589c8e84345645558860a7f8723c92a61182eb136de36dbb831d013bdbc2f",
+   "runtime_size_bytes": 6731,
+   "code_sha256_16": "a5d805057f26defa",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x8122835d",
+    "0x93f8c897",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 10439,
+   "calls_excluding_creation": 10438,
+   "calls_by_year": {
+    "2022": 10436,
+    "2026": 2
+   },
+   "txs_to_contract_total": 10439,
+   "txs_from_yoink_eoa": 10433,
+   "txs_from_others": 6,
+   "first_tx_utc": "2022-09-07T14:59:13Z",
+   "last_tx_utc": "2026-05-08T19:10:47Z",
+   "reverted_txs": 2459,
+   "characterization": "2022-09-07 contract found in transitswap-2022: 6,731 B, same selector set as gen0a; the busiest of the 2022 pre-gen1 bots (10,4xx txs, Sep-Nov 2022). Predates the \"gen1\" d050e0a4 by 86 days.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x638233b8e452d18e89b614bc2277e9f4075184b7",
+   "label": "stub",
+   "created_utc": "2022-10-06T17:40:23Z",
+   "created_block": 15690609,
+   "creation_tx": "0xa026393ea7b2d62c2563846af7cb896d2c5475c803cb4af9566ad418ca16211d",
+   "runtime_size_bytes": 342,
+   "code_sha256_16": "8631a16353b164e7",
+   "selectors": [
+    "0x9ed35f56"
+   ],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-10-06T17:40:23Z",
+   "last_tx_utc": "2022-10-06T17:40:23Z",
+   "reverted_txs": 0,
+   "characterization": "342 B single-function stub 0x9ed35f56; reverts unless msg.sender address begins 0x6c6b (companion of gen0b 0x6c6b87d4). No direct txs, but its address is embedded in 618 gen0b calldatas, i.e. an in-tx helper target.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x73a987534554c733b8f2af86ea7e9a70f4cde222",
+   "label": "gen1-pre",
+   "created_utc": "2022-11-30T16:43:35Z",
+   "created_block": 16084069,
+   "creation_tx": "0xff567afea1cccecae3836cd0e9a39d8331d10ab59e3b979a03581cfb30bc0803",
+   "runtime_size_bytes": 8586,
+   "code_sha256_16": "48ee0dffa046171c",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x8122835d",
+    "0x93f8c897",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 51,
+   "calls_excluding_creation": 50,
+   "calls_by_year": {
+    "2022": 50
+   },
+   "txs_to_contract_total": 51,
+   "txs_from_yoink_eoa": 51,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-11-30T16:43:35Z",
+   "last_tx_utc": "2022-12-02T15:21:59Z",
+   "reverted_txs": 12,
+   "characterization": "8,586 B, same selector set and same size as gen1; deployed 2022-11-30, 2 days before gen1; 51 txs (probably a staging/test copy; inferred).",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+   "label": "gen1",
+   "created_utc": "2022-12-02T15:10:35Z",
+   "created_block": 16097930,
+   "creation_tx": "0x4c4bd88332c0df0151302efe3c8c9cf78218b36538439e1ae8c5dc2828dc75f1",
+   "runtime_size_bytes": 8586,
+   "code_sha256_16": "fa78fb4ce815afd9",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x8122835d",
+    "0x93f8c897",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 9425,
+   "calls_excluding_creation": 9424,
+   "calls_by_year": {
+    "2022": 1267,
+    "2023": 8157
+   },
+   "txs_to_contract_total": 9425,
+   "txs_from_yoink_eoa": 9364,
+   "txs_from_others": 61,
+   "first_tx_utc": "2022-12-02T15:10:35Z",
+   "last_tx_utc": "2023-09-05T16:43:59Z",
+   "reverted_txs": 2697,
+   "characterization": "\"gen1\" of research/bot-re/analysis.md: 8,586 B, no header; main bot Dec 2022 - Aug 2023.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x68dda7026f6f38bfa33e2778f2fcc2c71f3afec8",
+   "label": "stub",
+   "created_utc": "2022-12-15T12:30:59Z",
+   "created_block": 16190107,
+   "creation_tx": "0xdeb7abc700610baa1e714eb36e510b289f145cebd91e81cb235fd4aaef640375",
+   "runtime_size_bytes": 300,
+   "code_sha256_16": "6f40e524646744aa",
+   "selectors": [
+    "0x9ed35f56"
+   ],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2022-12-15T12:30:59Z",
+   "last_tx_utc": "2022-12-15T12:30:59Z",
+   "reverted_txs": 0,
+   "characterization": "300 B single-function stub 0x9ed35f56; reverts unless msg.sender begins 0xd050 (companion of gen1). No direct txs; address embedded in 666 gen1 calldatas (in-tx helper target).",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "label": "gen2",
+   "created_utc": "2023-08-31T18:30:35Z",
+   "created_block": 18036360,
+   "creation_tx": "0xd38d714d39b56c64ca329530bed847817a163e98e1d2cf63597b6218d2098031",
+   "runtime_size_bytes": 10318,
+   "code_sha256_16": "bf0b35ea49a99c04",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 8995,
+   "calls_excluding_creation": 8994,
+   "calls_by_year": {
+    "2023": 1828,
+    "2024": 7166
+   },
+   "txs_to_contract_total": 8995,
+   "txs_from_yoink_eoa": 8170,
+   "txs_from_others": 825,
+   "first_tx_utc": "2023-08-31T18:30:35Z",
+   "last_tx_utc": "2024-10-31T18:55:23Z",
+   "reverted_txs": 81,
+   "characterization": "\"gen2\": 10,318 B, 3 core selectors, header+SSTORE callback store; main bot Aug 2023 - Feb 2025 (Ronin, Kelp-style captures).",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0xe6babc8f35f8600cd0ed78c0647656f94053452f",
+   "label": "stub",
+   "created_utc": "2023-08-31T18:32:11Z",
+   "created_block": 18036368,
+   "creation_tx": "0xa40aa0f28119a6ce224693370279491e083639b147f5afec7ca7b814b224ee57",
+   "runtime_size_bytes": 380,
+   "code_sha256_16": "eb49555377c0c5c5",
+   "selectors": [],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2023-08-31T18:32:11Z",
+   "last_tx_utc": "2023-08-31T18:32:11Z",
+   "reverted_txs": 0,
+   "characterization": "380 B selector-less forwarder (disassembly: forwards calldata back to msg.sender) gated on caller starting 0x69.. (companion of gen2 0x6980a47b). No direct txs; address in 43 gen2 calldatas.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x7bac4a2ede0779a1f79a5fefe4fe271b37304e24",
+   "label": "time-claimer",
+   "created_utc": "2023-12-11T20:22:35Z",
+   "created_block": 18765314,
+   "creation_tx": "0x8e0a4d9d67859270a49f58e5a99096fb33b5302b4f948160328df4afcc94054a",
+   "runtime_size_bytes": 16138,
+   "code_sha256_16": "6f047a2349661902",
+   "selectors": [
+    "0x9846cd9e",
+    "0x9890220b",
+    "0x9d43b53f"
+   ],
+   "txs_to_contract_total_incl_creation": 3,
+   "calls_excluding_creation": 2,
+   "calls_by_year": {
+    "2023": 1,
+    "2024": 1
+   },
+   "txs_to_contract_total": 3,
+   "txs_from_yoink_eoa": 3,
+   "txs_from_others": 0,
+   "first_tx_utc": "2023-12-11T20:22:35Z",
+   "last_tx_utc": "2024-01-12T18:44:47Z",
+   "reverted_txs": 0,
+   "characterization": "2023-12-11, 16,138 B: selectors 0x9846cd9e plus drain() 0x9890220b and claimed_(address) 0x9d43b53f - likely a one-off claim contract for TIME-token-hack proceeds (inferred from selector names and from message tx 0x273f8e55... pointing TIME holders to it). 3 txs.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x97f0fa1e5bf44f0dbd8dc5ee5e0d017667ae0c34",
+   "label": "gen2b",
+   "created_utc": "2024-10-31T18:42:47Z",
+   "created_block": 21087488,
+   "creation_tx": "0xd20d275bdf996d5ec1d1776a0c6aea421c248e81e1d1e7dd6af96684c04680b6",
+   "runtime_size_bytes": 9187,
+   "code_sha256_16": "1546ee50f8321470",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 1599,
+   "calls_excluding_creation": 1598,
+   "calls_by_year": {
+    "2024": 639,
+    "2025": 959
+   },
+   "txs_to_contract_total": 1599,
+   "txs_from_yoink_eoa": 1492,
+   "txs_from_others": 107,
+   "first_tx_utc": "2024-10-31T18:42:47Z",
+   "last_tx_utc": "2025-02-09T02:33:59Z",
+   "reverted_txs": 25,
+   "characterization": "2024-10-31, 9,187 B, same 3 core selectors; a second-line bot beside gen2 (~1,600 txs, Oct 2024 - Feb 2025).",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x6b35e95d8c855e8e4687ebafe6ae353b904b005e",
+   "label": "stub",
+   "created_utc": "2024-10-31T18:49:59Z",
+   "created_block": 21087524,
+   "creation_tx": "0x57393f75c85821db3c392d65d3238986b5f24de1d0350f3b0c58448918be8e33",
+   "runtime_size_bytes": 243,
+   "code_sha256_16": "4d31f380971b771b",
+   "selectors": [],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2024-10-31T18:49:59Z",
+   "last_tx_utc": "2024-10-31T18:49:59Z",
+   "reverted_txs": 0,
+   "characterization": "243 B selector-less forwarder gated on caller starting 0x97f0 (companion of gen2b). No direct txs; address in 5 gen2b calldatas.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+   "label": "gen3",
+   "created_utc": "2025-02-08T23:26:11Z",
+   "created_block": 21805063,
+   "creation_tx": "0xc6009ff6cd2954ea5f25adf11cffeea990ac8334560c527302b3bfa92f8c4c83",
+   "runtime_size_bytes": 9954,
+   "code_sha256_16": "284f31734a95933d",
+   "selectors": [
+    "0x205c2878",
+    "0x5b2e9917",
+    "0x9846cd9e"
+   ],
+   "txs_to_contract_total_incl_creation": 10243,
+   "calls_excluding_creation": 10242,
+   "calls_by_year": {
+    "2025": 5521,
+    "2026": 4721
+   },
+   "txs_to_contract_total": 10243,
+   "txs_from_yoink_eoa": 9650,
+   "txs_from_others": 593,
+   "first_tx_utc": "2025-02-08T23:26:11Z",
+   "last_tx_utc": "2026-10-21T08:53:23Z",
+   "reverted_txs": 110,
+   "characterization": "\"gen3\": 9,954 B, 3 core selectors, TSTORE callback store, Uniswap v4; main bot Feb 2025 - present.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0xd942ccb33ab81ee49c707c10ac65616a231b8295",
+   "label": "stub",
+   "created_utc": "2025-02-08T23:27:35Z",
+   "created_block": 21805070,
+   "creation_tx": "0x6e0dbccee557d5b586effaceffad044669a1099b0ac507c025205e86ba2a9023",
+   "runtime_size_bytes": 243,
+   "code_sha256_16": "3269d0880d11bfb1",
+   "selectors": [],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2025-02-08T23:27:35Z",
+   "last_tx_utc": "2025-02-08T23:27:35Z",
+   "reverted_txs": 0,
+   "characterization": "243 B selector-less forwarder gated on caller starting 0x80bf (companion of gen3). No direct txs; address in 23 gen3 calldatas.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x0913b172530805af05ff28814ca941bd28b5b4e9",
+   "label": "helper",
+   "created_utc": "2025-09-03T17:57:11Z",
+   "created_block": 23284221,
+   "creation_tx": "0xd9a8350a8927e2a2dd07d63c1299dbe0161f86b7e4675da22699b659452af114",
+   "runtime_size_bytes": 2085,
+   "code_sha256_16": "b11b57c0f3dab7fb",
+   "selectors": [
+    "0x8a788cad",
+    "0xe4149e48"
+   ],
+   "txs_to_contract_total_incl_creation": 1,
+   "calls_excluding_creation": 0,
+   "calls_by_year": {},
+   "txs_to_contract_total": 1,
+   "txs_from_yoink_eoa": 1,
+   "txs_from_others": 0,
+   "first_tx_utc": "2025-09-03T17:57:11Z",
+   "last_tx_utc": "2025-09-03T17:57:11Z",
+   "reverted_txs": 0,
+   "characterization": "2025-09-03, 2,085 B: 0x8a788cad gibToken(address) + 0xe4149e48; small token-pull helper.  1 tx.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  },
+  {
+   "address": "0x0d7ad6effd1c6e94e86e4daa7b7c7ef0ab3427d5",
+   "label": "gate",
+   "created_utc": "2026-05-03T23:45:59Z",
+   "created_block": 25017843,
+   "creation_tx": "0x979a8cdc748a63f713ca23795deed1b2209cfcca2023a02425b96e19a33992c0",
+   "runtime_size_bytes": 265,
+   "code_sha256_16": "6b2cbc3f2f48d167",
+   "selectors": [
+    "0xb4faa01f"
+   ],
+   "txs_to_contract_total_incl_creation": 171,
+   "calls_excluding_creation": 170,
+   "calls_by_year": {
+    "2026": 170
+   },
+   "txs_to_contract_total": 171,
+   "txs_from_yoink_eoa": 171,
+   "txs_from_others": 0,
+   "first_tx_utc": "2026-05-03T23:45:59Z",
+   "last_tx_utc": "2026-10-06T10:15:35Z",
+   "reverted_txs": 0,
+   "characterization": "2026-05-03, 265 B: single function 0xb4faa01f(uint256) that reverts if balance of gen3 0x80bf7db6 is below the argument (balance-guard probe). Called 170x by Y.",
+   "raw_refs": {
+    "creation_txlist": "full cache only (not published)",
+    "contract_txlist": "full cache only (not published)",
+    "code": "full cache only (not published)"
+   }
+  }
+ ]
+}

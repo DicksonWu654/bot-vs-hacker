@@ -1,0 +1,20 @@
+[
+ {
+  "slug": "alkemi-2026",
+  "sub": "wbtc-yoink",
+  "verdict": "related-not-frontrun",
+  "race_type": "post-failure-replay",
+  "why": "Alkemi Earn's self-liquidation bug (BlockSec) was used on two pools. The 'attack tx' DeFiHackLabs lists (0xa17001eb, block 24626979, +43.45395 ETH, ETH vault) is not what Yoink touched. Yoink's tx 0x7acef470 (block 24627181 idx 0) hits the WBTC pool and contains the same 16 state-changing Alkemi calls (+2 withdraws) as the deploy+attack tx 0x726bd90c of EOA 0x46c403e3, which was mined one block earlier (24627180 idx 226) and reverted out of gas at its 14,974,454 gas limit. A fork replay of that tx at 30M gas succeeds and pays the attacker exactly the 29,884,523 sat WBTC Yoink swapped. So Yoink retried a failed, already-mined tx; nothing of that actor's was pending. The on-chain complainant 0x8366d87b ('Why did you leak my attack transaction to yoink?', block 24627239) is a third party: its program differs (0 shared calls), its attack tx landed in 24627185 after Yoink's and found the pool empty. A traceCall of its tx on the pre-Yoink state would have taken the whole 29,980,756 sat, so Yoink did take what it was about to drain, but the leak itself is neither shown nor refuted (none of the 15 relevant txs is in mempool-dumpster although 55-63% of other txs in those blocks are). Yoink paid 10.2256 ETH coinbase (999 per mille), builder refunded 9.19 ETH, net about 9.20 ETH, no return found.",
+  "strength": ["medium", "Call-sequence diff of both traces (16/16 identical), block positions, fork replays of both rivals' txs, relay bids (271) and balances at each block are saved. Unknowns: what triggered Yoink (its tx and every rival tx are absent from the mempool archive) and whether the complainant's tx was visible to it; no direct transfer between 0x46c403e3 and 0x8366d87b was found in their tx lists, but a shared operator is not excluded."],
+  "headline_note": null
+ },
+ {
+  "slug": "alkemi-2026",
+  "sub": "eth-vault-copiers",
+  "verdict": "related-not-frontrun",
+  "race_type": "late-copy",
+  "why": "The DHL-listed attacker 0x0ed1c01b deployed (idx 2) and attacked (idx 3) in the same block 24626979 and took 43.45395 ETH from the ETH vault; BlockSec confirms the tx and the self-liquidation root cause (~$89K). All seven later txs running the same call sequence landed after it (24626980 x2 with nothing gained, 0.7173 ETH of leftovers taken at 24627055, then 24627182, 24627185 and a reverted one at 24627423). No bot was ahead of the attacker and Yoink is not among them; no c0ffeebabe tx touches the Alkemi proxy in blocks 24600000-24650000.",
+  "strength": ["high", "trace_filter scan of every call to the Alkemi proxy over blocks 24600000-24650000 (10 txs), traces of each, end-of-block vault balances, BlockSec write-up. In-archive mempool: none of the txs present (private flow or missed)."],
+  "headline_note": null
+ }
+]

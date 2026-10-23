@@ -1,0 +1,60 @@
+chain scan on-chain copycat scan: findings (evidence level of everything: `candidate`; in-block evidence only, no mempool data pre-Aug-2023)
+Raw responses: site/raw/rpc/ (eth_getTransactionByHash_*, eth_getBlockByNumber_full_*, eth_getBlockReceipts_*, debug_traceTransaction_callTracer_*), logged in site/raw/MANIFEST.json.
+
+WHAT WAS RUN
+- extract_exploits.py: parsed 912 DeFiHackLabs PoC files. PoC counts by chain: mainnet 365, BSC 389, Arbitrum 39, Base 38, Polygon 26,
+  Avalanche 13, Optimism 12, Fantom 6, others 8, unknown 17. Only mainnet scanned (exploits_all.json, exploits_mainnet.json).
+- scripts/scan_copycats.py (reusable): per attack tx fetch tx + block B and B-2,B-1,B+1 (full txs + block receipts), trace the attack, derive victim set
+  (net losers of attacker profit tokens/ETH, DHL-listed victims, non-infra depth-1 targets), pre-filter the 4-block window by receipt logs / `to` /
+  calldata, trace up to 28 candidates plus reverted and immediately preceding txs, score (argument-level replay of the attacker's victim calls, embedded
+  calldata, reverted txs aimed at the victim, coinbase payment, shared-contract penalty for same actor). ~6,100 candidate traces over 394 attack txs.
+- build_hits.py -> hits.json, coverage.json, recurring.json.
+
+DENOMINATOR (coverage.json lists every mainnet entry as scanned_hit / scanned_nohit / unscannable)
+- 365 mainnet PoCs: 328 scannable (>=1 attack tx verified on mainnet; up to 6 txs per PoC scanned, 393 txs total); 37 unscannable
+  (33 with no tx hash in the PoC header; 4 hashes not on mainnet: LiFi, Bacon, Cream, MEVbadc0de).
+- Of 328 scanned: 13 have a flagged candidate, 315 have none. Only 2-3 of the 13 contain a candidate worth calling a copy.
+- BACKRUNNER window (Jan 2023 - May 2024): 122 mainnet PoCs, 117 scanned, 5 hits (Hopelend, Curve01: reverted racers, weak; HODLCapital,
+  MultiChainCapital, YearnFinance: calldata-similarity noise, weak), 0 confirmed interceptions by in-block evidence. The method cannot see mempool-level
+  interception, so 0 is a floor-by-method, not a negative result.
+- Caveat: the DHL "Attack Tx" is sometimes the winning bot's tx or a later copy, not the original hacker's.
+
+STRONGEST HITS (ranked)
+1. RsETHSafeModule (2026-09-15), block 25980525. DHL attack tx 0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705 (idx 0, from 0xfde0d157..., priority 0,
+   coinbase payment 18.93 ETH = bundle). Candidate 0x16b9ddf976b805e20e08ff49e3f1d01ac7605814fb489f8795c7d95fbc3eeb45 (idx 3, same block, from/to 0x492d2552..., success,
+   coinbase 0.00032 ETH) repeats 60% of the attacker's 15 distinct victim calls with identical arguments, different calldata format. Two private-bundle searchers on
+   the same opportunity: looks like a competing/parallel bot, not a copy of a hacker. Strongest replay in the data; needs hand review.
+2. Kashi (2022-11-08). Attack 0x3d163bfbec5686d428a6d43e45e2626a220cc4fcfac7620c620b82c1f2537c78 (block 15928290 idx 29). Candidate
+   0x7bd7356d7e02e3ab5ab88e5c65e5a7c1acb9f81316c81ac00a87da6394e4f386 (next block idx 8, from 0xfa1232..., to 0x4a5296...): byte-identical 1034-char calldata to a different
+   contract, priority 169 gwei vs 1.5, reverted. Late copy-paste attempt (after the fact, not a front-run).
+3. NomadBridge (2022-08-02). Copy-paste cascade; DHL tx (block 15002481 idx 34) is not the first exploit tx. 0xafc5f7446bd2eb040d3447ae80130a378c6594be86908904d5d79e081df3cce0
+   (block 15002480 idx 67, from 0x5192946f...) embeds the same calldata; plus 6 same-block-after and 1 next-block copies (success, different senders, priority 1-3.25 gwei).
+   Real copying by a crowd, the DHL tx being one of the copiers. Not a bot-vs-hacker race.
+4. OMPxContract (2024-08-16). Attack 0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6 (block 20468780 idx 74). Candidate
+   0xa7f0319bb32347a3088250deea117fcdc1f203d67ad658773446b1165554e48c (next block idx 4, from 0x719cdb61... to 0x8d305002..., priority 0.23 gwei, coinbase 0.0086 ETH) re-issues
+   both victim calls with near-identical args via a 2.4 KB bot-style calldata. Likely follow-up bot after the fact; weak-medium.
+5. FixedTokenBSwap (2025-06-15). Attacker deploys exploit contract (idx 1); next block 0x9261b4bb9c7fb9dec340c77d9653da3c6eadc134c2742598fe68e15b20fff7ac (idx 0, from 0xcc3a5dc0...)
+   embeds the deployment code (copied exploit contract), priority 5.26 vs 5.0 gwei. Copy after the fact.
+6. Reverted gas-war loser candidates (weak): Scorch 0xb47223af... (block 21822424 idx 2, priority 8.7 gwei, behind attacker's idx-0 bundle), Hopelend 0xa414de03... (idx 5,
+   priority 50 gwei, 44% selector overlap), Curve01 0xb5d91f1e... (idx 91, 66% selector overlap). None embed attacker calldata.
+
+SERIAL ACTORS (recurring.json)
+DHL's "attacker" EOA is a known bot in 15 of 37 bundle-style incidents, i.e. those PoCs document the winning bot's tx, not the hacker's:
+- 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671 (c0ffeebabe.eth; labelled only, no internals analysed): DHL attack-tx sender in 9 mainnet incidents: Sushi_Router (2023-04-09,
+  0x04b166e7...), ERC20TokenBank, WiseLending, SwarmMarkets, BlueberryProtocol, AnyswapWETHPermit, DRLVaultV3, SecuredFi, BiFi (2026-10-17). All idx 0/1, priority 0, direct coinbase payment.
+- 0xfde0d1575ed8e06fbf36256bcdfa1f359281455a: DHL attack-tx sender in 6 incidents (TIME 2023-12, Paraswap 2024-03, DeFiPlaza 2024-07, Erc20transfer 2024-10, Alkimiya 2025-03,
+  RsETHSafeModule 2026-09), same bundle signature (idx 0, coinbase payments up to 66 ETH), and a candidate in 5 more: Sushi_Router (idx 1, same block as c0ffeebabe, pays 10 ETH
+  to coinbase: two bots in one block), Conic02, BTC20, SASHAToken (next-block bundles), PeapodsFinance (same block, 3 txs before the attack; an arb, not a copy). Selector 0x9846cd9e
+  with 1-17 KB payloads; behaves like a generalized backrunner/arb searcher on exploit residue.
+- Other recurring bundle senders (probably serial exploiters, unverified): 0x7248939f... (DOGGO, HANAToken, PestoToken), 0xd215ffaf... (DAO_SoulMate, DN404, DeezNutz404, INUMI),
+  0x6ce9fa08... (BTC20, HeavensGate, JumpFarm, QuantumWN).
+- 37 of 376 post-London DHL attack txs are bundle-style (priority fee 0 + direct coinbase payment); 13 of 117 in the BACKRUNNER window.
+
+FALSE-POSITIVE SOURCES
+Attacker multi-tx/multi-EOA: penalised via shared attack contract/created contracts (never a top hit). Popular victim pools (Uniswap v4 PoolManager, WETH, Balancer vault) give
+hundreds of same-selector users; mitigated by requiring identical/near-identical arguments, still the main noise (HODLCapital, MultiChainCapital, YearnFinance, Truebit, MUS
+word-similarity hits are padded-address coincidence). Embeds shorter than 250 hex chars ignored.
+
+LIMITS
+4-block window; 28 traces per tx (cap hit in ~2/3 of incidents, lower-priority candidates untraced); max 6 txs per PoC; reverted txs traced only in block B (10) and preceding
+heavy txs (8); no mempool or relay data. Next: auction tooling relay/bundle data and mempool-dumpster (Aug 2023+) to check whether candidate txs were visible before the attack.

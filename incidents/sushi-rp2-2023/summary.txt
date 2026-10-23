@@ -1,0 +1,5 @@
+SushiSwap RouteProcessor2 approval exploit (0xsifu) - rescue-turned-feeding-frenzy
+Yoink copied the white hat Trust's still-pending RouteProcessor2 rescue one block early (17007838 idx 23); the copy frenzy then sent 44.8% of the 1,800 WETH pulled to the block auction, and 875 ETH was later returned.
+Yoink landed before Trust's whitehat transaction. Later, c0ffeebabe.eth's transaction 0x04b166e7... landed at position 0 of block 17007842, paying 678.88 ETH to the builder. Returns recorded for the incident include 305.3 ETH from c0ffeebabe, 380 ETH from Yoink, 90 ETH from Trust and 100 ETH from BlockSec.
+
+Source: the incident page on the site; every figure links its saved raw response there.

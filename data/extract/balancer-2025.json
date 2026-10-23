@@ -1,0 +1,637 @@
+[
+ {
+  "slug": "balancer-2025",
+  "name": "Balancer v2 Composable Stable Pool rounding exploit (mainnet leg)",
+  "date_utc": "2025-11-03T07:46:59Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The attacker's creation tx (block 23717397, idx 1) had already landed and drained the pools; Bitfinding replayed the same creation input one block later (23717398, idx 2) to rescue residual balances, so it did not pre-empt anything. Replay confirmed on-chain (3 of 983 words differ).",
+  "one_liner": "Balancer v2 mainnet: whitehat Bitfinding replayed the attacker's exploit input one block after it landed, rescued about 260 ETH-equivalent in this tx, and returned it to the DAO; a 10% bounty was paid on 2026-01-15.",
+  "attacker": {
+   "eoa": "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+   "eoas": [
+    "0x506d1f9efe24f0d47853adca907eb8d89ae03207",
+    "0x766a892f8ba102556c8537d02fca0ff4cacfc492"
+   ],
+   "contracts": [
+    "0x54b53503c0e2173df29f8da735fbd45ee8aba30d",
+    "0x9c49fd8a06657928758f9921ff036aebd3636ad0",
+    "0x399a8e046bc0e9dddd0e757a09af748d03d80e54",
+    "0x7374fa9d1c12aa5a46a89800c37e7f47e3636bdd",
+    "0x11986fb1709652d906b73c8f55e5634aaed84a0a"
+   ],
+   "funding": "unknown",
+   "funding_tx": "0xa429ac9eeb4a745cd86af2bc8a98df876b42ce82b2b38895065e05096ea39173",
+   "deploy_tx": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+   "deploy_block": 23717397,
+   "attack_txs": [
+    {
+     "hash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+     "block": 23717397,
+     "index": 1,
+     "status": "success",
+     "role": "A1: contract creation, exploit in constructor (osETH/WETH and wstETH/WETH pools drained into Vault internal balance); the racing attacker tx"
+    },
+    {
+     "hash": "0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569",
+     "block": 23717404,
+     "index": 193,
+     "status": "success",
+     "role": "A2: stage-1 withdrawal of 6,587 WETH / 6,851 osETH / 4,260 wstETH from the Vault to the beneficiary"
+    }
+   ],
+   "none_reason": null,
+   "funding_note": "EOA1 first funded 2025-11-02 with 2.99985 ETH from 0x5babe600 (payout-style wallet, not Tornado Cash, type not verified). A second EOA 0x766a892f (same beneficiary 0xaa760d53) attacked other pools from block 23717522."
+  },
+  "bot": {
+   "label": "Bitfinding (whitehat; identity matched to BIP-892 by exact amounts)",
+   "eoa": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+   "contract": "0xdb8986fd3ff03182bd5fac4a8338ad6e6136fbf4",
+   "tx": "0x1dc60f917e4d841f281e827cf82f93c7355e08f5855e9ae5b0a1764b38ed4b87",
+   "block": 23717398,
+   "position": 2,
+   "status": "success",
+   "priority_fee_gwei": 2.0
+  },
+  "bots_other": [
+   {
+    "label": "0xc0ffee445a22 (backrun arbitrage; tx-level facts only, NOT c0ffeebabe.eth)",
+    "eoa": "0xc0ffee445a22e6228cfb77ec0483c426fc856161",
+    "tx": "0x4b6b5fb9aa779c7662793a2613dca48f6e4afd15037b1acf2be4355cb032ed63",
+    "block": 23717397,
+    "position": 2,
+    "status": "success",
+    "role": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+   },
+   {
+    "label": "0x240926d7 (backrun arbitrage)",
+    "eoa": "0x240926d7f0000006608b59d3952a5b64d3877d15",
+    "tx": "0xfd261ed26272fa1e084066aae99aa0141c403b0e76ce3ffaebe14adae9a6e9eb",
+    "block": 23717398,
+    "position": 1,
+    "status": "success",
+    "role": "backrun arbitrage directly before Bitfinding in the same block; 17.602 ETH to coinbase, most of the 18.169 ETH winning bid"
+   },
+   {
+    "label": "Bitfinding (same whitehat, 2nd replay)",
+    "eoa": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+    "tx": "0xa4ee77dbc66c106e5a552859f91b2a04cb8d26a94903644919acb53f540847b4",
+    "block": 23717631,
+    "position": 13,
+    "status": "success",
+    "role": "replay of attacker A3 (0x8e260bf8, block 23717627), 4 blocks later"
+   },
+   {
+    "label": "Bitfinding (same whitehat, 3rd replay)",
+    "eoa": "0x5af00b073abb9f88832353bd4c919caaa114c972",
+    "tx": "0xed0c8654af364a30957550cdf5eb664951cd277b1bc585902914ffe75247ee3a",
+    "block": 23717709,
+    "position": 2,
+    "status": "success",
+    "role": "replay of attacker A9 (0x2a0ead4e, block 23717706), 3 blocks later"
+   },
+   {
+    "label": "0x7bb28442 (copycat)",
+    "eoa": "0x7bb284421d3eafde4d45ee5e420c3269f87fa4fb",
+    "tx": "0xe1d5f36f0aa6f6a07865ac4feaae5bda839f489372eb3ece7d53fb10100a1eb1",
+    "block": 23717399,
+    "position": 0,
+    "status": "success",
+    "role": "creation tx with A1 input (same 3-word diff) 2 blocks after A1, after Bitfinding drained the pools; paid 0.8166 ETH to coinbase (idx 4); net ~0"
+   },
+   {
+    "label": "0x7bb28442 (copycat)",
+    "eoa": "0x7bb284421d3eafde4d45ee5e420c3269f87fa4fb",
+    "tx": "0x78ef0d388ab399dca877af4eb1eca244375456c1c75f07229e1f1c26abf4c596",
+    "block": 23717401,
+    "position": 1,
+    "status": "success",
+    "role": "second copy, 4 blocks after A1"
+   },
+   {
+    "label": "0x87a16382 (copy of A9)",
+    "eoa": "0x87a1638239a404487ade18800d2c8f1ea641e0fd",
+    "tx": "0x32a604f4404bdda461e9bddbd9a2e62f1c9f01f4850cbed38bf1b47f334f22ef",
+    "block": 23717709,
+    "position": 1,
+    "status": "success",
+    "role": "replay of A9 (rsETH/WETH pool) 3 blocks after A9, 7.03 gwei priority, ahead of Bitfinding (idx 2) in that block"
+   },
+   {
+    "label": "0xedecee64 (late copier)",
+    "eoa": "0xedecee6406859724f369a2d11752dbfbf27d1aa0",
+    "tx": "0x766569fdd544f2a4c0b1350dc9a04067697e7c5183b68ab0b0ce50b817df6c50",
+    "block": 23717911,
+    "position": 9,
+    "status": "success",
+    "role": "3 txs in blocks 23717911-23717950; small residues only (first tx shown)"
+   },
+   {
+    "label": "0x5b1a6bd4 (late copier, DAO-notified)",
+    "eoa": "0x5b1a6bd46852d298e0cfbbe556f8bb646995545e",
+    "tx": "0xaf786f37c9d96ddfb0da98eafd2e79f4cd64b531284a9eed7f0c509f7c36a4b4",
+    "block": 23717997,
+    "position": 1,
+    "status": "success",
+    "role": "8 exploit-shaped creation txs 23717997-23718264 (first shown); took BPT tokens"
+   },
+   {
+    "label": "0xf49632e3 (exploit-shaped runs, DAO-notified)",
+    "eoa": "0xf49632e3e0f19935d579a403f637ca75e05e4543",
+    "tx": "0x14fb45dd869208edffcb221add152a20292283be172ddb6ccfd2d73e3710b6f4",
+    "block": 23717662,
+    "position": 11,
+    "status": "success",
+    "role": "9 creation txs on pools the attacker did not touch; zero internal-balance delta (first shown)"
+   },
+   {
+    "label": "0x642cf741",
+    "eoa": "0x642cf74148c33820872c5e943a2bb538a0530f33",
+    "tx": "0xd9ea231fc39b7c2e2b30289cb67691e47cc15665912c5dbd9392a507b3e71257",
+    "block": 23717978,
+    "position": 0,
+    "status": "success",
+    "role": "exploit-shaped run, zero internal-balance gain (2 txs; first shown)"
+   },
+   {
+    "label": "0x6949b0aa (public copy, reverted)",
+    "eoa": "0x6949b0aa93c0f21e0ff0f44935649f332d33208a",
+    "tx": "0x6d021cb5468ca0fc0a1d60576af0c977c34754216143c03780dcdd2815c31808",
+    "block": 23718000,
+    "position": 84,
+    "status": "reverted",
+    "role": "public-mempool copy, out of gas; a second one reverted at 23718015 idx 103"
+   },
+   {
+    "label": "Yoink (post-hack arbitrage)",
+    "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "tx": "0xd8dd6cbcbbf1ad57de4394fee889e63174c65737df17f61e26d48dd17de7385a",
+    "block": 23718188,
+    "position": 0,
+    "status": "success",
+    "role": "ordinary rebalancing arbitrage 2 h 38 m after A1; not a replay"
+   }
+  ],
+  "evidence_level_mempool": "absent-from-archive",
+  "mempool_note": "mempool-dumpster covers 2025-11-03 (csv only; no sourcelog published for the month) but neither the attacker's A1 nor any Bitfinding tx is in it (private flow or missed). First-seen of A1 and of the replay is unknown. Only four later attacker txs (A8-A9b) were seen publicly, and they were not pre-empted.",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "A1 was never seen in the public mempool; Bitfinding reacted to the landed A1 (or a private view of it) one block later. No pre-inclusion first-seen exists."
+  },
+  "attacker_block": 23717397,
+  "attacker_block_note": "Attacker A1 0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742 landed at idx 1 of block 23717397 (07:46:47Z, built by Titan); the Bitfinding replay is in the next block, 12 s later.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 23717397,
+   "tx": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742"
+  },
+  "auction": {
+   "block": 23717398,
+   "slot": 12944333,
+   "slot_start_utc_ms": 1762156019000,
+   "relays_answered": [
+    "flashbots",
+    "bloxroute-regulated",
+    "titan",
+    "ethgas"
+   ],
+   "n_bids": 762,
+   "n_builders": 24,
+   "bids_per_relay": {
+    "flashbots": 121,
+    "titan": 500,
+    "ethgas": 141
+   },
+   "first_bid_ms_rel_slot": -8254,
+   "last_bid_ms_rel_slot": 4024,
+   "winning_bid_eth": 18.1691468492027,
+   "winning_builder": null,
+   "winning_builder_pubkey": "0x88a53ec4422f50238def5696446e06acd076f94d73c76e51449cf82eb5312dcb8a845a6c3199ce35de3f2b0441deb76b",
+   "winning_relays": [
+    "bloxroute-regulated"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 18.169146490962397,
+   "proposer_paid_eth": 18.1691468492027,
+   "proposer_payment_tx": "0xd7ccb7bb2c9b00de25fd935474253575b13a0416e567bff2b33995fafb338181",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -8254,
+     0.000824356597136732
+    ],
+    [
+     -7886,
+     0.001002911920709732
+    ],
+    [
+     -7665,
+     0.001104764830219901
+    ],
+    [
+     -7168,
+     0.001115264830219901
+    ],
+    [
+     -7113,
+     0.001152629688071878
+    ],
+    [
+     -6946,
+     0.001258782930496878
+    ],
+    [
+     -6712,
+     0.001333367730496878
+    ],
+    [
+     -6637,
+     0.001347686773645849
+    ],
+    [
+     -6447,
+     0.001545186085237878
+    ],
+    [
+     -6387,
+     0.001552651222969778
+    ],
+    [
+     -5712,
+     0.001564669837647778
+    ],
+    [
+     -5103,
+     0.00170004318105833
+    ],
+    [
+     -4938,
+     0.00179988290725833
+    ],
+    [
+     -4595,
+     0.00184188290725833
+    ],
+    [
+     -4340,
+     0.00184205130125833
+    ],
+    [
+     -4143,
+     0.045318009286491795
+    ],
+    [
+     -4074,
+     0.04532028243147607
+    ],
+    [
+     -3487,
+     1.3038244764459934
+    ],
+    [
+     -1949,
+     3.8632792816988397
+    ],
+    [
+     -1949,
+     15.372764646828163
+    ],
+    [
+     -1912,
+     17.61482462572873
+    ],
+    [
+     -1819,
+     17.61483409615929
+    ],
+    [
+     -1770,
+     17.614837913511135
+    ],
+    [
+     -1664,
+     17.61490857707525
+    ],
+    [
+     -1465,
+     17.61660857707525
+    ],
+    [
+     -1462,
+     17.745803621492154
+    ],
+    [
+     -1185,
+     17.74860664384837
+    ],
+    [
+     -1054,
+     17.76791520786422
+    ],
+    [
+     -1015,
+     17.77049711290354
+    ],
+    [
+     -1002,
+     17.888028671770453
+    ],
+    [
+     -804,
+     17.889409441476403
+    ],
+    [
+     -715,
+     17.892096942314414
+    ],
+    [
+     -693,
+     17.893437029878356
+    ],
+    [
+     -665,
+     17.90013716168025
+    ],
+    [
+     -657,
+     17.91001417341681
+    ],
+    [
+     -644,
+     17.918027150362867
+    ],
+    [
+     -643,
+     18.009545726209648
+    ],
+    [
+     -556,
+     18.009711325113507
+    ],
+    [
+     -425,
+     18.02896577666323
+    ],
+    [
+     -409,
+     18.08921039452356
+    ],
+    [
+     193,
+     18.090038206570696
+    ],
+    [
+     538,
+     18.12921998627579
+    ],
+    [
+     959,
+     18.13079551299466
+    ],
+    [
+     1001,
+     18.132354776991313
+    ],
+    [
+     1036,
+     18.132426316983295
+    ],
+    [
+     1066,
+     18.149710892992914
+    ],
+    [
+     1154,
+     18.15108100881147
+    ],
+    [
+     1229,
+     18.159616362774074
+    ],
+    [
+     1243,
+     18.16072990270485
+    ],
+    [
+     1245,
+     18.160729902973888
+    ],
+    [
+     1279,
+     18.16072990331557
+    ],
+    [
+     1325,
+     18.164203512808957
+    ],
+    [
+     1352,
+     18.164431183262803
+    ],
+    [
+     1378,
+     18.166610919287777
+    ],
+    [
+     1436,
+     18.16794727527321
+    ],
+    [
+     1595,
+     18.168032670430257
+    ],
+    [
+     1638,
+     18.16914617052379
+    ],
+    [
+     2247,
+     18.16914625078883
+    ],
+    [
+     3164,
+     18.169146490536356
+    ],
+    [
+     3460,
+     18.169146490962397
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/balancer-2025/race_23717398.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block23717398.json",
+    "relay_delivered:bloxroute-regulated": "site/raw/relay-bloxroute-regulated/delivered_block23717398.json",
+    "relay_bids:titan": "site/raw/relay-titan/bids_block23717398.json",
+    "relay_bids:ethgas": "site/raw/relay-ethgas/bids_block23717398.json"
+   },
+   "_missing_raw": [],
+   "auction_note": "Block 23717398 was delivered by bloxroute-regulated from an unlabelled builder pubkey (bid 18.169 ETH, mostly the 17.602 ETH coinbase payment of the 0x240926d7 backrun at idx 1); the Bitfinding bundle (idx 2-4) paid 2 gwei priority (0.0584 ETH) and no coinbase transfer. For the attacker's own block 23717397 (race_23717397.json): Titan-built, delivered via ultrasound, bid 0.0502 ETH, with the 0xc0ffee445a22 backrun paying 20.596 ETH to the fee recipient at idx 2; the winning block's bids there are not retrievable."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 260.527692,
+   "gross_loot_method": "Assets taken by the replay contract 0xdb8986fd (created by 0x1dc60f91): 135.856824 WETH and 10.956795 wstETH withdrawn in idx 4 (tx 0x0d6f2d90) plus 105.208208 osETH withdrawn from its Vault internal balance on 2025-11-08 (tx 0xaa52c3a7, a call into the same contract). wstETH valued at stEthPerToken 1.218116 (stETH taken as 1 ETH), osETH at OsTokenVaultController.convertToAssets 1.058132, both eth_call at block 23717398. 45.0152 osETH/wETH-BPT also withdrawn in 0xaa52c3a7 is NOT valued and not in this figure.",
+   "captured_native": {
+    "amount": "135.856824 WETH + 10.956795 wstETH + 105.208208 osETH (+ 45.0152 osETH/wETH-BPT, unvalued)",
+    "unit": "WETH+wstETH+osETH",
+    "desc": "rescued by the creation-tx replay contract; the weETH, rETH and 0.144 WETH of Bitfinding's ~$964K total came from its later replays at 23717631 and 23717709"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "aggregate_bitfinding_mainnet_usd": 963832,
+   "aggregate_bitfinding_mainnet_usd_source": "BIP-892 'Total Recovered (USD at the time of recovery)', Bitfinding, Ethereum Mainnet: $963,832 (all three replay bundles together, not this tx alone)",
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.05835193,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 260.527692,
+   "loot_note": "Scope: the Bitfinding replay of A1 (tx 0x1dc60f91 at idx 2 plus its two follow-up txs at idx 3-4, same EOA and block); coinbase and priority fee are summed over those three txs. Bitfinding paid 2 gwei priority (0.058352 ETH), no coinbase transfer, and received no builder refund (no transfer from the fee recipient to the bot in the block). bot_net is the gross rescued value held before it was returned to the DAO multisig; it is a whitehat rescue, not profit. ETH-equivalents use on-chain exchange rates at block 23717398 (see method) so they are approximate. The attacker's own take (6,587 WETH / 6,851 osETH / 4,260 wstETH in A2) is a different scope."
+  },
+  "fate": {
+   "return_status": "returned",
+   "returned_by_bot_eth": 260.527692,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 234.474923,
+   "returned_to": "Balancer DAO multisig 0x10A19e7eE7d7F8a52822f6817de8ea18204F2e4f",
+   "returned_desc": "Bitfinding returned its mainnet recoveries to the DAO multisig: wstETH 10.956795 (block 23722968, 2025-11-04), WETH 136.000912 (block 23722994, 2025-11-04; includes 0.144 WETH from its third replay), osETH 105.208208 (block 23756834, 2025-11-08), plus rETH and weETH from its second replay. Balancer's post-mortem put the total at about $964K ($963,832 in BIP-892). The DAO paid the 10% whitehat bounty to 0xc3C7ccE1962B7a744847933CC3abD50b67ff5402 on 2026-01-15 (tx 0xaa0de3c2, block 24237348). Row-level ETH-equivalents (this tx's three assets only): returned in full = 260.5277; net of the 10% bounty = 234.4749.",
+   "bounty_kept_eth": 26.052769,
+   "bounty_desc": "10% bounty on the whole Bitfinding mainnet return, paid by the DAO 2026-01-15T03:13:23Z (13.6001 WETH, 1.0957 wstETH, 0.6617 weETH, 0.6225 rETH, 10.5208 osETH); the figure here is 10% of this row's 260.5277 ETH-equivalent.",
+   "kept_by_bot_eth": 26.052769,
+   "returned_txs": [
+    {
+     "tx": "0xf6e3db8ff335aa3859ad2686a339920a718a5db64390cda1295f8f84fb7f7bed",
+     "eth": null,
+     "note": "10.956795 wstETH Bitfinding -> DAO multisig",
+     "block": 23722968,
+     "time_utc": "2025-11-04T02:27:11Z"
+    },
+    {
+     "tx": "0x1c20be7a609b53011cc569fc33d04ace7a4616de6efbf1c7bc1a72cd4f2909c9",
+     "eth": null,
+     "note": "136.000912 WETH Bitfinding -> DAO multisig (this row's share 135.857)",
+     "block": 23722994,
+     "time_utc": "2025-11-04T02:32:23Z"
+    },
+    {
+     "tx": "0x60687df48ac95b49e3952c6bb8a5f08b6d9959b26e6f56d24319c6499fd475ce",
+     "eth": null,
+     "note": "105.208208 osETH Bitfinding -> DAO multisig",
+     "block": 23756834,
+     "time_utc": "2025-11-08T20:09:35Z"
+    },
+    {
+     "tx": "0xaa0de3c2eac83bac2c3c5b78e0ae31aaddab2d7bcc45913b2210b697b535d688",
+     "eth": null,
+     "note": "DAO multisig pays 10% bounty to Bitfinding recipient 0xc3C7ccE1 (five tokens)",
+     "block": 24237348,
+     "time_utc": "2026-01-15T03:13:23Z"
+    }
+   ],
+   "public_statement": "Balancer post-mortem (quoted by AMBCrypto): Bitfinding alone front-ran attackers on Ethereum Mainnet for $964,000; BIP-892 lists Bitfinding's mainnet recovery as $963,832 with a 10% bounty.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": [
+    "site/raw/rpc/block_23717398.json"
+   ],
+   "bot.position": [
+    "site/raw/rpc/block_23717398.json",
+    "site/raw/rpc/receipts_23717398.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_23717397.json",
+    "site/raw/rpc/receipts_23717397.json"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/etherscan/bal_0x5af00b07_tokentx.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_23717398.json",
+    "site/raw/rpc/block_23717398.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_23717398.json",
+    "site/raw/rpc/block_23717398.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_23717398.json",
+    "site/raw/rpc/receipts_23717398.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/etherscan/bal_0x5af00b07_tokentx.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/etherscan/bal_0x5af00b07_tokentx.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/bal_0x5af00b07_tokentx.json",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "site/raw/balancer-web/bip892_6883.json"
+   ],
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/bal_bitf_bounty_tokentx.json",
+    "site/raw/balancer-web/bip892_6883.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/bal_bitf_bounty_tokentx.json",
+    "site/raw/balancer-web/bip892_6883.json"
+   ],
+   "loot.aggregate_bitfinding_mainnet_usd": [
+    "site/raw/balancer-web/bip892_6883.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "site/raw/mempool-dumpster/index_2025-11.html"
+   ]
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger.first_seen_utc_ms",
+    "why": "A1 and all Bitfinding txs are absent from mempool-dumpster for 2025-11-03; first-seen unknown"
+   },
+   {
+    "field": "auction.winning bid of attacker block 23717397",
+    "why": "ultrasound bid history aged out; winning-block bids not retrievable (bot block 23717398 has 762 bids)"
+   },
+   {
+    "field": "loot.osETH/wETH-BPT",
+    "why": "45.015 BPT withdrawn in 0xaa52c3a7 not valued and not seen returned in Bitfinding's token transfers; fate unknown"
+   }
+  ],
+  "discrepancies": [
+   "incident.json lists 0x7bb28442 priority_fee_gwei 0.1214/0.1273; the race files show gas price = base fee, i.e. priority fee 0.0 (0.1214 is the base fee of the block).",
+   "Bitfinding identity is by exact amount match to BIP-892 (the EOA is not printed there); the whole-incident $963,832 covers three replay bundles, only the first is this row.",
+   "Replay diff recomputed from site/raw/rpc-balancer2025 tx inputs: 3 of 983 32-byte words differ (word indexes [1, 895, 896]), matching incident.json."
+  ],
+  "evidence_notes": [
+   "Bitfinding creation input vs attacker A1 input: same length (31,427 bytes), 3 of 983 words differ (indexes [1, 895, 896]: beneficiary and owner address constants 0xaa760d53/0x506d1f9e -> 0x5af00b07); recomputed from site/raw/rpc-balancer2025/tx_<hash>.json.",
+   "Same call shape on the same pools (0xdacf5fa1 osETH/WETH and 0x93d19926): 12 Vault staticcalls, 2 batchSwap-selector calls, 2 manageUserBalance calls; the idx 4 tx withdraws from the new contract's Vault internal balance (incidents/balancer-2025/race_23717398.json focus txs).",
+   "Landing order: A1 at 23717397 idx 1, Bitfinding 23717398 idx 2-4; every replay on the same pool lands in a later block than the attacker, so this is a post-inclusion rescue (post-failure-replay), not pre-emption.",
+   "Funds trail: tokentx of 0x5af00b07 shows the Vault paying out to it and the returns to the DAO multisig 0x10a19e7e; the bounty tx 0xaa0de3c2 (2026-01-15) in bal_bitf_bounty_tokentx.json matches BIP-892.",
+   "0xc0ffee445a22 backrun at 23717397 idx 2 is an arbitrage next to A1 (tx-level facts only; not c0ffeebabe.eth)."
+  ],
+  "incident_dir": "incidents/balancer-2025"
+ }
+]

@@ -1,0 +1,24 @@
+{
+ "generated": "2026-10-22T09:46:49Z",
+ "rows": 43,
+ "definitions": {
+  "era": "pre-2021 (date < 2021-01-01) | mev-geth-2021-22 (to the Merge, block 15537394) | early-pbs-2022-23 (Merge to 2023-12-31) | mature-pbs-2024-26 (2024-01-01 on); same eras as evolution study E1-E4",
+  "headline": "verdict == confirmed-onchain AND race_type in {beat-pending-attack, deploy-window-copy}, excluding Euler (operator identity unresolved)",
+  "fate.return_status": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved",
+  "verdict": "see scripts/dataset/harmonize_rules.py docstring",
+  "race_type": "beat-pending-attack | deploy-window-copy | beat-whitehat-or-user | post-failure-replay | bot-was-first-exploiter | late-copy | no-race (added: rejected sub-races where nobody raced)",
+  "blocks_ahead": "attacker_block - bot.block (positive = bot landed that many blocks BEFORE the attacker's racing tx; 0 = same block, see ordering; negative = bot landed after). null when the attacker's call never landed (deploy-window copies; see attacker_reference) or there is no attacker",
+  "slot_start": "1606824023 + 12 * slot (unix s); auction.escalation = record-bid curve [[ms relative to slot start, ETH]], max 60 points (largest jumps kept)",
+  "detection_delay_ms": "trigger first seen in the public mempool (mempool-dumpster, earliest source) -> first bid by the WINNING builder's pubkey after the trigger worth >= max(2x its own best earlier bid, 0.5 ETH); relays never reveal losing-bid contents so this is a proxy; detection_delay_ub_ms = trigger -> first submission of the winning block hash (contents verified)",
+  "loot.gross_loot_eth": "ETH-equivalent the bot tx extracted before paying the builder",
+  "loot.pct_to_builder": "(bot tx coinbase transfers + priority fee) / gross_loot_eth * 100; the builder may pass most on (see auction.proposer_paid_eth, builder_refund, builder_payout_to_victim)",
+  "loot.pct_to_proposer": "winning bid / gross_loot_eth * 100 (bot-tx scope, bot tx in the winning block, bid history available)",
+  "fate.returned_pct": "returned_total_eth / gross_loot_eth * 100, where returned_total_eth reached the victim/protocol side out of the row's proceeds (bot returns + builder pass-through; net of any bounty the bot kept)",
+  "fate.returned_pct_of_gross": "returned_total_eth / loot.gross_loot_eth * 100 (gross = ETH-equivalent the bot tx took from the victim, before the coinbase payment). fate.returned_pct is kept and is IDENTICAL to this field for every row",
+  "fate.returned_pct_of_bot_net": "fate.returned_by_bot_side_eth / loot.bot_net_eth * 100 (bot_net = gross - coinbase - gas + builder refund; builder/proposer pass-through excluded from the numerator). null where bot_net is under 0.05 ETH or excludes the main proceeds (see fate.returned_pct_note)",
+  "fate.returned_by_builder_or_proposer_eth": "ETH a builder / proposer-side recipient passed on to the victim (Blueberry builder -> multisig 366.63; Makina builder -> 0xbed2 -> Safe 920.7); null = none seen",
+  "fate.returned_by_bot_side_eth": "returned_total_eth - returned_by_builder_or_proposer_eth: returned by the row's own actors (for Sushi RP2 also the whitehats), net of bounty",
+  "fate.victim_loss_eth / returned_pct_of_victim_loss": "victim's ETH-equivalent loss to the bot tx (equals gross_loot_eth except Earning.Farm = gross - 0.1 ETH deposit; null for Balancer, UNCX) and returned_total_eth / that * 100",
+  "evidence_level_mempool": "measured | in-block-only (before 2023-08-07, no archive) | absent-from-archive (archive covers the day, the attacker/bot txs are not in it)"
+ }
+}

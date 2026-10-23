@@ -1,0 +1,10 @@
+{
+ "coverage": {
+  "date": "2023-07-30",
+  "covered": false,
+  "reason": "mempool-dumpster starts 2023-08-07; no data before"
+ },
+ "txs": {
+  "0xcd99fadd7e28a42a063e07d9d86f67c88e10a7afe5921bd28cd1124924ae2052": null
+ }
+}

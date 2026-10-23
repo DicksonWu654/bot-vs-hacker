@@ -1,0 +1,373 @@
+{
+ "slug": "unizen-2024",
+ "note": "times are UTC ms; events from mempool-dumpster carry the first-seen time of the public pool (not the attacker's send time); block events use the block timestamp (= slot start). 'in-block evidence only' applies to everything without a mempool record.",
+ "events": [
+  {
+   "t_utc_ms": 1709928815000,
+   "t_utc": "2024-03-08T20:13:35.000Z",
+   "block": 19392761,
+   "kind": "tx",
+   "actor": "0xb660cae1 (attacker 1)",
+   "detail": "Creates contract 0xa91e1567 and, in the same tx at index 0, pulls 2,176,228.71 USDT from 5 approving wallets via the Unizen TradeAggregator proxy; recipient 0x011ee2b5a4ef3e05e11d45a241582ea191a86077. Not in mempool-dumpster (private flow / bundle). Built by Flashbots.",
+   "tx": "0xc12a4155c2c90707138e4aef8883c8f724371145823e2f661f19b93e5b3a9d6e",
+   "raw_ref": "incidents/unizen-2024/race_19392761.json"
+  },
+  {
+   "t_utc_ms": 1709933399000,
+   "t_utc": "2024-03-08T21:29:59.000Z",
+   "block": 19393120,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3, DeFiHackLabs 'attacker')",
+   "detail": "First of 78 EOA-to-proxy pulls (USDT, 1 wei value each); first sighting in the mempool sourcelog is 5 s AFTER the block timestamp (not seen pending)",
+   "tx": "0x4bd08e380b585246e5b54f584bc0e9b8b7f03f1cd418f7eb7980086e64c64bac",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "site/raw/rpc/trace_0x4bd08e380b585246e5b54f584bc0e9b8b7f03f1cd418f7eb7980086e64c64bac.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1709934503000,
+   "t_utc": "2024-03-08T21:48:23.000Z",
+   "block": 19393204,
+   "kind": "fund",
+   "actor": "0x4e5b2e1d... -> 0x4e2ce48f (attacker 4)",
+   "detail": "New EOA 0x4e2ce48f funded with 0.3789 ETH (21:48:23 block time); the same funder 0x4e5b2e1dc63f6b91cb6cd759936495434c7e972f funded attacker 5 (0xd440b927) at 21:02:11",
+   "tx": "0xc47f156acb386feb201f91be13f483a1abccb6a84ac2cfbea555426219e2748f",
+   "raw_ref": "site/raw/etherscan/unizen_txlist_0x4e2ce48f.json"
+  },
+  {
+   "t_utc_ms": 1709934673461,
+   "t_utc": "2024-03-08T21:51:13.461Z",
+   "block": null,
+   "kind": "mempool_seen",
+   "actor": "0x4e2ce48f",
+   "detail": "nonce-0 contract-creation tx first seen (4 sources); mined at 19393216 and reverted (insufficient balance for transfer): no victim calls executed",
+   "tx": "0xf5dd38c76f3bf1c3a71d44fa1fd95536c0c02bf256a807c71d55f4364a980119",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1709934775749,
+   "t_utc": "2024-03-08T21:52:55.749Z",
+   "block": null,
+   "kind": "mempool_seen",
+   "actor": "0x4e2ce48f (attacker 4)",
+   "detail": "nonce-1 attack tx (contract creation that calls the proxy for 5 wallets) first seen by bloxroute, +14 ms local, +33 ms eden, +118 ms apool, +291 ms mempoolguru; 3,251 ms before the slot start of block 19393223",
+   "tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1709934776192,
+   "t_utc": "2024-03-08T21:52:56.192Z",
+   "block": 19393223,
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "bid 2.439154 ETH to proposer (earlier bid, contents unknown); relay flashbots, -2808 ms relative to slot start",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block19393223.json"
+  },
+  {
+   "t_utc_ms": 1709934777707,
+   "t_utc": "2024-03-08T21:52:57.707Z",
+   "block": 19393223,
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "bid 2.450663 ETH to proposer (winning block hash); relay flashbots, -1293 ms relative to slot start",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block19393223.json"
+  },
+  {
+   "t_utc_ms": 1709934779000,
+   "t_utc": "2024-03-08T21:52:59.000Z",
+   "block": 19393223,
+   "kind": "block",
+   "actor": "builder 'I can haz block?' (10 tx block, fee recipient 0x229b8325)",
+   "detail": "block 19393223 (21:52:59 UTC): Yoink tx at index 0 pulls 8,163.94 + 5,401.75 USDT from two of the five wallets the pending tx targets; coinbase 3.4521 ETH, builder refund 0.99992 ETH, proposer paid 2.45066 ETH",
+   "tx": "0x4a69a272d0de1aaec34ac3489f5ab156b2a4e98412a25efbeacd93b7aa00b969",
+   "raw_ref": "site/raw/rpc/block_19393223.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_19393223.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1709934791000,
+   "t_utc": "2024-03-08T21:53:11.000Z",
+   "block": 19393224,
+   "kind": "tx",
+   "actor": "0x4e2ce48f (attacker 4)",
+   "detail": "the pending tx lands at index 80: all five proxy calls pull 0 (balances gone: three drained at 19392761 by attacker 1, two by Yoink one block earlier) and revert",
+   "tx": "0xba300ca5d3239e109295f4412bc856687c60163537b5264c4b0aa372042e5b44",
+   "raw_ref": "site/raw/rpc/block_19393224.json"
+  },
+  {
+   "t_utc_ms": 1709935319000,
+   "t_utc": "2024-03-08T22:01:59.000Z",
+   "block": 19393261,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "pulls exactly 50% of the victim's balance (index 24); not in mempool-dumpster (private flow or missed by its sources)",
+   "tx": "0xd0bab3e76a55033e4ef47a8a52bea74313eaea3b04a23adc7c7e416d359bc3a0",
+   "raw_ref": "site/raw/rpc/tx_0xd0bab3e76a55033e4ef47a8a52bea74313eaea3b04a23adc7c7e416d359bc3a0.json"
+  },
+  {
+   "t_utc_ms": 1709935343000,
+   "t_utc": "2024-03-08T22:02:23.000Z",
+   "block": 19393262,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0: same victim, token and amount (the other 50%); calldata identical to the attacker's except the recipient word; 1 block(s) after the attacker; builder rsync-builder.xyz",
+   "tx": "0x73dad216e383b51c589b943288cb25d03d16b8cf984dcea0fd9dbc336f2da1ad",
+   "raw_ref": "site/raw/rpc/block_19393262.json"
+  },
+  {
+   "t_utc_ms": 1709935355000,
+   "t_utc": "2024-03-08T22:02:35.000Z",
+   "block": 19393263,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "pulls exactly 50% of the victim's balance (index 31); mempool sourcelog first sighting 2024-03-08T22:03:06.291Z (after inclusion)",
+   "tx": "0xaf663a20894ce49fd4e666ac64fae7957b0884e1dc324fabe71562eea13876de",
+   "raw_ref": "site/raw/rpc/tx_0xaf663a20894ce49fd4e666ac64fae7957b0884e1dc324fabe71562eea13876de.json"
+  },
+  {
+   "t_utc_ms": 1709935367000,
+   "t_utc": "2024-03-08T22:02:47.000Z",
+   "block": 19393264,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0: same victim, token and amount (the other 50%); calldata identical to the attacker's except the recipient word; 1 block(s) after the attacker; builder I can haz block?",
+   "tx": "0xaeb81988bb0b1bcae375f979f9ecb8146d811b42170a8ebe11467625240178a2",
+   "raw_ref": "site/raw/rpc/block_19393264.json"
+  },
+  {
+   "t_utc_ms": 1709935811000,
+   "t_utc": "2024-03-08T22:10:11.000Z",
+   "block": 19393297,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "pulls exactly 50% of the victim's balance (index 83); not in mempool-dumpster (private flow or missed by its sources)",
+   "tx": "0x5cfe50df6e9bb8e07d36f7f5a031adad672550695106f4b94e227928b86efe61",
+   "raw_ref": "site/raw/rpc/tx_0x5cfe50df6e9bb8e07d36f7f5a031adad672550695106f4b94e227928b86efe61.json"
+  },
+  {
+   "t_utc_ms": 1709935823000,
+   "t_utc": "2024-03-08T22:10:23.000Z",
+   "block": 19393298,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0: same victim, token and amount (the other 50%); calldata identical to the attacker's except the recipient word; 1 block(s) after the attacker; builder I can haz block?",
+   "tx": "0xbe1ffe49a8b83947bcf91b19825591af8d0a5ce6d498f3e1fb3d20bd98eeea56",
+   "raw_ref": "site/raw/rpc/block_19393298.json"
+  },
+  {
+   "t_utc_ms": 1709935847000,
+   "t_utc": "2024-03-08T22:10:47.000Z",
+   "block": 19393300,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "own second-half tx for the XI wallet (nonce 17, 3 blocks after nonce 16) lands at index 62 and reverts 'Call-Failed': Yoink took that half two blocks earlier",
+   "tx": "0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87",
+   "raw_ref": "site/raw/rpc/trace_0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87.json",
+   "raw_refs": [
+    "site/raw/rpc/tx_0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1709936351000,
+   "t_utc": "2024-03-08T22:19:11.000Z",
+   "block": 19393341,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "pulls exactly 50% of the victim's balance (index 41); not in mempool-dumpster (private flow or missed by its sources)",
+   "tx": "0x2ee9720613dabe7795ca3511eb4aca64f51f39eb4364705ae79716df6992aa89",
+   "raw_ref": "site/raw/rpc/tx_0x2ee9720613dabe7795ca3511eb4aca64f51f39eb4364705ae79716df6992aa89.json"
+  },
+  {
+   "t_utc_ms": 1709936363000,
+   "t_utc": "2024-03-08T22:19:23.000Z",
+   "block": 19393342,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0: same victim, token and amount (the other 50%); calldata identical to the attacker's except the recipient word; 1 block(s) after the attacker; builder I can haz block?",
+   "tx": "0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746",
+   "raw_ref": "site/raw/rpc/block_19393342.json"
+  },
+  {
+   "t_utc_ms": 1709936615000,
+   "t_utc": "2024-03-08T22:23:35.000Z",
+   "block": 19393361,
+   "kind": "tx",
+   "actor": "0x2ad8aed8 (attacker 3)",
+   "detail": "pulls exactly 50% of the victim's balance (index 42); mempool sourcelog first sighting 2024-03-08T22:23:40.871Z (after inclusion)",
+   "tx": "0xdd0636e2598f4d7b74f364fedb38f334365fd956747a04a6dd597444af0bc1c0",
+   "raw_ref": "site/raw/rpc/tx_0xdd0636e2598f4d7b74f364fedb38f334365fd956747a04a6dd597444af0bc1c0.json"
+  },
+  {
+   "t_utc_ms": 1709936639000,
+   "t_utc": "2024-03-08T22:23:59.000Z",
+   "block": 19393363,
+   "kind": "tx",
+   "actor": "Yoink",
+   "detail": "index 0: same victim, token and amount (the other 50%); calldata identical to the attacker's except the recipient word; 2 block(s) after the attacker; builder Titan (titanbuilder.xyz)",
+   "tx": "0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437",
+   "raw_ref": "site/raw/rpc/block_19393363.json"
+  },
+  {
+   "t_utc_ms": 1709941035017,
+   "t_utc": "2024-03-08T23:37:15.017Z",
+   "block": null,
+   "kind": "mempool_seen",
+   "actor": "0x13a99ecc",
+   "detail": "tx with the ADS pull (victim 0x158fb20f, 7,800 ADS, recipient 0x011ee2b5...) first seen; input encoding shifted by 4 bytes; mined 19393715 and reverted",
+   "tx": "0x143329584d01e998e1b6c32b3a3fbcb9801245354df53b366efb72aa6151ff59",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1709941197990,
+   "t_utc": "2024-03-08T23:39:57.990Z",
+   "block": null,
+   "kind": "mempool_seen",
+   "actor": "0x13a99ecc",
+   "detail": "well-formed resend of the same pull (nonce 125) first seen by local node, +1 ms chainbound, +3 ms bloxroute, +6 ms eden, +105 ms apool, +168 ms mempoolguru; 1,010 ms before the slot start of block 19393726",
+   "tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1709941199000,
+   "t_utc": "2024-03-08T23:39:59.000Z",
+   "block": 19393726,
+   "kind": "block",
+   "actor": "builder 'I can haz block?' (16 tx block)",
+   "detail": "block 19393726 (23:39:59 UTC): Yoink tx at index 0 pulls the 7,800 ADS; coinbase 0.37629 ETH, builder refund 0.27301 ETH (index 14), proposer paid 0.11376 ETH (index 15)",
+   "tx": "0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a",
+   "raw_ref": "site/raw/rpc/block_19393726.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_19393726.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1709941199189,
+   "t_utc": "2024-03-08T23:39:59.189Z",
+   "block": 19393726,
+   "kind": "bid",
+   "actor": "builder 'I can haz block?'",
+   "detail": "first submission of the winning block hash (0.11376 ETH) to the Flashbots relay, 189 ms after slot start, 1,199 ms after the attacker tx was first seen",
+   "tx": null,
+   "raw_ref": "site/raw/relay-flashbots/bids_block19393726.json"
+  },
+  {
+   "t_utc_ms": 1709941211000,
+   "t_utc": "2024-03-08T23:40:11.000Z",
+   "block": 19393727,
+   "kind": "tx",
+   "actor": "0x13a99ecc",
+   "detail": "the pending tx lands at index 53 and reverts: only 1.93 ADS were left on the victim",
+   "tx": "0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88",
+   "raw_ref": "site/raw/rpc/block_19393727.json"
+  },
+  {
+   "t_utc_ms": 1710064775000,
+   "t_utc": "2024-03-10T09:59:35.000Z",
+   "block": 19403954,
+   "kind": "message",
+   "actor": "Unizen (0x9387cb4a)",
+   "detail": "Dear Security Professional,  We urge you to restore the misappropriated funds to the below specified wallet addresses:  Ethereum: 0x6003327a621Fc16C74BAf08229CC45A96e44F9Ee  Polygon: 0x95b47001111484B62da0E404aDBC157aA6628a52  Avalanche: 0x81aBEeF01b188e67a4F21C881B01Eb9193fC005f  We've sent 100 ZCX from our foundation wallet to the aforementioned Ethereum wallet to prove we are the owners of this",
+   "tx": "0x0dc8ce3e98d006cd1ba446544b289d960477347e8826efa788d6b879a59cd09d",
+   "raw_ref": "site/raw/rpc-quotecheck/tx_0x0dc8ce3e98d006cd1ba446544b289d960477347e8826efa788d6b879a59cd09d.json"
+  },
+  {
+   "t_utc_ms": 1710103139000,
+   "t_utc": "2024-03-10T20:38:59.000Z",
+   "block": 19407134,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "'Returning 90% of profits': 0.29808 ETH to Unizen's address 0x6003327a REVERTED (status 0, gas limit 41,511; recipient is a contract)",
+   "tx": "0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c",
+   "raw_ref": "site/raw/rpc/rcpt_0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c.json",
+   "raw_refs": [
+    "site/raw/rpc/tx_0xd06abff5e994e14fa82a4ca0f62e3d799529c7426218d5c6c1a937557818de7c.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1710103211000,
+   "t_utc": "2024-03-10T20:40:11.000Z",
+   "block": 19407140,
+   "kind": "return",
+   "actor": "Yoink",
+   "detail": "resend, 0.29808 ETH, succeeded",
+   "tx": "0x4f647c4d74a86e5f3719b235e96f55000a04df1e07137eed8baef09dd0c2c074",
+   "raw_ref": "site/raw/etherscan/unizen_recv_txlist.json"
+  },
+  {
+   "t_utc_ms": 1710103319000,
+   "t_utc": "2024-03-10T20:41:59.000Z",
+   "block": 19407149,
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "12,209.116660 USDT to 0x6003327a",
+   "tx": "0xb3482ffed5d6251adebb3ab572bcf1f588775e7c8443506f05557dbf9504521c",
+   "raw_ref": "site/raw/etherscan/unizen_recv_tokentx.json"
+  },
+  {
+   "t_utc_ms": 1710103403000,
+   "t_utc": "2024-03-10T20:43:23.000Z",
+   "block": 19407156,
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "4,327.967358 USDC to 0x6003327a",
+   "tx": "0xdac41e4153243240f864656f391736b7d169bce9018c0543019b142b4f8b1def",
+   "raw_ref": "site/raw/etherscan/unizen_recv_tokentx.json"
+  },
+  {
+   "t_utc_ms": 1710157355000,
+   "t_utc": "2024-03-11T11:42:35.000Z",
+   "block": 19411628,
+   "kind": "message",
+   "actor": "Unizen (0x9387cb4a)",
+   "detail": "Please return the remaining 7600 USDT/USDC to qualify for the bounty. Approximately 32000 USD worth of assets have been transferred to your wallet in the attack.",
+   "tx": "0x49b8361cb1565e03b0eeb247a89c41f1b1e32533f52ad8ca9fc4013124d2d1cf",
+   "raw_ref": "full cache only (not published)"
+  },
+  {
+   "t_utc_ms": 1710205775000,
+   "t_utc": "2024-03-12T01:09:35.000Z",
+   "block": 19415627,
+   "kind": "message",
+   "actor": "Yoink",
+   "detail": "Please show your math, including validator bribes. I see 7 txs with an overall profit to me of 0.33 Eth, 13566 USDT, and 4809 USDC.",
+   "tx": "0xc6f67b6da0709e804ebb48f72e59d559097383e0319195674e91ca4a422c37c9",
+   "raw_ref": "research/lineages/yoink_messages.json"
+  },
+  {
+   "t_utc_ms": 1710225983000,
+   "t_utc": "2024-03-12T06:46:23.000Z",
+   "block": 19417299,
+   "kind": "message",
+   "actor": "Unizen (0x9387cb4a)",
+   "detail": "Dear Security Professional,  Here are 7 unauthorized transactions from your account to ours:  https://etherscan.io/tx/0x2dfc3752e5efe27590d9a54aaabd4658a1f9d4857c46315b9c9bb37da0622f0a,  https://etherscan.io/tx/0xde7b7aedf81ff9eb19cab4139a2771e839900cb8c6c6c0c7dea0149432573437, https://etherscan.io/tx/0x14328e299167dea78c7f501c85578a6ef0f34cb30e9af796fcf79faa61d75746, https://etherscan.io/tx/0xbe1",
+   "tx": "0x79cafa09fbf7a760bdacc52fde881344c9e76d6949c1c407575b5f1557b242f6",
+   "raw_ref": "research/lineages/yoink_messages.json"
+  },
+  {
+   "t_utc_ms": 1710246707000,
+   "t_utc": "2024-03-12T12:31:47.000Z",
+   "block": 19419016,
+   "kind": "message",
+   "actor": "Yoink",
+   "detail": "Afraid you'll have to try and claw that back from the validators. In 0x4a69, for example, I did acquire 13.5K USDT, but you're missing the 2.45 Eth bribe to Lido which I had to pay in order to build that block.",
+   "tx": "0x4840a6a42adf52bdf79b85296b68c10e8b2e4c19862f820eb91a655779e3840b",
+   "raw_ref": "full cache only (not published)"
+  }
+ ]
+}

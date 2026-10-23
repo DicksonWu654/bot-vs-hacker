@@ -1,0 +1,143 @@
+[
+ {
+  "t_utc": "2026-08-23T19:42:47Z",
+  "kind": "fund",
+  "actor": "Tornado Cash 0.1 ETH pool -> attacker EOA 0xd3ac7b3a...",
+  "detail": "0.0979 ETH withdrawn via relayer, block 25820022",
+  "tx": "0xa57371e466bccfb65f8d5edf8fa4aa15b4f0ce305757af2b6d9d4a87b65a1753",
+  "raw_ref": "site/raw/rpc/trace_0xa57371e466bccfb65f8d5edf8fa4aa15b4f0ce305757af2b6d9d4a87b65a1753.json"
+ },
+ {
+  "t_utc": "2026-09-05T21:26:23Z..21:34:23Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "three ~2.7M-gas CREATEs (0x9d323421.., 0xabcb28d5.., 0x1495ab43..), blocks 25913811/837/851 (possible probes; purpose not established)",
+  "raw_ref": "site/raw/etherscan/sf_txlist_0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:40:20.400Z",
+  "kind": "mempool_seen",
+  "actor": "attacker",
+  "detail": "CREATE2 deploy tx first seen",
+  "tx": "0x6e6d5e2549d6bdd353df80c98291c469ac7724a52ca887fede4f035c58dc2e49",
+  "raw_ref": "site/raw/etherscan/sf_txlist_0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:40:23Z",
+  "kind": "deploy",
+  "actor": "attacker",
+  "detail": "block 25914178: CREATE2 -> 0xcb061059f81b...",
+  "tx": "0x6e6d5e2549d6bdd353df80c98291c469ac7724a52ca887fede4f035c58dc2e49",
+  "raw_ref": "site/raw/etherscan/sf_txlist_0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:41:54.507Z",
+  "kind": "mempool_seen",
+  "actor": "attacker",
+  "detail": "deploy of attack contract 0x4402232f... first seen",
+  "tx": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+  "raw_ref": "site/raw/rpc/eth_getTransactionByHash_0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:41:59Z",
+  "kind": "block",
+  "actor": "Eureka builder",
+  "detail": "block 25914186 idx 65: attack contract 0x4402232f... created via CREATE2; relay auction in race_25914186.json (winning bid 0.00894 ETH)",
+  "tx": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+  "raw_ref": "site/raw/rpc/block_25914186.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:42:20.456Z",
+  "kind": "mempool_seen",
+  "actor": "attacker",
+  "detail": "attack tx (nonce 14, gas limit 13.12M, tip 0.000565 gwei) first seen in public mempool",
+  "tx": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777",
+  "raw_ref": "site/raw/rpc/tx_0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:42:23Z",
+  "kind": "block",
+  "actor": "proposer (local build, reth/v2.2.0, no relay)",
+  "detail": "block 25914188 idx 76: attacker tx mined and REVERTED, out of gas in the Balancer flashLoan callback (12,717,983 of 13,118,277 gas); no relay auction for this block",
+  "tx": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777",
+  "raw_ref": "site/raw/rpc/block_25914188.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:43:00.990Z",
+  "kind": "bid",
+  "actor": "relay bloxroute-regulated (first bid for slot 15152014)",
+  "detail": "first of 5,947 bids across 5 relays (t = -10010 ms)",
+  "raw_ref": "incidents/securedfinance-2026/race_25914192.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:43:09.875Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "last sub-ETH bid: 6.3e-5 ETH, 136 txs (t = -1125 ms)",
+  "raw_ref": "site/raw/relay-titan/bids_block25914192.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:43:11.403Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "first 1+ ETH bid: 1.27695 ETH, 155 txs (block now contains the 28.8 ETH payment) (t = +403 ms)",
+  "raw_ref": "site/raw/relay-titan/bids_block25914192.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:43:11.805Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "highest bid of the slot: 1.27897 ETH, 153 txs (not delivered) (t = +805 ms)",
+  "raw_ref": "site/raw/relay-titan/bids_block25914192.json"
+ },
+ {
+  "t_utc": "2026-09-05T22:43:12.159Z",
+  "kind": "bid",
+  "actor": "builder.ultrasound.money via titan",
+  "detail": "winning submission 1.278614 ETH, block 0x0fb1f036... (t = +1159 ms); delivered by titan",
+  "raw_ref": "site/raw/relay-titan/delivered_block25914192.json"
+ },
+ {
+  "t_utc": "2026-09-05T23:25:24.070Z",
+  "kind": "mempool_seen",
+  "actor": "attacker",
+  "detail": "nonce 15 CREATE first seen",
+  "tx": "0xd1c6e7f0815bfcc51e7b945e2921e629aea543bf7a52088fb18542ed539223a4",
+  "raw_ref": "site/raw/rpc/tx_0xd1c6e7f0815bfcc51e7b945e2921e629aea543bf7a52088fb18542ed539223a4.json"
+ },
+ {
+  "t_utc": "2026-09-05T23:25:35Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "block 25914402 idx 147: CREATE reverted (out of gas, 2,666,604 gas)",
+  "tx": "0xd1c6e7f0815bfcc51e7b945e2921e629aea543bf7a52088fb18542ed539223a4",
+  "raw_ref": "site/raw/rpc/tx_0xd1c6e7f0815bfcc51e7b945e2921e629aea543bf7a52088fb18542ed539223a4.json"
+ },
+ {
+  "t_utc": "2026-09-05T23:26:11Z",
+  "kind": "tx",
+  "actor": "later searcher 0xf601d764",
+  "detail": "block 25914405 idx 0: CREATE 0xa2233b75 + execute(): takes 16,000.000004 USDC from the same vault via a 16,100 USDC Balancer flashLoan; not in mempool dump",
+  "tx": "0xf3627506a6d7d70ac993722539706e86aa442f69e8200149ba36f11e9eeafcb5",
+  "raw_ref": "site/raw/rpc/block_25914405.json",
+  "raw_refs": [
+   "site/raw/etherscan/sf_tokentx_0xb74749b2213916b1da3b869e41c7c57f1db69393_25914000.json"
+  ]
+ },
+ {
+  "t_utc": "2026-09-05T23:26:16.532Z",
+  "kind": "mempool_seen",
+  "actor": "attacker",
+  "detail": "nonce 16 CREATE first seen (4.6 s after the searcher's block)",
+  "tx": "0xbf81f4fa449aeae3c46b2ae10c4beae7d2236872fcf2ef4fab5b329cb3bddba8",
+  "raw_ref": "site/raw/rpc/tx_0xbf81f4fa449aeae3c46b2ae10c4beae7d2236872fcf2ef4fab5b329cb3bddba8.json"
+ },
+ {
+  "t_utc": "2026-09-05T23:26:23Z",
+  "kind": "tx",
+  "actor": "attacker",
+  "detail": "block 25914406 idx 165: CREATE succeeds, no token transfers",
+  "tx": "0xbf81f4fa449aeae3c46b2ae10c4beae7d2236872fcf2ef4fab5b329cb3bddba8",
+  "raw_ref": "site/raw/rpc/tx_0xbf81f4fa449aeae3c46b2ae10c4beae7d2236872fcf2ef4fab5b329cb3bddba8.json"
+ }
+]

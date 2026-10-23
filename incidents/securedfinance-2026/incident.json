@@ -1,0 +1,269 @@
+{
+ "slug": "securedfinance-2026",
+ "name": "Secured Finance (Secured.Fi lending market) exploit, c0ffeebabe.eth WBTC rescue",
+ "date": "2026-09-05",
+ "date_note": "initial incident notes said 2026-09-07; on-chain block timestamps are 2026-09-05 22:40-23:42 UTC. TechFlow reported Sept 7, other outlets Sept 5. Chain data wins.",
+ "chain": "ethereum",
+ "era": "post-merge, mempool-dumpster covers the day (public mempool only)",
+ "verdict": "related-not-frontrun",
+ "verdict_label_detail": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+ "verdict_reason": "The attacker's public-mempool tx 0x5d4e4fa9... It is in a LATER block than the attacker's tx and the attacker had no tx pending (next attacker tx 23:25), so it neither front-ran a pending attacker tx nor shares/precedes the attacker's block: fails the confirmed-onchain test (2)/(3).  A different searcher (0xf601d764, contract 0xa2233b75) later took 16,000 USDC at 25914405 idx 0 with the same shape (Balancer USDC flashLoan + same vault) - also post-failure. Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+ "protocol_loss_usd": 104000,
+ "protocol_loss_note": "press figure (KuCoin/TechFlow); ~0.9 WBTC (~$72k) by c0ffeebabe + 16,000 USDC by the later searcher + rest unattributed",
+ "attacker": {
+  "eoas": [
+   "0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305"
+  ],
+  "contracts": [
+   "0x4402232f6cade999776c1dec3303a4689d356044 (CREATE2 via 0x4e59b448..., blk 25914186 idx 65)",
+   "0xcb061059f81b... (CREATE2 blk 25914178, earlier try)"
+  ],
+  "deploy_tx": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+  "deploy_block": 25914186,
+  "deploy_first_seen_utc": "2026-09-05T22:41:54.507Z",
+  "deploy_included_utc": "2026-09-05T22:41:59Z",
+  "earlier_deploy_tx": "0x6e6d5e2549d6bdd353df80c98291c469ac7724a52ca887fede4f035c58dc2e49 (blk 25914178, first seen 22:40:20.400)",
+  "funding_tx": "0xa57371e466bccfb65f8d5edf8fa4aa15b4f0ce305757af2b6d9d4a87b65a1753",
+  "funding_source": "Tornado Cash 0.1 ETH pool 0x12d66f87a04a9e220743712ce6d9bb1b5616b8fc via relayer 0x4750bcfc...; 0.09787569644015 ETH to the attacker, block 25820022, 2026-08-23 19:42:47 UTC (13 days before)",
+  "other_activity": "CREATEs on 2026-08-23 and 2026-09-05 21:26-21:34 (3 x ~2.7M gas) = probes/other targets; after the rescue: nonce 15 CREATE reverted out of gas (blk 25914402, 23:25), nonce 16 CREATE ok (blk 25914406 idx 165, no transfers), nonce 17/18 CREATE2 (23:40, 23:42); 2026-09-23 sends 0.07 ETH to Across SpokePoolPeriphery 0x97ccdbea... (the Kelp attacker also used it at nonce 0 - weak link only)",
+  "txs": [
+   {
+    "hash": "0x5d4e4fa957af5cbb1c10bae726f71192fe876a8db719ed166edd8e899ce92777",
+    "block": 25914188,
+    "index": 76,
+    "status": "reverted (out of gas in flashLoan callback)",
+    "nonce": 14,
+    "first_seen_ms": 1788648140456,
+    "first_seen_utc": "2026-09-05T22:42:20.456Z",
+    "included_delay_ms": 2544,
+    "priority_fee_gwei": 0.00056505,
+    "gas_limit": 13118277,
+    "gas_used": 12717983
+   },
+   {
+    "hash": "0x3aed40debf5ca27f53d2450b36b713d43272a40df60623572afaebd0d8fbe270",
+    "block": 25914186,
+    "index": 65,
+    "status": "success (deploy)",
+    "first_seen_ms": 1788648114507
+   },
+   {
+    "hash": "0x6e6d5e2549d6bdd353df80c98291c469ac7724a52ca887fede4f035c58dc2e49",
+    "block": 25914178,
+    "status": "success (deploy)",
+    "first_seen_ms": 1788648020400
+   },
+   {
+    "hash": "0xd1c6e7f0815bfcc51e7b945e2921e629aea543bf7a52088fb18542ed539223a4",
+    "block": 25914402,
+    "index": 147,
+    "status": "reverted (CREATE out of gas)",
+    "first_seen_ms": 1788650724070
+   },
+   {
+    "hash": "0xbf81f4fa449aeae3c46b2ae10c4beae7d2236872fcf2ef4fab5b329cb3bddba8",
+    "block": 25914406,
+    "index": 165,
+    "status": "success (CREATE, no token transfers)",
+    "first_seen_ms": 1788650776532
+   }
+  ]
+ },
+ "victim": {
+  "proxies": {
+   "0x35e9d8e0223a75e51a67aa731127c91ea0779fe2": "lending market (delegates to LendingMarketController impl 0x60ccbf7e864df8c7223216baca4149a8190e5fc7)",
+   "0xb74749b2213916b1da3b869e41c7c57f1db69393": "token vault (impl TokenVault 0x4675b1573c528c4d5b4fe60e647810e4cf3135d4)"
+  },
+  "mechanism_reported": "getMarketUnitPrice() valued collateral from current-block order-book average, manipulated with flash loan + self-trades (press, reported)"
+ },
+ "bots": [
+  {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0xe08d97e151473a848c3d9ca3f323cb720472d015",
+   "txs": [
+    {
+     "hash": "0xcd6159860783d8d481cc4bf4dceddc88acdca6bb08f6445525b2904cfd75b1da",
+     "block": 25914192,
+     "index": 0,
+     "status": 1,
+     "gas_used": 10824964,
+     "first_seen": "not in mempool-dumpster (private order flow or missed)"
+    },
+    {
+     "hash": "0x5419ffb4eb89a255a54cde5d90f6574c35b7a1ba2a5ffe5a2ab3d26029609b45",
+     "block": 25914192,
+     "index": 1,
+     "note": "same contract, 203k gas, unrelated to Secured Finance victim, 1.83e-5 ETH to coinbase"
+    },
+    {
+     "hash": "0xc92d5c4937694bd5fc461bf25de208acca81cd4771c437087380e40bb5b5aeff",
+     "block": 25914192,
+     "index": 2,
+     "note": "EOA self-transfer of 71.38 ETH, 21000 gas"
+    }
+   ],
+   "captured": {
+    "token": "WBTC",
+    "amount": "0.9 WBTC withdrawn from the token vault (0.91 WBTC flash-loaned from Balancer, 0.91 repaid); proceeds sold on UniswapV3 WBTC/WETH pool 0x4585fe77... for 28.84875 WETH",
+    "usd": 72000
+   },
+   "coinbase_paid_eth": 28.837210715286012,
+   "coinbase_recipient": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e (block fee recipient, extraData builder.ultrasound.money)",
+   "bot_kept_eth": 0.011539500086156205,
+   "keep_share_pct": 0.04,
+   "priority_fee_gwei": 0.0,
+   "effective_gas_price_gwei": 0.046663324,
+   "notes": "Its tx came after (not before) the attacker's failed tx. No refund from the builder to c0ffeebabe is visible in the block or in the EOA/contract internal-tx lists."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "later searcher",
+   "eoa": "0xf601d7646c2db4940f0b1909b4835ed7279c5aed",
+   "factory": "0x9cb7a294cd...",
+   "contract": "0xa2233b751a27f0cd7cf58935798ae303b269a882",
+   "tx": "0xf3627506a6d7d70ac993722539706e86aa442f69e8200149ba36f11e9eeafcb5",
+   "block": 25914405,
+   "index": 0,
+   "status": 1,
+   "captured": "16,000.000004 USDC (Balancer USDC flashLoan 16,100; same vault)",
+   "first_seen": "not in mempool-dumpster",
+   "note": "Long-lived EOA since 2024. Block 25914405 delivered by Titan (0.0288 ETH). Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone."
+  }
+ ],
+ "auction": {
+  "block": 25914192,
+  "slot": 15152014,
+  "slot_start_utc": "2026-09-05T22:43:11Z",
+  "relays_with_bids": {
+   "bloxroute-regulated": 4408,
+   "agnostic": 572,
+   "aestus": 485,
+   "titan": 392,
+   "flashbots": 90
+  },
+  "relays_answered_empty": [
+   "ultrasound (bid API empty for every block we queried, incl. 25914186)",
+   "ethgas",
+   "btcs"
+  ],
+  "relays_unreachable": [
+   "bloxroute-max-profit",
+   "bloxroute-ethical",
+   "eden",
+   "manifold",
+   "blocknative"
+  ],
+  "n_bids": 5947,
+  "n_builders": 47,
+  "first_bid_t_rel_slot_ms": -10010,
+  "last_bid_t_rel_slot_ms": 14854,
+  "escalation": "builder.ultrasound.money (pubkey 0x8330662d...) bid 1e-10 ETH x13 (53-107 txs) from -9674 ms, then 5.0e-6, 5.6e-6, 2.0e-5, 6.3e-5 ETH (118-136 txs) up to -1125 ms; first 1 ETH+ bid at +403 ms: 1.27695 ETH with 155 txs; then 1.27695 (+539, 156 tx), 1.27695 (+634), 1.27711 (+710, 157), 1.27897 (+805, 153 txs, block 0x2219d2c5), final 1.278614 (+1159 ms, 153 txs, block 0x0fb1f036 = the delivered block).",
+  "winning": {
+   "builder": "builder.ultrasound.money",
+   "builder_pubkey": "0x8330662d8e0ae9a2f3e6d4e7067ab2bd7d383d5b1e3915c35a7c5a72e7becc00cb0c217b8c8a1465e3bb8ba09c9528a7",
+   "block_hash": "0x0fb1f036c0be027405b458bf3fbbe01701402f539adf1e6474702b2ebe73c6fc",
+   "value_eth": 1.278613875829206,
+   "delivered_by": [
+    "titan"
+   ],
+   "bid_t_rel_slot_ms": 1159
+  },
+  "runner_up": {
+   "note": "best bid by another builder: Titan 1.00112 ETH at +3241 ms (332 txs), too late/low; best overall bid was 1.27897 ETH by the same ultrasound builder at +805 ms (not delivered)"
+  },
+  "winning_block_contains_bot_tx": true,
+  "proposer_payment": {
+   "tx": "0x1713e246af0e1dd55e57ad3e3c997cabfb67f7fb75a0fe658f3fb8b2d50915bf",
+   "index": 152,
+   "to": "0xfeeeeee44046c3f61a8cc081e0918ef0de0a7ffc",
+   "value_eth": 1.278613875829206,
+   "proposer_fee_recipient": "0x8ae8cdfbf52c005b816813c228eb1d949ba3793a"
+  },
+  "builder_revenue_in_block_eth": 28.840845935538375,
+  "builder_retained_eth": 27.562232059709167,
+  "builder_retained_share_of_bot_payment": 0.956,
+  "builder_refund_to_bot": "none observed",
+  "bot_tx_only_in_one_builder_family": "inferred: the ~28.8 ETH tx lifts block value from ~6e-5 to ~1.28 ETH only in ultrasound-builder bids (+403 ms); no other builder bid exceeds 1.002 ETH, so the other builders' blocks apparently lacked it (relays do not reveal bid contents)",
+  "proposer_got_pct_of_bot_payment": 4.43
+ },
+ "funds_fate": [
+  {
+   "what": "c0ffeebabe tx0 payment to builder fee recipient",
+   "tx": "0xcd6159860783d8d481cc4bf4dceddc88acdca6bb08f6445525b2904cfd75b1da",
+   "amount": "28.837210715286012 ETH",
+   "to": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e"
+  },
+  {
+   "what": "c0ffeebabe retained",
+   "tx": "0xcd615986...",
+   "amount": "0.011539500086156205 ETH (~$29)",
+   "to": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671"
+  },
+  {
+   "what": "builder -> proposer",
+   "tx": "0x1713e246af0e1dd55e57ad3e3c997cabfb67f7fb75a0fe658f3fb8b2d50915bf",
+   "amount": "1.278613875829206 ETH",
+   "to": "0xfeeeeee44046c3f61a8cc081e0918ef0de0a7ffc"
+  },
+  {
+   "what": "no return of WBTC to the protocol seen: WBTC was sold to ETH inside the same tx",
+   "tx": "0xcd615986...",
+   "amount": "0.89899003 WBTC to Uniswap V3 pool for 28.848750215 WETH",
+   "to": "0x4585fe77225b41b697c938b018e2ac67ac5a20c0"
+  },
+  {
+   "what": "later searcher USDC",
+   "tx": "0xf3627506a6d7d70ac993722539706e86aa442f69e8200149ba36f11e9eeafcb5",
+   "amount": "16,000.000004 USDC",
+   "to": "0x9cb7a294cd (factory of 0xf601d764)"
+  }
+ ],
+ "reported_statements": [
+  "press calls c0ffeebabe a 'white-hat MEV bot' (TechFlow/KuCoin); not verified on-chain. No public statement from the protocol found."
+ ],
+ "sources": [
+  "https://www.techflowpost.com/en-US/newsletter/135195",
+  "https://www.kucoin.com/news/flash/secured-fi-lending-market-hacked-losing-104-000",
+  "https://www.kucoin.com/news/flash/defi-lending-market-secured-finance-hit-by-attack-losing-104-000"
+ ],
+ "raw_refs": {
+  "block_race": [
+   "incidents/securedfinance-2026/race_25914192.json",
+   "full cache only (not published)",
+   "full cache only (not published)",
+   "full cache only (not published)"
+  ],
+  "attacker_trace": "full cache only (not published)",
+  "bot_trace": "full cache only (not published)",
+  "mempool_lookup": "full cache only (not published)",
+  "relay_bids_192": "full cache only (not published)",
+  "attacker_etherscan": "site/raw/etherscan/sf_txlist_0xd3ac7b3a3a72de8efa0fa86a1a256ae933900305.json",
+  "tornado_funding_trace": "full cache only (not published)",
+  "calltree_compare": "full cache only (not published)"
+ },
+ "caveats": [
+  "Block 25914188 was proposed without a relay (extraData reth/v2.2.0): no auction exists for the attacker's block.",
+  "mempool-dumpster has no source log for 2026-09; first_seen is the dump's first observation.",
+  "Relays never reveal bid contents, so which losing bids carried the bot tx is inferred only.",
+  "Real payment TX hash for proposer: see race_25914192.json txs[152]."
+ ],
+ "verdict_original": "related-not-frontrun",
+ "race_type": "post-failure-replay",
+ "headline": false,
+ "headline_text": "The attacker's public tx ran out of gas and reverted at block 25914188; 48 s later c0ffeebabe.eth's tx (block 25914192, pos 0) completed the extraction, ended with 28.85 ETH, and paid 28.84 ETH to the builder.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "related-not-frontrun",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "Bot completed the attack 4 blocks (48 s) after the attacker's public tx was mined and had failed out of gas.",
+  "headline_note": null,
+  "dataset_rows": [
+   "securedfinance-2026"
+  ]
+ }
+}

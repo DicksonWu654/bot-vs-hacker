@@ -1,0 +1,104 @@
+{
+ "slug": "shoco-2023",
+ "note": "in-block evidence only: no mempool archive for 2023-01-19, so no mempool_seen events; bid events are the Flashbots relay's builder_blocks_received (the only relay with 2023 history)",
+ "events": [
+  {
+   "t_utc": "block 16440312 (before 2023-01-19T10:55Z; exact time not fetched)",
+   "kind": "fund",
+   "actor": "0x4025ee65... -> attacker EOA",
+   "detail": "0.049875 ETH (block 16440312, tx 0xd21f0797...) and again in block 16440529 (tx 0xfe26afb8...)",
+   "tx": "0xd21f079724082fec1f09a11382b6a8e30460e55cdf5f2d999a3ae3faed570e3b",
+   "raw_ref": "site/raw/etherscan/txlistinternal_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json"
+  },
+  {
+   "t_utc": "2023-01-19T10:55:11Z",
+   "kind": "deploy",
+   "actor": "attacker 0x14d8ada7",
+   "detail": "contract creation 0xb2af6dda... (block 16440388, idx 31)",
+   "tx": "0x8f194bd80afa9aa825b491327e072e552b6b513f42bf9320ddfe47b579770cef",
+   "raw_ref": "site/raw/etherscan/txlist_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:50:11Z",
+   "kind": "deploy",
+   "actor": "attacker 0x14d8ada7",
+   "detail": "creation of attack contract 0x15d684b4 (block 16440959 idx 38; Flashbots relay saw 601 bids, block delivered by agnostic/ultrasound)",
+   "tx": "0xf656affcd5c11ca07fb141043d85dba9d9682c08eef020ac6b724ad240ed2be8",
+   "raw_ref": "site/raw/rpc/block_16440959.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:54:00.625Z",
+   "kind": "bid",
+   "actor": "builders (Flashbots relay)",
+   "detail": "first of 540 bids for slot 5609069 (bloXroute builder, 0.00004 ETH)",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16440979.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:54:10.084Z",
+   "kind": "bid",
+   "actor": "Flashbots builder",
+   "detail": "bid 0.1327 ETH (same value as winner; one of two submissions at that value)",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16440979.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:54:10.157Z",
+   "kind": "bid",
+   "actor": "Flashbots builder",
+   "detail": "winning block 0x49a9af71... first received: 140 tx, 0.1327020 ETH, contains bot tx at idx 0 and attacker tx at idx 15",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16440979.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:54:10.601Z",
+   "kind": "bid",
+   "actor": "Flashbots builder",
+   "detail": "higher bid 0.13755 ETH arrives (12 higher bids arrive after the winning submission; max 0.13936 at +660 ms); not delivered",
+   "raw_ref": "site/raw/relay-flashbots/bids_block16440979.json"
+  },
+  {
+   "t_utc": "2023-01-19T12:54:11Z",
+   "kind": "block",
+   "actor": "Flashbots builder -> Lido vault proposer",
+   "detail": "block 16440979 (slot 5609069) begins; in-block evidence only, nothing known about tx arrival times",
+   "raw_ref": "site/raw/rpc/block_16440979.json",
+   "block": 16440979
+  },
+  {
+   "t_utc": "2023-01-19T12:54:11Z",
+   "kind": "tx",
+   "actor": "bot 0xe71aca93 -> 0x00000000...660d",
+   "detail": "idx 0: wraps 1.4676 ETH, buys SHOCO on pair 0x806b6c68, 12 skim rounds / 19 deliver() calls, WETH->ETH 5.6265 ETH, pays 0.0921 ETH coinbase; status 1, gas 922,911, effective 15.61 gwei",
+   "tx": "0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b",
+   "raw_ref": "site/raw/rpc/trace_tx_0x2e832f044b4a0a0b8d38166fe4d781ab330b05b9efa9e72a7a0895f1b984084b.json",
+   "block": 16440979
+  },
+  {
+   "t_utc": "2023-01-19T12:54:11Z",
+   "kind": "tx",
+   "actor": "attacker 0x14d8ada7 -> 0x15d684b4",
+   "detail": "idx 15: Balancer flash loan + swap + deliver + skim -> REVERT ds-math-sub-underflow at pair.skim; gas 316,184 at 16.61 gwei",
+   "tx": "0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f",
+   "raw_ref": "site/raw/rpc/trace_tx_0x2f2c3c1c648f6ef0fc3600a91ad389daeb6c76602c4bf0100475696535b6f84f.json",
+   "block": 16440979
+  },
+  {
+   "t_utc": "2023-01-19T12:54:11Z",
+   "kind": "tx",
+   "actor": "Flashbots builder 0xdafea492 -> Lido EL vault",
+   "detail": "idx 139: proposer payment 0.1327 ETH",
+   "tx": "0x1d077443eab3009ea22bbc2b93b26269f44f2c34c1bfdaec7f678e05940a9fbf",
+   "raw_ref": "site/raw/rpc/block_16440979.json",
+   "block": 16440979
+  },
+  {
+   "t_utc": "2023-01-26T07:10:47Z",
+   "kind": "tx",
+   "actor": "attacker 0x14d8ada7",
+   "detail": "TINU exploit, +22.11 ETH (separate incident; shows the attacker kept operating)",
+   "tx": "0x6200bf5c43c214caa1177c3676293442059b4f39eb5dbae6cfd4e6ad16305668",
+   "raw_ref": "site/raw/etherscan/txlist_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json",
+   "raw_refs": [
+    "site/raw/etherscan/txlistinternal_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json"
+   ]
+  }
+ ]
+}

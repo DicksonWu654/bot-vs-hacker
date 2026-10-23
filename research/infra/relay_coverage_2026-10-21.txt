@@ -1,0 +1,18 @@
+relay                    merge(2022-09-15)          2023-01-01          2023-07-30          2024-01-01          2025-01-01          2026-01-01                 now
+flashbots                              200             5475598             6994202             8103589            10738793            13366788            15482243
+ultrasound                             200             5475576             6994201             8103596            10738798            13366798            15482267
+bloxroute-max-profit                   ERR                 ERR                 ERR                 ERR                 ERR                 ERR                 ERR
+bloxroute-regulated                    200                 200                 200                 200            10738798            13366793            15482264
+bloxroute-ethical                      ERR                 ERR                 ERR                 ERR                 ERR                 ERR                 ERR
+eden                                   ERR                 ERR                 ERR                 ERR                 ERR                 ERR                 ERR
+agnostic                                 0             5475514             6994200             8103596            10738793            13366783            15482014
+aestus                                 200                 200                 200                 200                 200                 200            15482267
+titan                                  200                 200                 200                 200            10738788            13366796            15482266
+ethgas                                 200                 200                 200                 200                 200            13366741            15480663
+btcs                                   200                 200                 200                 200                 200            13149555            13149555
+manifold                               ERR                 ERR                 ERR                 ERR                 ERR                 ERR                 ERR
+wenmerge                               522                 522                 522                 522                 522                 522                 522
+blocknative                            ERR                 ERR                 ERR                 ERR                 ERR                 ERR                 ERR
+relayooor                              523                 523                 522                 523                 523                 523                 523
+
+(cell = slot of nearest payload delivered at/before the cursor slot; 200 = answered but empty/none; ERR = host down)

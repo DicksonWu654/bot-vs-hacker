@@ -1,0 +1,401 @@
+{
+ "20468848": {
+  "block": 20468848,
+  "coinbase": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+  "timestamp": 1722939107,
+  "n_tx": 24,
+  "sum_coinbase_payments_from_bot_txs_eth": 802.7852536659021,
+  "txs": [
+   {
+    "idx": 0,
+    "hash": "0x4fdd63be1aa46aa53b994e6bb30e7b26714cbe6ab1e602bd32ef4e029aa62346",
+    "from": "0xe1eea1dfec7a0dfbe5836c78cc2707199b6ec50e",
+    "to": "0xe8f07fb91f7ac5c758e9fa7b814aee751cee28b7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 1,
+    "hash": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.99e-16,
+    "eth_to_coinbase": 795.615040934472
+   },
+   {
+    "idx": 2,
+    "hash": "0x7bde045c2a45b51b7e520e91af2bec66d5c206dfa1c20bbfd8463381372e8a56",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.72e-16,
+    "eth_to_coinbase": 0.0506094262179488
+   },
+   {
+    "idx": 3,
+    "hash": "0x64ab2befeb7d48a1ad939fea84c6e5a44807aa749ca1283d3875cf487d3a063d",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.97e-16,
+    "eth_to_coinbase": 0.5004787042428793
+   },
+   {
+    "idx": 4,
+    "hash": "0xbd894485d2a43e1e58762f0b0506901a896d18806b202b65f11feb3bdf4195ce",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.97e-16,
+    "eth_to_coinbase": 0.4540897746662479
+   },
+   {
+    "idx": 5,
+    "hash": "0x7956a18e82bb818a1c5facbfde014e30140620ad38a49fcf410eb58eeac871f8",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.96e-16,
+    "eth_to_coinbase": 0.40742058605460857
+   },
+   {
+    "idx": 6,
+    "hash": "0x50374da0c583c58b16a197da172e4cf6c3ec0ff9164e7db1568d55bd648437bc",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.96e-16,
+    "eth_to_coinbase": 0.3613292099299454
+   },
+   {
+    "idx": 7,
+    "hash": "0xbf26eba8c532104886ea2ed5aae120e7550bc543e2efa76e839331ecf0246065",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.96e-16,
+    "eth_to_coinbase": 0.31525051049797886
+   },
+   {
+    "idx": 8,
+    "hash": "0xf35c77bead24c556f5e0fe571e1391810e523e0a6513e19e554a3f6778c85ae5",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.95e-16,
+    "eth_to_coinbase": 0.26898382734535164
+   },
+   {
+    "idx": 9,
+    "hash": "0x6754b4464bb4e7564bf558b11f44eebfe1e746bb12b72d89c25382c881ad02f2",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.94e-16,
+    "eth_to_coinbase": 0.22293674870737143
+   },
+   {
+    "idx": 10,
+    "hash": "0x69c18a71d55404f931204144a329d16c9061c7a12b6c8aacd739c0275dd47530",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.91e-16,
+    "eth_to_coinbase": 0.17677214936981775
+   },
+   {
+    "idx": 11,
+    "hash": "0x82a08bfdefe538c2618455ebca8049952337b5ef0941a47953798c6c63d5b621",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.9e-16,
+    "eth_to_coinbase": 0.13131881382659547
+   },
+   {
+    "idx": 12,
+    "hash": "0xc66b59a04909040090fb57fbee0b9c44e9cf7e6fb642c2878c3550c19ce50df4",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.85e-16,
+    "eth_to_coinbase": 0.0857348570306126
+   },
+   {
+    "idx": 13,
+    "hash": "0x49154482350e3bdd004d8c7e30dfef91efba93514a4ce8ebb12b7478ed5630f4",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.68e-16,
+    "eth_to_coinbase": 0.04022170226714888
+   },
+   {
+    "idx": 14,
+    "hash": "0x5cf327b3694d1b93e1b97cffa2346b1c5984b225d2b424fdfe6f65f184d8311b",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.91e-16,
+    "eth_to_coinbase": 0.12447973356664825
+   },
+   {
+    "idx": 15,
+    "hash": "0xc7ccbdd06130372f0a48b12c319f8dfe794323d54da5b1e069414a124cb77278",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.84e-16,
+    "eth_to_coinbase": 0.06312325745975207
+   },
+   {
+    "idx": 16,
+    "hash": "0x1bcbee4ee33177b4536277206ff376ae049cffb74bc9e1c1aaf3493528c7864c",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.87e-16,
+    "eth_to_coinbase": 0.11498300289835811
+   },
+   {
+    "idx": 17,
+    "hash": "0x5c317a4a244a645bdf8de3c7cb599ac9aa40cd7becde85defe49c74eadb3901e",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.75e-16,
+    "eth_to_coinbase": 0.05508996212551031
+   },
+   {
+    "idx": 18,
+    "hash": "0xbba0d4c08f6a3e051a8573adf185beb81207d524f883161a508fb27892c18a61",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.66e-16,
+    "eth_to_coinbase": 0.052930418641455
+   },
+   {
+    "idx": 19,
+    "hash": "0x3f83753a0fd381ca0e2ee8a0d8ef0e5804d7746ccbb4db7fbace37f37711eb3d",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.59e-16,
+    "eth_to_coinbase": 0.022203247920147794
+   },
+   {
+    "idx": 20,
+    "hash": "0xa00450d72cc381a99e026eb8659f6924a0954a821a7b1854a6d4d09706423ca7",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.63e-16,
+    "eth_to_coinbase": 0.016841529195904714
+   },
+   {
+    "idx": 21,
+    "hash": "0x8d86f5d857de84c1e9c0ed04fc5e48803a0144cb3f43b4e13d34e92baeac3788",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 9.98e-16,
+    "eth_to_coinbase": 3.7054152694659215
+   },
+   {
+    "idx": 22,
+    "hash": "0x43354f3f541e2df3d600b54670fd8e38f28f0850f517b53e5b7d222c34c89bb2",
+    "from": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+    "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+    "value_eth": 791.742284675237
+   },
+   {
+    "idx": 23,
+    "hash": "0xc5eaed361ca3b40863477d1a33b55f630bad5e69ff7364706aa4ade19c35f961",
+    "from": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+    "to": "0x498fe6625628053e4f97246161fab24aea3dec36",
+    "value_eth": 11.04299088234891
+   }
+  ]
+ },
+ "25980525": {
+  "block": 25980525,
+  "coinbase": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+  "timestamp": 1789447127,
+  "n_tx": 27,
+  "sum_coinbase_payments_from_bot_txs_eth": 18.95005686938009,
+  "txs": [
+   {
+    "idx": 0,
+    "hash": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+    "value_eth": 9.99e-16,
+    "eth_to_coinbase": 18.93122243326834
+   },
+   {
+    "idx": 1,
+    "hash": "0x8dfb264ca06fe36347ae806fe7249dd8e7a4d202595ed4a59e6bf8b5adb65345",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+    "value_eth": 9.98e-16,
+    "eth_to_coinbase": 0.018834436111750657
+   },
+   {
+    "idx": 2,
+    "hash": "0x8576f914a00af4bb11e633adef0b23f347de01279d1cd7d3f358d8860dd603db",
+    "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+    "to": "0x0d7ad6effd1c6e94e86e4daa7b7c7ef0ab3427d5",
+    "value_eth": 0.0,
+    "eth_to_coinbase": 0.0
+   },
+   {
+    "idx": 3,
+    "hash": "0x16b9ddf976b805e20e08ff49e3f1d01ac7605814fb489f8795c7d95fbc3eeb45",
+    "from": "0x492d255234c83f2ddc5aa904d8a9db6743e9f046",
+    "to": "0x492d255234c83f2ddc5aa904d8a9db6743e9f046",
+    "value_eth": 9.999e-15
+   },
+   {
+    "idx": 4,
+    "hash": "0xe3d5e1fe2d6b4aa5813b7b0f70bb66146df439cbffe1488074e2f28b3908acc4",
+    "from": "0x97d3ab557cc3f67e8668af9e108454823ff6ec99",
+    "to": "0x000006c2a22ff4a44ff1f5d0f2ed65f781f55555",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 5,
+    "hash": "0xed84f1fcf92ef12477c9325d12fff6265596fd1caf8b13f70e6bc1fe26e32d60",
+    "from": "0x6a5fbb3ef87a9191d84f8ba5048bbed7533f06b8",
+    "to": "0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 6,
+    "hash": "0xaf715a2bdd4368c9ccfac792b61d5f4b73ac638a2c2c5f86e85e2656e49d70c9",
+    "from": "0xc9f3b27308b55e14092a3e64c590bd4b237b1894",
+    "to": "0xc43c6bfeda065fe2c4c11765bf838789bd0bb5de",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 7,
+    "hash": "0x8a60a018f63c6f09f92615430ceec8023ed9f05fea0b7fd5b1d262621f77cd7e",
+    "from": "0x4acb6c4321253548a7d4bb9c84032cc4ee04bfd7",
+    "to": "0x0000000000001ff3684f28c67538d4d072c22734",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 8,
+    "hash": "0x006556e2d3d7980e30f719ea674c3029f535abb32c1478d1d2fcac2e568cd505",
+    "from": "0xaa8ba7d4611437141192e7ceced531bc0a133efb",
+    "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 9,
+    "hash": "0xd27689d7d607ae65dd57419cd115b6461948756a89e2ec029e057c592d6da2c6",
+    "from": "0x3a3c006053a9b40286b9951a11be4c5808c11dc8",
+    "to": "0xb93b82f33e2653b544e046128f3cb47879dc917b",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 10,
+    "hash": "0x928848897a35936b841de1fcad84968cc56b4d07630b5afb60dcf8ac1097700d",
+    "from": "0x6cdb7776f6a20b9ed4441b791e9541a6fc04e313",
+    "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 11,
+    "hash": "0x1654f15e8c32d3c490e968066edafbc4d46bb4e9b87ced52e04667da1f326620",
+    "from": "0x59c965f35482d71aec54471d7c1d954f3dadd4fe",
+    "to": "0x4655ce3d625a63d30ba704087e52b4c31e38188b",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 12,
+    "hash": "0x0e560efdee9b57dd835836b2b96bc2aaae8a94802f21d8d5b744290818401b6b",
+    "from": "0xf96bbb6be5d3d3052b6c645c479aeeb89c4f636d",
+    "to": "0x015cc884e56f99859d48abd05eeed5b4967b155f",
+    "value_eth": 0.05016706
+   },
+   {
+    "idx": 13,
+    "hash": "0x4e654f0630962967e22dcfca59c8ace6d6a3247943941e840d7c2a30b7987789",
+    "from": "0xd72bca1976624a8de4e9f7acdca049ace9b634ac",
+    "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 14,
+    "hash": "0x8ea7631287cd30e651baab2ed0bb4a0f0ab023e290da0c19a8c3bd9f738fa6a1",
+    "from": "0xf346898ccdcf7aa3a0c87e8bb1d58d1a391d27cb",
+    "to": "0x111111125421ca6dc452d289314280a0f8842a65",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 15,
+    "hash": "0x82a7e159bcbfeeaa4446be561e99206f8b626ff7ebcc674577e81f0a5be2bf87",
+    "from": "0x64cdaa89629fe003eaa31b480d8b63372d109a53",
+    "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 16,
+    "hash": "0xbb3ae64f3729e957b72d8002242a6a4fef34f1455a66780e0bd492c12400f867",
+    "from": "0x056eaae048a9ab44b230a6d67392d4b6d335bba6",
+    "to": "0xd47a1bdc6872ad2fd16e50149baa9924c653e624",
+    "value_eth": 0.119672126242972
+   },
+   {
+    "idx": 17,
+    "hash": "0x0d6288e8aa39a32b07cd310a50c882a0aba25873f96f0bf8219f37e76b32d3fe",
+    "from": "0x0ba57742336f25f64d9dea675d4ded08e5c66e59",
+    "to": "0xd47a1bdc6872ad2fd16e50149baa9924c653e624",
+    "value_eth": 0.04797240538679336
+   },
+   {
+    "idx": 18,
+    "hash": "0x3a265cfef0078e61f55fb3d90164d60a8300c1ec2a6cbf3e2db6b9091cb7ee53",
+    "from": "0xd47a1bdc6872ad2fd16e50149baa9924c653e624",
+    "to": "0x564a5162062d16b5b85f57429d711b0a3f150d6f",
+    "value_eth": 0.000113519421015
+   },
+   {
+    "idx": 19,
+    "hash": "0x8047f0b3ad02f1377107891aaa7023b5f03f9115b0746729a808fe74c4406e0c",
+    "from": "0x65115c6d23274e0a29a63b69130efe901aa52e7a",
+    "to": "0xff00000000000000000000000000000000043111",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 20,
+    "hash": "0xb0f664701a5c8d208b9a1b4a8600ca3419d9f4e29516494e349e6338bc080ee6",
+    "from": "0x5783288f5fc54f7feee6b2cf2e1822dbc20d5f5d",
+    "to": "0x3f3ee0a9cac2d01db44001eca3e8382fbe40207b",
+    "value_eth": 0.00996815
+   },
+   {
+    "idx": 21,
+    "hash": "0xa2c6fc86758d44498714180449a14375e032a407b33fd4753bad293696a882e3",
+    "from": "0x300773969b499b9768267e0c5a049f7751de79e7",
+    "to": "0xb2d1e1e44a71ae8b25af00460ae7b2e2cf6dd753",
+    "value_eth": 0.00013699
+   },
+   {
+    "idx": 22,
+    "hash": "0x16454417ed83a2fbb1ecf275fbe56449b4d0e3f26dde7a663e83052af23717b1",
+    "from": "0xa15f78142995179ee75971ff41555e32e56ee31d",
+    "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "value_eth": 0.0
+   },
+   {
+    "idx": 23,
+    "hash": "0x2b7f90b1018f944bb8711a85ce24708fa9340cba0945a4cc21df5587c0ca3c16",
+    "from": "0x16eeba1690120cbb988f161599c012deae8ec646",
+    "to": "0x1aadbb8dc2ebe223101fda830facc350db72c49e",
+    "value_eth": 0.013406969757128
+   },
+   {
+    "idx": 24,
+    "hash": "0xfc7bd0a7f442e07f0e0bcc16cef43b81fe27ebd818e9f45ba0ce9786e37c49d3",
+    "from": "0xb63faaf26cd5db8e06d6bad3df34c18bfc060cdd",
+    "to": "0xd79ce457317ad57afd3c90eb816ed9b2caf36524",
+    "value_eth": 0.7827333047000125
+   },
+   {
+    "idx": 25,
+    "hash": "0xf74c5bbe353b35e20b85c306275cb9ab9f603bdc78f8e94c46bc60228189ab09",
+    "from": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+    "to": "0xf6337b38141c019cf7cd7a5752cbdf041a270bbb",
+    "value_eth": 0.000568356231692383
+   },
+   {
+    "idx": 26,
+    "hash": "0x29e6d2a277e9d34261139f5987f9acf25c7f7a45ede6100a65b442027894fd65",
+    "from": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+    "to": "0xfeeeeee44046c3f61a8cc081e0918ef0de0a7ffc",
+    "value_eth": 13.862964598163177
+   }
+  ]
+ }
+}

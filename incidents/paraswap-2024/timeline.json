@@ -1,0 +1,220 @@
+[
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "Velora/ParaSwap (reported)",
+  "detail": "Augustus V6 released to the public 2024-03-18 (announced 2024-02-13), per the Velora post-mortem",
+  "raw_ref": "site/raw/web-paraswap/velora_postmortem_wayback.html"
+ },
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "mempool",
+  "detail": "No direct 0xfa461e33 tx to Augustus in the 2024-03-19 mempool-dumpster csv; no tx of the Yoink pair either (private).",
+  "raw_ref": "full cache only (not published)"
+ },
+ {
+  "t_utc_ms": 1710872735000,
+  "t_utc": "2024-03-19T18:25:35.000Z",
+  "kind": "block",
+  "actor": "proposer 0xb8499999...",
+  "detail": "block 19470561 (slot 8670726), 2024-03-19 18:25:35 UTC, delivered by Ultrasound, builder \"I can haz block?\", bid 2.2229 ETH, 15 tx",
+  "raw_ref": "site/raw/rpc/block_19470561.json",
+  "block": 19470561
+ },
+ {
+  "t_utc_ms": 1710872735000,
+  "t_utc": "2024-03-19T18:25:35.000Z",
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "index 0: Augustus.uniswapV3SwapCallback pulls 12,479.44 OPSEC from approving wallet 0x0cc396f5, sold in V3 pool for 6.4633 WETH; 6.4504 ETH to coinbase",
+  "tx": "0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60",
+  "raw_ref": "site/raw/rpc/trace_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json",
+  "block": 19470561
+ },
+ {
+  "t_utc_ms": 1710872735000,
+  "t_utc": "2024-03-19T18:25:35.000Z",
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "index 1: arbitrage of the moved V3/V2 OPSEC price (2.01 ETH in, 2.117 ETH out), 0.098 ETH to coinbase",
+  "tx": "0xaed21758134ab27c8866dd5d82c04186609bed7549a75c80422496764c1fee58",
+  "raw_ref": "site/raw/rpc/trace_0xaed21758134ab27c8866dd5d82c04186609bed7549a75c80422496764c1fee58.json",
+  "block": 19470561
+ },
+ {
+  "t_utc_ms": 1710872735000,
+  "t_utc": "2024-03-19T18:25:35.000Z",
+  "kind": "return",
+  "actor": "builder 0x229b8325",
+  "detail": "index 13: 4.3369 ETH builder refund to Yoink contract",
+  "tx": "0x3574e4241410bcce0b91f4faf77934d2d593410168ee7da6170e70044fcc7f1c",
+  "block": 19470561,
+  "raw_ref": "site/raw/etherscan/txlist_bot2024_p5.json"
+ },
+ {
+  "t_utc_ms": 1710872735000,
+  "t_utc": "2024-03-19T18:25:35.000Z",
+  "kind": "tx",
+  "actor": "builder 0x229b8325",
+  "detail": "index 14: proposer payment 2.2229 ETH to 0x000cb325...",
+  "tx": "0x3e0523a3fa76c726de186de67619f25a82af74fae931f3a770efb8deb3b289c1",
+  "block": 19470561,
+  "raw_ref": "site/raw/rpc/block_19470561.json"
+ },
+ {
+  "t_utc_ms": 1710913127000,
+  "t_utc": "2024-03-20T05:38:47.000Z",
+  "kind": "tx",
+  "actor": "0x0000000000d67e5d5f991a40f04ed40fa3b150df",
+  "detail": "block 19473885 index 198: callback abuse (no Augustus swap above it); BNT (token 0x1f573d6f...) 30,000.00000000089 moved 0x6133de40 -> 0x62c94e37; callback `from` = third-party wallet",
+  "tx": "0x83f11ad653a9cdee52e54db2365947c61dd054af250f7fcf52240967eea4095a",
+  "block": 19473885,
+  "raw_ref": "site/raw/rpc/tx_0x83f11ad653a9cdee52e54db2365947c61dd054af250f7fcf52240967eea4095a.json"
+ },
+ {
+  "t_utc_ms": 1710917243000,
+  "t_utc": "2024-03-20T06:47:23.000Z",
+  "kind": "tx",
+  "actor": "0x0000000000d67e5d5f991a40f04ed40fa3b150df",
+  "detail": "block 19474225 index 277: callback abuse (no Augustus swap above it); 20,000 USDT 0x567b8492 -> 0xdcf83d17",
+  "tx": "0x893fc9c3b9d4837f5afa950784ade06c4d82343883acce933e13dc2a932c58e6",
+  "block": 19474225,
+  "raw_ref": "site/raw/rpc/tx_0x893fc9c3b9d4837f5afa950784ade06c4d82343883acce933e13dc2a932c58e6.json",
+  "raw_refs": [
+   "site/raw/rpc/rcpt_0x893fc9c3b9d4837f5afa950784ade06c4d82343883acce933e13dc2a932c58e6.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1710923363000,
+  "t_utc": "2024-03-20T08:29:23.000Z",
+  "kind": "tx",
+  "actor": "0x8c036aa7ef5b58922f72f9d9cfd70c9d18add40e",
+  "detail": "block 19474732 index 23: callback abuse (no Augustus swap above it); 145 CTSI via fake pool -> 0.0123 WETH to EOA",
+  "tx": "0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe",
+  "block": 19474732,
+  "raw_ref": "site/raw/rpc/tx_0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe.json",
+  "raw_refs": [
+   "site/raw/rpc/rcpt_0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1710933215000,
+  "t_utc": "2024-03-20T11:13:35.000Z",
+  "kind": "tx",
+  "actor": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+  "detail": "block 19475538 index 14: callback abuse (no Augustus swap above it); 1,033,695 XWG taken from 0x7a6c8dcc... (victim wallet), tip 4.58 gwei",
+  "tx": "0xfb3ec9ba69c0d7cd79a763167409f740c8a45af02a1dd4a947f39834a04ecb06",
+  "block": 19475538,
+  "raw_ref": "site/raw/rpc/tx_0xfb3ec9ba69c0d7cd79a763167409f740c8a45af02a1dd4a947f39834a04ecb06.json"
+ },
+ {
+  "t_utc_ms": 1710935279000,
+  "t_utc": "2024-03-20T11:47:59.000Z",
+  "kind": "tx",
+  "actor": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+  "detail": "block 19475708 index 45: callback abuse (no Augustus swap above it); 335.94 UNIBOT",
+  "tx": "0x9104735d148856507a797abeb4493b20ca79da9da0949c7ad49d6f056b4e69d9",
+  "block": 19475708,
+  "raw_ref": "site/raw/rpc/tx_0x9104735d148856507a797abeb4493b20ca79da9da0949c7ad49d6f056b4e69d9.json"
+ },
+ {
+  "t_utc_ms": 1710940607000,
+  "t_utc": "2024-03-20T13:16:47.000Z",
+  "kind": "tx",
+  "actor": "0xcc3a5dc003b3a58621745a39f706ef9646d5c481",
+  "detail": "block 19476151 index 3: callback abuse (no Augustus swap above it); 39,994.4 USDP",
+  "tx": "0x904099bdaf93097c24d91fdb75bf607c9125ec4c8794056bed9f5aeb11b2b6dd",
+  "block": 19476151,
+  "raw_ref": "site/raw/rpc/tx_0x904099bdaf93097c24d91fdb75bf607c9125ec4c8794056bed9f5aeb11b2b6dd.json"
+ },
+ {
+  "t_utc_ms": 1710979331000,
+  "t_utc": "2024-03-21T00:02:11.000Z",
+  "kind": "tx",
+  "actor": "0xe6e83f9dbc454205322c43c861ed5e8745e4e572",
+  "detail": "block 19479351 index 0: callback abuse (no Augustus swap above it); 35,568 cvxPrisma",
+  "tx": "0x1e73c4205822c28a5cb85fa354771bb4a72eb1778b68932e7ab7ba9559db09ec",
+  "block": 19479351,
+  "raw_ref": "site/raw/rpc/tx_0x1e73c4205822c28a5cb85fa354771bb4a72eb1778b68932e7ab7ba9559db09ec.json"
+ },
+ {
+  "t_utc_ms": 1711321259000,
+  "t_utc": "2024-03-24T23:00:59.000Z",
+  "kind": "message",
+  "actor": "Paraswap EOA 0xe85ad062",
+  "detail": "on-chain message to Yoink's EOA: reply by email or transfer the funds directly to 0x66E90d840D7C4F3473E25dD8ca361747058c6Db0; deadline 2024-03-27 23:00 UTC",
+  "tx": "0xcaa2422853fd14f5645d762729b6edc41ebdac2dce988123d1b91d98eab37e0f",
+  "raw_ref": "site/raw/rpc/tx_0xcaa2422853fd14f5645d762729b6edc41ebdac2dce988123d1b91d98eab37e0f.json",
+  "block": 19507521
+ },
+ {
+  "t_utc_ms": 1711330415000,
+  "t_utc": "2024-03-25T01:33:35.000Z",
+  "kind": "return",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "4.342 ETH sent to the Safe Paraswap named (0x66E90d84...): 67.2% of the 6.4633 ETH sale, 99.8% of the bot tx's net",
+  "tx": "0xa1b1ea5033611603f6e8e5ce5d566ad6b9ad1cd69476e37091c0d90c56c04f90",
+  "raw_ref": "site/raw/rpc/tx_0xa1b1ea5033611603f6e8e5ce5d566ad6b9ad1cd69476e37091c0d90c56c04f90.json",
+  "block": 19508275,
+  "raw_refs": [
+   "site/raw/rpc/receipt_0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1711405235000,
+  "t_utc": "2024-03-25T22:20:35.000Z",
+  "kind": "message",
+  "actor": "Paraswap EOA 0xe85ad062",
+  "detail": "'Thank you for sending back half the misappropriated funds ... propose a bounty of 10% ... transfer the remaining 90%'",
+  "tx": "0x19a02f97af7d8165a702c49a6919387bf14c5324853ebb97752084fc813688ec",
+  "raw_ref": "site/raw/rpc/tx_0x19a02f97af7d8165a702c49a6919387bf14c5324853ebb97752084fc813688ec.json",
+  "block": 19514410
+ },
+ {
+  "t_utc_ms": 1711421015000,
+  "t_utc": "2024-03-26T02:43:35.000Z",
+  "kind": "message",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "'I've already repaid my entire profit (plus some extra from a following arbitrage!). Note the validator payment at the end of the block'",
+  "tx": "0xa645a61524e1cd75b8cd4db956253a804a023ff766d60245d70462ed41b6a278",
+  "raw_ref": "site/raw/rpc/tx_0xa645a61524e1cd75b8cd4db956253a804a023ff766d60245d70462ed41b6a278.json",
+  "block": 19515720
+ },
+ {
+  "t_utc_ms": 1711468091000,
+  "t_utc": "2024-03-26T15:48:11.000Z",
+  "kind": "message",
+  "actor": "Paraswap EOA 0xe85ad062",
+  "detail": "'0x35a7 took 12,479 OPSEC from the user, which is 6.46 ETH instead of 4.342 ETH that you sent back. Could you please send the rest?'",
+  "tx": "0xbd43d2dec15cbb6099b6290d4d2fb4d182b59cbb8d42b52b6003d0a64ece0c7c",
+  "raw_ref": "site/raw/rpc/tx_0xbd43d2dec15cbb6099b6290d4d2fb4d182b59cbb8d42b52b6003d0a64ece0c7c.json",
+  "block": 19519593,
+  "raw_refs": [
+   "site/raw/etherscan/para_yoink_eoa_txlist_19470000_19530000.json"
+  ]
+ },
+ {
+  "t_utc_ms": 1711504583000,
+  "t_utc": "2024-03-27T01:56:23.000Z",
+  "kind": "message",
+  "actor": "Yoink 0xfde0d157...",
+  "detail": "'I've already sent you more than 100% of my profits from 0x35a7 ... I had to pay 2.22 Eth to the validator ... welcome to try and recover the remaining amount from the validator'",
+  "tx": "0x3d3e7cfe2bc311c7b9c44c62c29224e4ad55e79e241086ca4689198921b7c427",
+  "raw_ref": "site/raw/rpc/tx_0x3d3e7cfe2bc311c7b9c44c62c29224e4ad55e79e241086ca4689198921b7c427.json",
+  "block": 19522575
+ },
+ {
+  "t_utc_ms": null,
+  "t_utc": null,
+  "kind": "message",
+  "actor": "Velora (reported)",
+  "detail": "tweet: critical vulnerability found, V6 API paused, \"white hack\" secured funds held in a Safe; post-mortem lists ~$24K initial MEV loss, ~$1.1M follow-up, ~$3.4M rescued, ~$0.8M returned",
+  "raw_ref": "site/raw/web-paraswap/velora_x_status_1770313086072742263.html",
+  "raw_refs": [
+   "site/raw/web-paraswap/velora_postmortem_wayback.html"
+  ]
+ }
+]

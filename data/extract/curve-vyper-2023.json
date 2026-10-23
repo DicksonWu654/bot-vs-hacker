@@ -1,0 +1,2103 @@
+[
+ {
+  "slug": "curve-vyper-2023",
+  "sub": "pETH",
+  "name": "Curve/Vyper reentrancy: pETH-ETH (JPEG'd) pool - byte-copy front-runner vs the real attacker",
+  "date_utc": "2023-07-30T13:10:35Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "The front-runner's tx sits at idx 0 of block 17806056 and its in-tx CREATE initcode is a copy of the attacker's deploy initcode (20 bytes differ); the real attacker's deploy (idx 90) and attack (idx 91) are later in the SAME block and the attack reverted because the pool was already drained.",
+  "one_liner": "An unrelated address copied the pETH attacker's contract and landed at block position 0, ahead of the attacker's own deploy and attack at positions 90 and 91 (which reverted); it took 6,106.65 WETH and returned 90% to JPEG'd.",
+  "attacker": {
+   "eoa": "0x172f6fdefeb079e435f22c918a919540f4721e60",
+   "eoas": [
+    "0x172f6fdefeb079e435f22c918a919540f4721e60"
+   ],
+   "contracts": [
+    "0x6a1a7578e36cf0838c77f59d1f029873b8e0ff77"
+   ],
+   "funding": "tornado",
+   "funding_tx": "0x56ca0a0cff2ac75906e8ab0ea406fa263fac6a0e68e0ddef521bfe04b35eed64",
+   "deploy_tx": "0xb2dfea6de47e35cc8e660489afb7380a1fa0b978a59c81685d94ff0ca7ce9dfc",
+   "deploy_block": 17806056,
+   "attack_txs": [
+    {
+     "hash": "0xb2dfea6de47e35cc8e660489afb7380a1fa0b978a59c81685d94ff0ca7ce9dfc",
+     "block": 17806056,
+     "index": 90,
+     "status": "success",
+     "role": "attacker contract deploy (priority fee 0.150 gwei)"
+    },
+    {
+     "hash": "0xb5d91f1e0afc96a52f8c6c28eae405eda7fcc5d34d6d03bdd8b16bd58089e939",
+     "block": 17806056,
+     "index": 91,
+     "status": "reverted",
+     "role": "attacker attack call start(): reverted (pool already emptied by the front-runner); priority fee 0.150 gwei"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "pETH front-runner (anon, not c0ffeebabe)",
+   "eoa": "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+   "contract": "0x9420f8821ab4609ad9fa514f8d2f5344c3c0a6ab",
+   "tx": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+   "block": 17806056,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 18.276471394
+  },
+  "bots_other": [
+   {
+    "label": "msETH actor's byte-copy deploy (0x19c7849d)",
+    "eoa": "0x19c7849d10333188678fad560d2436cec11071a6",
+    "tx": "0x3fbe0c28fe252a218399dc38d44fbd2f7c3e039ef08eb07c9581c371cda6583f",
+    "block": 17806057,
+    "position": 14,
+    "status": "success",
+    "role": "Later transaction in block 17806057 at position 14; after the incident transaction."
+   },
+   {
+    "label": "second copycat, re-implementation (0x79310104)",
+    "eoa": "0x79310104bed24250cd39baa7c49e2d242d6ed879",
+    "tx": "0x95e8d7c388cdebac568e3ddab2a8e1e24e90497c5685455f888f3f699c49ca8f",
+    "block": 17806058,
+    "position": 0,
+    "status": "success",
+    "role": "Later transaction in block 17806058 at position 0; after the incident transaction."
+   },
+   {
+    "label": "second copycat attack call",
+    "eoa": "0x79310104bed24250cd39baa7c49e2d242d6ed879",
+    "tx": "0xfe07ef76b96624643be6e5ab68c4001330732154ab786f23dd3cf979b0bf4461",
+    "block": 17806058,
+    "position": 2,
+    "status": "success",
+    "role": "Later transaction in block 17806058 at position 2; after the incident transaction."
+   }
+  ],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Aug-2023 (2023-07-30): mempool-dumpster starts 2023-08-07, so in-block evidence only; no first-seen time for any tx in this incident. Flashbots-relay bid history exists for the blocks (other relays answered empty).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool archive for 2023-07-30 (starts 2023-08-07); trigger time unknowable"
+  },
+  "attacker_block": 17806056,
+  "attacker_block_note": "attacker's racing attack tx 0xb5d91f1e0a at idx 91 of the SAME block (reverted); its deploy 0xb2dfea6de4 is at idx 90. bot block - attacker block = 0, bot position 0 vs 91.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17806056,
+   "tx": "0xb5d91f1e0afc96a52f8c6c28eae405eda7fcc5d34d6d03bdd8b16bd58089e939"
+  },
+  "auction": {
+   "block": 17806056,
+   "slot": 6991551,
+   "slot_start_utc_ms": 1690722635000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 807,
+   "n_builders": 66,
+   "bids_per_relay": {
+    "flashbots": 807
+   },
+   "first_bid_ms_rel_slot": -8064,
+   "last_bid_ms_rel_slot": 3764,
+   "winning_bid_eth": null,
+   "winning_builder": null,
+   "winning_builder_pubkey": null,
+   "winning_relays": [],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 333.66013289089136,
+   "proposer_paid_eth": null,
+   "proposer_payment_tx": null,
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -8064,
+     0.001479687260573161
+    ],
+    [
+     -7748,
+     0.001583708260573161
+    ],
+    [
+     -7432,
+     0.002701825960573161
+    ],
+    [
+     -6741,
+     0.003397929123112136
+    ],
+    [
+     -6451,
+     0.004869313521018961
+    ],
+    [
+     -6339,
+     0.009785013190576435
+    ],
+    [
+     -6197,
+     0.01354509314213496
+    ],
+    [
+     -5905,
+     0.02529043432785896
+    ],
+    [
+     -5748,
+     0.02913745932785896
+    ],
+    [
+     -5684,
+     0.03317066762756512
+    ],
+    [
+     -5300,
+     0.03322316762756512
+    ],
+    [
+     -4829,
+     0.0336036773916176
+    ],
+    [
+     -4677,
+     0.03376200938546301
+    ],
+    [
+     -4458,
+     0.03385422738546301
+    ],
+    [
+     -4197,
+     0.03447052391759098
+    ],
+    [
+     -3766,
+     0.035421072519215197
+    ],
+    [
+     -3016,
+     0.03595257209672357
+    ],
+    [
+     -2657,
+     0.03598090630411004
+    ],
+    [
+     -2498,
+     0.03602084689411004
+    ],
+    [
+     -2340,
+     0.036610496949089195
+    ],
+    [
+     -2331,
+     0.03754908614988425
+    ],
+    [
+     -2175,
+     0.03759943422118504
+    ],
+    [
+     -2007,
+     0.03766173882118504
+    ],
+    [
+     -1846,
+     0.03803757980362674
+    ],
+    [
+     -1806,
+     0.038560830814696787
+    ],
+    [
+     -1720,
+     0.03860648728599757
+    ],
+    [
+     -1644,
+     0.039329439624296934
+    ],
+    [
+     -1451,
+     0.039373528133296934
+    ],
+    [
+     -1412,
+     0.03959479200459772
+    ],
+    [
+     -1033,
+     0.03965379782851519
+    ],
+    [
+     -735,
+     0.03972479200459772
+    ],
+    [
+     -727,
+     0.039778451069134926
+    ],
+    [
+     -667,
+     0.03985094094540568
+    ],
+    [
+     -534,
+     0.03995529006554425
+    ],
+    [
+     -526,
+     0.04082339043813393
+    ],
+    [
+     -314,
+     0.04141504108299764
+    ],
+    [
+     -149,
+     0.04167360380933781
+    ],
+    [
+     59,
+     0.04206725853181755
+    ],
+    [
+     68,
+     0.04239515853181755
+    ],
+    [
+     172,
+     0.04289483715854128
+    ],
+    [
+     297,
+     0.04335369511296274
+    ],
+    [
+     492,
+     0.04373335785434054
+    ],
+    [
+     664,
+     0.043787750454340545
+    ],
+    [
+     763,
+     0.061708229610453365
+    ],
+    [
+     767,
+     0.06186137096882766
+    ],
+    [
+     852,
+     0.062165755047022216
+    ],
+    [
+     932,
+     0.06225722487139884
+    ],
+    [
+     933,
+     0.07145703697610585
+    ],
+    [
+     933,
+     0.0722961892731409
+    ],
+    [
+     933,
+     8.062330238729764
+    ],
+    [
+     964,
+     300.50036236807864
+    ],
+    [
+     1346,
+     323.2738323167578
+    ],
+    [
+     1479,
+     323.3151510265888
+    ],
+    [
+     1960,
+     323.3156039383063
+    ],
+    [
+     2453,
+     323.47133399502695
+    ],
+    [
+     2456,
+     327.83065418884973
+    ],
+    [
+     2469,
+     327.8308015101109
+    ],
+    [
+     2578,
+     327.84976881628734
+    ],
+    [
+     3254,
+     327.8499950632607
+    ],
+    [
+     3391,
+     333.66013289089136
+    ]
+   ],
+   "bid_data_note": "no bid history available for this block (pre-Merge or relays hold no data)",
+   "raw_refs": {
+    "race_file": "incidents/curve-vyper-2023/race_17806056.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block17806056.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 6106.654659206664,
+   "gross_loot_method": "WETH Transfer events in the front-runner tx receipt: WETH paid to the front-runner's contract (1 WETH = 1 ETH)",
+   "captured_native": {
+    "amount": 6106.654659206664,
+    "unit": "WETH",
+    "desc": "WETH from the pETH-ETH pool (via a flash-loaned 80,000 WETH round trip) to the front-runner's contract"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.030944240970137888,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 6106.6237149656945,
+   "loot_note": "won position 0 with a plain gas bid: 18.276 gwei priority, no coinbase transfer, 0.030944 ETH to the builder (rsync-builder.xyz block; no delivered-payload record on any reachable relay). bot_net = gross - priority fee - coinbase (base-fee burn excluded), before the later return. USD not computed."
+  },
+  "fate": {
+   "return_status": "returned",
+   "returned_by_bot_eth": 5495.4,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 5495.4,
+   "returned_to": "0x51c2cef9efa48e08557a361b52db34061c025a1b (JPEG'd DAO multisig, per JPEG'd's on-chain statement)",
+   "returned_desc": "On 2023-08-04 the operator moved 6106.7513 WETH to a second address (0x9d1ec3375252d4ab3c128f9774be266f67faa0bd), which sent 5495.4 WETH to the JPEG'd Safe in two txs (blocks 17844527 and 17844597, finishing 2023-08-04T22:28:23Z); the rest was kept as the agreed white-hat bounty. JPEG'd's team had messaged the operator on chain at block 17808132 and promised no legal action on return.",
+   "bounty_kept_eth": 611.3513075624505,
+   "bounty_desc": "on-chain remainder 611.3513 WETH; JPEG'd's statement says a 10% bounty of 610.6 WETH was awarded (see discrepancies)",
+   "kept_by_bot_eth": 611.3513075624505,
+   "returned_txs": [
+    {
+     "tx": "0x9b2855ff5bff567f7a2db13f56c0a2cd66492901f15426598c84f7fd75952250",
+     "eth": 1.0,
+     "note": "WETH from the front-runner's second address 0x9d1ec337 to the JPEG'd Safe 0x51c2cef9efa48e08557a361b52db34061c025a1b",
+     "block": 17844527,
+     "time_utc": "2023-08-04T22:14:23Z"
+    },
+    {
+     "tx": "0x003b00378ac52c10200d8fcac0e42138a34e46b9d7c3350ad3372ae0eb141df3",
+     "eth": 5494.4,
+     "note": "WETH from the front-runner's second address 0x9d1ec337 to the JPEG'd Safe 0x51c2cef9efa48e08557a361b52db34061c025a1b",
+     "block": 17844597,
+     "time_utc": "2023-08-04T22:28:23Z"
+    }
+   ],
+   "public_statement": "JPEG'd DAO on-chain message (tx 0x463dd19c91e69d5b4a50ec396f90c916f5a719cca726f76985a27e9f6a2a4672, block 17844761): The JPEG'd DAO confirms receipt of 5,494.4 WETH back to the JPEG'd Multisig for a total of 5,495.4 WETH. A 10% white-hat bounty of 610.6 WETH was awarded to the owner of the address that recovered funds from the pETH exploit.",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "evidence_notes": [
+   "The front-runner's tx sits at idx 0 of block 17806056 and its in-tx CREATE initcode is a copy of the attacker's deploy initcode (20 bytes differ); the real attacker's deploy (idx 90) and attack (idx 91) are later in the SAME block and the attack reverted because the pool was already drained.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/curve-vyper-2023",
+  "discrepancies": [
+   "incident.json says the front-runner EOA had 167 prior txs; the saved txlist (site/raw/etherscan/txlist_0x6ec21d18_0_17830000.json) shows 171 before block 17806056.",
+   "auction tooling treated idx 0 (0xa84aa065) as the attacker. On chain it is a front-runner whose in-tx CREATE initcode equals the real attacker's deploy tx initcode byte for byte except 20 bytes; the real attacker (0x172f6fde, Tornado-funded) is at idx 90/91 and its attack reverted.",
+   "Bounty: JPEG'd's on-chain statement (block 17844761) says a 10% bounty of 610.6 WETH was awarded; the on-chain remainder after the 5,495.4 WETH return is 611.3513 WETH (6106.7513 moved out of the front-runner EOA, which had received 6106.7513 from the contract; the contract-to-EOA move of 6106.7513 exceeds the 6106.6547 WETH taken in the exploit tx by 0.0966 WETH of pre-existing balance). Raw value used for bounty_kept_eth.",
+   "incident.json reports 'returned 90%': 5,495.4 / 6,106.75 = 89.99%; against the 6,106.65 WETH taken in the exploit tx it is 89.99% as well."
+  ],
+  "raw_refs": {
+   "attacker.funding_tx": "site/raw/etherscan/txlistinternal_0x172f6fde_0_17806100.json",
+   "bot.block": "site/raw/rpc/block_17806056.json",
+   "bot.position": [
+    "site/raw/rpc/block_17806056.json",
+    "site/raw/rpc/receipts_17806056.json",
+    "site/raw/rpc/trace_block_17806056.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_17806056.json",
+    "site/raw/rpc/receipts_17806056.json",
+    "site/raw/rpc/trace_block_17806056.json"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/receipts_17806056.json",
+    "site/raw/rpc/trace_block_17806056.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_17806056.json",
+    "site/raw/rpc/block_17806056.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_17806056.json",
+    "site/raw/rpc/block_17806056.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/receipts_17806056.json",
+    "site/raw/rpc/block_17806056.json"
+   ],
+   "fate.returned_by_bot_eth": "site/raw/etherscan/tokentx_0x9d1ec337_17839000_17900000.json",
+   "fate.returned_total_eth": "site/raw/etherscan/tokentx_0x9d1ec337_17839000_17900000.json",
+   "fate.bounty_kept_eth": [
+    "site/raw/etherscan/tokentx_0x6ec21d18_17806056_17860000.json",
+    "site/raw/etherscan/tokentx_0x9d1ec337_17839000_17900000.json"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/tokentx_0x6ec21d18_17806056_17860000.json",
+    "site/raw/etherscan/tokentx_0x9d1ec337_17839000_17900000.json"
+   ],
+   "fate.public_statement": "full cache only (not published)",
+   "bots_other.positions": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": []
+ },
+ {
+  "slug": "curve-vyper-2023",
+  "sub": "msETH",
+  "name": "Curve/Vyper reentrancy: msETH-ETH (Metronome) pool - c0ffeebabe at position 0 vs the adapter 0x19c7849d",
+  "date_utc": "2023-07-30T14:50:11Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "In-block evidence only. c0ffeebabe.eth's transaction 0xc93eb238... landed at position 0 of block 17806550, before the later actor's deployment at position 10. That actor's transaction 0xe2eb61b1... landed in block 17806552 and received no net ETH. The earlier transaction took 866.73 ETH and paid the builder 0.173 ETH.",
+  "one_liner": "c0ffeebabe.eth's transaction landed at position 0 of block 17806550, before the later actor's contract deployment at position 10. It took 866.73 ETH and paid the builder 0.173 ETH.",
+  "attacker": {
+   "eoa": "0x19c7849d10333188678fad560d2436cec11071a6",
+   "eoas": [
+    "0x19c7849d10333188678fad560d2436cec11071a6"
+   ],
+   "contracts": [
+    "0xbdee6f2b08574f01a3d9dfb5b5b137fca374f4f8"
+   ],
+   "funding": "eoa-transfer",
+   "funding_tx": "0x5fbd45fddec6d8705bf78e4f364b2d7b90f7fa63d7bf471f0004c2830f1cccbc",
+   "deploy_tx": "0x95827369a933e695832dd73b35097c89d94663722e0589e98f00053af3ed132c",
+   "deploy_block": 17806550,
+   "attack_txs": [
+    {
+     "hash": "0x95827369a933e695832dd73b35097c89d94663722e0589e98f00053af3ed132c",
+     "block": 17806550,
+     "index": 10,
+     "status": "success",
+     "role": "attacker contract deploy, same block as and AFTER the bot (priority fee 37.983 gwei)"
+    },
+    {
+     "hash": "0xe2eb61b1ff11e447b791e030039ce89ae294423da1622d0be8c7ec3b2ff1a22a",
+     "block": 17806552,
+     "index": 3,
+     "status": "success",
+     "role": "attacker attack call boom(): top-level success, pool calls reverted inside, net zero (priority fee 36.966 gwei)"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0x7c28e0977f72c5d08d5e1ac7d52a34db378282b3",
+   "tx": "0xc93eb238ff42632525e990119d3edc7775299a70b56e54d83ec4f53736400964",
+   "block": 17806550,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Aug-2023 (2023-07-30): mempool-dumpster starts 2023-08-07, so in-block evidence only; no first-seen time for any tx in this incident. Flashbots-relay bid history exists for the blocks (other relays answered empty).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool archive for 2023-07-30 (starts 2023-08-07); trigger time unknowable"
+  },
+  "attacker_block": 17806552,
+  "attacker_block_note": "block of the attacker's attack tx 0xe2eb61b1 (idx 3, +2 blocks after the bot): top-level success but net zero. The attacker's contract deploy is in the BOT's block (17806550 idx 10), after the bot at idx 0. bot block - attacker block = -2 (bot is earlier); in block 17806550 the bot is 10 positions ahead of the deploy.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17806552,
+   "tx": "0xe2eb61b1ff11e447b791e030039ce89ae294423da1622d0be8c7ec3b2ff1a22a"
+  },
+  "auction": {
+   "block": 17806550,
+   "slot": 6992049,
+   "slot_start_utc_ms": 1690728611000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "n_bids": 161,
+   "n_builders": 23,
+   "bids_per_relay": {
+    "flashbots": 161
+   },
+   "first_bid_ms_rel_slot": -9919,
+   "last_bid_ms_rel_slot": 1770,
+   "winning_bid_eth": 0.36181239003042964,
+   "winning_builder": "BuildAI (https://buildai.net)",
+   "winning_builder_pubkey": "0x82ba7cadcdfc1b156ba2c48c1c627428ba917858e62c3a97d8f919510da23d0f11cf5db53cb92a5faf5de7d31bf38632",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": -217,
+   "winning_last_submission_ms_rel_slot": -217,
+   "runner_up_eth": 0.3610267976171105,
+   "runner_up_builder": "BuildAI (https://buildai.net)",
+   "runner_up_ms_rel_slot": -299,
+   "runner_up_other_builder_eth": 0.3575877466217389,
+   "runner_up_other_builder": "https://eth-builder.com",
+   "runner_up_other_builder_ms_rel_slot": -730,
+   "n_higher_bids_after_winner": 16,
+   "max_bid_eth": 0.3692110289621393,
+   "proposer_paid_eth": 0.36181239003042964,
+   "proposer_payment_tx": "0x3d1020897d12637d4b54d465149619145399cc6a8c5558b8b0d3baf67154b626",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9919,
+     0.003171979848279298
+    ],
+    [
+     -9581,
+     0.00323918200230022
+    ],
+    [
+     -9442,
+     0.0039674079020109
+    ],
+    [
+     -9040,
+     0.00527444061942136
+    ],
+    [
+     -8959,
+     0.00544790660012243
+    ],
+    [
+     -8716,
+     0.00557814160012243
+    ],
+    [
+     -8557,
+     0.007137729875868901
+    ],
+    [
+     -8465,
+     0.0078345848758689
+    ],
+    [
+     -8074,
+     0.007947183075868901
+    ],
+    [
+     -7507,
+     0.008386571232345229
+    ],
+    [
+     -7028,
+     0.00868380723234523
+    ],
+    [
+     -6981,
+     0.05429777312091518
+    ],
+    [
+     -6834,
+     0.054311533973901184
+    ],
+    [
+     -6529,
+     0.055028388973901186
+    ],
+    [
+     -6350,
+     0.055740812825645365
+    ],
+    [
+     -5998,
+     0.05627282167914541
+    ],
+    [
+     -5990,
+     0.05673114574862437
+    ],
+    [
+     -5624,
+     0.05677656097914541
+    ],
+    [
+     -5592,
+     0.05714216997914541
+    ],
+    [
+     -5552,
+     0.05775189566758648
+    ],
+    [
+     -4992,
+     0.08335230158650514
+    ],
+    [
+     -4429,
+     0.1659568539319229
+    ],
+    [
+     -3879,
+     0.1709921131449783
+    ],
+    [
+     -3878,
+     0.17320304908042575
+    ],
+    [
+     -3830,
+     0.17447534807613338
+    ],
+    [
+     -3641,
+     0.17454332337615436
+    ],
+    [
+     -3449,
+     0.17472408422914038
+    ],
+    [
+     -3252,
+     0.1747653932291404
+    ],
+    [
+     -3084,
+     0.17480739322914038
+    ],
+    [
+     -3031,
+     0.17482839322914037
+    ],
+    [
+     -2917,
+     0.17483049322914038
+    ],
+    [
+     -2861,
+     0.17485558922914038
+    ],
+    [
+     -2795,
+     0.17494716900974358
+    ],
+    [
+     -2748,
+     0.17527716900974358
+    ],
+    [
+     -2691,
+     0.1755311751097436
+    ],
+    [
+     -2681,
+     0.18773268462990247
+    ],
+    [
+     -2631,
+     0.27953843081829677
+    ],
+    [
+     -2547,
+     0.3228766318567647
+    ],
+    [
+     -2364,
+     0.3492121777948229
+    ],
+    [
+     -2294,
+     0.349214658267867
+    ],
+    [
+     -2010,
+     0.35633253164365225
+    ],
+    [
+     -1786,
+     0.35637546522767255
+    ],
+    [
+     -1444,
+     0.3566188943354748
+    ],
+    [
+     -1315,
+     0.35749119566726123
+    ],
+    [
+     -736,
+     0.3608364188271105
+    ],
+    [
+     -330,
+     0.360887196913098
+    ],
+    [
+     -299,
+     0.3610267976171105
+    ],
+    [
+     -217,
+     0.36181239003042964
+    ],
+    [
+     -33,
+     0.3618989398313312
+    ],
+    [
+     209,
+     0.36461792845487934
+    ],
+    [
+     356,
+     0.3646249755509401
+    ],
+    [
+     567,
+     0.3666673224670148
+    ],
+    [
+     594,
+     0.3667422318310273
+    ],
+    [
+     780,
+     0.3667609138951759
+    ],
+    [
+     1152,
+     0.3670587480451442
+    ],
+    [
+     1278,
+     0.36714803148915665
+    ],
+    [
+     1358,
+     0.3673576839003819
+    ],
+    [
+     1378,
+     0.3680255506944302
+    ],
+    [
+     1557,
+     0.3690915807606842
+    ],
+    [
+     1761,
+     0.3692110289621393
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/curve-vyper-2023/race.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block17806550.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block17806550.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 866.7271309046098,
+   "gross_loot_method": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "captured_native": {
+    "amount": 866.5537854784288,
+    "unit": "ETH",
+    "desc": "ETH delivered to the bot EOA by the bot contract in this tx (after the coinbase payment)"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.173345426180922,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 866.5537854784288,
+   "loot_note": "scope = this one tx. Gas price equals base fee (priority 0); the whole builder payment is a 0.1733 ETH direct transfer to the block's fee recipient (47.9% of the 0.3618 ETH winning bid, 0.020% of the gross). USD not computed."
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "c0ffeebabe sent 0.1 ETH (block 17809283), received 0.01 ETH back from 0xfa9b97d6 (block 17809289), then sent 1000.0 ETH to 0xfa9b97d6 (block 17809304, 2023-07-31T00:05:59Z). The recipient is not identified by any saved source, and the amount exceeds this tx's net of 866.55 ETH (c0ffeebabe also held the CRV/ETH take), so it cannot be assigned to the msETH pool from chain data alone. Public reports (not saved) say funds were returned to the affected protocols.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [
+    {
+     "tx": "0x9d18d84353c8216d653afd402de8b4961cb3316f40152fab592c35d28515e060",
+     "eth": 1000.0,
+     "note": "1,000 ETH to 0xfa9b97d6 (recipient unverified; handshake: 0.1 ETH out, 0.01 ETH back)",
+     "block": 17809304,
+     "time_utc": "2023-07-31T00:05:59Z"
+    }
+   ],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "evidence_notes": [
+   "In-block evidence only. c0ffeebabe.eth's transaction 0xc93eb238... landed at position 0 of block 17806550, before the later actor's deployment at position 10. That actor's transaction 0xe2eb61b1... landed in block 17806552 and received no net ETH. The earlier transaction took 866.73 ETH and paid the builder 0.173 ETH.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/curve-vyper-2023",
+  "discrepancies": [
+   "auction tooling called the later same-sequence tx 0xe2eb61b1 (17806552 idx 3) 'reverted'. Its status is 1 (success); inside it the first add_liquidity and the reentrant one reverted (6 inner call errors), the flash loan was repaid and no ETH reached the attacker EOA (net zero). It is the adapter 0x19c7849d's own tx, not a copycat of c0ffeebabe.",
+   "The 1,000 ETH sent to 0xfa9b97d6 exceeds this tx's 866.5538 ETH net: c0ffeebabe's two takes total 3746.2132 ETH and its three outbound transfers (2,879.5421 to the Curve deployer, 0.1 test to it, 1,000 to 0xfa9b97d6) total 3879.6421; the msETH row cannot be separated by amount.",
+   "The recipient 0xfa9b97d6 is not identified by any saved source (The Block / Metronome pages saved under site/raw/web-curve-sushi are Cloudflare challenge pages, unreadable); on chain it forwarded 786.5467 ETH to Gnosis Safe 0xd1de3f9cd4ae2f23da941a67ca4c739f8dd9af33 at block 17813555 (tx 0x650a73bfff233815ec6c4de22f105ddff8d5194d10b7375b3cdcd23ec6469f9a) and kept the rest (not traced further)."
+  ],
+  "raw_refs": {
+   "attacker.funding_tx": "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json",
+   "bot.block": "site/raw/rpc/block_17806550.json",
+   "bot.position": [
+    "site/raw/rpc/block_17806550.json",
+    "site/raw/rpc/receipts_17806550.json"
+   ],
+   "attacker_block": [
+    "site/raw/rpc/block_17806552.json",
+    "site/raw/rpc/receipts_17806552.json"
+   ],
+   "loot.gross_loot_eth": "site/raw/rpc/trace_block_17806550.json",
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_17806550.json",
+    "site/raw/rpc/block_17806550.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_17806550.json",
+    "site/raw/rpc/block_17806550.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_block_17806550.json",
+    "site/raw/rpc/receipts_17806550.json"
+   ],
+   "fate.returned_txs": [
+    "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": []
+ },
+ {
+  "slug": "curve-vyper-2023",
+  "sub": "CRV-ETH-wave2",
+  "name": "Curve/Vyper reentrancy: CRV/ETH pool, second wave - c0ffeebabe at position 7 pre-empts the adapter 0x19c7849d",
+  "date_utc": "2023-07-30T22:00:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "Recorded classification; public transaction ordering and funds retained.",
+  "race_type_proposed": "beat-pending-attack",
+  "race_type_reason": "In-block evidence only. c0ffeebabe.eth's transaction 0xcd99fadd... landed at position 7 of block 17808683, before the later actor's deployment at position 13. Curve's deployer subsequently described the transaction in an on-chain message and requested a refund; 2,879.54 ETH was returned.",
+  "one_liner": "c0ffeebabe.eth's transaction landed at position 7 of block 17808683, before the later actor's deployment at position 13. It took 2,879.66 ETH; 2,879.54 ETH was later returned to Curve's deployer.",
+  "attacker": {
+   "eoa": "0x19c7849d10333188678fad560d2436cec11071a6",
+   "eoas": [
+    "0x19c7849d10333188678fad560d2436cec11071a6"
+   ],
+   "contracts": [
+    "0xa96a058dba885227a7feb92c5e306a8f0944a945"
+   ],
+   "funding": "eoa-transfer",
+   "funding_tx": "0x5fbd45fddec6d8705bf78e4f364b2d7b90f7fa63d7bf471f0004c2830f1cccbc",
+   "deploy_tx": "0xccdc1855f4028bf110d98842c1b947606918b958d950fbd6f132b37e37ca4337",
+   "deploy_block": 17808683,
+   "attack_txs": [
+    {
+     "hash": "0xccdc1855f4028bf110d98842c1b947606918b958d950fbd6f132b37e37ca4337",
+     "block": 17808683,
+     "index": 13,
+     "status": "success",
+     "role": "attacker contract deploy, same block as and AFTER the bot (priority fee 37.040 gwei)"
+    },
+    {
+     "hash": "0x3079ebb01a1eedbf655d038a387b61476dfb2e687d2f21e8c48c8d8e80e0da70",
+     "block": 17808686,
+     "index": 6,
+     "status": "success",
+     "role": "attacker go() call: top-level success, the exchange call reverted inside (priority fee 35.363 gwei)"
+    }
+   ],
+   "none_reason": null
+  },
+  "bot": {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0x7c28e0977f72c5d08d5e1ac7d52a34db378282b3",
+   "tx": "0xcd99fadd7e28a42a063e07d9d86f67c88e10a7afe5921bd28cd1124924ae2052",
+   "block": 17808683,
+   "position": 7,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [
+   {
+    "label": "copycat 0x79310104 (re-implementation, also in the pETH race)",
+    "eoa": "0x79310104bed24250cd39baa7c49e2d242d6ed879",
+    "tx": "0xed45b40251aad4af478b5e8dfa04e66d6458e825c69b9aac50ac325490dfbf6e",
+    "block": 17808685,
+    "position": 0,
+    "status": "success",
+    "role": "Later transaction in block 17808685 at position 0; after the incident transaction."
+   },
+   {
+    "label": "copycat 0x79310104 attack call",
+    "eoa": "0x79310104bed24250cd39baa7c49e2d242d6ed879",
+    "tx": "0xbe06d1e02d08c3e1551f519e3ed7df12dcd6c0f6363ca1eb95dbf1cb109545c9",
+    "block": 17808685,
+    "position": 3,
+    "status": "success",
+    "role": "Later transaction in block 17808685 at position 3; after the incident transaction."
+   },
+   {
+    "label": "claim_admin_fees-only caller",
+    "eoa": "0x8c73d39b2da2dd1a10cc16502bc7c8d768ec74c9",
+    "tx": "0xea502dd1792145bdb60312f5b31701a8a4c21093199291017e4a148b8db22721",
+    "block": 17808685,
+    "position": 44,
+    "status": "success",
+    "role": "Later transaction in block 17808685 at position 44; after the incident transaction."
+   }
+  ],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Aug-2023 (2023-07-30): mempool-dumpster starts 2023-08-07, so in-block evidence only; no first-seen time for any tx in this incident. Flashbots-relay bid history exists for the blocks (other relays answered empty).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool archive for 2023-07-30 (starts 2023-08-07); trigger time unknowable"
+  },
+  "attacker_block": 17808686,
+  "attacker_block_note": "block of the attacker's go() tx 0x3079ebb0 (idx 6, +3 blocks after the bot, top-level success, exchange reverted inside). The attacker's contract deploy is in the BOT's block (17808683 idx 13), after the bot at idx 7. bot block - attacker block = -3.",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17808686,
+   "tx": "0x3079ebb01a1eedbf655d038a387b61476dfb2e687d2f21e8c48c8d8e80e0da70"
+  },
+  "auction": {
+   "block": 17808683,
+   "slot": 6994202,
+   "slot_start_utc_ms": 1690754447000,
+   "relays_answered": [
+    "flashbots"
+   ],
+   "n_bids": 125,
+   "n_builders": 25,
+   "bids_per_relay": {
+    "flashbots": 125
+   },
+   "first_bid_ms_rel_slot": -9747,
+   "last_bid_ms_rel_slot": 745,
+   "winning_bid_eth": 0.5032781632160619,
+   "winning_builder": "https://eth-builder.com",
+   "winning_builder_pubkey": "0x8e96593b5418b162e7f7d5c165fef2566a67d5e03357baa780a2956a6f2c0b6426c20d7f82f527bcaa1719ebbc8d6048",
+   "winning_relays": [
+    "flashbots"
+   ],
+   "winning_first_submission_ms_rel_slot": 66,
+   "winning_last_submission_ms_rel_slot": 66,
+   "runner_up_eth": 0.47635426420643373,
+   "runner_up_builder": "https://eth-builder.com",
+   "runner_up_ms_rel_slot": 20,
+   "runner_up_other_builder_eth": 0.2945995938885638,
+   "runner_up_other_builder": "payload.de",
+   "runner_up_other_builder_ms_rel_slot": -928,
+   "n_higher_bids_after_winner": 2,
+   "max_bid_eth": 0.5157448898100958,
+   "proposer_paid_eth": 0.5032781632160619,
+   "proposer_payment_tx": "0xa8b3f11ec5ea002f9a324e8f4fbdbd2cacb9a65dda6818bbd9db8d248c1f7a12",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -9747,
+     0.007891696570165837
+    ],
+    [
+     -9623,
+     0.00880673442882804
+    ],
+    [
+     -9545,
+     0.010251866621887814
+    ],
+    [
+     -8749,
+     0.04426663130467034
+    ],
+    [
+     -8695,
+     0.04450267267948394
+    ],
+    [
+     -8506,
+     0.044907943458997575
+    ],
+    [
+     -8483,
+     0.04606805020364614
+    ],
+    [
+     -8153,
+     0.046524996326994486
+    ],
+    [
+     -7671,
+     0.04734423292699449
+    ],
+    [
+     -7075,
+     0.047621117480636486
+    ],
+    [
+     -6642,
+     0.04766311748063649
+    ],
+    [
+     -6130,
+     0.04772611748063649
+    ],
+    [
+     -5602,
+     0.04777039057145649
+    ],
+    [
+     -5133,
+     0.04794198097145649
+    ],
+    [
+     -4657,
+     0.048254442414713744
+    ],
+    [
+     -4124,
+     0.048523006114713746
+    ],
+    [
+     -3879,
+     0.050003120102358065
+    ],
+    [
+     -3807,
+     0.05119189865229143
+    ],
+    [
+     -3770,
+     0.051803487837535675
+    ],
+    [
+     -3718,
+     0.05180639693753567
+    ],
+    [
+     -3657,
+     0.05182573985888713
+    ],
+    [
+     -3590,
+     0.051863318163993914
+    ],
+    [
+     -3588,
+     0.05187988852531595
+    ],
+    [
+     -3566,
+     0.051884310220209166
+    ],
+    [
+     -3532,
+     0.05190088852531595
+    ],
+    [
+     -3469,
+     0.052059683747831216
+    ],
+    [
+     -3228,
+     0.05216611650556973
+    ],
+    [
+     -3191,
+     0.05222026517199855
+    ],
+    [
+     -3152,
+     0.05224126517199855
+    ],
+    [
+     -3097,
+     0.05227111650556973
+    ],
+    [
+     -3062,
+     0.054272954455608174
+    ],
+    [
+     -2993,
+     0.054377954455608175
+    ],
+    [
+     -2882,
+     0.05479224583627222
+    ],
+    [
+     -2872,
+     0.05484834424244118
+    ],
+    [
+     -2651,
+     0.08875042483835457
+    ],
+    [
+     -2563,
+     0.08902798376895588
+    ],
+    [
+     -2520,
+     0.08965241973378121
+    ],
+    [
+     -2520,
+     0.08965470674378122
+    ],
+    [
+     -2452,
+     0.08968019218200325
+    ],
+    [
+     -2383,
+     0.1326973045630906
+    ],
+    [
+     -2250,
+     0.13274644252717901
+    ],
+    [
+     -2119,
+     0.1340406999798403
+    ],
+    [
+     -2029,
+     0.1974136440419049
+    ],
+    [
+     -1967,
+     0.20633185516721084
+    ],
+    [
+     -1737,
+     0.2393048867317169
+    ],
+    [
+     -1534,
+     0.29208692757417626
+    ],
+    [
+     -996,
+     0.32664301157821274
+    ],
+    [
+     -492,
+     0.36979395043760327
+    ],
+    [
+     20,
+     0.47635426420643373
+    ],
+    [
+     66,
+     0.5032781632160619
+    ],
+    [
+     222,
+     0.5142352361086454
+    ],
+    [
+     745,
+     0.5157448898100958
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/curve-vyper-2023/race_17808683.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block17808683.json",
+    "relay_delivered:flashbots": "site/raw/relay-flashbots/delivered_block17808683.json"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 2879.6594397211875,
+   "gross_loot_method": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "captured_native": {
+    "amount": 2879.6594397211875,
+    "unit": "ETH",
+    "desc": "ETH delivered to the bot EOA by the bot contract"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 0.0,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 2879.6594397211875,
+   "loot_note": "scope = this one tx. Gas price equals the base fee (priority 0) and there is no coinbase transfer, yet the tx sits at idx 7 ahead of txs paying 53 gwei: the builder was paid nothing visible in the tx, and the inclusion path is not determinable from public data. USD not computed."
+  },
+  "fate": {
+   "return_status": "returned",
+   "returned_by_bot_eth": 2879.64210353,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 2879.64210353,
+   "returned_to": "0xc447fcaf1def19a583f97b3620627bf69c05b5fb (Curve deployer)",
+   "returned_desc": "After the Curve deployer (0xbabe6188) wrote to c0ffeebabe on chain at block 17808841, c0ffeebabe sent a 0.1 ETH test transfer (block 17809219) and then 2879.54210353 ETH (block 17809228, 2023-07-30T23:50:47Z) to the same address.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "no bounty visible on chain; the unreturned remainder is below the gas cost of the return txs plus rounding and is recorded as kept_by_bot_eth",
+   "kept_by_bot_eth": 0.017336191187496297,
+   "returned_txs": [
+    {
+     "tx": "0xe676a2835913041fd85c98a7e0c82cd921ab2f20a831351ef746b5fc987c2246",
+     "eth": 0.1,
+     "note": "test transfer to the Curve deployer",
+     "block": 17809219,
+     "time_utc": "2023-07-30T23:48:59Z"
+    },
+    {
+     "tx": "0xb76754124fdde090f25129105ed2907e3c62e0db87ecb8ffcefcb1dede0954fd",
+     "eth": 2879.54210353,
+     "note": "return to the Curve deployer",
+     "block": 17809228,
+     "time_utc": "2023-07-30T23:50:47Z"
+    }
+   ],
+   "public_statement": "On-chain messages (txlist input data): c0ffeebabe self-note block 17808834 'moving funds to cold wallet for now, affected protocols can contact via etherscan chat.'; Curve deployer 0xbabe6188 block 17808841: 'Deployer from Curve. One tx you front-ran was a hack of CRV/ETH pool. Can refund?'; c0ffeebabe block 17808866: 'Yes, please send me a way to contact via etherscan chat.'; 0xbabe6188 block 17808891: '0x39415255619783A2E71fcF7d8f708A951d92e1b6 (swiss-stake.eth) will contact'",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "evidence_notes": [
+   "In-block evidence only. c0ffeebabe.eth's transaction 0xcd99fadd... landed at position 7 of block 17808683, before the later actor's deployment at position 13. Curve's deployer subsequently described the transaction in an on-chain message and requested a refund; 2,879.54 ETH was returned.",
+   "Transaction hashes, block positions, funds and public statements are retained for verification."
+  ],
+  "incident_dir": "incidents/curve-vyper-2023",
+  "discrepancies": [
+   "auction tooling labelled this a 'post-hack trade' (related-not-frontrun). The sequence is a second-wave attack on the pool's remaining funds, and the Curve deployer wrote on chain (block 17808841): 'One tx you front-ran was a hack of CRV/ETH pool.'",
+   "incident.json verdict_reason says the attacker's go() came 'two blocks later'; the saved block data place it in block 17808686 idx 6, i.e. 3 blocks after the bot (17808685 holds the copycat 0x79310104 txs).",
+   "Return: incident.json counts 2,879.54210353 ETH returned; adding the 0.1 ETH test transfer to the same Curve deployer address the bot sent 2879.64210353 ETH to it (99.999% of the 2879.6594 ETH take). Both figures are recorded."
+  ],
+  "raw_refs": {
+   "attacker.funding_tx": "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json",
+   "bot.block": "site/raw/rpc/block_17808683.json",
+   "bot.position": [
+    "site/raw/rpc/block_17808683.json",
+    "site/raw/rpc/receipts_17808683.json"
+   ],
+   "attacker_block": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/trace_block_17808683.json",
+    "site/raw/rpc/receipts_17808683.json"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_block_17808683.json",
+    "site/raw/rpc/block_17808683.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_17808683.json",
+    "site/raw/rpc/block_17808683.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_block_17808683.json",
+    "site/raw/rpc/receipts_17808683.json"
+   ],
+   "fate.returned_by_bot_eth": "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json",
+   "fate.returned_total_eth": [
+    "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json",
+    "site/raw/rpc/trace_block_17808683.json"
+   ],
+   "fate.public_statement": "site/raw/etherscan/txlist_0xc0ffeeba_17806000_17830000.json"
+  },
+  "rawref_gaps": []
+ },
+ {
+  "slug": "curve-vyper-2023",
+  "sub": "alETH",
+  "name": "Curve/Vyper reentrancy: alETH-ETH (Alchemix) pool - sole actor, no racer (rejected)",
+  "date_utc": "2023-07-30T15:34:47Z",
+  "chain": "ethereum",
+  "orig_verdict": "rejected",
+  "race_type_proposed": "bot-was-first-exploiter",
+  "race_type_reason": "No racer: every tx calling the alETH pool in blocks 17805900-17809000 was inspected (incident.json: 39 txs) and exactly one carries the reentrancy sequence, the attacker's own at idx 10; c0ffeebabe never touched this pool. PLACEHOLDER: the taxonomy has no 'no race' value; the nearest is bot-was-first-exploiter (the sole actor is the exploiter itself). The harmonized verdict is 'rejected' (no racer), so this must not count as a bot win or be headlined.",
+  "one_liner": "alETH pool: the only reentrancy exploit tx is the attacker's own at block position 10 (3 gwei priority); no bot or copier touched this sequence before or after it. Rejected as a race.",
+  "attacker": {
+   "eoa": "0xdce5d6b41c32f578f875efffc0d422c57a75d7d8",
+   "eoas": [
+    "0xdce5d6b41c32f578f875efffc0d422c57a75d7d8"
+   ],
+   "contracts": [
+    "0x30fb95794a2051abe30a67892b3a1fa73947aee5"
+   ],
+   "funding": "eoa-transfer",
+   "funding_tx": "0xc0e6169ccab4fc39c0dd09d065d1ecc7980b23c46559c31c1200a2a1fac639b1",
+   "deploy_tx": "0xf7704b5c4dabd8e6f94391b48467fedfcf02f5d5820fa4d737be464515fc1fc0",
+   "deploy_block": 17806760,
+   "attack_txs": [
+    {
+     "hash": "0xb676d789bb8b66a08105c844a49c2bcffb400e5c1cfabd4bc30cca4bff3c9801",
+     "block": 17806772,
+     "index": 10,
+     "status": "success",
+     "role": "attacker exploit tx (swap/loop on the alETH pool); priority fee 3.000 gwei",
+     "priority_fee_gwei": 3.0,
+     "priority_fee_paid_eth": 0.001222023,
+     "coinbase_eth": 0.0,
+     "eth_received_by_attacker_eoa": 7258.701569350005
+    }
+   ],
+   "none_reason": null,
+   "note": "self-described white hat per its on-chain messages (incident.json), not verified"
+  },
+  "bot": {
+   "label": "none",
+   "eoa": null,
+   "contract": null,
+   "tx": null,
+   "block": null,
+   "position": null,
+   "status": null,
+   "priority_fee_gwei": null
+  },
+  "bots_other": [
+   {
+    "label": "pre-exploit pool withdrawal (reported Alchemix-side white hat, unverified; not racing)",
+    "eoa": "0x05466fc96ba8dbb4b0f3f360adfdd7c14e828a5f",
+    "tx": "0x3d92f0152b582304b3068d9c779d4793152703a9baf3d4c4ce0e0a8a7161a4ef",
+    "block": 17806708,
+    "position": 34,
+    "status": "success",
+    "role": "withdrawal from the alETH pool before the exploit, via contract 0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9"
+   },
+   {
+    "label": "pre-exploit pool withdrawal (reported Alchemix-side white hat, unverified; not racing)",
+    "eoa": "0x05466fc96ba8dbb4b0f3f360adfdd7c14e828a5f",
+    "tx": "0x20d00acdfbaeffa5fe618ecbcbb8c13df80133cb6d964f9a7ab6a5a7b0d796f3",
+    "block": 17806741,
+    "position": 0,
+    "status": "success",
+    "role": "withdrawal from the alETH pool before the exploit, via contract 0x9e2b6378ee8ad2a4a95fe481d63caba8fb0ebbf9"
+   },
+   {
+    "label": "pre-exploit pool withdrawal (reported Alchemix-side white hat, unverified; not racing)",
+    "eoa": "0x8542c5d2392564389c46dd5e6cfb150707bbd9cc",
+    "tx": "0x1fd303a0475b1836f7cf53cf9a88e5eff990dbd3100247f3c109f8aac60306a6",
+    "block": 17806746,
+    "position": 7,
+    "status": "success",
+    "role": "withdrawal from the alETH pool before the exploit, via contract 0xc53127af77cba7d07dc08e271bd0826c55f97467"
+   },
+   {
+    "label": "pre-exploit pool withdrawal (reported Alchemix-side white hat, unverified; not racing)",
+    "eoa": "0x8542c5d2392564389c46dd5e6cfb150707bbd9cc",
+    "tx": "0x5dbd9c4291833047250e2812f81cb02d66872867ef7877332782753d481431f4",
+    "block": 17806760,
+    "position": 26,
+    "status": "success",
+    "role": "withdrawal from the alETH pool before the exploit, via contract 0xc53127af77cba7d07dc08e271bd0826c55f97467"
+   }
+  ],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Aug-2023 (2023-07-30): mempool-dumpster starts 2023-08-07, so in-block evidence only; no first-seen time for any tx in this incident. Flashbots-relay bid history exists for the blocks (other relays answered empty).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool archive for 2023-07-30 (starts 2023-08-07); trigger time unknowable"
+  },
+  "attacker_block": 17806772,
+  "attacker_block_note": "block of the sole actor's exploit tx 0xb676d789bb (idx 10); no other actor replays the sequence, so there is no bot block (bot block - attacker block undefined).",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17806772,
+   "tx": "0xb676d789bb8b66a08105c844a49c2bcffb400e5c1cfabd4bc30cca4bff3c9801"
+  },
+  "auction": {
+   "block": 17806772,
+   "slot": 6992272,
+   "slot_start_utc_ms": 1690731287000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound",
+    "agnostic"
+   ],
+   "n_bids": 135,
+   "n_builders": 22,
+   "bids_per_relay": {
+    "flashbots": 135
+   },
+   "first_bid_ms_rel_slot": -9362,
+   "last_bid_ms_rel_slot": 1730,
+   "winning_bid_eth": 0.03190985829182216,
+   "winning_builder": "Flashbots",
+   "winning_builder_pubkey": "0xb89b9308fbc6c2998c7e60e39424b858c74b02c234b3e0fa5ecf7c3971208dfa5f92e0bdbe16fc24abfd71c248acf0f9",
+   "winning_relays": [
+    "agnostic",
+    "flashbots",
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 175,
+   "winning_last_submission_ms_rel_slot": 175,
+   "runner_up_eth": 0.029702250818709027,
+   "runner_up_builder": "Flashbots",
+   "runner_up_ms_rel_slot": 15,
+   "runner_up_other_builder_eth": 0.028686417787148432,
+   "runner_up_other_builder": "BuildAI (https://buildai.net)",
+   "runner_up_other_builder_ms_rel_slot": 30,
+   "n_higher_bids_after_winner": 3,
+   "max_bid_eth": 0.03327639682683374,
+   "proposer_paid_eth": 0.03190985829182216,
+   "proposer_payment_tx": "0x2f917162d535e82aa1cce8544d51aac4afd6e97c6c19c052927b33dab46205d4",
+   "bot_tx_in_winning_block": null,
+   "escalation": [
+    [
+     -9362,
+     0.0014400112715223
+    ],
+    [
+     -9199,
+     0.001905832155101115
+    ],
+    [
+     -8779,
+     0.002289709190115703
+    ],
+    [
+     -8576,
+     0.002296127592151452
+    ],
+    [
+     -8429,
+     0.002676719550689657
+    ],
+    [
+     -8302,
+     0.003023260550689657
+    ],
+    [
+     -8026,
+     0.003059066150689657
+    ],
+    [
+     -7990,
+     0.003169228852725406
+    ],
+    [
+     -7767,
+     0.003260918741040657
+    ],
+    [
+     -7576,
+     0.003370747752725406
+    ],
+    [
+     -7146,
+     0.003420236539002537
+    ],
+    [
+     -7068,
+     0.003473298650687286
+    ],
+    [
+     -6914,
+     0.003550957436009934
+    ],
+    [
+     -6762,
+     0.003846708588569609
+    ],
+    [
+     -6645,
+     0.003880064793571609
+    ],
+    [
+     -6526,
+     0.003951605605256358
+    ],
+    [
+     -6432,
+     0.004009114231755984
+    ],
+    [
+     -6247,
+     0.004225317335492812
+    ],
+    [
+     -6131,
+     0.004560343835492812
+    ],
+    [
+     -6016,
+     0.00560195044945488
+    ],
+    [
+     -5475,
+     0.013675314930340876
+    ],
+    [
+     -5036,
+     0.01368448319946406
+    ],
+    [
+     -4190,
+     0.015500876792055683
+    ],
+    [
+     -3930,
+     0.016278829731658468
+    ],
+    [
+     -3926,
+     0.01630205627430562
+    ],
+    [
+     -3883,
+     0.016304827996754773
+    ],
+    [
+     -3833,
+     0.01631451889675477
+    ],
+    [
+     -3763,
+     0.01633997129430562
+    ],
+    [
+     -3634,
+     0.01634575308018189
+    ],
+    [
+     -3577,
+     0.01634866218018189
+    ],
+    [
+     -3467,
+     0.016363779897534736
+    ],
+    [
+     -3442,
+     0.017193600964512227
+    ],
+    [
+     -3411,
+     0.017196510064512227
+    ],
+    [
+     -3396,
+     0.01720795713140783
+    ],
+    [
+     -3354,
+     0.01721086623140783
+    ],
+    [
+     -3310,
+     0.017624470601074145
+    ],
+    [
+     -3309,
+     0.01762989886107414
+    ],
+    [
+     -3295,
+     0.017648798861074143
+    ],
+    [
+     -3282,
+     0.017651707961074143
+    ],
+    [
+     -3171,
+     0.017654343603523293
+    ],
+    [
+     -2997,
+     0.024991697849552744
+    ],
+    [
+     -2996,
+     0.025037432055072636
+    ],
+    [
+     -2931,
+     0.025252747734105144
+    ],
+    [
+     -2431,
+     0.025268833837105143
+    ],
+    [
+     -2041,
+     0.0253907115740945
+    ],
+    [
+     -1538,
+     0.025488890112727897
+    ],
+    [
+     -1516,
+     0.025602430742276226
+    ],
+    [
+     -1402,
+     0.025629938487102225
+    ],
+    [
+     -1017,
+     0.025798651487102225
+    ],
+    [
+     -928,
+     0.027534314152615005
+    ],
+    [
+     -512,
+     0.027625694934033003
+    ],
+    [
+     -501,
+     0.027664314152615003
+    ],
+    [
+     -428,
+     0.02768641778714843
+    ],
+    [
+     -141,
+     0.027816417787148433
+    ],
+    [
+     -2,
+     0.027911089597671856
+    ],
+    [
+     15,
+     0.029702250818709027
+    ],
+    [
+     175,
+     0.03190985829182216
+    ],
+    [
+     724,
+     0.03220894522683374
+    ],
+    [
+     1217,
+     0.03229186642683374
+    ],
+    [
+     1730,
+     0.03327639682683374
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/curve-vyper-2023/race_17806772.json",
+    "relay_bids:flashbots": "full cache only (not published)",
+    "relay_delivered:flashbots": "full cache only (not published)",
+    "relay_delivered:ultrasound": "full cache only (not published)",
+    "relay_delivered:agnostic": "full cache only (not published)"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": null,
+   "gross_loot_method": "no bot tx in this sub-race",
+   "captured_native": {
+    "amount": null,
+    "unit": null,
+    "desc": "no bot"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": null,
+   "priority_fee_paid_eth": null,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": null,
+   "loot_note": "no bot tx; for reference the sole actor's own exploit tx moved 7258.7016 ETH to its EOA and paid 0.001222 ETH priority fee to the builder (3 gwei priority). It also held ~4,820 alETH (see fate note)."
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "not-applicable: no bot in this sub-race. Context: the sole actor (0xdce5d6b4, who calls itself a white hat) sent back 4820.55 alETH and 2259.0 ETH to 0x9e2b6378 (Alchemix-side) around 2023-08-04, per the saved txlist/tokentx files.",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "evidence_notes": [
+   "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "Exploit tx 0xb676d789bb at idx 10 of 17806772 with 3.0 gwei priority; the attacker deployed its final contract 12 blocks earlier (17806760 idx 64) after earlier deploy/test iterations at 17806549, 17806688, 17806727 (incident.json).",
+   "Four earlier txs from Alchemix-side accounts withdrew from the pool (17806708-17806760); public reports call them white hats who 'only got 2/3 of the way through' - interpretation, not verified; they are not copies of the exploit sequence.",
+   "txs that never reached the pool (early reverts) are not enumerable from pool-touch scans, so 'no racer' means no racer among txs that touched the pool."
+  ],
+  "incident_dir": "incidents/curve-vyper-2023",
+  "discrepancies": [
+   "The attacker later returned alETH and ETH to 0x9e2b6378 (Alchemix-side); saved txlists show 4,820.55 alETH and 2,259.0 ETH sent there before block 17850000; purpose of the additional 5,000 ETH sent on 2023-08-05 is not verified (incident.json)."
+  ],
+  "raw_refs": {
+   "attacker.funding_tx": "full cache only (not published)",
+   "attacker_block": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "bots_other.positions": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.context": [
+    "site/raw/etherscan/txlist_0xdce5d6b4_17806000_17860000.json",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": []
+ },
+ {
+  "slug": "curve-vyper-2023",
+  "sub": "CRV-ETH-wave1",
+  "name": "Curve/Vyper reentrancy: CRV/ETH pool, first wave - sole actor, no racer (rejected)",
+  "date_utc": "2023-07-30T19:08:23Z",
+  "chain": "ethereum",
+  "orig_verdict": "rejected",
+  "race_type_proposed": "bot-was-first-exploiter",
+  "race_type_reason": "No racer: the attacker deployed its contract at 17807829 idx 84 and attacked at 17807830 idx 6; no other tx in 17807700-17808000 replays the sequence (incident.json scan). PLACEHOLDER: the taxonomy has no 'no race' value; the nearest is bot-was-first-exploiter (the sole actor is the exploiter itself). The harmonized verdict is 'rejected' (no racer), so this must not count as a bot win or be headlined.",
+  "one_liner": "CRV/ETH pool, first wave: the sole actor deployed and attacked within two blocks (position 6, 1 gwei priority); nothing replays it. The pool's leftover funds were taken hours later in the wave-2 race.",
+  "attacker": {
+   "eoa": "0xb752def3a1fded45d6c4b9f4a8f18e645b41b324",
+   "eoas": [
+    "0xb752def3a1fded45d6c4b9f4a8f18e645b41b324"
+   ],
+   "contracts": [
+    "0x83e056ba00beae4d8aa83deb326a90a4e100d0c1"
+   ],
+   "funding": "eoa-transfer",
+   "funding_tx": "0x756cf2da292c3511735ee67e566bbf8209990724949852b2ee582a332e725b27",
+   "deploy_tx": null,
+   "deploy_block": 17807829,
+   "attack_txs": [
+    {
+     "hash": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
+     "block": 17807830,
+     "index": 6,
+     "status": "success",
+     "role": "attacker exploit tx on the CRV/ETH pool (add/remove-liquidity loops, 10,000 WETH Balancer flash); priority fee 1.000 gwei",
+     "priority_fee_gwei": 1.0,
+     "priority_fee_paid_eth": 0.011366004,
+     "coinbase_eth": 0.0,
+     "eth_received_by_attacker_eoa": 0.0
+    }
+   ],
+   "none_reason": null,
+   "deploy_note": "deploy tx hash not recorded in incident.json (block 17807829 idx 84)"
+  },
+  "bot": {
+   "label": "none",
+   "eoa": null,
+   "contract": null,
+   "tx": null,
+   "block": null,
+   "position": null,
+   "status": null,
+   "priority_fee_gwei": null
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "in-block-only",
+  "mempool_note": "Pre-Aug-2023 (2023-07-30): mempool-dumpster starts 2023-08-07, so in-block evidence only; no first-seen time for any tx in this incident. Flashbots-relay bid history exists for the blocks (other relays answered empty).",
+  "trigger": {
+   "kind": null,
+   "tx": null,
+   "first_seen_utc_ms": null,
+   "first_seen_utc": null,
+   "sources": null,
+   "note": "no mempool archive for 2023-07-30 (starts 2023-08-07); trigger time unknowable"
+  },
+  "attacker_block": 17807830,
+  "attacker_block_note": "block of the sole actor's exploit tx 0x2e7dc8b2fb (idx 6); no other actor replays the sequence, so there is no bot block (bot block - attacker block undefined).",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 17807830,
+   "tx": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c"
+  },
+  "auction": {
+   "block": 17807830,
+   "slot": 6993340,
+   "slot_start_utc_ms": 1690744103000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "n_bids": 51,
+   "n_builders": 14,
+   "bids_per_relay": {
+    "flashbots": 51
+   },
+   "first_bid_ms_rel_slot": -9022,
+   "last_bid_ms_rel_slot": 1085,
+   "winning_bid_eth": 0.024372806157743176,
+   "winning_builder": "f1b.io",
+   "winning_builder_pubkey": "0xabc387dff20ff4bda974b7f3041ea857d591681cc03271519196587a2d6b30c953ea4df11acf637db76f462834a8c80e",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": null,
+   "winning_last_submission_ms_rel_slot": null,
+   "runner_up_eth": null,
+   "runner_up_builder": null,
+   "runner_up_ms_rel_slot": null,
+   "runner_up_other_builder_eth": null,
+   "runner_up_other_builder": null,
+   "runner_up_other_builder_ms_rel_slot": null,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 0.013556730597375303,
+   "proposer_paid_eth": 0.024372806157743176,
+   "proposer_payment_tx": "0xf787ea59c5eb47481cf8d5c1e7255183a277ae2284dd8d45fd9bf20ec01b5da7",
+   "bot_tx_in_winning_block": null,
+   "escalation": [
+    [
+     -9022,
+     0.002924842405966856
+    ],
+    [
+     -8697,
+     0.002926420738824281
+    ],
+    [
+     -8078,
+     0.003353804438824281
+    ],
+    [
+     -7884,
+     0.003421433525024613
+    ],
+    [
+     -7516,
+     0.003678195300382659
+    ],
+    [
+     -7175,
+     0.003918606234243267
+    ],
+    [
+     -6424,
+     0.004072610727875728
+    ],
+    [
+     -6018,
+     0.005416689388771841
+    ],
+    [
+     -5186,
+     0.00595863611899076
+    ],
+    [
+     -4509,
+     0.006434150502087541
+    ],
+    [
+     -4195,
+     0.006480763502087541
+    ],
+    [
+     -3958,
+     0.006711471885608132
+    ],
+    [
+     -3764,
+     0.007067396665438791
+    ],
+    [
+     -3068,
+     0.007354373760388114
+    ],
+    [
+     -2897,
+     0.009130704137291624
+    ],
+    [
+     -2546,
+     0.009375539908422674
+    ],
+    [
+     -2262,
+     0.009503122022857172
+    ],
+    [
+     -2099,
+     0.009534164046419888
+    ],
+    [
+     -2097,
+     0.009552193821908
+    ],
+    [
+     -1936,
+     0.009591448979599824
+    ],
+    [
+     -1600,
+     0.009861074508136704
+    ],
+    [
+     -1596,
+     0.009871705464455071
+    ],
+    [
+     -981,
+     0.00999014617685015
+    ],
+    [
+     -976,
+     0.010237514425013396
+    ],
+    [
+     -807,
+     0.010871705464455072
+    ],
+    [
+     -706,
+     0.011237514425013397
+    ],
+    [
+     -83,
+     0.0114709010203775
+    ],
+    [
+     -55,
+     0.011474083059390187
+    ],
+    [
+     206,
+     0.011623037263987612
+    ],
+    [
+     414,
+     0.012795244469369886
+    ],
+    [
+     520,
+     0.013369738716939887
+    ],
+    [
+     969,
+     0.013556730597375303
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/curve-vyper-2023/race_17807830.json",
+    "relay_bids:flashbots": "full cache only (not published)",
+    "relay_delivered:ultrasound": "full cache only (not published)"
+   },
+   "_missing_raw": []
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": null,
+   "gross_loot_method": "no bot tx in this sub-race",
+   "captured_native": {
+    "amount": null,
+    "unit": null,
+    "desc": "no bot"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": null,
+   "priority_fee_paid_eth": null,
+   "builder_refund_to_bot_eth": null,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": null,
+   "loot_note": "no bot tx; for reference the sole actor's own exploit tx (gas used 11,366,004) paid 0.011366 ETH priority fee (1 gwei) and sent no ETH to its EOA directly; the net take is not summed (token and ETH flows pass through its contract, e.g. the pool paid 33,680.49 ETH to the contract in the tx before the flash loan was repaid)."
+  },
+  "fate": {
+   "return_status": "unknown",
+   "returned_by_bot_eth": null,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": null,
+   "returned_to": null,
+   "returned_desc": "not-applicable: no bot in this sub-race; no return recorded for this sole actor in the saved data (not searched beyond the incident file).",
+   "bounty_kept_eth": null,
+   "bounty_desc": null,
+   "kept_by_bot_eth": null,
+   "returned_txs": [],
+   "public_statement": null,
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "evidence_notes": [
+   "The attacker's deploy is at 17807829 idx 84 (incident.json; deploy tx hash not recorded there) and the attack at 17807830 idx 6; with a 11.37M-gas tx at 1 gwei priority the attacker paid builders only 0.0114 ETH (recomputed).",
+   "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "auction tooling's 'post-hack trade' label for tx 0x2e7dc8b2 is wrong in the opposite direction: it is the original CRV/ETH reentrancy attack."
+  ],
+  "incident_dir": "incidents/curve-vyper-2023",
+  "discrepancies": [
+   "auction tooling reading of 0x2e7dc8b2 as a 'post-hack trade' is rejected; it is the CRV/ETH pool's first-wave exploit (incident.json w3_claims_checked)."
+  ],
+  "raw_refs": {
+   "attacker.funding_tx": "full cache only (not published)",
+   "attacker_block": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ]
+  },
+  "rawref_gaps": []
+ }
+]

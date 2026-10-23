@@ -1,0 +1,494 @@
+{
+ "slug": "defiplaza-2024",
+ "note": "block-level events share the slot-start timestamp; 'precision': ms (mempool/relay clocks), s (block time), block, day",
+ "events": [
+  {
+   "t_utc_ms": 1707130259000,
+   "utc": "2024-02-05T10:50:59Z",
+   "precision": "s",
+   "kind": "fund",
+   "actor": "attacker 0x14b362d2",
+   "detail": "0.9857 ETH from Tornado Cash 1 ETH pool (internal tx; block 19161592); second 0.9873 ETH at 10:57:59",
+   "tx": "0x4c27e806ded2db44ae20aeb55aab332f427366bbcffefbb31e4016851ada1e1c",
+   "raw_ref": "site/raw/etherscan/p2_atk_txlistinternal.json"
+  },
+  {
+   "t_utc_ms": 1720184891000,
+   "utc": "2024-07-05T13:08:11Z",
+   "precision": "s",
+   "kind": "fund",
+   "actor": "unknown -> 0x907f8529 (possible second attacker EOA)",
+   "detail": "0.1 ETH from 0x077d360f11... at 13:08:11 (block 20240502)",
+   "tx": "0x795f04e8345e",
+   "raw_ref": "site/raw/etherscan/p2_907f_txlist.json"
+  },
+  {
+   "t_utc_ms": 1720185325099,
+   "utc": "2024-07-05T13:15:25.099Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "blocksmith.org",
+   "detail": "first Flashbots-relay bid for slot 9446776 (0.0052 ETH); 73 bids from 9 builders in total",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json"
+  },
+  {
+   "t_utc_ms": 1720185327984,
+   "utc": "2024-07-05T13:15:27.984Z",
+   "precision": "ms",
+   "kind": "mempool_seen",
+   "actor": "0x907f8529",
+   "detail": "contract-creation tx with byte-identical initcode to the attacker's deploy, nonce 0, tip 1 gwei (lands at idx 219 of block 20240540)",
+   "tx": "0xbb5dffb00d103d5b9ef3a29eb01c166cd766265fe251e0bd89863d7f2d96ff2a",
+   "raw_ref": "full cache only (not published)",
+   "per_source": [
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1720185327984
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1720185327987
+    },
+    {
+     "source": "local",
+     "first_seen_ms": 1720185328020
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1720185328828
+    }
+   ],
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185329054,
+   "utc": "2024-07-05T13:15:29.054Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "last >4.5 ETH bid before the attacker txs appear: 4.9842 ETH, 139 tx (ordinary block, no incident content)",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json"
+  },
+  {
+   "t_utc_ms": 1720185329185,
+   "utc": "2024-07-05T13:15:29.185Z",
+   "precision": "ms",
+   "kind": "mempool_seen",
+   "actor": "attacker 0x14b362d2",
+   "detail": "deploy of attack contract (nonce 12, tip 9.32 gwei) first seen by 4 of 4 dumpster sources: local/bloxroute .185, chainbound .189, mempoolguru 30.030",
+   "tx": "0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0",
+   "raw_ref": "full cache only (not published)",
+   "per_source": [
+    {
+     "source": "local",
+     "first_seen_ms": 1720185329185
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1720185329185
+    },
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1720185329189
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1720185330030
+    }
+   ],
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185329185,
+   "utc": "2024-07-05T13:15:29.185Z",
+   "precision": "ms",
+   "kind": "mempool_seen",
+   "actor": "attacker 0x14b362d2",
+   "detail": "run() on 0xa4e8969b (nonce 13, tip 8.94 gwei) first seen in the same millisecond as the deploy; sent as a pair",
+   "tx": "0xe00b0998d71b0e657379be196babd1637a653c100e8162853ca6616c3970790d",
+   "raw_ref": "full cache only (not published)",
+   "per_source": [
+    {
+     "source": "local",
+     "first_seen_ms": 1720185329185
+    },
+    {
+     "source": "bloxroute",
+     "first_seen_ms": 1720185329185
+    },
+    {
+     "source": "chainbound",
+     "first_seen_ms": 1720185329189
+    },
+    {
+     "source": "mempoolguru",
+     "first_seen_ms": 1720185330590
+    }
+   ],
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185329789,
+   "utc": "2024-07-05T13:15:29.789Z",
+   "precision": "ms",
+   "kind": "mempool_seen",
+   "actor": "attacker 0x14b362d2",
+   "detail": "two lower-fee versions of nonce 12 and 13 (never mined) seen 604 ms later",
+   "tx": "0xc1509590b77dc5d3f68b8e61886017e57bbea64e1d725808b8899b893f25c2e6 / 0x9b840783793438e5c0395dcf5d59e7f273bde8fc8bac64c4f7a4844c11d18275",
+   "raw_ref": "full cache only (not published)",
+   "raw_refs": [
+    "full cache only (not published)"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185330914,
+   "utc": "2024-07-05T13:15:30.914Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "6.3575 ETH, 134 tx, gas 29983506, block 0x7e8c44c18d [pubkey 0xa01a0047]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -4086,
+   "block_hash": "0x7e8c44c18d12cadc80527d3959f94f503a502f27882949d027e042e08545feca",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185331251,
+   "utc": "2024-07-05T13:15:31.251Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "6.3576 ETH, 137 tx, gas 29989443, block 0x466b018cc0 [pubkey 0xa01a0047]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -3749,
+   "block_hash": "0x466b018cc0e662732c57d9eca4eab3dfa6d362c37aedd3984a9bfd0f4fc8e318",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185331358,
+   "utc": "2024-07-05T13:15:31.358Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "6.3576 ETH, 137 tx, gas 29989443, block 0x375dcacf7d [pubkey 0xa01a0047]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -3642,
+   "block_hash": "0x375dcacf7d724f0cb96e29825c7e204ffe7e3b7e790a51de505afcb746f162e5",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332198,
+   "utc": "2024-07-05T13:15:32.198Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "6.9829 ETH, 14 tx, gas 12223622, block 0x390719e013 [pubkey 0x81476ce9]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2802,
+   "block_hash": "0x390719e013f6f0d2c69e1253639a37f853a8c1b8469854c74daec3a1f93a4616",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332527,
+   "utc": "2024-07-05T13:15:32.527Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "builder0x69",
+   "detail": "18.1124 ETH, 111 tx, gas 23070904, block 0xbf839e76c0 [pubkey 0xa4fb63c2]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2473,
+   "block_hash": "0xbf839e76c0e2d36db55d80c820513afd3c8d52947482b1562e16d0fa9a8d09da",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332661,
+   "utc": "2024-07-05T13:15:32.661Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "18.6043 ETH, 14 tx, gas 12223622, block 0x5ce2c23f7d [pubkey 0x81476ce9]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2339,
+   "block_hash": "0x5ce2c23f7d12b735de23948e49ea82adaa54bbf57ecc5e4236ed5918661380bb",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332682,
+   "utc": "2024-07-05T13:15:32.682Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "18.6043 ETH, 14 tx, gas 12223622, block 0x7e604ce722 [pubkey 0xad251e6b]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2318,
+   "block_hash": "0x7e604ce722d6938f416750318b88a4f3f276b610f6b7b325dabbda33a64294c5",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332739,
+   "utc": "2024-07-05T13:15:32.739Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "60.2643 ETH, 33 tx, gas 22680531, block 0x36e8d48f35 [pubkey 0xa03a000b]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2261,
+   "block_hash": "0x36e8d48f35381af73c5ea84987f24786a72feeb2e66d86d0ba5a47d6575c258d",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332740,
+   "utc": "2024-07-05T13:15:32.740Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "60.2664 ETH, 39 tx, gas 23676154, block 0xce91642cf1 [pubkey 0xa02a0054]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2260,
+   "block_hash": "0xce91642cf18117b6865ff910cb0491d4e988ebe2942ebab996773f72839a059f",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332798,
+   "utc": "2024-07-05T13:15:32.798Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "62.4326 ETH, 3 tx, gas 11088283, block 0xde367dbef6 [pubkey 0xa01a0047]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2202,
+   "block_hash": "0xde367dbef64d499cd4fd9b707c72ba859e25144c9e389e14620fef895878676e",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332802,
+   "utc": "2024-07-05T13:15:32.802Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "60.2736 ETH, 116 tx, gas 29995117, block 0x387060e596 [pubkey 0xa02a0054]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2198,
+   "block_hash": "0x387060e59606581698f5d5adbfc5946b180d485d10b4198acf38c84593563242",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332814,
+   "utc": "2024-07-05T13:15:32.814Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "62.4928 ETH, 140 tx, gas 29987564, block 0x1916a2e663 [pubkey 0xa01a0047]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2186,
+   "block_hash": "0x1916a2e663e6d3cb4ed7e4f92ac130803b2cc94fd3329f7e3680c280790a9323",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332821,
+   "utc": "2024-07-05T13:15:32.821Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "Flashbots",
+   "detail": "60.2738 ETH, 140 tx, gas 29987564, block 0x9d8af6fa02 [pubkey 0xa03a000b]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2179,
+   "block_hash": "0x9d8af6fa02dbe9642f04ad95a078a8e3dc220e2703e73fb639af312bc5ff0801",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185332898,
+   "utc": "2024-07-05T13:15:32.898Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "62.4813 ETH, 14 tx, gas 12223622, block 0x26c0418ca1 [pubkey 0x81476ce9]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -2102,
+   "block_hash": "0x26c0418ca1f5663277ce0f1a65e38eae6a8676be85254368b48dc879a2117b59",
+   "is_winning": false
+  },
+  {
+   "t_utc_ms": 1720185333003,
+   "utc": "2024-07-05T13:15:33.003Z",
+   "precision": "ms",
+   "kind": "bid",
+   "actor": "I can haz block?",
+   "detail": "62.5409 ETH, 14 tx, gas 12223622, block 0xa298fd4c2f (WINNING block hash, delivered by Flashbots + Ultra Sound) [pubkey 0x81476ce9]",
+   "raw_ref": "site/raw/relay-flashbots/bids_block20240539.json",
+   "t_rel_slot_ms": -1997,
+   "block_hash": "0xa298fd4c2f077318d4b156262bddbee231180527d4744542ea5ebdb2a76d61d5",
+   "is_winning": true
+  },
+  {
+   "t_utc_ms": 1720185335000,
+   "utc": "2024-07-05T13:15:35.000Z",
+   "precision": "ms",
+   "kind": "block",
+   "actor": "proposer (Lido-linked fee recipient)",
+   "detail": "block 20240539 timestamp (slot 9446776): pos 0 Yoink 0xa245deda (66.318 ETH coinbase), pos 3 attacker deploy, pos 11 second Yoink tx, pos 12 builder refund 4.761 ETH to bot, pos 13 builder -> proposer 62.5409 ETH",
+   "tx": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+   "raw_ref": "site/raw/rpc/block_20240539.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_block_20240539.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185335000,
+   "utc": "2024-07-05T13:15:35Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "Yoink 0xfde0d157 -> 0x6980a47b",
+   "detail": "pos 0: Balancer flashLoan + Aave flashLoan, 25 calls to DeFi Plaza 0xe68c1d72, coinbase.transfer 66.3180915 ETH, sweep to vault",
+   "tx": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+   "raw_ref": "site/raw/rpc/trace_0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a.json",
+   "raw_refs": [
+    "site/raw/rpc/eth_getTransactionByHash_0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1720185335000,
+   "utc": "2024-07-05T13:15:35Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0x14b362d2",
+   "detail": "pos 3: deploy of attack contract 0xa4e8969b lands (status 1)",
+   "tx": "0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0",
+   "raw_ref": "site/raw/rpc/block_20240539.json"
+  },
+  {
+   "t_utc_ms": 1720185335000,
+   "utc": "2024-07-05T13:15:35Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "builder 0x229b8325",
+   "detail": "pos 12: refund 4.761056907 ETH to Yoink bot",
+   "tx": "0x2fc1684935de935bf8daf035fb8a70b0e396af334e328c76b5ad6569dd618ef8",
+   "raw_ref": "site/raw/rpc/block_20240539.json"
+  },
+  {
+   "t_utc_ms": 1720185335000,
+   "utc": "2024-07-05T13:15:35Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "builder 0x229b8325",
+   "detail": "pos 13: proposer payment 62.540934666 ETH to 0x388C818C (Lido Execution Layer Rewards Vault)",
+   "tx": "0x454219fb25d36590279fd9c17fccb5b5a29acbbb3f90f318a3e4d9d2ad104e7c",
+   "raw_ref": "site/raw/rpc/block_20240539.json"
+  },
+  {
+   "t_utc_ms": 1720185347000,
+   "utc": "2024-07-05T13:15:47Z",
+   "precision": "block",
+   "kind": "tx",
+   "actor": "attacker 0x14b362d2",
+   "detail": "block 20240540 pos 27: run() lands one block later and reverts (nothing left to drain); fork replay shows it would have succeeded on the pre-Yoink state",
+   "tx": "0xe00b0998d71b0e657379be196babd1637a653c100e8162853ca6616c3970790d",
+   "raw_ref": "site/raw/rpc/block_20240540.json"
+  },
+  {
+   "t_utc_ms": 1720206023000,
+   "utc": "2024-07-05T19:00:23Z",
+   "precision": "s",
+   "kind": "message",
+   "actor": "DeFi Plaza deployer 0x0422afb5 -> Yoink owner 0xfde0d157",
+   "detail": "on-chain text: 'The DefiPlaza exchange was exploited in transaction 0xa245deda... but the attacker was front run by your MEV bot. We're looking to discuss return of stolen funds ... in return for a bounty ... via BlockScan chat'",
+   "tx": "0x1e34998e96183aa6c0e3eae0dc242008e5ce8d19ee4f5b48d169297d42981f60",
+   "raw_ref": "site/raw/etherscan/p2_0422_txlist.json"
+  },
+  {
+   "t_utc_ms": 1720208147000,
+   "utc": "2024-07-05T19:35:47Z",
+   "precision": "s",
+   "kind": "tx",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "USDT swept to vault 0xc70f00cd then sold (Universal Router): 13,504.300602 USDT -> 4.519460 ETH",
+   "tx": "0xd7ceb45c4205312a557ac05844d92e302d2e03652a62ee236ac7ae116880159c",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_0xd7ceb45c4205312a557ac05844d92e302d2e03652a62ee236ac7ae116880159c.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1720208231000,
+   "utc": "2024-07-05T19:37:11Z",
+   "precision": "s",
+   "kind": "tx",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "WBTC swept to vault then sold: 0.24367467 WBTC -> 4.612157 ETH",
+   "tx": "0x8db1e512b06b38cae784cd68646a538f6c383056387d56f3cb89f12710c22111",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json",
+   "raw_refs": [
+    "site/raw/rpc/trace_0x8db1e512b06b38cae784cd68646a538f6c383056387d56f3cb89f12710c22111.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1720208375000,
+   "utc": "2024-07-05T19:39:35Z",
+   "precision": "s",
+   "kind": "tx",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "USDC swept to vault then sold (12,808.734214 of 13,409.070847): 12,808.734214 USDC -> 4.286220 ETH",
+   "tx": "0x50001c27ca5f4a5a89ad85cd48b240e7cfa4fd9be1a012139fb239ca79659c31",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json",
+   "raw_refs": [
+    "site/raw/etherscan/p2_vault_txlist_20240539_20400000.json"
+   ]
+  },
+  {
+   "t_utc_ms": 1720208543000,
+   "utc": "2024-07-05T19:42:23Z",
+   "precision": "s",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "RETURN to DeFi Plaza deployer 0x0422afb5481a21b3fea2c94e08dfad45da1975b7: 600.336633 USDC",
+   "tx": "0xb1ddf7e262ceec136f39dcc36509e0203b1536938a6f3c5ae1a26bd0aeba39f0",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json"
+  },
+  {
+   "t_utc_ms": 1720208663000,
+   "utc": "2024-07-05T19:44:23Z",
+   "precision": "s",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "RETURN: 13,413.796570 DAI",
+   "tx": "0xd52bc63c573ad8395635e5616576a1f111073e2c232b4ead0cbfb155aaede382",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json"
+  },
+  {
+   "t_utc_ms": 1720208759000,
+   "utc": "2024-07-05T19:45:59Z",
+   "precision": "s",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "RETURN: 257,253.140376 DFP2",
+   "tx": "0xfab945a043d69dcc9c13a39a0ac06b69baed071f205942ea04d7100d172e6c7b",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json"
+  },
+  {
+   "t_utc_ms": 1720208855000,
+   "utc": "2024-07-05T19:47:35Z",
+   "precision": "s",
+   "kind": "return",
+   "actor": "Yoink vault 0xc70f00cd",
+   "detail": "RETURN: 121,266.679431 eXRD",
+   "tx": "0x140d107887461556deaa0839875a8417b5e8abcff9a12e37fd647ea95ee9f533",
+   "raw_ref": "site/raw/etherscan/p2_vault_tokentx_20240539_20400000.json"
+  },
+  {
+   "t_utc_ms": 1725103080000,
+   "utc": "2024-08-31",
+   "precision": "day",
+   "kind": "message",
+   "actor": "DeFi Plaza team",
+   "detail": "Lido forum RFC posted (2024-08-31 ~11:18 local forum time): 'The attacker was front-run, leading to ... 62.5 ETH ending up with the Lido Execution Rewards Vault'; 'We have contacted the front runner and they promptly returned their profits'",
+   "raw_ref": "site/raw/web-p2/lido_defiplaza_rfc.json"
+  }
+ ]
+}

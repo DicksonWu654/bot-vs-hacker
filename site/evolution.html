@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Has the dark forest evolved? | The Bot Beat the Hacker</title>
+<meta name="description" content="Attackers went private, started doing everything in one transaction, and stopped leaving bots a window. What the numbers show, and what they cannot.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main id="main" class="wrap">
+  <header class="ihead">
+    <h1>Has the dark forest evolved?</h1>
+    <p class="lede" style="margin-top:20px" id="lede">Loading the measurements&hellip;</p>
+    <div class="banner" id="banner" role="note" hidden></div>
+  </header>
+
+  <div class="stats" id="stats" role="list" style="margin-top:28px"></div>
+
+  <section class="fig" aria-labelledby="h-meas">
+    <h2 id="h-meas">What can be measured, and when</h2>
+    <div class="prose"><p>The public mempool archive we rely on begins on 7 August 2023. Before that, nobody saved which transactions were pending, so for older exploits we have in-block evidence only. Every number below says which part of the timeline it comes from.</p></div>
+    <div class="chart" id="c-meas"></div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-a">
+    <h2 id="h-a">Almost no exploit transaction shows up in the public archive</h2>
+    <div class="figcols">
+      <div class="prose"><p id="a-text"></p><p class="small muted">The comparison group matters. A transaction missing from the archive could be private or simply missed by it, so we count how many <em>other</em> transactions in the same blocks were in the archive. If the archive were poor, the blue line would be low too.</p></div>
+      <div><div class="chart" id="c-a"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-a"></div></details></div>
+    </div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-b">
+    <h2 id="h-b">More attacks happen in a single transaction</h2>
+    <div class="figcols">
+      <div class="prose"><p id="b-text"></p><p class="small muted">A constructor-only exploit runs entirely while its contract is being created. There is nothing pending to copy except the whole deployment, so a bot has to rebuild the contract with its own addresses. Whiskers are 95% Wilson intervals. Years with fewer than ten exploits are drawn faint.</p></div>
+      <div><div class="chart" id="c-b"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-b"></div></details></div>
+    </div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-c">
+    <h2 id="h-c">The window between deploy and attack is shrinking</h2>
+    <div class="figcols">
+      <div class="prose"><p id="c-text"></p><p class="small muted">Only exploits whose attack contract was deployed within the previous seven days are drawn. A zero gap means the same block or the same transaction, so a bot sees nothing before the attack lands.</p></div>
+      <div><div class="chart" id="c-c"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-c"></div></details></div>
+    </div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-d">
+    <h2 id="h-d">Attackers stopped bidding in the gas auction</h2>
+    <div class="figcols">
+      <div class="prose"><p id="d-text"></p><p class="small muted">The priority fee is what the transaction pays on top of the base fee. It collapsed for everyone after the Merge, so the useful comparison is against the block's own median. Exploits with a zero tip cannot be drawn on a log scale; they are counted in the table.</p></div>
+      <div><div class="chart" id="c-d"></div><details class="small"><summary>Data table</summary><div style="overflow-x:auto" id="t-d"></div></details></div>
+    </div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-e">
+    <h2 id="h-e">What the correction removed</h2>
+    <div class="prose" id="e-text"></div>
+    <div style="overflow-x:auto"><table class="ops" id="t-e"></table></div>
+  </section>
+
+  <section class="fig" aria-labelledby="h-f">
+    <h2 id="h-f">Definitions</h2>
+    <dl class="defs">
+      <dt>exposure: public or private</dt><dd>An exploit transaction is <em>public</em> if the mempool archive saw it before its block was proposed. It is <em>private</em> if the archive covered that day, saw many of the other transactions in the same block, and never saw this one. Otherwise the label is unknown. Private here means "not in the archive", which is strong evidence and not proof.</dd>
+      <dt>ordinary transactions in the same blocks</dt><dd>The share of other transactions in the exploit's block that the archive saw. This is the control for the archive's coverage on that day.</dd>
+      <dt>constructor-only exploit</dt><dd>The attack runs inside the attack contract's constructor, so deployment and attack are one transaction.</dd>
+      <dt>deploy-to-attack gap</dt><dd>Seconds between the block that created the attack contract and the block of the attack, only for contracts created within seven days before.</dd>
+      <dt>tip</dt><dd>Effective priority fee per gas, in gwei, of the first attack transaction. The block median is the median tip across all transactions in that block.</dd>
+      <dt>sample</dt><dd>Exploits listed in the DeFiHackLabs reproduction repository on Ethereum mainnet. It is a sample of public, reproduced incidents, not of all attacks.</dd>
+    </dl>
+  </section>
+
+  <section class="fig" aria-labelledby="h-g">
+    <h2 id="h-g">Download the data</h2>
+    <p class="small muted">Every figure on this page can be recomputed from these files. The per-exploit file carries a link to each saved response it was built from.</p>
+    <table class="dltable" id="t-dl"></table>
+  </section>
+</main>
+<script src="assets/common.js"></script>
+<script src="assets/evolution.js"></script>
+</body>
+</html>

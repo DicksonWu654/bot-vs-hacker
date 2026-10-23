@@ -1,0 +1,93 @@
+{
+ "selection": "Yoink (operator EOA 0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A), contract generations gen2 0x6980a47b... and gen3 0x80bf7db6... analysed in depth, gen1 0xD050E0A4... compared.",
+ "selection_reason": [
+  "Only shortlisted bot with a confirmed on-chain COPY of an exploit tx: Ronin 2024-08-06, attacker's public-mempool tx 0xb7c3f85a... vs Yoink's tx 0xbce5b854...: identical 1956-byte calldata except 3 of 61 words (2 recipient words, 1 quantity word), signatures byte-identical.",
+  "Second independent confirmed front-run (Kelp rsETH 2026-09-15, tx 0x0e7680b0..., position 0) plus coordinator literature sweep lists 10-12 incidents over 4 years and 3 contract generations, so evolution can be shown.",
+  "Runtime bytecode is immutable and identical at incident blocks and today (eth_getCode at N-1, N, latest) - no redeploy ambiguity. Unverified on Etherscan, but compact (9.9-10.3 KB), decompilable; all 17,783 gen2/gen3 inputs parse to the exact byte with the recovered format.",
+  "Searcher and builder are the same entity in several blocks (coinbase 0x229b8325... refunds the bot in-block), which makes the 'bribe' mechanics unusually visible.",
+  "No owner-rule conflict (not c0ffeebabe)."
+ ],
+ "candidates": [
+  {
+   "rank": 1,
+   "bot": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "vault_eoa": "0xc70f00cd7e461686b04b0e912e309beca8b80ea0",
+   "contracts": {
+    "gen1": "0xd050e0a4838d74769228b49dff97241b4ef3805d (created 2022-12-02, block 16097930)",
+    "gen2": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0 (created 2023-08-31, block 18036360)",
+    "gen3": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4 (created 2025-02-08, block 21805063)"
+   },
+   "builder_fee_recipients": [
+    "0x229b8325bb9ac04602898b7e8989998710235d5f (2024 Yoink builder, in-block refunds to bot)",
+    "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e (2026 blocks; attribution to Yoink NOT proven)"
+   ],
+   "incident_txs": {
+    "ronin_usdc_leg_2024-08-06": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8 (block 20468848, idx 1)",
+    "ronin_attacker_tx_copied": "0xb7c3f85abd0b9ede7b64868eeb6778ea4731adb1d49f8640b7e7234e470e96c1 (mempool first seen 2024-08-06 10:11:40.233 UTC, reverted in block 20468849)",
+    "kelp_rseth_2026-09-15": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705 (block 25980525, idx 0)",
+    "defiplaza_2024-07-05": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a (block 20240539, idx 0, gen2)",
+    "uncx_2026-10-14": "0xbf7e5182694d0703051951520c176135dac63d772b328468ce783b37dd7a8a7c (block 26191920, idx 0, gen3)"
+   },
+   "evidence_level": "confirmed-onchain (Ronin copy); confirmed-onchain front-run in-block, discovery method unknown (Kelp)",
+   "bytecode": "unverified on Etherscan; decompiled",
+   "verdict": "SELECTED"
+  },
+  {
+   "rank": 2,
+   "bot": "'0xa57' family (Earning.Farm 2022-10-14)",
+   "eoa": "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e (per literature sweep)",
+   "contracts": [
+    "0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf (deployed 2019, 3,136 bytes, unverified, execute(address,bytes)-style, called by 20+ different EOAs)",
+    "0xa69babef1ca67a37ffaf7a485dfff3382056e78c (per literature sweep)"
+   ],
+   "incident_txs": "not located in this study (web3isgoinggreat/MevRefund: bot made 480 ETH front-running one of the exploiter's flash-loan txs); no >150 ETH internal transfer to 0xa57bd001 found in blocks 15742627-15790000",
+   "evidence_level": "reported",
+   "verdict": "Not chosen: shared multi-caller executor (the intelligence sits off-chain), no incident tx confirmed, tiny bytecode would give a thin write-up. Fallback target."
+  },
+  {
+   "rank": 3,
+   "bot": "DODO 'Individual B' (2021-03-08/09)",
+   "eoa": "0x3554187576ec863af63eea81d25fbf6d3f3f13fc",
+   "contracts": [
+    "0x00000000e84f2bbdfb129ed6e495c7f879f3e634 (3,613 bytes)"
+   ],
+   "incident_txs": [
+    "0xff9b3b2cb09d149762fcffc56ef71362bec1ef6a7d68727155c2d68f395ac1e8 (block 12000022, 243 gwei)",
+    "0x0b062361e16a2ea0942cc1b4462b6584208c8c864609ff73aaa640aaa2d92428 (block 12000102, 1883 gwei)",
+    "0x561f7ccb27b9928df33fa97c2fb99ea3750593e908f9f0f8baf22ec7ca0c5c4a (block 12001452, 93,148 gwei)"
+   ],
+   "evidence_level": "reported (rekt.news); txs and gas prices verified on-chain, but whether B copied A's calldata or found the bug itself is not shown",
+   "verdict": "Good historical comparison (pre-Flashbots gas war, CHI gas token, vanity address); not chosen because no replay of someone else's calldata is demonstrated."
+  },
+  {
+   "rank": 4,
+   "bot": "Ronin ETH-leg searcher (2024-08-06)",
+   "eoa": "0x1a56abf4fe95e21c1704cbd5ffc79ea1effa3cc1",
+   "contracts": [
+    "0x4ab12e7ce31857ee022f273e8580f73335a73c0b"
+   ],
+   "incident_txs": [
+    "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb (block 20468679, idx 0, selector 0x972547d7, builder coinbase 0x95222290...)"
+   ],
+   "evidence_level": "confirmed-onchain that it is NOT Yoink (coordinator note labelled it a Yoink example; sender/contract differ). Not analysed here.",
+   "verdict": "Unanalysed; possible second subject."
+  },
+  {
+   "rank": 5,
+   "bot": "SHOCO frontrunner",
+   "eoa": "0xE71AcA93C0E0721F8250D2d0e4F883AA1C020361",
+   "contracts": [
+    "0x000000000000660deF84E69995117c0176bA446E (shared by several EOAs)"
+   ],
+   "incident_txs": "shoco-2023-01 (per literature sweep)",
+   "evidence_level": "reported (literature sweep)",
+   "verdict": "Low priority: shared commercial-looking bot."
+  },
+  {
+   "rank": -1,
+   "bot": "c0ffeebabe.eth",
+   "verdict": "EXCLUDED by publication policy; nothing about its bot or contracts was analysed."
+  }
+ ]
+}

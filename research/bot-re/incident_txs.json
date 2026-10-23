@@ -1,0 +1,322 @@
+{
+ "kelp": {
+  "hash": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b072dde03909d43fcfd98a8705",
+  "block": 25980525,
+  "idx": 0,
+  "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+  "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+  "status": 1,
+  "msg_value": 999,
+  "time": "2026-09-15T04:38:47+00:00",
+  "coinbase": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+  "selector": "0x9846cd9e",
+  "ops": [
+   [
+    "CALL",
+    "0x882d6bfa",
+    "0x10605ee48f"
+   ],
+   [
+    "V4_SWAP",
+    null,
+    "0xa1290d69c6"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0xa1290d69c6"
+   ]
+  ],
+  "parse_ok": true,
+  "eth_to_coinbase": 18.93122243326834,
+  "eth_in": 18.95017260587421
+ },
+ "uncx": {
+  "hash": "0xbf7e5182694d0703051951520c176135dac63d772b328468ce783b37dd7a8a7c",
+  "block": 26191920,
+  "idx": 0,
+  "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+  "to": "0x80bf7db69556d9521c03461978b8fc731dbbd4e4",
+  "status": 1,
+  "msg_value": 999,
+  "time": "2026-10-14T16:24:59+00:00",
+  "coinbase": "0x6c42a0b5d13059fa36d5567ab04f83bab57bbf0e",
+  "selector": "0x9846cd9e",
+  "ops": [
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x140007c655"
+   ],
+   [
+    "CALL",
+    "0x022c0d9f",
+    "0xca984e344f"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x140007c655"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0x140007c655"
+   ]
+  ],
+  "parse_ok": true,
+  "eth_to_coinbase": 8.131967287259824,
+  "eth_in": 9.490107394654478
+ },
+ "defiplaza": {
+  "hash": "0xa245deda8553c6e4c575baff9b50ef35abf4c8f990f8f36897696f896f240e3a",
+  "block": 20240539,
+  "idx": 0,
+  "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+  "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+  "status": 1,
+  "msg_value": 663180915,
+  "time": "2024-07-05T13:15:35+00:00",
+  "coinbase": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+  "selector": "0x9846cd9e",
+  "ops": [
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x6b175474e8"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0xc00e94cb66"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0xd533a94974"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0xd533a94974"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x7fc66500c8"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x514910771a"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x090185f213"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x4e3fbd56cd"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x6468e79a80"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x6b35950687"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x2260fac5e5"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x514910771a"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x7d1afa7b71"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x9f8f72aa93"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x2260fac5e5"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0xdac17f958d"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x9f8f72aa93"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x0bc529c00c"
+   ],
+   [
+    "CALL",
+    "0x095ea7b3",
+    "0x2f57430a6c"
+   ],
+   [
+    "CALL",
+    "0x5c38449e",
+    "0xba12222222"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0x514910771a"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x6b35950687"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x4e3fbd56cd"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0x7d1afa7b71"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x2f57430a6c"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x090185f213"
+   ],
+   [
+    "V2_SELL",
+    null,
+    "0x0bc529c00c"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0xd533a94974"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0x9f8f72aa93"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0xc00e94cb66"
+   ],
+   [
+    "V3_SELL",
+    null,
+    "0x6468e79a80"
+   ],
+   [
+    "UNWRAP",
+    null,
+    ""
+   ],
+   [
+    "SWEEP",
+    null,
+    "0xdac17f958d"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0x2260fac5e5"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0xa0b86991c6"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0x6b175474e8"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0x2f57430a6c"
+   ],
+   [
+    "SWEEP",
+    null,
+    "0x6468e79a80"
+   ]
+  ],
+  "parse_ok": true,
+  "eth_to_coinbase": 66.31809150000001,
+  "eth_in": 69145.68221941868
+ },
+ "ronin_eth_leg": {
+  "hash": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb",
+  "block": 20468679,
+  "idx": 0,
+  "from": "0x1a56abf4fe95e21c1704cbd5ffc79ea1effa3cc1",
+  "to": "0x4ab12e7ce31857ee022f273e8580f73335a73c0b",
+  "status": 1,
+  "msg_value": 1,
+  "time": "2024-08-06T09:37:23+00:00",
+  "coinbase": "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+  "selector": "0x972547d7"
+ },
+ "ronin_usdc_leg": {
+  "hash": "0xbce5b8548db486c561948e8a177c8ccaa72810f972cee3909ea50af015a60ad8",
+  "block": 20468848,
+  "idx": 1,
+  "from": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+  "to": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+  "status": 1,
+  "msg_value": 999,
+  "time": "2024-08-06T10:11:47+00:00",
+  "coinbase": "0x229b8325bb9ac04602898b7e8989998710235d5f",
+  "selector": "0x9846cd9e",
+  "ops": [
+   [
+    "CALL",
+    "0x4d0d6673",
+    "0x64192819ac"
+   ],
+   [
+    "CALL",
+    "0x128acb08",
+    "0x88e6a0c2dd"
+   ],
+   [
+    "CALL",
+    "0x2e1a7d4d",
+    "0xc02aaa39b2"
+   ]
+  ],
+  "parse_ok": true,
+  "eth_to_coinbase": 795.615040934472,
+  "eth_in": 796.4114523868589
+ }
+}

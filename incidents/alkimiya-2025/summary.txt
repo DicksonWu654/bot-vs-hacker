@@ -1,0 +1,11 @@
+Alkimiya SilicaPools, 2025-03-28 (Ethereum) - verdict: confirmed-onchain front-run, with a return and a bounty
+
+The original attacker is EOA 0xf6ffba5c...2b6e (Tornado-funded in 2023). Over 52 minutes (blocks 22146080 to 22146338) it iterated through four contract designs and deployed the final helpers: a fake pool-"index" contract 0x9188738a (block 22146328) and the attack contract 0x69af47f3 (block 22146335). Its attack tx 0xc8875004 (Morpho 10 WBTC flash loan, then collateralizedMint with a uint128 cast bug, then redeemShort) landed in block 22146341 and reverted. The pool had been emptied one block earlier.
+
+Yoink's tx 0x9b9a6dd0 sits at position 0 of block 22146340. Decoded with the bot analysis grammar, it is a Morpho flashLoan with a callback script of 8 CALLs. Those match the attacker's call tree one for one: the same 7 SilicaPools/index calls, with only the caller contract address and the timestamp words changed (0x67e6c18b vs 0x67e6c197). Yoink even reuses the attacker's own deployed index contract. A debug_traceCall of the attacker tx on the block-22146339 state succeeds with exactly +114,015,390 sat WBTC, which is what Yoink took and swapped for 50.885 ETH.
+
+Auction: Yoink's builder "I can haz block?" escalated 0.54 to 2.576 ETH in 70 ms (-1114 to -1048 ms) and won at -891 ms. Yoink bribed 50.834 ETH (999 per mille) to the coinbase. The builder refunded 48.278 ETH to Yoink in the same block and paid the proposer only 2.576 ETH.
+
+Funds: on 30 March Yoink sent 48.3287 ETH to a Safe linked to Alkimiya (inferred). The Safe sent 6.3287 ETH (13%) back the next day. The net return is 42.0 ETH.
+
+Three facts: (1) DeFiHackLabs lists Yoink's tx as the attack, but the header does name 0xF6ff.. as the original attacker; Verichains and Olympix describe Yoink's tx as the attack. (2) The attacker spent 0.0158 ETH on gas and got nothing. (3) The attacker's txs are absent from mempool-dumpster, so first-seen and how Yoink learned of the attack are UNKNOWN.

@@ -1,0 +1,459 @@
+[
+ {
+  "t_utc": "2023-07-19T05:51:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17725270,
+  "kind": "fund",
+  "actor": "clone exploiter 0x8d67db0b",
+  "detail": "Tornado Cash 1 ETH pool pays 0.98702 ETH to the EOA that will later clone the first attacker's contract",
+  "tx": "0xecdd09dd1e34d0f54909b06408a15719ed4b8b79ddad64e57ffad021e8f6f3de",
+  "raw_ref": "site/raw/rpc-conic/conic_blockhdr_17725270.json"
+ },
+ {
+  "t_utc": "2023-07-21T09:47:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740718,
+  "kind": "fund",
+  "actor": "first ETH-pool attacker 0x10db234e",
+  "detail": "Tornado Cash 1 ETH pool pays 0.98282 ETH",
+  "tx": "0x3334b58cc940fdf77d8cd2027b0869118230bf74bbbdacdb9bdc81af9ededa28",
+  "raw_ref": "site/raw/etherscan/conic_origattacker_txlistinternal.json"
+ },
+ {
+  "t_utc": "2023-07-21T10:22:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740893,
+  "kind": "deploy",
+  "actor": "first ETH-pool attacker 0x10db234e",
+  "detail": "deploys attack contract 0xdac434f8 (21,970-byte creation code), idx 6",
+  "tx": "0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0x4df580b9b4afc34c195f6b18b1468be5354c014294425aabe59150da351d6d74.json"
+ },
+ {
+  "t_utc": "2023-07-21T10:24:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740901,
+  "kind": "tx",
+  "actor": "first ETH-pool attacker 0x10db234e",
+  "detail": "attack tx 0x52558bb0 REVERTS (out of gas in a nested Curve call; gas limit 27.64M); idx 4, builder0x69 block, 13.7 gwei effective tip",
+  "tx": "0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16",
+  "raw_ref": "site/raw/rpc-conic/trace_0x97a8315e942dd180fb90a17b92f7dabd6e8a2e5b9fd5e4a95ee4049ff33d2f16.json"
+ },
+ {
+  "t_utc": "2023-07-21T10:33:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740947,
+  "kind": "tx",
+  "actor": "clone exploiter 0x8d67db0b",
+  "detail": "unwraps 3.15 WETH to ETH for gas",
+  "tx": "0x813f6cb1ae3f745f1bfb21228819afe937b354e4b85194bf4e1b626903c11915",
+  "raw_ref": "site/raw/etherscan/conic_ethattacker_hist_txlistinternal.json"
+ },
+ {
+  "t_utc": "2023-07-21T10:34:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740952,
+  "kind": "deploy",
+  "actor": "clone exploiter 0x8d67db0b",
+  "detail": "deploys 0x743599ba: SAME creation code as the failed attacker's contract except one 20-byte address (offset 1370); idx 3, 51 blocks (~10 min) after the failed attack",
+  "tx": "0x16718a6df144de749035e4763946ad56d3dfaeb5d151a82f913698fa4ae28c3d",
+  "raw_ref": "site/raw/rpc-quotecheck/tx_0x16718a6df144de749035e4763946ad56d3dfaeb5d151a82f913698fa4ae28c3d.json"
+ },
+ {
+  "t_utc": "2023-07-21T10:35:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740955,
+  "kind": "tx",
+  "actor": "clone exploiter 0x8d67db0b",
+  "detail": "attack tx, identical calldata (0x52558bb0; 19700, 240, 3000, 180), idx 0 of an rsync-builder block, 3 gwei tip, 29.5M gas limit / 20.14M used: SUCCESS, 1,724.175 ETH to the EOA",
+  "tx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
+  "raw_ref": "site/raw/rpc/block_17740955.json",
+  "raw_refs": [
+   "site/raw/rpc/trace_block_17740955.json"
+  ]
+ },
+ {
+  "t_utc": "2023-07-21T10:35:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740955,
+  "kind": "bid",
+  "actor": "rsync-builder.xyz",
+  "detail": "winning submission to the Flashbots relay at +231 ms, 0.12459 ETH (proposer payment tx 0xf699a28d in the block's last position); relay delivered-payload record not found for this slot",
+  "raw_ref": "incidents/conic-2023/race_17740955.json",
+  "t_rel_slot_ms": 231
+ },
+ {
+  "t_utc": "2023-07-21T10:40:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17740980,
+  "kind": "return",
+  "actor": "clone exploiter 0x8d67db0b",
+  "detail": "forwards 1,726.59 ETH to 0x3d32c5a2 (not returned)",
+  "tx": "0x388a60c2958cd6dd5f8b9efe8163938700fcdc4ac40b8e70d07d27163b07acf3",
+  "raw_ref": "site/raw/etherscan/conic_ethattacker_after_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-21T18:43:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743378,
+  "kind": "fund",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "Tornado Cash 1 ETH pool pays ~0.97 ETH",
+  "tx": "0x4e2678fd999e9fd403f8c5a0abf7d8e1e062486797e05a3e7288c43f361f2ce1",
+  "raw_ref": "site/raw/etherscan/conic_conic02_attacker_txlistinternal.json"
+ },
+ {
+  "t_utc": "2023-07-21T18:57:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743451,
+  "kind": "fund",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "Tornado Cash 1 ETH pool pays ~0.97 ETH",
+  "tx": "0x41ed3160a526a08b861e8622c75944ac7c0143be674fc409be71f61d9648e118",
+  "raw_ref": "site/raw/etherscan/conic_conic02_attacker_txlistinternal.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:00:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743464,
+  "kind": "deploy",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "deploys attack contract 0x486cb3f6 (idx 98, Titan block)",
+  "tx": "0x90eef27416e85fb1c6acaded14588f1cc244d0ba7b6858f010957ced32d87e6d",
+  "raw_ref": "site/raw/rpc/block_17743464.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:00:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743467,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "setup tx (approvals), idx 84",
+  "tx": "0xc8603387e50e659d128790b827627911b039e986f221eda9124f1e263f2093a0",
+  "raw_ref": "site/raw/rpc/block_17743467.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:01:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743470,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "attack tx: Balancer flash loan 12M USDC / 80,000 WETH / 9M USDT, 4 sandwich rounds on the Conic crvUSD pool; idx 4, 1 gwei tip, 21.66M gas; SUCCESS, +11.5626 ETH",
+  "tx": "0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
+  "raw_ref": "site/raw/rpc/block_17743470.json",
+  "raw_refs": [
+   "site/raw/rpc/receipts_17743470.json"
+  ]
+ },
+ {
+  "t_utc": "2023-07-21T19:01:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743470,
+  "kind": "bid",
+  "actor": "Made on the moon by Blocknative",
+  "detail": "winning bid 0.23792 ETH delivered via Agnostic; 192 Flashbots-relay bids, first at -9.8 s",
+  "raw_ref": "incidents/conic-2023/race_17743470.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:01:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743471,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #1: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.5835 ETH, coinbase 1.6484 to rsync-builder.xyz, gas 0.8594; net 10.0756 ETH",
+  "tx": "0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f",
+  "raw_ref": "site/raw/rpc-conic/trace_0x64910b0a07083119403ce1bb30c94503e99e44c334bdb68f3afea09c834bdd9f.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:01:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743471,
+  "kind": "block",
+  "actor": "rsync-builder.xyz",
+  "detail": "builder pays proposer 1.70579 ETH in the block's last tx; no relay recorded this block",
+  "raw_ref": "site/raw/rpc/block_17743471.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:01:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743472,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #2: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.5626 ETH, coinbase 2.4497 to I can haz block?, gas 0.9541; net 9.1588 ETH",
+  "tx": "0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80",
+  "raw_ref": "site/raw/rpc-conic/trace_0x3af57106166b8568a0ace8d0741cf05355d74d7e7e173f1bab7a4434c6f0ed80.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:01:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743472,
+  "kind": "bid",
+  "actor": "'I can haz block?'",
+  "detail": "winning bid 2.43348 ETH at -1,180 ms (57 Flashbots-relay bids; first at -9,949 ms)",
+  "raw_ref": "incidents/conic-2023/race_17743472.json",
+  "t_rel_slot_ms": -1180
+ },
+ {
+  "t_utc": "2023-07-21T19:02:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743473,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #3: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.5376 ETH, coinbase 2.3445 to I can haz block?, gas 1.0733; net 9.1198 ETH",
+  "tx": "0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd",
+  "raw_ref": "site/raw/rpc-conic/trace_0xcf484ced351166dee819fcf2417e7df6ac826ac6af53c676e28f6bc96f5bcdbd.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:02:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743474,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #4: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.5106 ETH, coinbase 2.6898 to I can haz block?, gas 1.1959; net 8.6250 ETH",
+  "tx": "0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f",
+  "raw_ref": "site/raw/rpc-conic/trace_0x680b7d4947068647b1360904581c843fe6b477e55fe64ece6ef4b733aee12c8f.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:02:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743475,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #5: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.4828 ETH, coinbase 2.4217 to I can haz block?, gas 1.3203; net 8.7408 ETH",
+  "tx": "0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41",
+  "raw_ref": "site/raw/rpc-conic/trace_0x69029760e5907a7a82c9ac008602f6cc719f1e64bf7912c1148bb6dce10cea41.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:02:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743476,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #6: replays the attacker's sandwich via bot 0xd050e0a4; idx 4; gross 12.6568 ETH, coinbase 1.3796 to rsync-builder.xyz, gas 1.4151; net 9.8621 ETH",
+  "tx": "0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308",
+  "raw_ref": "site/raw/rpc-conic/trace_0xad596a612492bc640eca76afd03a03aed9ad91cf98f226624a9d8829e35e9308.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:02:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743477,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #7: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.6505 ETH, coinbase 1.3916 to builder0x69, gas 1.5945; net 9.6644 ETH",
+  "tx": "0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa",
+  "raw_ref": "site/raw/rpc-conic/trace_0xa267ece5e1321e4a51c2a03fb9592e73f79cc13ddc60d8bd7dafd6daf491d7fa.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:03:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743478,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #8: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.6356 ETH, coinbase 2.6661 to I can haz block?, gas 1.7226; net 8.2468 ETH",
+  "tx": "0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080",
+  "raw_ref": "site/raw/rpc-conic/trace_0xe7f54acd58bea522f9aac5d18f8765a96a2b41d1aa620f9df5e084e113976080.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:03:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743479,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #9: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.6148 ETH, coinbase 2.1445 to I can haz block?, gas 1.8765; net 8.5938 ETH",
+  "tx": "0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c",
+  "raw_ref": "site/raw/rpc-conic/trace_0x050dec294956f9a036565be9b2c1cfb4e7c74fcdeaed4ae8ef42f42cca17e32c.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:03:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743480,
+  "kind": "tx",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "copy #10: replays the attacker's sandwich via bot 0xd050e0a4; idx 0; gross 12.5894 ETH, coinbase 2.3039 to I can haz block?, gas 2.0313; net 8.2543 ETH",
+  "tx": "0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8",
+  "raw_ref": "site/raw/rpc-conic/trace_0xde8e5f61c89d3f488e97dad680d314a347fefa3e55eb00221b70527a7d44cea8.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:05:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743492,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "retry with contract 1 REVERTS (nested out of gas), idx 2, 60.6 gwei",
+  "tx": "0x8478a9567b06d5b9a2e09a0599a95c674cf2d9a70496e6ef7e5f0f3d0ec9a0ef",
+  "raw_ref": "site/raw/rpc/block_17743492.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:10:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743514,
+  "kind": "deploy",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "deploys second attack contract 0x17e0329d, idx 74",
+  "tx": "0x4e74c092c3e01a4b9f51c7d3ac214ce6d231bac1ccf17d5514625740870f81a2",
+  "raw_ref": "site/raw/rpc-conic/conic_blockhdr_17743514.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:10:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743516,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "second setup tx, idx 68",
+  "tx": "0x3f505c0efd5ab37517317732d0862d1e4f2e53bb5ed5ae573bd1656a222ee24a",
+  "raw_ref": "site/raw/rpc-conic/conic_blockhdr_17743516.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:11:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743521,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "attack with contract 2 REVERTS (out of gas), idx 2",
+  "tx": "0xc8818aa3afb0a073ab507fb868f7a9f62c28607763bb3d678cdf0290fff7519e",
+  "raw_ref": "site/raw/rpc-conic/conic_blockhdr_17743521.json"
+ },
+ {
+  "t_utc": "2023-07-21T19:13:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17743531,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "attack with contract 2 SUCCEEDS, idx 5, +2.0183 ETH",
+  "tx": "0xc08bfee8653bdb715144f98bc014eecbab6cf92ddaba16b836f3889fd850a862",
+  "raw_ref": "site/raw/rpc/block_17743531.json",
+  "raw_refs": [
+   "site/raw/rpc/receipts_17743531.json"
+  ]
+ },
+ {
+  "t_utc": "2023-07-22T12:59:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17748821,
+  "kind": "tx",
+  "actor": "crvUSD attacker 0xb6369f59",
+  "detail": "begins 9 x 1 ETH deposits into the Tornado Cash router (to block 17748913)",
+  "tx": "0x0fcb43ab934afc812d87fe2c71204e530cd1653fa56b3cd45f002ebf9541d7b7",
+  "raw_ref": "site/raw/etherscan/conic_conic02_attacker_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-22T16:27:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17749857,
+  "kind": "message",
+  "actor": "conicfinance.eth",
+  "detail": "on-chain message to the ETH-pool clone EOA 0x8d67db0b ('another attempt at trying to contact you...')",
+  "tx": "0x4704290baebde66e5f7f644e773e6293b9dc9c9148bdd6f62ac000f27e1df5b4",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0x4704290baebde66e5f7f644e773e6293b9dc9c9148bdd6f62ac000f27e1df5b4.json"
+ },
+ {
+  "t_utc": "2023-07-22T16:43:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17749937,
+  "kind": "message",
+  "actor": "conicfinance.eth",
+  "detail": "to Yoink: 'Your bot has replicated an attack on Conic Finance ... open to returning these funds in exchange for a bounty?'",
+  "tx": "0x6382dad8f1f08c90aa74a01bae2ec414161821b276f8955cb8dddc68856c03ce",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0x6382dad8f1f08c90aa74a01bae2ec414161821b276f8955cb8dddc68856c03ce.json"
+ },
+ {
+  "t_utc": "2023-07-22T23:34:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17751975,
+  "kind": "message",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "'my bot took 125.82415 Eth while spending 35.48275 in gas fees and bribes, leaving 90.34139 to return. ... Would appreciate a bounty'",
+  "tx": "0xaf1535ea5bee7ccbc048eafd1fe0771c31cde51d065e6abc2c4aa2c1f9d264ff",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0xaf1535ea5bee7ccbc048eafd1fe0771c31cde51d065e6abc2c4aa2c1f9d264ff.json"
+ },
+ {
+  "t_utc": "2023-07-23T14:05:35Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17756297,
+  "kind": "message",
+  "actor": "conicfinance.eth",
+  "detail": "agrees the numbers, offers 10% bounty, asks for 81.307251 ETH to conicfinance.eth",
+  "tx": "0x9074a68818751bcfe88c22f483784bf686481ee8b7b3f81e00b03d36628a4b47",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0x9074a68818751bcfe88c22f483784bf686481ee8b7b3f81e00b03d36628a4b47.json"
+ },
+ {
+  "t_utc": "2023-07-23T15:42:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17756778,
+  "kind": "return",
+  "actor": "Yoink 0xfde0d157",
+  "detail": "bot contract withdrawTo: 81.307251 ETH to conicfinance.eth (90.0% of net 90.341; Yoink keeps 9.034 ETH)",
+  "tx": "0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4",
+  "raw_ref": "site/raw/rpc-conic/trace_0xf56f34a092d8864549052d8a1072e8477a4fb45382ec9549a25c63bb566630b4.json"
+ },
+ {
+  "t_utc": "2023-07-23T19:39:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17757958,
+  "kind": "message",
+  "actor": "conicfinance.eth",
+  "detail": "'Thank you very much for returning the funds so quickly.'",
+  "tx": "0xd9f718386aa359cd5f2d15619a3a536eb3d17eb10c0cac78106440b3d4c92ce5",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0xd9f718386aa359cd5f2d15619a3a536eb3d17eb10c0cac78106440b3d4c92ce5.json"
+ },
+ {
+  "t_utc": "2023-07-23T19:53:23Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17758024,
+  "kind": "message",
+  "actor": "conicfinance.eth",
+  "detail": "to 0x3d32c5a2 (ETH-pool loot): cites Yoink's return and offers a 24 h white-hat deal",
+  "tx": "0x5cf6288c7940150e3624c3459f26f837109262002add2f89488b07b64b0ef3a8",
+  "raw_ref": "site/raw/rpc-conic/conic_tx_0x5cf6288c7940150e3624c3459f26f837109262002add2f89488b07b64b0ef3a8.json"
+ },
+ {
+  "t_utc": "2023-07-31T10:26:11Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17812383,
+  "kind": "tx",
+  "actor": "0x3d32c5a2 (ETH-pool loot)",
+  "detail": "sends 300 ETH to 0x160b431b... (onward destination not attributed)",
+  "tx": "0xd81b195321892d9b1c6e6391bbe02a87d93ecdec53f2eec87b51773fc404fa27",
+  "raw_ref": "site/raw/etherscan/conic_3d32_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-31T10:42:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17812465,
+  "kind": "tx",
+  "actor": "0x3d32c5a2 (ETH-pool loot)",
+  "detail": "sends 300 ETH to 0x160b431b... (onward destination not attributed)",
+  "tx": "0xad4b67881fd62c66dbd59266a6b8bb466f4a8494e3da34d098d540b8a78d73a1",
+  "raw_ref": "site/raw/etherscan/conic_3d32_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-31T10:46:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17812486,
+  "kind": "tx",
+  "actor": "0x3d32c5a2 (ETH-pool loot)",
+  "detail": "sends 400 ETH to 0x160b431b... (onward destination not attributed)",
+  "tx": "0xae77338d304776cf297b661f989d679cbfffc69cf6e4d7a1823e87d7d50ddde1",
+  "raw_ref": "site/raw/etherscan/conic_3d32_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-31T10:49:59Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17812501,
+  "kind": "tx",
+  "actor": "0x3d32c5a2 (ETH-pool loot)",
+  "detail": "sends 400 ETH to 0x160b431b... (onward destination not attributed)",
+  "tx": "0xfaba86f1391d77ca09a57a0bebba698f96284222e524147af867e8f59f3c5e1f",
+  "raw_ref": "site/raw/etherscan/conic_3d32_txlist.json"
+ },
+ {
+  "t_utc": "2023-07-31T10:52:47Z",
+  "t_precision": "block timestamp (second resolution); no sub-block time available",
+  "block": 17812515,
+  "kind": "tx",
+  "actor": "0x3d32c5a2 (ETH-pool loot)",
+  "detail": "sends 327 ETH to 0x160b431b... (onward destination not attributed)",
+  "tx": "0xb7c1163e5c9ec701092ed2bcce6815715602bf70e74563316e9894bb6e062596",
+  "raw_ref": "site/raw/etherscan/conic_3d32_txlist.json"
+ }
+]

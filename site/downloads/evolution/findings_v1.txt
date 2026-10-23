@@ -1,0 +1,126 @@
+evolution study: Has the dark forest evolved? (attacker-side longitudinal measurement)
+
+Generated 2026-10-21 by scripts/evolution.py (stages: txs, traces, mempool, calibrate, analyze).
+Data: per_exploit.json (one row per exploit, every measured field plus raw_refs into data/raw/), by_era.json (overall, by era, by year,
+dumpster-era by quarter), calibration.json (ground-truth checks of the heuristics and of the mempool archive's own coverage drift).
+
+HEADLINE
+Yes, and the change is on the attacker's side. In 2020 every exploit we can see was an ordinary public transaction. Since Aug 2023,
+when exposure can be measured directly, 217 of 227 resolved exploits (95.6%) never touched the public mempool, while ordinary
+transactions in the same blocks were seen 86% of the time in 2023 H2 and about 50% in 2025-26 (attackers are roughly 11-16x less
+visible than their neighbours). The mechanics changed too: exploits that run entirely inside a contract constructor rose from 0% (2020-21)
+to 6% (2022-23), 12% (2024), 58% (2025), 37% (2026 YTD), and the median deploy-to-attack gap fell from 13-23 minutes to about 1 minute.
+By 2025, 71% of exploits left a bot no watchable window (constructor, internal CREATE, or deploy in the same block as the attack).
+Limit: exposure cannot be measured directly before 2023-08-07 (Blocknative archive host unreachable; blocks.flashbots.net returns HTTP 410).
+Before that date: "in-block evidence only".
+
+SAMPLE
+DeFiHackLabs mainnet entries (chain scan exploits_mainnet.json): 365. 320 have a resolvable mainnet tx, 5 are duplicate listings of one incident
+(excluded) -> 315 analysed. 9 entries list a tx sent by c0ffeebabe.eth; those txs were never fetched or traced (publication policy): BiFi,
+SecuredFi, DRLVaultV3, AnyswapWETHPermit, BlueberryProtocol, SwarmMarkets, WiseLending, ERC20TokenBank, Sushi_Router.
+
+RESULTS BY ERA (95% Wilson intervals in brackets; "fresh" gap = attacker-owned contract deployed <= 7 days before the attack)
+E1 = before 2021; E2 = Jan 2021 to Merge (MEV-geth bundles); E3 = Merge to end 2023 (early PBS); E4 = 2024 to Oct 2026.
+
+Metric                                   E1        E2          E3                  E4
+Exploits analysed                        11        25          89                  190
+Measured (dumpster) exploits             0         0           38                  189
+Public share of measured                 n/a       n/a         8% [3-21]           4% [2-7]
+Same-block neighbours seen (control)     n/a       n/a         86%                 60% (about 85% 2024H1, about 50% 2025-26)
+Pre-Aug-2023 labels                      11 public (era prior, not measured) | 2 private (heuristic), 23 unknown | 8 private (heuristic), 43 unknown
+Constructor exploit                      0%        8% [2-25]   4.5% [2-11]         33% [26-40]
+Constructor or internal CREATE           0%        8%          8% [4-15]           36% [30-43]
+Median fresh deploy->attack gap          13 min    23 min      5 min (n=67)        2.4 min (n=78)
+  (own-contract attacks)                 (n=6)     (n=12)
+Deploy in same block as attack           0%        0%          1.5%                20.5%
+ORIGIN-opcode check (lower bound)        17% (6)   25% (12)    30% (73)            41% (106)
+Any sender guard                         17%       50%         43%                 51%
+Attack contract unverified               100%      92%         100%                98%
+Coinbase bribe inside the tx             0%        4%          11% [6-19]          16% [12-22]
+Zero priority fee but included           0%        8%          4.5%                10.5%
+Median priority fee (gwei)               21        10          3.0                 0.48
+Median tx index in block                 30        37          10                  8.5
+Flash loan used                          9%        36%         55%                 41%
+3+ attack txs listed                     0%        20%         5.6%                5.3%
+chain scan copycat candidates (medium/strong)    0/11      1/25        1/89                3/190
+
+BY YEAR
+Year   n    Constructor   No watchable window   Public share (dumpster era)    Median fresh gap
+2020   7    0%            0%                    n/a                            15 min
+2021   10   0%            0%                    n/a                            2.1 h (n=4)
+2022   32   6% [2-20]     6%                    n/a                            5.3 min
+2023   72   6% [2-13]     11% [6-20]            8% [3-21] (n=38, Aug-Dec)      5 min
+2024   81   12% [7-21]    22% [15-32]           6% [3-14]                      4 min
+2025   55   58% [45-70]   71% [58-81]           4% [1-12]                      72 s (n=18)
+2026   54   37% [25-50]   52% [39-65]           0% [0-7]                       60 s (n=25)
+"No watchable window" = constructor, internal CREATE/CREATE2 that attacks, or attack contract deployed in the same block as the attack.
+Half-years: constructor share 2025H1 52% [35-67], 2025H2 68% [47-84], 2026H1 26% [13-45], 2026H2 48% [31-66].
+
+STRONGEST EVIDENCE OF EVOLUTION
+1. Visibility gap (direct, Aug 2023+). Attacker txs seen in the public mempool before inclusion: 10 of 227 (4.4%) vs 86% of neighbouring
+   txs in 2023 and about 50% in 2025-26. The 10 public ones were seen only 6-11 s before the block timestamp (median 8.9 s, under one slot)
+   and mostly belong to unsophisticated attacks (WiseLending x2, Raft, kTAF, OrbitChain, Peapods, Particle, XBridge, Unilend, coinbase
+   [row has an empty sources field, low confidence]). Public share by half-year: 2024H2 0/38, 2025H1 1/33, 2025H2 1/22, 2026 0/54.
+2. Constructor shift. A bot that watches for a deploy and copies the trigger has nothing to copy when the exploit runs inside the CREATE.
+   0% (2020-21), 6% (2022-23), 12% (2024), 52% (2025H1), 68% (2025H2), 37% (2026 YTD). The 2024 -> 2025 jump is outside the intervals.
+3. The window closes. Median deploy-to-attack gap: 13-23 min (2020-22) -> 5 min (2023) -> 72 s (2025) -> 60 s (2026). Same-block deploy:
+   0% -> 46% of own-contract attacks in 2025.
+4. Gas competition stopped. Median priority fee 118 gwei (2021) -> 3 (2023) -> 1 (2024) -> 0.49 (2025) -> 0.1 (2026); median tx index 30-37 -> 8.5.
+   Attackers no longer outbid anyone. (Ordinary tips fell too, so read with item 1.)
+5. Bribes appear: direct coinbase payment 0% before 2022, 11% (2023), 16% (2024-26), including large ones (Makina 1,299 ETH, Hopelend 264 ETH,
+   DeFiPlaza 66 ETH, Anyswap 34 ETH). Payers mostly have a near-zero tip, i.e. they buy builder priority rather than win a public gas auction.
+6. What did not change: flash-loan use (35-60% in each year, no trend); unverified attack contracts (96-100%); sender/origin guards
+   (25-50%, noisy, not monotone; a lower bound by our bytecode test).
+7. chain scan medium/strong copycat candidates: 1/25 (Nomad), 1/89 (Kashi), 3/190 (RsETHSafeModule, FixedTokenBSwap, OMPxContract). None is a
+   same-block-before copy. At about 1-4% per era there is no trend we can resolve: the visibility collapse says the opportunity shrank,
+   but the candidate counts cannot yet show an effect on realised front-running.
+
+EXTERNAL COMPARISON
+- BACKRUNNER (arXiv 2409.06213): 17 of 158 attack txs visible in the public mempool, Jan 2023 - May 2024 (10.8%). Ours, exploit level, the
+  overlapping measurable window Aug 2023 - May 2024: 8 of 75 public (10.7%). They agree. Their "bots intercepted 18/158" is not comparable to
+  chain scan's candidates (they detect interception with their own bots/nodes; chain scan looks for copy txs within +/-1 block); chain scan finds 0 medium/strong
+  candidates among the 109 exploits dated Jan 2023 - May 2024. BACKRUNNER saw 4 constructor attack txs in 1.5 years; we count 4 of 72 exploits
+  in 2023 and 6 of 42 in 2024H1 (definitions differ: exploits vs txs).
+- APE (Qin et al.): 10 of 12 whitehat attack txs private (83%). Our dumpster-era attackers are 95.6% private against a 50-86% control rate
+  for ordinary txs, so private submission is the norm for adversaries too, not only a whitehat tactic.
+
+CAVEATS
+1. No direct exposure data before 2023-08-07. Pre-Aug-2023 labels are heuristic and were calibrated on the dumpster era (calibration.json):
+   "zero priority fee" precision 98-100%, recall only 5-10%; "out-of-order" (later txs pay more yet this tx sits early) precision 82-89%,
+   recall 3-6%. "Unknown" does NOT mean public: 43 of 51 E3 pre-Aug-2023 and 23 of 25 E2 exploits are unknown; only flagged ones count as
+   private. Any E2/early-E3 "private share" would be an unsupported guess. E1 "public" is an era prior, not a measurement.
+2. The dumpster drifted. Sources went from 7 (Oct 2023) to 3-4 (2024-25) and ordinary-tx visibility fell from about 86% to about 50%, partly
+   real private flow, partly fewer sources (per-quarter summary files saved in calibration.json). Hence the comparison with same-block
+   neighbours instead of absolute public shares. "Absent" means no source saw it before inclusion: Flashbots Protect, MEV Blocker, builder
+   RPCs and bundles are not separable. Day 2024-10-29 is 404 upstream (one exploit, BUBAI, left unknown). Single-source "public" rows could
+   be semi-private order flow (flagged as medium confidence).
+3. Survivorship/selection: DeFiHackLabs only has exploits somebody wrote a PoC for; biased toward DeFi, 2023-26, and attacks worth reproducing.
+   Yearly counts (7, 10, 32, 72, 81, 55, 54) partly track DeFiHackLabs coverage, not attack frequency. Exploits that were front-run away or
+   unnoticed are missing; constructor attacks may be easier to notice.
+4. One row per exploit uses the earliest listed tx that is not a pure deploy; multi-tx incidents carry all txs in all_txs. 9 exploits lost a
+   listed c0ffeebabe tx by publication policy; where the rest is only the deploy (e.g. BiFi) the row shows created-in-this-tx, not constructor.
+5. Guard detection is a lower bound: ORIGIN+EQ and hard-coded attacker addresses in bytecode. Storage-based owner checks are not separable
+   from library callback checks (reported only as the weak flag caller_eq_weak). Constructor exploits have no callable surface and are
+   excluded from guard rates. Own-contract attacks in 2025-26 are few (18, 25).
+6. constructor_attack = root tx is a CREATE whose init code calls a listed victim or makes 3+ calls; the 2025-26 positives were eyeballed
+   (dozens to thousands of inner calls each).
+7. Tip medians are in gwei (pre-London = gas price). Small cells: E1 n=11; do not quote them without the interval.
+
+CHART IDEAS FOR THE SITE
+1. The gap opens: per quarter 2023Q3-2026Q4, "ordinary txs in the same blocks seen in the public mempool" (86% -> about 50%) vs "exploit txs
+   seen" (11% -> 0%), dots sized by n. Data: by_era.json -> dumpster_era_by_quarter.
+2. Where did the bots' window go: stacked bars by half-year of exploit style (constructor / internal CREATE / same-block deploy / earlier
+   deploy), 2020-2026, annotated with Flashbots (2021), Merge (Sept 2022), and the 2025 jump.
+3. Deploy-to-attack gap beeswarm by year, log-seconds axis with a line at 12 s (one slot); constructor exploits in a separate lane at zero.
+   Data: per_exploit.json -> techniques.deploy_gap_s.
+4. Gas stops mattering: priority fee vs block median tip (scatter, log scale, coloured by era) plus a lollipop for large coinbase bribes
+   (Makina, Hopelend, DeFiPlaza).
+5. Honesty strip: timeline band showing what is measurable per era (direct mempool Aug 2023+, heuristics only before) with "unknown" as a
+   first-class colour. Optional: technique heat map by year (flash loan, bribe, origin check, unverified, multi-tx) showing what did not evolve.
+
+REPRODUCE
+  .venv/bin/python scripts/evolution.py all        (cached; the mempool stage streams about 195 dumpster day files, keeps only matching rows)
+  .venv/bin/python scripts/evolution.py calibrate
+  .venv/bin/python scripts/evolution.py analyze
+Mempool evidence: data/raw/mempool-dumpster/extract_<date>.json (matched rows + control sample per day); sha256/bytes of each full upstream
+zip are in data/raw/MANIFEST.jsonl (full 100 MB files were streamed, not kept, to save disk).

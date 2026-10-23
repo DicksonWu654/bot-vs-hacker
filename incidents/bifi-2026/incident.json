@@ -1,0 +1,406 @@
+{
+ "slug": "bifi-2026",
+ "name": "BiFi Lending idle USDT market (0x808c3ba9...) drain",
+ "date": "2026-10-17",
+ "chain": "ethereum",
+ "era": "post-merge; mempool-dumpster 2026-10-17 present (788,533 txs; 381 of 518 txs of block 26210255 and 111 of 276 of block 26210256 are in it) but neither the deploy tx nor the c0ffeebabe tx is",
+ "verdict": "confirmed-onchain",
+ "verdict_reason": "The attacker EOA 0x7c78a049 deployed purpose-built contract 0x8c0d729d in block 26210255 (pos 333) and never sent a call to it (no tx to the contract ever; the EOA's next tx is block 26210307, nonce 1 -> 2, unrelated). c0ffeebabe's tx 0x756c6805... landed in the next block 26210256 at position 1 and emptied the market (USDT balance 170,038.086 -> 4,462.937). Position 0 is an unrelated Uniswap v4 arb. Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+ "protocol_loss_usd": {
+  "usdt_drained_from_market_in_block_26210256": 165575.15,
+  "basis": "balanceOf(market) 170,038.086459 -> 4,462.936729 USDT; c0ffeebabe tx moved 165,574.514633 USDT to a WETH/USDT pool for 68.057203 WETH",
+  "evidence": "confirmed-onchain (balances); no protocol statement found"
+ },
+ "attacker": {
+  "eoas": [
+   "0x7c78a049fff71609990017b58a959e926e6ec4c6"
+  ],
+  "contracts": [
+   "0x8c0d729d03cb8ecbc79a62a68cdd67ccfa6a7b92 (hardcodes target market 0x808c3ba9..., USDT, Morpho 0xbbbbbbbb...; owner-only execute(uint256,uint256))"
+  ],
+  "deploy_tx": "0x15b47e2c0daf723dec64c75b435079d3a1f8a6058b21b9a64dda4844e877a034 (block 26210255, position 333 of 518, block time 2026-10-17T05:42:59Z, nonce 1, tip 0.0004 gwei, gas price 0.0486 gwei, status 1; constructor only calls USDT.decimals())",
+  "funding_tx": "0x5166f24bd843c944eceecb160b4a33411115fd639763593be47e7196f642e79c (block 26209535, 1.670240 ETH internal transfer from 0xac9f360ae85469b27aeddeafc579ef2d052ad405, a 9.6 kB contract, called by 0x7347ee04dc6865043895d1be72c90a416c40970b; source not identified, not verified as a mixer); nonce 0 tx 0xd06554eb83d284a829bd311c36e41b7243ee45a7d97e111f5518005b09d16d5c (block 26209649) sent 0.05 ETH to 0x85f0881f...",
+  "txs": [
+   {
+    "hash": "0x15b47e2c0daf723dec64c75b435079d3a1f8a6058b21b9a64dda4844e877a034",
+    "block": 26210255,
+    "index": 333,
+    "status": 1,
+    "first_seen_ms": null,
+    "note": "deploy; not in mempool-dumpster -> private flow or missed; no ms timestamp available"
+   }
+  ],
+  "attacker_call": "none: Etherscan txlist for 0x8c0d729d shows only the creation; trace scan of blocks 26210240-26210300 (61 blocks) finds no call into 0x8c0d729d; EOA nonce-2 tx is 0xa1b79a9fe5010345d6b22cf8bc160a6d90145c0b9d1d4059da9684a9a86061b3 (block 26210307, 0.1 ETH to 0x0439e60f, unrelated)"
+ },
+ "position_0": {
+  "hash": "0xf8a79e4aef429c5a16c87f898e8d560d73289d8afd3f88d8e0f9dfc2a7e5149f",
+  "block": 26210256,
+  "index": 0,
+  "from": "0xc917c3fa468f2c4b9c84c72caa46420eb9825249",
+  "to": "0x0000000aa232009084bd71a5797d089aa4edfad4",
+  "status": 1,
+  "gas_price_gwei": 0.054153232,
+  "priority_fee": 0,
+  "coinbase_transfer_eth": 0,
+  "what": "DEX arbitrage routed through the Uniswap v4 PoolManager 0x000000000004444c... (WETH/USDC/USDT legs; 0.3287 WETH in, 432.19 USDC + 365.09 USDT out to 0x73d53553...); does not touch the BiFi market or its USDT; not the attacker, unrelated to the exploit",
+  "evidence": "site/raw/rpc/trace_block_26210256.json idx 0"
+ },
+ "bots": [
+  {
+   "label": "c0ffeebabe.eth",
+   "eoa": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+   "contract": "0xe08d97e151473a848c3d9ca3f323cb720472d015",
+   "txs": [
+    "0x756c68055af7a0630aa0b56891ba4de14c56c39cbebe99e47eeb4728f4d6ad14"
+   ],
+   "block": 26210256,
+   "index": 1,
+   "status": 1,
+   "value_wei": 145,
+   "gas_used": 15617818,
+   "tx_level_facts": "flash loan from Morpho (0xbbbbbbbb...) 40,499,999.999997 USDT in/out; Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "captured": {
+    "token": "USDT->WETH",
+    "amount": "165,574.514633 USDT (68.057203 WETH)",
+    "usd": null
+   },
+   "coinbase_paid_eth": 0.986829445119922,
+   "priority_fee_gwei": 0.0,
+   "notes": "Also in this block: pos 2 (0x48618b877ca36b3466431eab242f58e0d2bbc957b02d03e1b0149dadf522501e, coinbase 0.0000222 ETH, unrelated DEX trades, no BiFi calls) and pos 3 (0x28be1d725c07c590a8a58516320ee378524dc8d4a06f3de9aedec426a081d111, self-transfer of 74.566715 ETH). Position 1 sits directly behind the unrelated arb at position 0 (gas price = base fee)."
+  }
+ ],
+ "other_racers": [
+  {
+   "label": "later same-profile txs (440 victim calls, same selector set) after 26210256",
+   "txs": "c0ffeebabe x5 (26210260 pos 22,23,24; 26210268 pos 130; 26210273 pos 181); 0x5c096ef846447cb935c5d247e4ab2a867ecc33a9 -> 0x00000f91109c4d0007e90000d9facad5298a0cac x4 (26210264, 268, 285, 297); 0x9235910f410478b89f86e06be0e4535335af6dea -> 0x00000f91... x6 (26210277 x3, 26210289 x3); 0x000000000033214a5ae994caa0458c213e82d2ae -> 0x0000000000be226afde21672a5e4adc45692e69d x3 (26210281, 293, 297)",
+   "note": "all successful; market USDT stays ~4.4k (4,462.94 at 256, 4,455.55 at 260, 4,417.98 at 300), so marginal; they arrive 4-41 blocks after the first drain"
+  }
+ ],
+ "funds_fate": [
+  {
+   "what": "no return found: c0ffeebabe EOA txs 26210256-26260000 (1000 listed) contain only routine self/contract txs; no transfer to the market, attacker contract or deployer found. Unknown != none (no protocol/whitehat statement found; web search returned nothing for this 2026 incident)"
+  },
+  {
+   "what": "builder/proposer: coinbase 0.986829 ETH from c0ffeebabe; Titan builder fee recipient 0x4838b106... revenue 0.9914 ETH; proposer payment 0.990070 ETH via 0xfeeeee44... (pos 275, tx 0x19161b0290b6...)"
+  }
+ ],
+ "auction": {
+  "note": "deploy block and race block",
+  "blocks": {
+   "26210255": {
+    "block": 26210255,
+    "slot": 15449313,
+    "block_time_utc": "2026-10-17T05:42:59+00:00",
+    "relays_answered": {
+     "flashbots": {
+      "bids": 121
+     },
+     "ultrasound": {
+      "bids": 1384
+     },
+     "agnostic": {
+      "bids": 639
+     }
+    },
+    "n_bids": 2144,
+    "n_builders": 42,
+    "first_bid_t_rel_slot_ms": -5116,
+    "last_bid_t_rel_slot_ms": 2092,
+    "value_escalation_running_max_steps": [
+     [
+      -5116,
+      "agnostic",
+      "BuilderNet",
+      0.00177,
+      871
+     ],
+     [
+      -4630,
+      "agnostic",
+      "BuilderNet",
+      0.00186,
+      878
+     ],
+     [
+      -4264,
+      "agnostic",
+      "BuilderNet",
+      0.00196,
+      889
+     ],
+     [
+      -3795,
+      "agnostic",
+      "BuilderNet",
+      0.00213,
+      895
+     ],
+     [
+      -3293,
+      "agnostic",
+      "BuilderNet",
+      0.0024,
+      901
+     ],
+     [
+      -3116,
+      "agnostic",
+      "BuilderNet",
+      0.00256,
+      905
+     ],
+     "...",
+     [
+      -290,
+      "ultrasound",
+      "✨ Quasar (quasar.win) ✨",
+      0.00666,
+      320
+     ],
+     [
+      86,
+      "ultrasound",
+      "Builder+ www.btcs.com/builder",
+      0.00701,
+      117
+     ],
+     [
+      460,
+      "ultrasound",
+      "✨ Quasar (quasar.win) ✨",
+      0.00743,
+      147
+     ],
+     [
+      558,
+      "ultrasound",
+      "✨ Quasar (quasar.win) ✨",
+      0.00783,
+      147
+     ],
+     [
+      711,
+      "ultrasound",
+      "Eureka (eurekabuilder.xyz)",
+      0.00823,
+      470
+     ],
+     [
+      1478,
+      "ultrasound",
+      "Titan (titanbuilder.xyz)",
+      0.00876,
+      406
+     ]
+    ],
+    "winning": {
+     "builder": "Eureka (eurekabuilder.xyz)",
+     "block_hash": "0x12956fcfe912f87a4301f4bd372d0b7f5f7255bbb84d67dd4e01244d6ff75921",
+     "value_eth": 0.008583830627815819,
+     "delivered_by": [
+      "ultrasound"
+     ],
+     "submissions_byhash": [
+      {
+       "relay": "ultrasound",
+       "t_rel_slot_ms": 1221,
+       "timestamp_ms": 1792215780221,
+       "value_eth": 0.008583830627815819,
+       "num_tx": "518"
+      },
+      {
+       "relay": "agnostic",
+       "t_rel_slot_ms": 1240,
+       "timestamp_ms": 1792215780240,
+       "value_eth": 0.008583830627815819,
+       "num_tx": "518"
+      }
+     ],
+     "proposer_pubkey": "0xa2a98f2a0850b736e71a50c2e7cfe4f239627dc32fca5f2ab860926ffa7cca02a1bb40218eb88c7e30a6feff7b2ed97a",
+     "proposer_fee_recipient": "0x388c818ca8b9251b393131c08a736a67ccb19297",
+     "proposer_payment_tx": {
+      "index": 517,
+      "hash": "0xb61d0ae6b2a73e5beeba3cccacc2cbcef40233e6164b09757368b00835a8062c",
+      "to": "0xfeeeeee44046c3f61a8cc081e0918ef0de0a7ffc",
+      "eth": 0.008583830627815819
+     },
+     "builder_fee_recipient": "0xfb74767c1ce1aada0a0e114441173b57f8c1571b",
+     "builder_revenue_total_eth": 0.010801951937838688
+    },
+    "runner_up_not_winning_hash": {
+     "t_rel_slot_ms": 1488,
+     "relay": "ultrasound",
+     "builder": "Titan (titanbuilder.xyz)",
+     "value_eth": 0.00877892453422245,
+     "num_tx": 409,
+     "block_hash": "0xfa6f3d6bc2dfebb39fefb30ecade490bc5947c80a1b01215ecbe3eb20d184247"
+    },
+    "max_bid_eth_in_recorded_list": 0.00877892453422245,
+    "note": "Losing-bid contents are not published by relays; winning block contains the focus tx(s) on-chain. Bid lists are what builder_blocks_received returned (may be truncated per relay); winning bid also queried by block_hash.",
+    "raw_race": "incidents/bifi-2026/race_26210255.json"
+   },
+   "26210256": {
+    "block": 26210256,
+    "slot": 15449314,
+    "block_time_utc": "2026-10-17T05:43:11+00:00",
+    "relays_answered": {
+     "flashbots": {
+      "bids": 79
+     },
+     "bloxroute-regulated": {
+      "bids": 1212
+     },
+     "titan": {
+      "bids": 313
+     }
+    },
+    "n_bids": 1604,
+    "n_builders": 41,
+    "first_bid_t_rel_slot_ms": -7913,
+    "last_bid_t_rel_slot_ms": 1551,
+    "value_escalation_running_max_steps": [
+     [
+      -7090,
+      "titan",
+      "BuilderNet",
+      0.00104,
+      47
+     ],
+     [
+      -6475,
+      "bloxroute-regulated",
+      "Powered by bloXroute",
+      0.00114,
+      58
+     ],
+     [
+      -6412,
+      "bloxroute-regulated",
+      "Powered by bloXroute",
+      0.00123,
+      60
+     ],
+     [
+      -4438,
+      "titan",
+      "BuilderNet",
+      0.00134,
+      75
+     ],
+     [
+      -3426,
+      "bloxroute-regulated",
+      "Powered by bloXroute",
+      0.00148,
+      86
+     ],
+     [
+      -1664,
+      "titan",
+      "beaverbuild.org",
+      0.00988,
+      66
+     ],
+     [
+      -978,
+      "flashbots",
+      "BuilderNet",
+      0.01085,
+      187
+     ],
+     [
+      -864,
+      "titan",
+      "builder.ultrasound.money",
+      0.68032,
+      128
+     ],
+     [
+      920,
+      "titan",
+      "builder.ultrasound.money",
+      1.36457,
+      161
+     ]
+    ],
+    "winning": {
+     "builder": "Titan (titanbuilder.xyz)",
+     "block_hash": "0x6630bd67dd125885fde38b9a066bf946f4d55a4937dffa54f00b2926752ce155",
+     "value_eth": 0.9900700857186591,
+     "delivered_by": [
+      "bloxroute-regulated",
+      "titan"
+     ],
+     "submissions_byhash": [
+      {
+       "relay": "titan",
+       "t_rel_slot_ms": 1011,
+       "timestamp_ms": 1792215792011,
+       "value_eth": 0.9900700857186591,
+       "num_tx": "276"
+      },
+      {
+       "relay": "bloxroute-regulated",
+       "t_rel_slot_ms": 1012,
+       "timestamp_ms": 1792215792012,
+       "value_eth": 0.9900700857186591,
+       "num_tx": "276"
+      }
+     ],
+     "proposer_pubkey": "0xb9313a1450192959fed888f8fd4ff1353f2ef2e901419697365ebb79803eb62ca28b6d2d081bec870d3377dfecf77bfc",
+     "proposer_fee_recipient": "0xd18821CfB3d7268F5051Ec008Cd80d3dF5f0d128",
+     "proposer_payment_tx": {
+      "index": 275,
+      "hash": "0x19161b0290b6e1f892735f3f40a8fa4037a6042985542ee5397e6ef5667a08f8",
+      "to": "0xfeeeeee44046c3f61a8cc081e0918ef0de0a7ffc",
+      "eth": 0.9900700857186591
+     },
+     "builder_fee_recipient": "0x4838b106fce9647bdf1e7877bf73ce8b0bad5f97",
+     "builder_revenue_total_eth": 0.9913715231106947
+    },
+    "runner_up_not_winning_hash": {
+     "t_rel_slot_ms": 920,
+     "relay": "titan",
+     "builder": "builder.ultrasound.money",
+     "value_eth": 1.3645726319832623,
+     "num_tx": 161,
+     "block_hash": "0x3ef67a3d824a1df3d3b6e7f3f349cc9fa65e7c3bc4465dba84a905480d8f9e2b"
+    },
+    "max_bid_eth_in_recorded_list": 1.3645726319832623,
+    "note": "Losing-bid contents are not published by relays; winning block contains the focus tx(s) on-chain. Bid lists are what builder_blocks_received returned (may be truncated per relay); winning bid also queried by block_hash.",
+    "raw_race": "incidents/bifi-2026/race_26210256.json"
+   }
+  },
+  "slot_256_extra": "first bid built on block 255: t=-7913 ms (bloxroute-regulated; 05:43:03.087 UTC); first elevated bid 0.6803 ETH, 128 txs, builder.ultrasound.money via titan relay at -864 ms (05:43:10.136) vs baseline ~0.0015-0.0107; at +920 ms builder.ultrasound.money bid 1.3646 ETH (161 txs) which did not win; delivered block: Titan builder 0.990070 ETH, 276 txs, submitted +1011 ms (titan) / +1012 ms (bloxroute-regulated)",
+  "deploy_to_race_window": "block 255 delivered at +1221 ms of its slot (05:43:00.221 UTC); c0ffeebabe's winning bid for 256 arrived 05:43:12.011 UTC = 11.79 s later; first bids on 255 as parent began 05:43:03.087 (2.9 s after delivery). Deploy-tx mempool first-seen: none (not in mempool-dumpster) - no ms deploy-to-call window can be computed from mempool data."
+ },
+ "sources": [],
+ "raw_refs": {
+  "race": [
+   "incidents/bifi-2026/race_26210255.json",
+   "incidents/bifi-2026/race_26210256.json"
+  ],
+  "traces": "full cache only (not published)",
+  "simulation": "full cache only (not published)",
+  "attacker_code": "site/raw/rpc/eth_getCode_0x8c0d729d03cb8ecbc79a62a68cdd67ccfa6a7b92_26210255.json",
+  "mempool": "full cache only (not published)",
+  "market_balances": "full cache only (not published)"
+ },
+ "verdict_original": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+ "race_type": "deploy-window-copy",
+ "headline": true,
+ "headline_text": "One block after an attacker deployed a purpose-built BiFi USDT-market drain contract, and before it was ever called, c0ffeebabe.eth's tx emptied the market (netting 165,574.51 USDT, 68.06 WETH) and paid 0.9868 ETH to the builder.",
+ "verdict_rule": "harmonized 2026-10-21: see scripts/dataset/harmonize_rules.py and data/harmonize_log.json",
+ "harmonized": {
+  "before": {
+   "verdict": "Our call-level comparison for c0ffeebabe.eth transactions is withheld by policy; the public traces can be compared by anyone.",
+   "race_type": null,
+   "headline": null
+  },
+  "verdict_reason": "The attacker deployed a purpose-built contract in block 26210255 and never called it. The next block contains c0ffeebabe.eth at position 1, with the market funds removed and 0.9868 ETH paid to the builder. Classification retains the recorded deploy-window result; only transaction, block, position and funds are published.",
+  "headline_note": "Deploy-window classification from transaction ordering and funds; the attacker contract was never called.",
+  "dataset_rows": [
+   "bifi-2026"
+  ]
+ }
+}

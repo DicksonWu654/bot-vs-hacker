@@ -1,0 +1,487 @@
+[
+ {
+  "slug": "taopad-2024",
+  "name": "TaoPad (TPAD) tax-ETH extraction: Yoink replays the operator's failed tx",
+  "date_utc": "2024-02-14T13:27:35Z",
+  "chain": "ethereum",
+  "orig_verdict": "related-not-frontrun",
+  "race_type_proposed": "post-failure-replay",
+  "race_type_reason": "The counterparty is the TaoPad operator (not a hacker). Its tx failed on chain (out of gas, block 19226482); Yoink replayed the same victim-protocol call sequence 21 blocks / 252 s later with a higher gas limit. Nothing was pending in between and no other tx called the vulnerable function.",
+  "one_liner": "TaoPad's own operator tx to pull the token's 29.2 ETH tax balance ran out of gas; Yoink replayed its calls 4 min later (net 26.32 ETH) and returned it all the next day after the team wrote to it.",
+  "attacker": {
+   "eoa": null,
+   "eoas": [],
+   "contracts": [],
+   "funding": "n/a",
+   "funding_tx": null,
+   "deploy_tx": null,
+   "deploy_block": null,
+   "attack_txs": [],
+   "none_reason": "No hostile attacker in this event. The racing counterparty is the project's operator (below). The earlier third-party exploit of the TPAD token that TaoPad mentions is outside the scope and not identified here."
+  },
+  "counterparty": {
+   "kind": "project operator (the protocol extracting its own accumulated tax ETH)",
+   "label": "taopad.eth (TaoPad team)",
+   "eoa": "0x98915686e23032a1d3b8596badd7fadf147d5c00",
+   "helper_contract": "0x8ec2e9dee58efb69e9986d3a27d7f3810209c6cb",
+   "helper_deployer": "0x397c9e1c1241430af08668e1ba6ea0c00fefde30",
+   "token": "0x5483dc6abda5f094865120b2d251b5744fc2ecb5",
+   "txs": [
+    {
+     "hash": "0xbcfb472530332c7206c6cc0a32f99833c20092510a672d3a3c813cc46d167961",
+     "block": 19226381,
+     "index": 128,
+     "status": "success",
+     "role": "operator funds helper deployer 0x397c9e1c with 0.12 ETH"
+    },
+    {
+     "hash": "0xd0e8fc22b214c24f5dffadb6105aebc00fcd5927cf4c33ea8c7f27f390b329c5",
+     "block": 19226396,
+     "index": 90,
+     "status": "success",
+     "role": "0x397c9e1c deploys helper contract 0x8ec2e9de"
+    },
+    {
+     "hash": "0xe21e4f3d4eab52a62f203ec63b4a6496389c584e3ad683011075e05ba2ae88df",
+     "block": 19226402,
+     "index": 112,
+     "status": "success",
+     "role": "operator: TPAD.setPoolFee(100)"
+    },
+    {
+     "hash": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+     "block": 19226482,
+     "index": 0,
+     "status": "reverted",
+     "first_seen_ms": 1707916992276,
+     "role": "operator: helper.execute() with 1 ETH, public mempool, out of gas in the second swap"
+    },
+    {
+     "hash": "0xeaa5f727dd6e2467e6bd8f7a6f2625cd37a67e0552875756eb0b001f02df5a96",
+     "block": 19226577,
+     "index": 93,
+     "status": "success",
+     "role": "operator: TPAD.setPoolFee(0) after Yoink's tx (message: 'so nobody could exploit Tpad again')"
+    }
+   ],
+   "message_txs": [
+    "0x1c900a5c5d0aa25d2cc931682f470d38c158ad54b06d15e689f3d607e7545e84",
+    "0x20d4929ea446a16473b90336c1f0a419f7be5744e2064c5bfb4c11a0868efc8f",
+    "0x13f4d83c0f4ed0fabdd88a90fe49774660166db637e8e3b89432ceb3f350f3b7",
+    "0x9a88afc42aef10cc652ba97fafa6a8929d924c51d697965cb038fc881851b1a6"
+   ]
+  },
+  "bot": {
+   "label": "Yoink",
+   "eoa": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+   "contract": "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0",
+   "tx": "0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e",
+   "block": 19226503,
+   "position": 0,
+   "status": "success",
+   "priority_fee_gwei": 0.0
+  },
+  "bots_other": [],
+  "evidence_level_mempool": "measured",
+  "mempool_note": "mempool-dumpster covers 2024-02-14 (csv + sourcelog). The operator's failed tx was seen publicly by 6 sources (first 13:23:12.276Z, local), 10.7 s before inclusion. Yoink's tx 0x5853b7a0 is not in the archive (private flow), so its own first-seen / bid time is unknown.",
+  "trigger": {
+   "kind": null,
+   "tx": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d",
+   "first_seen_utc_ms": 1707916992276,
+   "first_seen_utc": "2024-02-14T13:23:12.276000Z",
+   "sources": [
+    "local",
+    "bloxroute",
+    "eden",
+    "chainbound",
+    "apool",
+    "mempoolguru"
+   ],
+   "note": "kind is null on purpose: the first-seen above is the OPERATOR's public tx, but Yoink did not pre-empt it as a pending tx. It was mined and failed (block 19226482, 13:23:23Z) 252 s before Yoink's block 19226503 (13:27:35Z; 262.7 s after first seen), with no operator tx pending in between. Recorded to document the gap, not as a trigger."
+  },
+  "attacker_block": 19226482,
+  "attacker_block_note": "The racing tx is the operator's reverted execute() at block 19226482 index 0; Yoink landed 21 blocks AFTER it (blocks_ahead = -21).",
+  "attacker_reference": {
+   "kind": "attack-tx",
+   "block": 19226482,
+   "tx": "0xced2c7fa5eaf5dc0829b6fcbd8ab979e4dd267b9677911351a852db73f537b2d"
+  },
+  "auction": {
+   "block": 19226503,
+   "slot": 8424436,
+   "slot_start_utc_ms": 1707917255000,
+   "relays_answered": [
+    "flashbots",
+    "ultrasound"
+   ],
+   "n_bids": 138,
+   "n_builders": 21,
+   "bids_per_relay": {
+    "flashbots": 138
+   },
+   "first_bid_ms_rel_slot": -10155,
+   "last_bid_ms_rel_slot": 961,
+   "winning_bid_eth": 1.403189437488996,
+   "winning_builder": "https://blockbeelder.com 🐝",
+   "winning_builder_pubkey": "0xb193dcaf1d485ba78094cb6b4126bff77e08c1244dff814447d3a31d9030b2584b369244ea67f13d48a02fa907b05f3a",
+   "winning_relays": [
+    "ultrasound"
+   ],
+   "winning_first_submission_ms_rel_slot": 380,
+   "winning_last_submission_ms_rel_slot": 380,
+   "runner_up_eth": 0.022197749192638352,
+   "runner_up_builder": "beaverbuild.org",
+   "runner_up_ms_rel_slot": 320,
+   "runner_up_other_builder_eth": 0.022197749192638352,
+   "runner_up_other_builder": "beaverbuild.org",
+   "runner_up_other_builder_ms_rel_slot": 320,
+   "n_higher_bids_after_winner": 0,
+   "max_bid_eth": 1.403189437488996,
+   "proposer_paid_eth": 1.403189437488996,
+   "proposer_payment_tx": "0xd4405f3beee60d05b6e54f7a4356e9e4e98c971751b8003076de03e5fa91107b",
+   "bot_tx_in_winning_block": true,
+   "escalation": [
+    [
+     -10155,
+     1.6562419918122e-05
+    ],
+    [
+     -9757,
+     9.0765892407026e-05
+    ],
+    [
+     -9635,
+     0.000163794292407026
+    ],
+    [
+     -9565,
+     0.000171047460905714
+    ],
+    [
+     -9233,
+     0.000246856516394136
+    ],
+    [
+     -9084,
+     0.000249172530015466
+    ],
+    [
+     -8656,
+     0.001399499079970794
+    ],
+    [
+     -8625,
+     0.001553871116242486
+    ],
+    [
+     -8160,
+     0.002796808842809415
+    ],
+    [
+     -8108,
+     0.002828372453054733
+    ],
+    [
+     -8105,
+     0.002833789711323714
+    ],
+    [
+     -7660,
+     0.002834571279492706
+    ],
+    [
+     -7632,
+     0.002835154553425646
+    ],
+    [
+     -7156,
+     0.00388892317188143
+    ],
+    [
+     -7131,
+     0.003933320366032337
+    ],
+    [
+     -6648,
+     0.003933443183032337
+    ],
+    [
+     -6614,
+     0.004286250725856881
+    ],
+    [
+     -6165,
+     0.004802885883936753
+    ],
+    [
+     -6101,
+     0.00482574620238098
+    ],
+    [
+     -6099,
+     0.004826490356425012
+    ],
+    [
+     -5655,
+     0.005122169763156595
+    ],
+    [
+     -5606,
+     0.005550454200860595
+    ],
+    [
+     -5157,
+     0.005995061845848039
+    ],
+    [
+     -5147,
+     0.006016061845848039
+    ],
+    [
+     -5060,
+     0.006037061845848039
+    ],
+    [
+     -4672,
+     0.006079958010901499
+    ],
+    [
+     -4658,
+     0.006081606932007907
+    ],
+    [
+     -4601,
+     0.006091331463428965
+    ],
+    [
+     -4581,
+     0.006112331463428965
+    ],
+    [
+     -4178,
+     0.007086049867576103
+    ],
+    [
+     -4122,
+     0.007220288867576103
+    ],
+    [
+     -4110,
+     0.007239210931872103
+    ],
+    [
+     -3945,
+     0.012265084885920367
+    ],
+    [
+     -3791,
+     0.012282216682657136
+    ],
+    [
+     -3586,
+     0.012282453157657136
+    ],
+    [
+     -3226,
+     0.012283732156106524
+    ],
+    [
+     -2984,
+     0.014366800866029488
+    ],
+    [
+     -2648,
+     0.01469257436598822
+    ],
+    [
+     -1943,
+     0.015259747004472652
+    ],
+    [
+     -1899,
+     0.01649085787920112
+    ],
+    [
+     -1360,
+     0.016847991939824676
+    ],
+    [
+     -1253,
+     0.017344669850183
+    ],
+    [
+     -899,
+     0.020524873920276857
+    ],
+    [
+     -728,
+     0.020644892653663368
+    ],
+    [
+     -512,
+     0.02066173213860537
+    ],
+    [
+     -297,
+     0.02070962012816037
+    ],
+    [
+     -169,
+     0.0213499698766151
+    ],
+    [
+     -164,
+     0.021351968751793453
+    ],
+    [
+     6,
+     0.021475919504376488
+    ],
+    [
+     105,
+     0.02176970650343449
+    ],
+    [
+     320,
+     0.022197749192638352
+    ],
+    [
+     380,
+     1.403189437488996
+    ]
+   ],
+   "bid_data_note": null,
+   "raw_refs": {
+    "race_file": "incidents/taopad-2024/race_19226503.json",
+    "relay_bids:flashbots": "site/raw/relay-flashbots/bids_block19226503.json",
+    "relay_delivered:ultrasound": "site/raw/relay-ultrasound/delivered_block19226503.json"
+   },
+   "auction_note": "138 bids / 21 builders on Flashbots' archive. The winning block (blockbeelder via Ultrasound, 1.4032 ETH to the proposer, contains Yoink's tx) was submitted once at +380 ms; best other bid 0.0222 ETH (beaverbuild, +320 ms): the block was ~63x the next best bid. The bot's own submission time and whether other builders also held its bundle are unknown (relays do not publish bid contents). Not a competition for a pending attacker tx."
+  },
+  "loot": {
+   "scope": "bot-tx",
+   "gross_loot_eth": 28.505595444531,
+   "gross_loot_method": "WETH.withdraw ETH delivered to Yoink's contract in the tx trace (29.5056 ETH: 29.1789 from the TPAD token's accumulated ETH balance sold through the in-tx Uniswap V3 pool + 0.3267 recovered liquidity) minus the 1.0 ETH working capital it sent into the router/position manager. This is also the 'profit' of Yoink's per-mille bribe rule: 49/1000 x 28.5056 = 1.3968 = the coinbase transfer.",
+   "captured_native": {
+    "amount": 29.178877,
+    "unit": "ETH",
+    "desc": "ETH balance of the TPAD token contract (accumulated trading taxes), swapped via a pool created inside the tx and withdrawn as WETH"
+   },
+   "captured_usd": null,
+   "captured_usd_source": null,
+   "coinbase_paid_eth": 1.396774176782,
+   "priority_fee_paid_eth": 0.0,
+   "builder_refund_to_bot_eth": 0.0,
+   "builder_payout_to_victim_eth": null,
+   "bot_net_eth": 26.324156993719,
+   "loot_note": "bot_net = gross 28.5056 - coinbase 1.3968 - gas 0.7847 (29.38M gas at base fee 26.71 gwei, priority fee 0) = 26.3242 ETH. No builder refund in this block (13 txs; the only builder-sent tx is the proposer payment)."
+  },
+  "fate": {
+   "return_status": "partial",
+   "returned_by_bot_eth": 26.32,
+   "returned_by_builder_eth": null,
+   "returned_total_eth": 26.32,
+   "returned_to": "taopad.eth 0x98915686e23032a1d3b8596badd7fadf147d5c00 (the operator wallet that sent the failed tx)",
+   "returned_desc": "Yoink sent exactly 26.32 ETH to taopad.eth on 2024-02-15T12:53:35Z (block 19233454, tx 0xa0346352...) with the message 'Thanks for the explanation, sent back the entire bot profit.' 99.98% of the bot's net 26.3242 ETH, 92.3% of the 28.5056 ETH gross after working capital (the bribe and gas are sunk). Sequence: TaoPad messaged Yoink at 2024-02-14T13:54:59Z (27 min after the tx); Yoink asked for details 'to make sure it wasn't a failed rug attempt' (20:50:47Z); TaoPad explained at 2024-02-15 09:26-09:37Z; Yoink returned at 12:53:35Z.",
+   "bounty_kept_eth": null,
+   "bounty_desc": "No bounty; Yoink kept only the ~0.0042 ETH difference between the 26.32 round number and its 26.3242 net.",
+   "kept_by_bot_eth": 0.004156993719,
+   "returned_txs": [
+    {
+     "tx": "0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32",
+     "eth": 26.32,
+     "note": "Yoink -> taopad.eth, 'sent back the entire bot profit'",
+     "block": 19233454,
+     "time_utc": "2024-02-15T12:53:35Z"
+    }
+   ],
+   "public_statement": "On-chain messages only (research/lineages/yoink_messages.json; decoded from the Yoink EOA txlist). TaoPad: 'we have been frontran by your bot' / 'we have to extract the rewards ourselves taking advantage of this vulnerability'; Yoink: 'Thanks for the explanation, sent back the entire bot profit.'",
+   "return_status_rule": "returned = everything went back to the victim side except a bounty the victim agreed to or offered; partial = some came back, otherwise; none = known zero within the documented search window; unknown = unresolved"
+  },
+  "raw_refs": {
+   "bot.block": "site/raw/rpc/block_19226503.json",
+   "bot.position": [
+    "site/raw/rpc/block_19226503.json",
+    "site/raw/rpc/receipts_19226503.json"
+   ],
+   "attacker_block": "site/raw/rpc/block_19226482.json",
+   "trigger.first_seen_utc_ms": [
+    "full cache only (not published)",
+    "full cache only (not published)",
+    "incidents/taopad-2024/race_19226482.json"
+   ],
+   "loot.gross_loot_eth": [
+    "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+    "full cache only (not published)"
+   ],
+   "loot.coinbase_paid_eth": [
+    "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+    "site/raw/rpc/trace_block_19226503.json"
+   ],
+   "loot.priority_fee_paid_eth": [
+    "site/raw/rpc/receipts_19226503.json",
+    "site/raw/rpc/block_19226503.json"
+   ],
+   "loot.builder_refund_to_bot_eth": [
+    "site/raw/rpc/block_19226503.json",
+    "site/raw/rpc/trace_block_19226503.json"
+   ],
+   "loot.bot_net_eth": [
+    "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "fate.returned_by_bot_eth": [
+    "site/raw/rpc/tx_0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32.json",
+    "full cache only (not published)"
+   ],
+   "fate.returned_total_eth": [
+    "site/raw/rpc/tx_0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32.json",
+    "full cache only (not published)"
+   ],
+   "fate.kept_by_bot_eth": [
+    "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+    "site/raw/rpc/tx_0xa03463523f384d4240a10829577d807789861a71d2d7886701a4073ebb799c32.json"
+   ],
+   "evidence_level_mempool": [
+    "full cache only (not published)",
+    "full cache only (not published)"
+   ],
+   "operator_tx_trace": "full cache only (not published)",
+   "bot_tx_trace": "site/raw/rpc/trace_0x5853b7a0b09f600baf44317ccc311382c9bc5d954b21968ac0ee3cbae3481c3e.json",
+   "operator_tx": "full cache only (not published)",
+   "bot_tx": "full cache only (not published)",
+   "calldata_compare": "incidents/taopad-2024/call_diff.json",
+   "token_calls_trace_filter": "site/raw/rpc/taopad_tf_token_19226300_19226700.json",
+   "operator_txlist": "site/raw/etherscan/taopad_victim_txlist_19200000_19240000.json",
+   "yoink_txlist_messages": "site/raw/etherscan/taopad_yoink_txlist_19226000_19234000.json",
+   "token_source": "site/raw/etherscan/taopad_source_0x5483dc6abda5f094865120b2d251b5744fc2ecb5.json"
+  },
+  "rawref_gaps": [
+   {
+    "field": "trigger (Yoink)",
+    "why": "Yoink's tx is not in mempool-dumpster; what triggered it (operator's public tx, helper deployment, setPoolFee or independent discovery) is unknown"
+   },
+   {
+    "field": "protocol_loss_usd",
+    "why": "no USD price source saved; 29.18 ETH is the TPAD tax balance taken"
+   },
+   {
+    "field": "earlier third-party TPAD exploit",
+    "why": "TaoPad says the token was exploited weeks earlier; not identified or verified here; no web source fetched (search budget exhausted)"
+   }
+  ],
+  "discrepancies": [
+   "yoink_more_incidents.json calls this 'not an exploit by Yoink: it front-ran the project extracting its own rewards'. The chain shows a replay AFTER the project's tx had already failed (21 blocks, 252 s later), not a front-run of a pending tx.",
+   "TaoPad's message says its tx failed because it 'was frontran'. Its tx reverted out of gas on its own (gas limit 29,792,302; the failing frame is the second swap, which needed more than the ~10.06M gas it was given); Yoink's equivalent swap used 10,041,501 with a 30,000,000 limit.",
+   "leads file est_profit 28.506 ETH is the gross-profit estimate (coinbase / 0.049); the bot's net after bribe and gas is 26.3242 ETH."
+  ],
+  "evidence_notes": [
+   "incidents/taopad-2024/call_diff.json: 9 victim-protocol calls of Yoink's tx pair one-to-one with calls of the operator's tx (same target, selector; 4 byte-identical after normalising the two contracts; the others differ in swap/mint deadline = each tx's block timestamp, one amount-bound word, approve amount). The ETH amounts 0.6667 + 0.3333 and distribute(0) are identical. The operator's trace stops at the second swap (out of gas); Yoink's continues with decreaseLiquidity/collect and two WETH.withdraw.",
+   "site/raw/rpc/taopad_tf_token_19226300_19226700.json: the only calls to TPAD.distribute (0x91c05b0b) in blocks 19226300-19226700 are the operator's reverted one (19226482) and Yoink's (19226503): no other racer, no earlier exploiter in the window.",
+   "site/raw/etherscan/taopad_victim_txlist_19200000_19240000.json: operator nonces 451 (fund deployer, 19226381), 453 (execute, failed), 452 setPoolFee(100) at 19226402 before, 454 setPoolFee(0) at 19226577 after Yoink: no pending operator tx between the failure and Yoink.",
+   "TPAD token source (verified on Etherscan): distribute(uint256 amountOutMinimum) is public, swaps the contract's whole ETH balance to the reward token through Uniswap V3 at the operator-set poolFee with the caller's minimum-out. TaoPad set poolFee to 0 after the incident ('so nobody could exploit Tpad contract again')."
+  ],
+  "incident_dir": "incidents/taopad-2024"
+ }
+]

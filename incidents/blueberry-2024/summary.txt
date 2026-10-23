@@ -1,0 +1,5 @@
+Blueberry Protocol oracle-decimals market drain (c0ffeebabe pre-emption)
+c0ffeebabe.eth's tx took the full market cash (457.68 ETH) one block before the attacker's public tx landed, which then got nothing; the builder passed 366.5 ETH to Blueberry's multisig and c0ffeebabe's EOA later sent it 70 ETH.
+The attacker (EOA 0x0512ac94..., contract 0x70b96d02... deployed 02:18:11 UTC) broadcast its exploit tx 0xb6748899... to the public mempool; first seen 02:22:09.219 UTC (Chainbound), 1.78 s before slot 8485909. c0ffeebabe.eth's tx 0xf0464b01... is index 0 of block 19287289 (02:22:11), the block before the attacker's tx (block 19287290, index 218, 02:22:23). It took the markets' cash (457.68 ETH) and paid 457.55 ETH to the builder; the attacker's tx still succeeded in the next block but received nothing from any market. The attacker's tx was pending in the public mempool when the bot's block was built; the bot's own tx is not in the mempool archive. The relationship is reported only from the public transaction, block, position and funds.
+
+Source: the incident page on the site; every figure links its saved raw response there.

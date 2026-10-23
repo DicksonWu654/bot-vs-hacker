@@ -1,0 +1,15 @@
+Peapods Finance (Ethereum), 2025-07-08: did Yoink front-run the attacker? Verdict: no headline win. Related, but a post-failure replay.
+
+What happened. An attacker (EOA 0x277da2d1, contract 0x7212de58) manipulated the price oracle of Peapods' leveraged pods with a Morpho flash loan, a Uniswap V3 swap, a Curve swap and a pod bond/LP step. At block 22873986 (tx 0xeff836fa, idx 4) the first run on the WETH market netted 78.19 ETH. The attacker then tried the same recipe on a second market, the USDC pair 0xca1154bb, in three consecutive blocks (22874007, 22874008, 22874009). In all three the pair-2 leg reverted inside the attacker's own try/catch, so each outer transaction succeeded with no profit.
+
+Yoink's tx 0xff8e9226 (block 22874010, index 0, 12 seconds after the last attempt) made the same 42 state-changing calls as the attacker's three attempts, with the same 10M USDC Morpho loan and the same swap sizes, and its final borrow passed. It took 174,258.31 USDC (about $174k) from the lending vault, paid 11.4944 ETH to the coinbase (11.9877 ETH across its three txs in the block), and had no builder refund. The attacker's later attempts (22874015, 22874016) found nothing left.
+
+Why not a headline. Every attacker pair-2 attempt had already landed and failed before Yoink acted. The attacker's calldata, simulated on the state just before Yoink's tx, still reverts. We cannot show any attacker tx that was pending and pre-empted; neither side's txs are in the public mempool archive. So Yoink adapted and completed a failed, already-mined attack. Press (Phalcon/BlockSec, Quadriga) calls this "front-run"; the evidence supports "replayed after failure".
+
+Funds. Peapods messaged Yoink on chain (10% bounty offer, 07-10). Yoink's vault sold 33,267.41 USDC for 11.95248 ETH to cover its bribe, then returned 126,891.81 USDC (90% of the rest; 72.8% of the take) to the Peapods team address (tx 0xe64f202c, block 22889167) and kept 14,099.10 USDC.
+
+Other rows. 07-09 block 22883324 (Yoink lead from a Yoink message): 36 Yoink txs, none touch Peapods; rejected. 2025-10-09: a user's removeLeverage stranded 8,957.75 USDC in the LeverageManager and Yoink swept it 10 blocks later (tx 0xe00aea94, block 23540182 idx 0); it returned 1.416285 ETH (90% of net). That is a first-exploiter case, not a race.
+
+Three facts. (1) Attacker's three pair-2 attempts equal Yoink's call sequence call-for-call (similarity 1.0). (2) Yoink's tx is 12 s after the last attempt; the attacker's calldata still reverts on the pre-Yoink state. (3) Yoink returned 72.8% of the gross take after recouping its 11.95 ETH bribe.
+
+Limits. Yoink's trigger and why the attacker's borrow reverted while Yoink's passed are not determined. Yoink's stated cost (11.95248 ETH) differs from the measured coinbase total (11.98767 ETH). ETH values of USDC use the vault's own swap proceeds.
