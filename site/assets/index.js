@@ -1,7 +1,8 @@
 (function () {
   "use strict";
-  /* The landing page: the series intro, a playable Makina race, the three parts, famous races with their full money
-     split, the headline numbers, and the data & evidence layer (race table, race types, lineages, messages). */
+  /* The landing page: the decided headline and who-lost strip, a playable Makina race, the headline numbers, the
+     three parts, the 19-race scoreboard (who lost, full money split), the bot's messages as a chat, and the data &
+     evidence drawers (race table, race types, lineages). */
   var $ = function (s) { return document.querySelector(s); };
   var RV = window.RaceViz, esc = BVH.esc;
   BVH.chrome("index.html");
@@ -12,32 +13,42 @@
   Promise.all([BVH.json("data/incidents.json"), BVH.json("data/incident/makina-2026.json").catch(function () { return null; }), BVH.json("data/evolution.json").catch(function () { return null; }), BVH.json("data/lineages.json").catch(function () { return null; }), BVH.json("data/headline_stats.json"), BVH.json("data/explainer.json").catch(function () { return null; })])
     .then(function (r) {
       headlineStats = r[4]; rows = r[0];
-      hero(r[1], rows); stats(); parts(r[1], r[5], r[2]); famous(); types(); table();
+      hero(r[1], rows); stats(); parts(r[1], r[5], r[2]); board(); types(); table();
       if (r[3]) lineages(r[3]); else { $("#lineages").hidden = true; $("#said").hidden = true; }
-      if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+      /* deep links (index.html#data, #sb-makina-2026 ...) open the drawer they point into */
+      BVH.openHash(null, true);
     })
     .catch(function (e) { BVH.loadError($("#hx-sum"), e); });
 
-  /* ---------- hero: the Makina race, playable ---------- */
+  /* ---------- hero: the decided headline, the 19 who-lost dots, then the Makina race ---------- */
   function hero(D, rows) {
+    var nRaces = rows.filter(function (x) { return x.headline; }).length;
+    $("#hx-dek").innerHTML = esc(BVH.headline(rows)) + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: verdict, note and evidence per race") + "</sup>";
+    $("#hx-strip").innerHTML = BVH.lostStrip(rows);
+    Array.prototype.forEach.call(document.querySelectorAll('a[href="#races"]'), function (a) { a.textContent = "All " + nRaces + " races"; });
+    $("#races-h").textContent = "All " + nRaces + " races, and who lost each one";
     var row = rows.filter(function (x) { return x.id === "makina-2026"; })[0];
     if (!D || !row) { $("#hx-sum").textContent = "The race could not be loaded."; return; }
     var E = RV.E, ev = RV.events(D), dep = ev.filter(function (e) { return e.id === "deploy"; })[0];
-    var bot = D.txs.filter(function (t) { return t.role === "bot"; })[0], m = row.money || {};
+    var bot = D.txs.filter(function (t) { return t.role === "bot"; })[0];
     var fn = RV.footnotes();
     $("#hx-date").textContent = BVH.dateLong(D.date);
-    $("#hx-sum").innerHTML = "Every bid for block " + D.block.number.toLocaleString("en-US") + ", the block the bot's copy ran in, against the clock. Press play to watch from the attacker's deploy; the replay slows down and pauses at each key moment.";
-    var nOther = headlineStats && headlineStats.counts ? headlineStats.counts.headline_rows - 1 : null;
-    $("#hx-dek").innerHTML = "On " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina. " + Math.round(-dep.t / 1000) +
-      " seconds later a bot ran the same plan first and paid " + E(bot.cb_eth) + " to the block builder for the right to go first" + fn(D.incident_raw && D.incident_raw.copy_tx_trace, "Trace of the copy, with the payment to the builder") + "." +
-      (nOther ? " This series replays that race and " + nOther + " others where a bot got to a live exploit first." : "");
-    var chart = RV.auction($("#hx-chart"), D, { compact: true });
-    RV.warp($("#hx-ctrl"), chart, { t0: D.t0_ms, label: "Time in the Makina race", autoplay: "inview" });
-    $("#hx-split").innerHTML = '<p class="hx-split-h">Where the ' + E(row.gross_eth) + " it took went" + BVH.rawA(D.incident_raw && D.incident_raw.copy_tx_trace, "raw", "Trace of the copy") + "</p>" + BVH.splitHTML(BVH.moneySplit(row, "Makina"), { compact: true, labels: { bld: "Builder and proposer" }, sources: BVH.moneySrc(row, D) });
-    $("#hx-src").innerHTML = "Bids for block " + D.block.number.toLocaleString("en-US") + " on a linear scale" + BVH.bidsA(D.auction) + ". <a href=\"race.html\">The whole race, second by second</a>";
+    var IR = D.incident_raw || {};
+    $("#hx-sum").innerHTML = "An attacker deployed Makina's drain contract. The next block, timestamped " + Math.round(-dep.t / 1000) + " seconds later" + timesA(D) +
+      ", held a bot's copy and its " + E(bot.cb_eth) + " payment to the " + BVH.term("builder", "builder") + fn(IR.copy_tx_trace, "Trace of the copy, with the payment to the builder") + ".";
+    var chart = RV.auction($("#hx-chart"), D, { compact: true, inset: false });
+    RV.warp($("#hx-ctrl"), chart, { t0: D.t0_ms, label: "Time in the Makina race", autoplay: "inview", observe: $("#hx-chart"), compact: true });
+    $("#hx-src").innerHTML = "Saved bids for block " + D.block.number.toLocaleString("en-US") + " on a linear scale" + BVH.bidsA(D.auction) + '. <a href="race.html#auction">The whole race, second by second, in Part 1 <span aria-hidden="true">&rarr;</span></a>';
   }
 
   /* ---------- headline numbers: one big figure, one plain sentence, a source marker ---------- */
+  /* the 12 seconds is the gap between two block timestamps: the attacker's deploy (account history) and the copy's block */
+  function timesA(D) {
+    var IR = D.incident_raw || {}, br = D.block && D.block.raw || {};
+    return '<sup class="fn">' + BVH.rawA(IR.attacker_txlist, "deploy", "Attacker account history: the deploy transaction and its block timestamp") + "</sup>" +
+      '<sup class="fn">' + BVH.rawA(br.block, "block", "The copy's block, with its timestamp") + "</sup>";
+  }
+
   /* ======================================================================================
      HEADLINE COPY. Edit the words here; {names} are filled from data/headline_stats.json and
      data/incidents.json so the numbers never drift from the data. Big numbers are rounded for
@@ -49,8 +60,14 @@
     returned: ["{retPct}%", "of what the bots took went back to the victims, across the {retRows} races where the outcome is known. In {retZero} of them, nothing came back."],
     paid:     ["{paidPct}%", "of the take was paid to block builders for the right to go first: {paidEth} ETH, before any refunds."],
     exact:    "Exact values: {takenExact} ETH taken in the {priced} priced races; {retExact} ETH returned of the {retGross} ETH taken in the {retRows} races with a known outcome; {paidExact} ETH paid to builders.",
-    /* who lost each race: one sentence over the three groups, one under them */
-    lostLede: "The series is called The Bot Beat the Hacker, but the one a bot beats is not always the person who started the hack. We checked who sent each losing transaction or setup. In {orig} of the {races} races it was the original attacker ({conf} confirmed, {likely} likely). In {later} it was a later exploiter, or we can't tell.",
+    /* v4 tiles: the same numbers, each with a label of eight words or fewer; the full sentences above sit in the drawer */
+    tiles: {
+      races: "races where a bot got there first",
+      taken: "taken first by the bots, in {priced} priced races",
+      returned: "of the take went back, in {retRows} known-outcome races",
+      paid: "of the take paid to builders, before refunds"
+    },
+    lostWhy: "We checked who sent each losing transaction or setup.",
     lostFoot: "\u201cConfirmed\u201d means the loser's own setup trail or the victim's report ties it to the attack being intercepted; \u201clikely\u201d means a prepared attack with its origin not fully traced. Each race page shows its verdict and the saved responses behind it. <a href=\"methods.html#who-lost\">How we judged who lost</a>."
   };
   function fill(t, v) { return t.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }); }
@@ -70,27 +87,28 @@
     };
     var bc = BVH.beatenCounts(rows);
     v.orig = bc.original; v.conf = bc.confirmed; v.likely = bc.likely; v.later = bc.later;
-    var src = '<sup class="fn">' + BVH.rawA("data/headline_stats.json", "data", "Computed in data/headline_stats.json from the race rows; method on the methods page") + "</sup>";
-    var items = [HEADLINE.races, HEADLINE.taken, HEADLINE.returned, HEADLINE.paid];
-    $("#stats").innerHTML = items.map(function (it) { return '<div class="num" role="listitem"><b>' + fill(it[0], v) + src + "</b><span>" + fill(it[1], v) + "</span></div>"; }).join("");
-    var ex = $("#statexact"); if (ex) ex.textContent = fill(HEADLINE.exact, v);
-    /* who lost: only drawn when every headline race carries a verdict */
-    if (bc.total === c.headline_rows) {
-      $("#wl-lede").innerHTML = fill(HEADLINE.lostLede, v) + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: verdict, note and evidence per race") + "</sup>";
-      $("#wholost").innerHTML = BVH.whoLostHTML(rows);
-      $("#wl-foot").innerHTML = HEADLINE.lostFoot;
-    } else { $("#who-lost").hidden = true; }
+    var src = BVH.rawA("data/headline_stats.json", "data", "Computed in data/headline_stats.json from the race rows; method on the methods page");
+    var T = HEADLINE.tiles;
+    $("#stats").innerHTML = BVH.tiles([
+      { big: fill("{races}", v), label: T.races, cls: "t-bot", src: src },
+      { big: fill("<small class=\"pre\">about</small>{takenRound}<small> ETH</small>", v), label: fill(T.taken, v), src: src },
+      { big: fill("{retPct}%", v), label: fill(T.returned, v), cls: "t-ret", src: src },
+      { big: fill("{paidPct}%", v), label: T.paid, src: src }
+    ], { cls: "tiles-4", label: "The headline numbers" });
+    var items = [HEADLINE.taken, HEADLINE.returned, HEADLINE.paid];
+    $("#stat-drawer").innerHTML = BVH.drawer("What each number counts", '<ul class="statfull"><li>' + BVH.esc(BVH.headline(rows)) + "</li>" + items.map(function (it) { return "<li><b>" + fill(it[0], v).replace(/<small[^>]*>|<\/small>/g, "") + "</b> " + fill(it[1], v) + "</li>"; }).join("") + "</ul>" +
+      '<p class="statnote">' + fill(HEADLINE.exact, v) + '</p><p class="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#data">the race table</a>, with a link to the saved source behind every value.</p>', { meta: "exact values and scope", id: "stat-notes" });
   }
 
   /* ---------- the three parts ---------- */
   function parts(D, X, Ev) {
     var tz = {};
-    if (D) { var dep = RV.events(D)[0]; tz[1] = ['<span class="pt-big">' + Math.round(-dep.t / 1000) + " s</span>", "from the attacker's deploy to the bot's copy at position 0"]; }
-    if (X && X.words_total) tz[2] = ['<span class="pt-big">' + (X.words_total - X.words_different) + " of " + X.words_total + "</span>", "calldata words identical between the Ronin withdrawal and the bot's copy"];
-    if (Ev && Ev.measured) tz[3] = ['<span class="pt-big">' + Ev.measured.attacker_seen_pct + "%</span>", "of attacker transactions were visible in the public mempool, against " + Ev.measured.control_seen_pct + "% of ordinary ones"];
+    if (D) { var dep = RV.events(D)[0]; tz[1] = ['<span class="pt-big">' + Math.round(-dep.t / 1000) + " s" + timesA(D) + "</span>", "between block timestamps"]; }
+    if (X && X.words_total) tz[2] = ['<span class="pt-big">' + (X.words_total - X.words_different) + " of " + X.words_total + '<sup class="fn">' + BVH.rawA(X.raw && X.raw.user_tx, "user", "The Ronin withdrawal transaction") + '</sup><sup class="fn">' + BVH.rawA(X.raw && X.raw.yoink_tx, "bot", "The bot's transaction") + "</sup></span>", "32-byte words match"];
+    if (Ev && Ev.measured) tz[3] = ['<span class="pt-big">' + Ev.measured.attacker_seen_pct + '%<sup class="fn">' + BVH.rawA("data/evolution.json", "data", "Part 3's measured shares and their sample") + "</sup></span>", "of sampled attacks seen in public; other transactions in their blocks " + Ev.measured.control_seen_pct + "%"];
     $("#parts").innerHTML = BVH.SERIES.map(function (s) {
       var t = tz[s.part];
-      return '<a class="part" href="' + s.href + '"><span class="pt-art night" data-pt-art="' + s.part + '" aria-hidden="true"></span><span class="pt-n">Part ' + s.part + '</span><h3>' + s.title + "</h3><p>" + s.blurb + "</p>" + (t ? '<p class="pt-tz">' + t[0] + "<span>" + t[1] + "</span></p>" : "") + '<span class="pt-go">Read part ' + s.part + "</span></a>";
+      return '<div class="part"><span class="pt-art night" data-pt-art="' + s.part + '" aria-hidden="true"></span><span class="pt-main"><span class="pt-n">Part ' + s.part + '</span><h3><a class="pt-link" href="' + s.href + '">' + s.title + "</a></h3>" + (t ? '<span class="pt-tz">' + t[0] + "<span>" + t[1] + "</span></span>" : "") + "</span></div>";
     }).join("");
     /* each card carries a small piece of its part's code-made art (same data as the part's opener) */
     var ART = { 1: ["gate", { id: "makina-2026", x: 0.7, trails: false, fade: "none" }], 2: ["rain", { fade: "none" }], 3: ["fog", { fade: "none" }] };
@@ -99,33 +117,11 @@
     });
   }
 
-  /* ---------- famous names first, each with the whole money split ---------- */
-  var FAMOUS = [
-    ["makina-2026", "Makina"], ["curve-vyper-2023--peth", "JPEG'd"], ["curve-vyper-2023--crv-eth-2", "Curve"], ["kelp-rseth-2026", "the Safe's owner"],
-    ["ronin-2024--eth-leg", "Ronin"], ["blueberry-2024", "Blueberry"], ["punk-2021", "Punk"], ["earningfarm-2022", "Earning.Farm"], ["dodo-v2-2021", "DODO"]
-  ];
-  function famous() {
-    Promise.all(FAMOUS.map(function (f) { return BVH.json("data/incident/" + f[0] + ".json").catch(function () { return null; }); })).then(drawFamous);
-  }
-  function drawFamous(DS) {
-    var E = RV.E;
-    $("#famlist").innerHTML = FAMOUS.map(function (f, fi) {
-      var r = rows.filter(function (x) { return x.id === f[0]; })[0];
-      if (!r) return "";
-      var s = BVH.moneySplit(r, f[1]), name = r.title.split(":")[0].replace(/^Curve \/ Vyper$/, "Curve").trim();
-      var sub = r.sub && r.title.indexOf(":") > 0 ? r.title.split(":").slice(1).join(":").trim() : "";
-      var bot = String(r.bot || "").replace(/\s*\(.*\)\s*$/, "").trim();
-      var href = "incident.html?slug=" + encodeURIComponent(r.slug) + (r.sub ? "&sub=" + encodeURIComponent(r.sub) : "");
-      var kept = s.parts.filter(function (p) { return p.k === "bot"; })[0];
-      var plain = "";
-      if (!s.priced && r.id === "dodo-v2-2021") { var dm = /and ([\d.]+) ETH to/.exec(r.fate || ""); plain = "Antelope later sent back tokens" + (dm ? " and " + RV.E(+dm[1]) : "") + " to DODO; the return is not reconciled with the take."; }
-      if (kept && kept.eth < 0.0005) plain = "The bot kept nothing.";
-      else if (kept && s.priced && kept.eth / s.gross < 0.001) plain = "The bot kept next to nothing.";
-      return '<li class="fx"><div class="fx-id"><a class="fx-name" href="' + href + '">' + esc(name) + "</a>" + '<span class="fx-meta">' + r.date.slice(0, 4) + (sub ? ", " + esc(sub) : "") + "</span>" +
-        '<span class="fx-bot">' + esc(bot) + (r.headline ? "" : ' <span class="pill no" title="' + esc(BVH.RT[r.race_type] ? BVH.RT[r.race_type].def : "") + '">not in the headline count</span>') + "</span>" + (r.headline ? BVH.beatenHTML(r, { compact: true, note: true }) : '<p class="beaten-c fx-notrace">' + esc(BVH.RT[r.race_type] ? BVH.RT[r.race_type].def : "") + "</p>") + "</div>" +
-        '<div class="fx-amt">' + (s.priced ? E(s.gross, s.gross >= 100 ? 0 : 2) : "tokens") + (s.priced ? '<small>taken' + BVH.rawA(r.raw && r.raw.trace, "raw", "Block trace with the bot's take") + "</small>" : "<small>not priced in ETH</small>") + "</div>" +
-        '<div class="fx-split">' + BVH.splitHTML(s, { inline: true, labels: { bld: "To the builder and proposer", ret: "Returned to " + f[1] }, sources: BVH.moneySrc(r, DS[fi]) }) + (plain ? '<p class="fx-plain' + (s.priced ? "" : " fx-muted") + '">' + plain + "</p>" : "") + "</div></li>";
-    }).join("");
+  /* ---------- the scoreboard: 19 rows, grouped by who lost, the whole split on every row ---------- */
+  function board() {
+    BVH.scoreboard($("#board"), rows, { victims: { "makina-2026": "Makina", "kelp-rseth-2026": "the Safe's owner" } });
+    $("#lost-drawer").innerHTML = BVH.drawer("How we judged who lost", "<p>" + HEADLINE.lostWhy + " " + HEADLINE.lostFoot + "</p>" +
+      '<p class="sb-src">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: verdict, note and evidence per race") + " every verdict, with its note and evidence</p>", { meta: "confirmed, likely, later" });
   }
 
   function types() {
@@ -197,6 +193,7 @@
         return (typeof x === "string" ? x.localeCompare(y) : x - y) * sortDir;
       });
       $("#count").textContent = list.length + " races" + (filter === "all" ? "" : ", each with who lost");
+      var dm = $("#data-meta"); if (dm) dm.textContent = COLS.length + " fields per race";
       var head = "<thead><tr>" + COLS.map(function (c) {
         var s = sortKey === c[0] ? (sortDir > 0 ? "ascending" : "descending") : "none";
         return '<th scope="col" class="' + (c[2] ? "num" : "") + '" aria-sort="' + s + '"><button type="button" data-k="' + c[0] + '">' + c[1] + "</button></th>";
@@ -238,15 +235,23 @@
       '<div class="lin"><h3>Yoink, 2022 to 2026</h3><p>One deployer address has put up <b>' + y.contracts + ' contracts</b>' + BVH.rawA(y.raw, "raw", "Contract-creation transactions of Yoink\'s deployer address, cut from the saved Etherscan list") +
       ', the first in August 2022. Rows in this piece: ' + yRaces + '.</p></div>' +
       '<div class="lin"><h3>The 0xa57 family, 2019 to 2022</h3><p>The searcher that replayed the DODO attack in 2021 (&ldquo;Cheetah&rdquo;) and the one behind the Earning.Farm copy in 2022 look like <b>one operator</b>, not two. The same capital wallet (0x56178a0d) received the DODO take&nbsp;' + BVH.rawAs(A.dodo_take, "raw", "Receipt of Cheetah\'s DODO transaction: 1,139,456.204396 USDT end up at 0x56178a0d") + '&nbsp;and supplied the Earning.Farm capital&nbsp;' + BVH.rawAs(A.ef_capital, "raw", "Call trace of the Earning.Farm copy: 0x56178a0d is the source and the destination of the WETH it moves") + ', and the same deployer wallet (0x8641df2d) put up both generations of the bot&rsquo;s contracts&nbsp;' + BVH.rawAs(A.deployer, "raw", "Etherscan rows of the two deployer transactions, and the creation record of 0xa69babef") + '. Confidence is high, based on an inference from public Etherscan histories. The infrastructure goes back to 2019 and kept running after our two races. Races: <a href="incident.html?slug=dodo-v2-2021">DODO 2021</a> and <a href="incident.html?slug=earningfarm-2022">Earning.Farm 2022</a>.</p></div>';
-    $("#msglist").innerHTML = (mm.groups || []).map(function (g) {
-      var msgs = g.messages.map(function (m) {
+    /* the bot's messages: one exchange as a chat thread, the rest in a drawer; tx details behind a toggle on each bubble */
+    function when(m) { var d = m.time_utc; return BVH.dateLong(d.slice(0, 10)) + ", " + d.slice(11, 16) + " UTC"; }
+    function thread(g) {
+      return BVH.chat(g.messages.map(function (m) {
         var mine = m.dir === "from_yoink";
-        return '<figure class="msg ' + (mine ? "out" : "in") + '"><blockquote>' + BVH.esc(m.text) + '</blockquote><figcaption>' + (mine ? "Yoink wrote" : "Sent to Yoink") + ', ' + m.time_utc.replace("T", " ").replace("Z", " UTC") + ' &middot; <a class="raw" href="https://etherscan.io/tx/' + m.tx + '" target="_blank" rel="noopener" title="Open on Etherscan (external)">' + BVH.short(m.tx, 10, 6) + '</a>' + BVH.rawA(mm.raw, "raw", "Verbatim Etherscan row for this message transaction") + (m.failed ? ' <span class="pill no" title="The transaction reverted, so the value it names did not move here">reverted</span>' : "") + '</figcaption></figure>';
-      }).join("");
-      var ex = g.extra ? '<p class="small muted mono">' + BVH.esc(g.extra.label) + ', ' + BVH.esc(g.extra.time_utc) + ': <a class="raw" href="https://etherscan.io/tx/' + g.extra.tx + '" target="_blank" rel="noopener" title="Open on Etherscan (external)">' + BVH.short(g.extra.tx, 10, 6) + '</a>' + BVH.rawA(mm.raw, "raw", "Verbatim Etherscan row") + '</p>' : "";
-      return '<div class="msgg"><h3>' + BVH.esc(g.heading) + '</h3><p class="muted">' + BVH.esc(g.context) + (g.incident ? ' <a href="incident.html?slug=' + g.incident + '">Race page</a>' : "") + '</p>' + msgs + ex + '</div>';
-    }).join("");
-    $("#msgnote").innerHTML = "Messages are the transaction input data of Yoink&rsquo;s address and of transactions sent to it, decoded as text. These are a selection of " + (mm.groups || []).length + " exchanges. Off-chain Blockscan Chat messages are not on chain and are not included. Who wrote the incoming messages is as claimed in the message itself.";
+        return { side: mine ? "out" : "in", who: mine ? "Yoink wrote" : "Sent to Yoink", when: when(m), text: esc(m.text),
+          tx: '<a class="raw" href="https://etherscan.io/tx/' + m.tx + '" target="_blank" rel="noopener" title="Open on Etherscan (external)">' + BVH.short(m.tx, 10, 6) + "</a>" + BVH.rawA(mm.raw, "raw", "Verbatim Etherscan row for this message transaction") + " block " + m.block.toLocaleString("en-US") + (m.failed ? ' <span class="pill no" title="The transaction reverted, so the value it names did not move here">reverted</span>' : "") };
+      }), { label: g.heading });
+    }
+    function group(g, lead) {
+      var ex = g.extra ? '<p class="cb-extra">' + esc(g.extra.label) + ", " + esc(g.extra.time_utc) + ': <a class="raw" href="https://etherscan.io/tx/' + g.extra.tx + '" target="_blank" rel="noopener" title="Open on Etherscan (external)">' + BVH.short(g.extra.tx, 10, 6) + "</a>" + BVH.rawA(mm.raw, "raw", "Verbatim Etherscan row") + "</p>" : "";
+      return '<div class="msgg' + (lead ? " msgg-lead" : "") + '"><h3>' + esc(g.heading) + '</h3><p class="msgg-ctx">' + esc(g.context) + (g.incident ? ' <a href="incident.html?slug=' + g.incident + '">Race page</a>' : "") + "</p>" + thread(g) + ex + "</div>";
+    }
+    var G = mm.groups || [], lead = G.filter(function (g) { return g.key === "botbot"; })[0] || G[0], rest = G.filter(function (g) { return g !== lead; });
+    if (lead) { $("#said-one").innerHTML = group(lead, true); BVH.buildIn($("#said-one"), "rise"); }
+    $("#said-more").innerHTML = BVH.drawer("Read all " + G.length + " exchanges", rest.map(function (g) { return group(g); }).join("") +
+      '<p class="tblnote">Messages are the transaction input data of Yoink&rsquo;s address and of transactions sent to it, decoded as text. These are a selection of ' + G.length + " exchanges. Off-chain Blockscan Chat messages are not on chain and are not included. Who wrote the incoming messages is as claimed in the message itself.</p>", { meta: rest.length + " more threads", id: "said-all" });
   }
 
 })();

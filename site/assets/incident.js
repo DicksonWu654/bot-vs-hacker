@@ -40,13 +40,6 @@
   function niceMax(v) { var st = [1, 2, 2.5, 5, 10], p = Math.pow(10, Math.floor(Math.log10(v || 1))); for (var i = 0; i < st.length; i++) if (st[i] * p >= v) return st[i] * p; return 10 * p; }
   function tickStep(max, n) { var raw = max / (n || 5), p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
   function fmtTick(v) { if (v === 0) return "0"; if (v >= 1000) return v.toLocaleString("en-US"); if (v >= 1) return String(+v.toFixed(2)); return String(+v.toPrecision(2)); }
-  /* time scale with an optional break: [t0, tb] gets `frac` of the width, [tb, t1] the rest; both linear */
-  function timeScale(t0, tb, t1, r0, r1, frac) {
-    if (tb == null || tb <= t0 || tb >= t1) { var l = BVH.lin(t0, t1, r0, r1); l.rb = null; return l; }
-    var rb = r0 + (r1 - r0) * frac, a = BVH.lin(t0, tb, r0, rb), b = BVH.lin(tb, t1, rb, r1);
-    var f = function (t) { return t <= tb ? a(t) : b(t); };
-    f.rb = rb; f.tb = tb; return f;
-  }
   function qhref(r) { return "incident.html?slug=" + encodeURIComponent(r.slug) + (r.sub ? "&sub=" + encodeURIComponent(r.sub) : ""); }
   function kicker() { return '<p class="series-kicker inc-kicker"><span class="sk-n">Data &amp; evidence</span><span class="sk-t"><a href="index.html#data">Every race</a> / one race, every source</span></p>'; }
   function subtabs(sibs, curId) {
@@ -84,7 +77,8 @@
     h += '<p class="lede">' + esc(D.one_liner || "") + "</p>";
     /* who lost this race: the original attacker, probably the original attacker, or a later exploiter (row.beaten) */
     if (D.headline && row && row.beaten) h += BVH.beatenHTML(row);
-    if (PART1[D.id]) h += '<p class="inc-p1"><a href="' + PART1[D.id] + '">' + (D.id === "makina-2026" ? "Read this race as a story in Part 1: The race" : "This race is in the Part 1 gallery: The race") + "</a></p>";
+    if (D.id === "makina-2026") h += '<p class="inc-p1"><a href="race.html">Read this race as a story in Part 1: The race</a></p>';
+    else if (row && row.headline) h += '<p class="inc-p1"><a href="race.html#sb-' + encodeURIComponent(row.id) + '">This race in the Part 1 scoreboard: The race</a></p>';
     h += "</header>";
     h += keyNumbers(D, row);
     if (D.caveat) h += '<p class="callout">' + esc(D.caveat) + '</p>';
@@ -102,6 +96,8 @@
     blockSection(D);
     moneySection(D, row);
     below(D, row, rows);
+    BVH.buildIn(document.querySelector("#money .inc-split"), "bars");
+    BVH.openHash(null, true);
   }
 
   /* big numbers at the top, each with its source */
@@ -192,11 +188,12 @@
     h += "</div>";
     if (!hasBids) { el.innerHTML = h + noBids(D); var gb = document.getElementById("gasbox"); if (gb) drawGas(gb, D); return; }
     var ev = events(D);
-    h += '<figure class="auc-fig inc-fig"><div class="auc-ctrl" id="auc-ctrl"></div>' +
+    h += '<figure class="auc-fig inc-fig">' +
       '<ul class="fig-key inc-key" aria-label="Chart key"><li><i class="k-dot"></i>bids from other builders</li>' + (A.winner && A.winner.builder && B.builders.indexOf(A.winner.builder) >= 0 ? '<li><i class="k-dotw"></i>bids from ' + esc(A.winner.builder) + " (won)</li>" : "") + '<li><i class="k-rec"></i>best bid so far</li>' + (A.winner && A.winner.builder && B.record.some(function (r) { return B.builders[r[2]] === A.winner.builder; }) ? '<li><i class="k-recw"></i>best bid, held by the winning builder</li>' : "") + (A.winner && A.winner.eth != null ? '<li><i class="k-win"></i>winning bid</li>' : "") + (ev.some(function (e) { return e.id === "deploy" || e.id === "seen"; }) ? '<li><i class="k-atk"></i>' + (D.race_type === "beat-whitehat-or-user" ? "copied transaction" : "attacker") + "</li>" : "") + "</ul>" +
-      '<div class="auc-box" id="auc"></div>' +
-      '<figcaption class="auc-src" id="auc-src"></figcaption></figure>' +
-      '<ol class="auc-steps inc-steps" id="auc-steps" aria-label="Key moments, in order"></ol>';
+      '<div class="auc-box" id="auc"></div><div class="auc-ctrl" id="auc-ctrl"></div>' +
+      '<figcaption class="auc-src" id="auc-src1"></figcaption></figure>' +
+      BVH.drawer("How to read this chart", '<p class="auc-src" id="auc-src"></p>', { meta: "bids, builders, sources", id: "auc-read" }) +
+      BVH.drawer("The key moments, in order", '<ol class="auc-steps inc-steps" id="auc-steps" aria-label="Key moments, in order"></ol>', { meta: (function () { var nt = ev.filter(function (e) { return e.t != null; }).length; return nt < ev.length ? nt + " timed moments, plus an untimed note" : nt + " moments, each with its time and source"; })(), id: "auc-moments" });
     el.innerHTML = h;
     var list = document.getElementById("auc-steps");
     /* the shared race player (race.js): event-driven time warp, holds on each moment, a linear ETH axis that widens as bids grow */
@@ -208,6 +205,7 @@
     function mark(n) { Array.prototype.forEach.call(list.children, function (li) { var k = +li.getAttribute("data-n"); li.classList.toggle("is-cur", k === n); li.classList.toggle("is-future", k > n && n > 0); }); }
     window.RaceViz.warp(document.getElementById("auc-ctrl"), chart, { t0: D.t0_ms, label: "Moment in the race (drag to scrub)" });
     var W = A.winner || {}, winInFiles = W.builder && B.builders.indexOf(W.builder) >= 0;
+    document.getElementById("auc-src1").innerHTML = ((A.raw.capped || []).length ? "At least " : "") + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.sources(BVH.bidsA(A) + (W.eth != null ? rawA(A.raw.delivered, "delivered", "Relay record of the payload delivered to the proposer") : "")) + ", on a linear ETH scale.";
     var mem = M.state === "measured" ? "" : " Mempool: " + esc(M.note) + (M.coverage_raw ? rawA(M.coverage_raw, "raw", "Mempool archive index for that month") : "");
     document.getElementById("auc-src").innerHTML = "Each column is one block a builder offered the proposer, rising to the price it offered. " + ((A.raw.capped || []).length ? "At least " : "") + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.bidsA(A) + "; " + B.n_shown + " are drawn, including every new best bid" + (B.n_offslot ? " (" + B.n_offslot + " rows for a competing slot left out)" : "") + "." +
       (W.builder ? (winInFiles ? " Amber columns are " + esc(W.builder) + "'s bids; the best-bid line is amber while " + esc(W.builder) + " holds it." : " The winning builder, " + esc(W.builder) + ", has no bids in these files.") : "") +
@@ -257,7 +255,13 @@
       tops.forEach(function (t, k) {
         var ly = 16 + k * 16;
         o += '<line x1="' + t[0].toFixed(1) + '" x2="' + t[0].toFixed(1) + '" y1="' + (ly + 5) + '" y2="' + (y(t[2][3] || 0) - 2).toFixed(1) + '" class="inc-lead-gold"/>';
-        o += '<text x="' + t[0].toFixed(1) + '" y="' + ly + '" text-anchor="' + (t[1] === "middle" ? "start" : t[1]) + '" class="auc-lab inc-lab-gold">position ' + t[2][0] + ": +" + E(t[2][4]) + " direct to the " + who + "</text>";
+        var lab = "position " + t[2][0] + ": +" + E(t[2][4]) + " direct to the " + who;
+        /* narrow charts: the key under the chart already names the gold mark, so the callout keeps only the amount */
+        if (lab.length * 8.6 > w - 8) lab = "position " + t[2][0] + ": +" + E(t[2][4]);
+        var lw = lab.length * 8.6;
+        /* keep the callout inside the chart: anchor at its end when it would run past the right edge */
+        var la = t[0] + lw > w - 4 ? (t[0] - lw < 4 ? "start" : "end") : "start", lx = la === "start" && t[0] + lw > w - 4 ? 4 : t[0];
+        o += '<text x="' + lx.toFixed(1) + '" y="' + ly + '" text-anchor="' + la + '" class="auc-lab inc-lab-gold">' + lab + "</text>";
       });
       bars.forEach(function (b, i) { if (i % (K > 20 ? 5 : 2) === 0 || b[2]) o += '<text x="' + (m.l + i * bw + 1 + bw / 2).toFixed(1) + '" y="' + (h - m.b + 15) + '" text-anchor="middle" class="auc-tick auc-tick-s">' + b[0] + "</text>"; });
       o += '<text x="' + (w - m.r) + '" y="' + (h - 3) + '" text-anchor="end" class="auc-axlab">block position' + (D.block.ntx > K ? " (first " + K + " of " + D.block.ntx + ")" : "") + "</text></svg>";
@@ -318,13 +322,13 @@
     var tr = (row.raw && row.raw.trace) || D.block.raw.trace;
     var h = '<div class="inc-head2"><p class="r-beat">Where the money went</p><h2 id="money-h">' + (split.priced ? "Where the " + E(split.gross, split.gross >= 100 ? 0 : 2) + " went" : "Where the money went") + "</h2>";
     h += '<p class="r-lede">' + (split.priced ? "The bot took " + E(split.gross) + rawA(tr, "raw", "Block trace with the bot's take") + ". The whole split: what went back to " + esc(victim) + ", what the bot paid the block builder and proposer for going first, and what the bot kept." : "The bot took tokens, not ETH" + rawA(tr, "raw", "Block trace with the bot's take") + ", and we do not price them, so the split cannot be drawn to scale. What is known is written out under Afterwards.") + "</p></div>";
-    h += '<div class="inc-split">' + BVH.splitHTML(split, { labels: { ret: "Returned to " + victim }, sources: BVH.moneySrc(row, D) }) + (split.priced && !split.mixed ? '<p class="inc-split-x">The builder-and-proposer share is the bot\'s payment for going first.' + (split.parts.some(function (p) { return p.k === "unk"; }) ? " Unknown means no return is established in our sources; it is shown, not hidden." : "") + (split.parts.some(function (p) { return p.k === "bot" && p.eth < 0.0005; }) ? " The bot kept nothing." : "") + "</p>" : "") + "</div>";
+    h += '<div class="inc-split">' + BVH.splitHTML(split, { labels: { ret: "Returned to " + victim }, sources: BVH.sources(BVH.moneySrc(row, D)) }) + (split.priced && !split.mixed ? '<p class="inc-split-x">The builder-and-proposer share is the bot\'s payment for going first.' + (split.parts.some(function (p) { return p.k === "unk"; }) ? " Unknown means no return is established in our sources; it is shown, not hidden." : "") + (split.parts.some(function (p) { return p.k === "bot" && p.eth < 0.0005; }) ? " The bot kept nothing." : "") + "</p>" : "") + "</div>";
     h += '<h3 class="inc-h3">Inside the block: what happened to the payment</h3>' + inBlock(D);
     if (D.dataset_money && D.dataset_money.scope !== "bot-tx") {
       var dm = D.dataset_money;
       h += '<p class="callout"><b>Dataset aggregate (' + esc(dm.scope) + '):</b> ' + E(dm.paid_to_builder_eth) + ' paid to the builder before refunds; ' + E(dm.builder_refund_eth || 0) + ' refunded. The block above covers the selected block. ' + esc(dm.note || '') + '</p>';
     }
-    h += '<h3 class="inc-h3">Afterwards</h3>' + afterwards(D);
+    h += '<h3 class="inc-h3">Afterwards</h3>' + afterwards(D, true);
     el.innerHTML = h;
   }
   function inBlock(D) {
@@ -341,12 +345,12 @@
     out += '<p class="small muted mono">Read from the block itself: transfers from the builder\'s fee recipient after the bot\'s transaction. Who the builder works for is not on chain.</p>';
     return out;
   }
-  function afterwards(D) {
+  function afterwards(D, drawer) {
     var out = "", after = D.events.filter(function (e) { return e.t != null && e.t > D.block.ts_ms + 1000 && ["return", "message", "tx", "fund"].indexOf(e.kind) >= 0; });
     if (D.fate && D.fate.text) out += '<div class="callout ' + (D.fate.kind === "returned" ? "good" : D.fate.kind === "kept" ? "bad" : "") + '"><b>' + ({ returned: "Returned. ", partial: "Partly returned. ", kept: "No return found. ", unknown: "Unknown. ", "n-a": "" }[D.fate.kind] || "") + "</b>" + esc(D.fate.text) + (D.fate.returned_pct != null ? " That is about " + D.fate.returned_pct + "% of the bot's gross take (our arithmetic from the transfers listed below)." : "") + "</div>";
-    if (after.length) out += '<ol class="after inc-after">' + after.map(function (e) {
+    if (after.length) out += (drawer ? '<details class="drawer" id="afterwards"><summary><span class="dr-t">Recorded transfers and messages</span><span class="dr-m">' + after.length + " recorded events, with sources</span></summary><div class=\"dr-b\">" : "") + '<ol class="after inc-after">' + after.map(function (e) {
       return '<li class="af-' + esc(e.kind) + '"><span class="af-t">' + BVH.utc(e.t).replace(" UTC", "") + ' UTC<small>' + BVH.dur(e.t - D.block.ts_ms) + ' after the block</small></span><span class="af-k">' + esc(e.kind === "return" ? "funds move" : e.kind === "message" ? "on-chain message" : e.kind) + '</span><span class="af-d">' + esc(e.detail || "") + BVH.derivedTxt(e) + ((e.raws && e.raws.length) ? BVH.rawAs(e.raws) : rawA(e.raw)) + (e.actor ? "<small>" + esc(e.actor) + "</small>" : "") + "</span></li>";
-    }).join("") + "</ol>";
+    }).join("") + "</ol>" + (drawer ? "</div></details>" : "");
     else out += '<p class="muted">No later transfers or messages were recorded for this race.</p>';
     return out;
   }
@@ -354,12 +358,15 @@
   /* ================================================================ the evidence below */
   function below(D, row, rows) {
     var el = document.getElementById("below"), h = "";
-    h += '<section class="inc-sec inc-ev" aria-labelledby="ev-h"><div class="inc-head2"><p class="r-beat">The evidence</p><h2 id="ev-h">Every source for this race</h2></div><div class="cols"><div><h3 class="inc-h3">What the data says</h3>' + facts(D, row) + '</div><div><h3 class="inc-h3">The block</h3>' + blockFacts(D) + "</div></div></section>";
-    h += '<section class="inc-sec" id="ledger"><h3 class="inc-h3">Every timestamp, with its source</h3><p class="prose small muted">Each row links to the saved response the time or number came from. Times are UTC; the offset is from the start of the slot.</p>' + ledger(D) + "</section>";
-    h += '<section class="inc-sec" id="txs"><h3 class="inc-h3">Transactions that matter in the block</h3>' + txTable(D) + "</section>";
+    /* v4: the evidence stays one tap away, in closed drawers whose summaries say what is inside; #ledger / #txs links open them */
+    var led = ledger(D), nLed = (led.match(/<tr><td/g) || []).length, txt = txTable(D), nTx = (txt.split("</table>")[0].match(/<tr><td/g) || []).length;
+    h += '<section class="inc-sec inc-ev" aria-labelledby="ev-h"><div class="inc-head2"><p class="r-beat">The evidence</p><h2 id="ev-h">Every source for this race</h2></div>' +
+      BVH.drawer("What the data says, and the block", '<div class="cols"><div><h3 class="inc-h3">What the data says</h3>' + facts(D, row) + '</div><div><h3 class="inc-h3">The block</h3>' + blockFacts(D) + "</div></div>", { meta: "the race's key values, each with its source", id: "facts", cls: "drawer-wide" }) +
+      BVH.drawer("Every timestamp, with its source", '<p class="prose small muted">Each row links to the saved response the time or number came from. Times are UTC; the offset is from the start of the slot.</p>' + led, { meta: nLed + " rows", id: "ledger", cls: "drawer-wide" }) +
+      BVH.drawer("Transactions that matter in the block", txt, { meta: Math.max(0, nTx) + " transactions", id: "txs", cls: "drawer-wide" });
     if (D.timeline_publication_gaps && D.timeline_publication_gaps.length) h += '<p class="small muted">' + D.timeline_publication_gaps.length + ' source timeline entries are omitted pending complete evidence in the published responses. The repository retains the source records.</p>';
-    if (D.narrative) h += '<section class="inc-sec"><details><summary class="mono small" style="cursor:pointer">Full evidence note from the investigation</summary><p class="prose" style="margin-top:12px">' + esc(D.narrative) + "</p></details></section>";
-    h += caveats(D);
+    if (D.narrative) h += BVH.drawer("Full evidence note from the investigation", '<p class="prose">' + esc(D.narrative) + "</p>", { cls: "drawer-wide", id: "note" });
+    h += caveats(D) + "</section>";
     h += neighbours(rows, D.id);
     el.innerHTML = h;
     el.querySelectorAll("table.led").forEach(function (t) {
@@ -445,6 +452,6 @@
     c.push("Bid times are each relay's own receive clock, so cross-relay comparison carries clock skew and network latency.");
     if (D.mempool.state !== "measured") c.push("Mempool: " + D.mempool.note);
     c.push("First seen means first seen by the archive's sources, not by the bot. The bot may have learned of the attack earlier or by another route.");
-    return '<section class="inc-sec"><h3 class="inc-h3">Limits of this reconstruction</h3><ul class="prose small" style="padding-left:1.1em">' + c.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="small"><a href="methods.html">Methods, evidence levels and limitations</a></p></section>';
+    return BVH.drawer("Limits of this reconstruction", '<ul class="prose small" style="padding-left:1.1em">' + c.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="small"><a href="methods.html">Methods, evidence levels and limitations</a></p>', { meta: c.length + " limits", id: "limits", cls: "drawer-wide" });
   }
 })();

@@ -19,7 +19,7 @@
   BVH.SERIES = [
     { part: 1, href: "race.html", title: "The race", blurb: "Makina, January 2026, second by second: a contract deployed, twelve seconds of bidding, and where 1,299 ETH went." },
     { part: 2, href: "explainer.html", title: "How the bot works", blurb: "How Yoink copied a Ronin bridge withdrawal, step by step: watch, simulate, swap the beneficiary, bid, get in first, pay out." },
-    { part: 3, href: "evolution.html", title: "Has the dark forest changed?", blurb: "Attackers went private, exploits moved into constructors, and the window a bot can use keeps shrinking." }
+    { part: 3, href: "evolution.html", title: "Has the dark forest changed?", blurb: "Sampled attacks often went unseen in public or ran during contract creation, narrowing the copying window." }
   ];
   BVH.DATA_LINKS = [["index.html#data", "Every race"], ["methods.html", "Methods"], ["paper.html", "Paper"], ["data/incidents.json", "Download the data"]];
   var DATA_PAGES = { "methods.html": 1, "paper.html": 1, "incident.html": 1, "index.html#table": 1, "index.html#data": 1 };
@@ -415,7 +415,7 @@
   /* the bar + key; opts: { compact: bool, labels: {k: text} } */
   BVH.splitHTML = function (s, opts) {
     opts = opts || {};
-    var src = opts.sources ? '<p class="split-src">' + opts.sources + "</p>" : "";
+    var src = opts.sources ? '<div class="split-src">' + opts.sources + "</div>" : "";
     if (s.mixed) {
       var k = s.known || {};
       return '<div class="split split-none split-mixed"><div class="split-bar" role="img" aria-label="Mixed, not reconciled"><i class="s-unk" style="flex:1 1 0"></i></div><p class="split-note"><b>Mixed, not reconciled.</b> ' + BVH.esc(s.mixed) +
@@ -432,16 +432,19 @@
     }).join("") + "</div>";
     var note = s.note && s.extras && s.extras.length ? '<p class="split-note split-denom">' + BVH.esc(s.note) + "</p>" : "";
     function pcTxt(pc) { return pc >= 0.1 ? BVH.pct(pc, pc >= 10 ? 0 : 1) : "&lt;0.1%"; }
+    /* "kept" rows: the return checks cover a finite range (fate.text), so a zero return reads "no return found", not "nothing" */
+    var R0 = s.row || {}, notFound = R0.fate_kind === "kept";
+    function zeroTxt(p) { return p.k === "ret" && notFound ? "no return found" + BVH.rawA("data/incident/" + R0.id + ".json", "basis", "The return checks and the range they cover (fate)") : "nothing"; }
     if (opts.inline) {
       var ik = '<ul class="split-key split-inline">' + s.parts.map(function (p) {
         var pc = 100 * p.eth / G, zero = p.eth < 1e-9, lab = ((opts.labels && opts.labels[p.k]) || p.label);
-        return '<li class="sk-' + p.k + (zero ? " is-zero" : "") + '"><i aria-hidden="true"></i><span><b>' + (zero && p.k !== "unk" ? "nothing" : BVH.eth2(p.eth)) + "</b> " + BVH.esc(lab.charAt(0).toLowerCase() + lab.slice(1)) + (zero ? "" : ' <small class="sk-pc">' + pcTxt(pc) + "</small>") + (p.sub ? ' <small class="sk-sub">' + BVH.esc(p.sub) + "</small>" : "") + "</span></li>";
+        return '<li class="sk-' + p.k + (zero ? " is-zero" : "") + '"><i aria-hidden="true"></i><span>' + (zero && p.k === "ret" && notFound ? "<b>No return found</b>" + zeroTxt(p).replace(/^no return found/, "") : "<b>" + (zero && p.k !== "unk" ? "nothing" : BVH.eth2(p.eth)) + "</b> " + BVH.esc(lab.charAt(0).toLowerCase() + lab.slice(1))) + (zero ? "" : ' <small class="sk-pc">' + pcTxt(pc) + "</small>") + (p.sub ? ' <small class="sk-sub">' + BVH.esc(p.sub) + "</small>" : "") + "</span></li>";
       }).join("") + "</ul>";
-      return '<div class="split split-compact">' + bar + ik + note + src + "</div>";
+      return '<div class="split split-compact">' + (opts.bar === false ? "" : bar) + ik + note + src + "</div>";
     }
     var key = '<ul class="split-key">' + s.parts.map(function (p) {
       var pc = 100 * p.eth / G, zero = p.eth < 1e-9;
-      var val = zero && p.k !== "unk" ? "nothing" : BVH.eth2(p.eth);
+      var val = zero && p.k !== "unk" ? zeroTxt(p) : BVH.eth2(p.eth);
       return '<li class="sk-' + p.k + (zero ? " is-zero" : "") + '"><i aria-hidden="true"></i><span class="sk-l">' + BVH.esc((opts.labels && opts.labels[p.k]) || p.label) + (p.sub ? '<small>' + BVH.esc(p.sub) + "</small>" : "") + '</span><span class="sk-v">' + val + (zero ? "" : '<small>' + pcTxt(pc) + "</small>") + "</span></li>";
     }).join("") + "</ul>";
     return '<div class="split' + (opts.compact ? " split-compact" : "") + '">' + bar + key + note + src + "</div>";
@@ -527,5 +530,249 @@
   };
   BVH.loadError = function (el, e) {
     el.innerHTML = '<div class="callout bad">Could not load the data (' + BVH.esc(e.message || e) + '). Serve the site over http, for example <code>python -m http.server</code> from the site folder, not from file://.</div>';
+  };
+
+  /* =====================================================================================
+     v4 skim components (launch/v4/shared-api.txt). All return HTML strings unless noted,
+     work with keyboard (native <details>/<button>), and render complete without motion.
+     ===================================================================================== */
+
+  /* ---------- the decided headline sentence (owner, word for word). Numbers are filled from the data. ---------- */
+  BVH.HEADLINE_TEXT = "{races} races where a bot got there first, in {incidents} hacks. In {orig} the loser was the original attacker ({conf} confirmed, {likely} likely); in {later} it was a later exploiter or we can't tell.";
+  BVH.headlineVals = function (rows) {
+    var c = BVH.beatenCounts(rows), slugs = {};
+    (rows || []).forEach(function (r) { if (r.headline) slugs[r.slug] = 1; });
+    return { races: (rows || []).filter(function (r) { return r.headline; }).length, incidents: Object.keys(slugs).length, orig: c.original, conf: c.confirmed, likely: c.likely, later: c.later };
+  };
+  BVH.headline = function (rows) {
+    var v = BVH.headlineVals(rows);
+    return BVH.HEADLINE_TEXT.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; });
+  };
+
+  /* ---------- drawer: a closed <details> whose summary says what is inside ---------- */
+  BVH.drawer = function (title, body, o) {
+    o = o || {};
+    return '<details class="drawer' + (o.cls ? " " + o.cls : "") + '"' + (o.id ? ' id="' + o.id + '"' : "") + (o.open ? " open" : "") + '><summary><span class="dr-t">' + title + "</span>" +
+      (o.meta ? '<span class="dr-m">' + o.meta + "</span>" : "") + '</summary><div class="dr-b">' + body + "</div></details>";
+  };
+  /* a hash that points into (or at) a closed drawer opens it, so links from elsewhere still land on the rows */
+  BVH.openHash = function (hash, scroll) {
+    hash = hash == null ? location.hash : hash;
+    if (!hash || hash.length < 2) return false;
+    var t; try { t = document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { t = null; }
+    if (!t) return false;
+    var n = t, opened = false;
+    while (n && n !== document.body) { if (n.tagName === "DETAILS" && !n.open) { n.open = true; opened = true; } n = n.parentNode; }
+    if (opened || scroll) t.scrollIntoView();
+    return true;
+  };
+  window.addEventListener("hashchange", function () { BVH.openHash(null, false); });
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var h = a.getAttribute("href"); if (h.length < 2) return;
+    var t = document.getElementById(h.slice(1));
+    if (t && t.closest("details:not([open])")) { setTimeout(function () { BVH.openHash(h, true); }, 0); }
+  });
+
+  /* ---------- "Sources (n)": one toggle per card instead of rows of raw chips ---------- */
+  BVH.sources = function (html, o) {
+    o = o || {};
+    if (!html) return "";
+    var n = (String(html).match(/class="raw[" ]/g) || []).length;
+    if (n <= (o.inlineMax == null ? 1 : o.inlineMax)) return '<span class="srcs-inline">' + html + "</span>";
+    return '<details class="srcs' + (o.cls ? " " + o.cls : "") + '"><summary>' + (o.label || "Sources") + " (" + n + ')</summary><div class="srcs-b">' + html + "</div></details>";
+  };
+
+  /* ---------- chapter opener: ONE big number + ONE plain sentence ---------- */
+  BVH.opener = function (o) {
+    return '<div class="opener' + (o.cls ? " " + o.cls : "") + '"><p class="op-big">' + o.big + (o.src ? '<sup class="fn">' + o.src + "</sup>" : "") + "</p>" +
+      '<p class="op-line">' + o.text + "</p></div>";
+  };
+
+  /* ---------- tile grid (2x3 on desktop, 2 columns on phones): each tile jumps to its chapter; one share icon ---------- */
+  var SHARE_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l3.2 3.2-.9.9L8.6 3.9V10H7.4V3.9L5.7 5.6l-.9-.9z"/><path d="M3 7h2v1.2H4.2v5.6h7.6V8.2H11V7h2v8H3z"/></svg>';
+  BVH.tiles = function (items, o) {
+    o = o || {};
+    return '<div class="tiles' + (o.cls ? " " + o.cls : "") + '"' + (o.label ? ' role="list" aria-label="' + BVH.esc(o.label) + '"' : ' role="list"') + ">" + items.map(function (t) {
+      /* a tile without a link carries its source as a superscript beside the number; a linked tile keeps it outside the link */
+      var inner = (t.badge ? '<span class="tile-badge">' + t.badge + "</span>" : "") + '<b class="tile-big">' + t.big + (!t.href && t.src ? '<sup class="fn">' + t.src + "</sup>" : "") + '</b><span class="tile-l">' + t.label + "</span>";
+      var plain = String(t.big).replace(/<[^>]*>/g, "") + " " + String(t.label).replace(/<[^>]*>/g, "");
+      return '<div class="tile' + (t.cls ? " " + t.cls : "") + '" role="listitem">' + (t.href ? '<a class="tile-a" href="' + t.href + '">' + inner + "</a>" : '<div class="tile-a">' + inner + "</div>") +
+        (t.src && t.href ? '<span class="tile-src">' + t.src + "</span>" : "") +
+        (t.share !== false && t.href ? '<button type="button" class="tile-share" data-share="' + BVH.esc(t.href) + '" data-share-text="' + BVH.esc(t.shareText || plain) + '" aria-label="' + BVH.esc("Share: " + plain) + '">' + SHARE_ICON + "</button>" : "") + "</div>";
+    }).join("") + "</div>";
+  };
+  /* share a link to a place on this page: the system share sheet where there is one, else copy the link */
+  BVH.toast = function (msg) {
+    var t = document.getElementById("bvh-toast");
+    if (!t) { t = document.createElement("div"); t.id = "bvh-toast"; t.className = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove("on"); }, 2200);
+  };
+  BVH.share = function (href, text) {
+    var url = new URL(href || "", location.href).href;
+    if (navigator.share) { navigator.share({ title: document.title, text: text || "", url: url }).catch(function () { /* dismissed */ }); return; }
+    var done = function () { BVH.toast("Link copied"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt("Copy this link", url); });
+    else window.prompt("Copy this link", url);
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-share]");
+    if (b) { e.preventDefault(); BVH.share(b.getAttribute("data-share"), b.getAttribute("data-share-text")); }
+  });
+
+  /* ---------- tap-to-define: <button class="term" data-term="builder">block builder</button> ---------- */
+  BVH.term = function (key, text, def) {
+    var g = BVH.GLOSSARY[key];
+    return '<button type="button" class="term" data-term="' + BVH.esc(key) + '"' + (def ? ' data-def="' + BVH.esc(def) + '"' : "") + ' aria-expanded="false">' + (text || (g ? g[0].toLowerCase() : key)) + "</button>";
+  };
+  var termPop = null, termBtn = null;
+  function closeTerm(refocus) {
+    if (!termPop || termPop.hidden) return;
+    termPop.hidden = true; if (termBtn) { termBtn.setAttribute("aria-expanded", "false"); if (refocus) termBtn.focus(); } termBtn = null;
+  }
+  function openTerm(btn) {
+    if (!termPop) { termPop = document.createElement("div"); termPop.className = "term-pop"; termPop.id = "bvh-termpop"; termPop.setAttribute("role", "note"); termPop.hidden = true; document.body.appendChild(termPop); }
+    var k = btn.getAttribute("data-term"), g = BVH.GLOSSARY[k], def = btn.getAttribute("data-def") || (g ? g[1] : "");
+    termPop.innerHTML = "<b>" + BVH.esc(g ? g[0] : btn.textContent) + "</b> " + def;
+    termPop.hidden = false; termBtn = btn; btn.setAttribute("aria-expanded", "true"); btn.setAttribute("aria-controls", "bvh-termpop");
+    var r = btn.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 24);
+    termPop.style.width = w + "px";
+    var left = Math.max(12, Math.min(window.innerWidth - w - 12, r.left + r.width / 2 - w / 2));
+    termPop.style.left = (left + window.scrollX) + "px";
+    var below = r.bottom + 10 + termPop.offsetHeight < window.innerHeight || r.top < termPop.offsetHeight + 20;
+    termPop.style.top = (below ? r.bottom + 8 + window.scrollY : r.top - termPop.offsetHeight - 8 + window.scrollY) + "px";
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("button.term");
+    if (b) { if (termBtn === b && !termPop.hidden) closeTerm(); else openTerm(b); return; }
+    if (termPop && !termPop.hidden && !termPop.contains(e.target)) closeTerm();
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" || e.key === "Esc") closeTerm(true); });
+  window.addEventListener("resize", function () { closeTerm(); });
+  /* the glossary as a closed drawer: "7 words this story uses" */
+  BVH.glossary = function (keys, o) {
+    o = o || {};
+    var items = (keys || []).map(function (k) { return typeof k === "string" ? BVH.GLOSSARY[k] : k; }).filter(Boolean);
+    return BVH.drawer(o.title || (items.length + " words this story uses"), (o.intro ? '<p class="dr-intro">' + o.intro + "</p>" : "") + '<dl class="gloss">' + items.map(function (t) { return "<dt>" + BVH.esc(t[0]) + "</dt><dd>" + t[1] + "</dd>"; }).join("") + "</dl>",
+      { cls: "drawer-gloss" + (o.cls ? " " + o.cls : ""), id: o.id, meta: o.meta || "tap to open" });
+  };
+
+  /* ---------- build once on scroll ----------
+     BVH.onView(el, fn, {threshold, rootMargin}) calls fn(el, reduced) once, when el first scrolls into view
+     (immediately when IntersectionObserver is missing or the reader prefers reduced motion).
+     BVH.buildIn(el|selector, kind) marks content that should build in: "bars" (split bars and .bi-bar fill
+     left to right), "rise" (.bi-item children fade up one after another), "grow" (.bi-col scale up from the floor).
+     The waiting state is only applied by script when motion is allowed and the element is below the fold, so the
+     page is complete if the animation never fires. Each build runs once and takes 600 ms or less. */
+  BVH.onView = function (el, fn, o) {
+    o = o || {};
+    if (!el) return;
+    var red = BVH.reduced();
+    if (red || !("IntersectionObserver" in window)) { fn(el, red); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); fn(el, false); } }); }, { threshold: o.threshold == null ? 0.15 : o.threshold, rootMargin: o.rootMargin || "0px 0px -8% 0px" });
+    io.observe(el);
+  };
+  BVH.buildIn = function (els, kind) {
+    var list = typeof els === "string" ? document.querySelectorAll(els) : (els && els.length != null && !els.tagName ? els : [els]);
+    Array.prototype.forEach.call(list, function (el) {
+      if (!el || el.classList.contains("bi")) return;
+      el.classList.add("bi", "bi-" + (kind || "bars"));
+      Array.prototype.forEach.call(el.querySelectorAll(".bi-item, .split-bar"), function (c, i) { c.style.setProperty("--bi-i", Math.min(i, 12)); });
+      if (BVH.reduced() || !("IntersectionObserver" in window)) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92) return;   /* already on screen: leave it drawn */
+      el.classList.add("bi-wait");
+      BVH.onView(el, function () { el.classList.remove("bi-wait"); el.classList.add("bi-go"); });
+    });
+  };
+  window.addEventListener("beforeprint", function () { Array.prototype.forEach.call(document.querySelectorAll(".bi-wait"), function (el) { el.classList.remove("bi-wait"); }); });
+
+  /* ---------- chat: on-chain messages as a two-sided thread, tx details behind a toggle ----------
+     msgs: [{ side: "in"|"out", who, when, text, tx: HTML for the toggle (hash link, raw), note }] */
+  BVH.chat = function (msgs, o) {
+    o = o || {};
+    return '<div class="chat' + (o.cls ? " " + o.cls : "") + '"' + (o.label ? ' aria-label="' + BVH.esc(o.label) + '" role="group"' : "") + ">" + msgs.map(function (m) {
+      if (m.gap) return '<p class="cb-gap bi-item">' + m.gap + "</p>";
+      return '<figure class="cb cb-' + (m.side === "out" ? "out" : "in") + ' bi-item"><figcaption class="cb-who">' + m.who + (m.when ? ' <span class="cb-when">' + m.when + "</span>" : "") + "</figcaption>" +
+        '<blockquote class="cb-text">' + m.text + "</blockquote>" + (m.note ? '<p class="cb-note">' + m.note + "</p>" : "") +
+        (m.tx ? '<details class="cb-tx"><summary>tx</summary><div class="cb-txb">' + m.tx + "</div></details>" : "") + "</figure>";
+    }).join("") + "</div>";
+  };
+
+  /* ---------- who lost, as 19 dots (8 solid confirmed, 5 ring likely, 6 dashed later / can't tell) ---------- */
+  BVH.lostStrip = function (rows, o) {
+    o = o || {};
+    var c = BVH.beatenCounts(rows), href = o.href || function (r) { return "#sb-" + r.id; };
+    var dots = ["confirmed", "likely", "later"].map(function (k) {
+      return '<span class="ls-g ls-' + k + '">' + c.rows[k].slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).map(function (r) {
+        return '<a class="ls-dot bt-' + k + '" href="' + href(r) + '" aria-label="' + BVH.esc(BVH.raceShort(r) + " " + r.date.slice(0, 4) + ": " + BVH.BEATEN[k].short) + '" title="' + BVH.esc(BVH.raceShort(r) + " " + r.date.slice(0, 4)) + '"><i></i></a>';
+      }).join("") + "</span>";
+    }).join("");
+    return '<div class="lstrip"><div class="ls-dots" role="group" aria-label="Who lost each of the ' + c.total + ' races">' + dots + '</div><p class="ls-key"><span class="bt-confirmed"><i></i>' + c.confirmed + ' original attacker, confirmed</span><span class="bt-likely"><i></i>' + c.likely + ' probably the original attacker</span><span class="bt-later"><i></i>' + c.later + " later exploiter or can't tell</span></p></div>";
+  };
+
+  /* ---------- the scoreboard: one row per headline race, grouped by who lost ----------
+     BVH.scoreboard(el, rows, { victims: {id: "Makina"}, ids: [subset], extra: function(row, D) -> HTML,
+       idPrefix: "sb-", group: true, keyText }) renders into el. Each row is a <details>: the summary shows the
+     marker, name, year, bot, what it took and the full money split bar; opening it shows the split amounts, who
+     lost, the sources (one "Sources (n)" toggle) and a link to the race page. The race file is loaded on first open. */
+  function victimOf(r) {
+    var n = String(r.title || r.name || r.id);
+    if (/^Curve \/ Vyper: (.*?)( pool)?$/.test(n)) return { "curve-vyper-2023--peth": "JPEG'd", "curve-vyper-2023--crv-eth-2": "Curve", "curve-vyper-2023--mseth": "Metronome" }[r.id] || "Curve";
+    if (r.id === "kelp-rseth-2026") return "the Safe's owner";
+    return n.split(":")[0].replace(/ Protocol$| Finance$| Lending$| token vesting$| SilicaPools$| V2$| token$/, "").trim();
+  }
+  BVH.victimOf = victimOf;
+  BVH.botShort = function (r) { return String(r.bot || "").replace(/\s*\(.*\)\s*$/, "").replace(/^anonymous /, "anon ").trim(); };
+  BVH.SPLIT_KEY = '<div class="fig-key sb-key" aria-hidden="true"><span><i class="s-ret"></i>returned to the victim</span><span><i class="s-bld"></i>builder and proposer</span><span><i class="s-bot"></i>kept by the bot</span><span><i class="s-oth"></i>gas and other</span><span><i class="s-unk"></i>unknown</span></div>';
+  BVH.scoreboard = function (el, rows, o) {
+    o = o || {};
+    var pre = o.idPrefix || "sb-", V = o.victims || {};
+    var list = rows.filter(function (r) { return r.headline && r.beaten && (!o.ids || o.ids.indexOf(r.id) >= 0); });
+    function rowHTML(r) {
+      var vic = V[r.id] || victimOf(r), s = BVH.moneySplit(r, vic), k = r.beaten.kind;
+      var took = s.priced ? (s.gross >= 100 ? Math.round(s.gross).toLocaleString("en-US") : s.gross >= 10 ? s.gross.toFixed(1) : s.gross.toFixed(2)) + " ETH" + (BVH.MIXED_ROWS[r.id] ? " + tokens" : "") : "tokens";
+      var tr0 = r.raw && (r.raw.trace || r.raw.block);
+      var bar = s.mixed || !s.priced ? '<div class="split-bar"><i class="s-unk" style="flex:1 1 0"></i></div>' : (BVH.splitHTML(s, { compact: true }).match(/<div class="split-bar"[\s\S]*?<\/div>/) || [""])[0];
+      return '<details class="sb-row sb-' + k + '" id="' + pre + r.id + '" data-id="' + r.id + '"><summary class="sb-sum">' +
+        '<span class="sb-mk" aria-hidden="true"><i></i></span>' +
+        '<span class="sb-name"><b>' + BVH.esc(BVH.raceShort(r)) + "</b> <span class=\"sb-meta\">" + r.date.slice(0, 4) + " &middot; " + BVH.esc(BVH.botShort(r)) + "</span>" + "</span>" +
+        '<span class="sb-took"><span class="sr">took </span>' + took + '<sup class="fn">' + BVH.rawA(tr0, "raw", "Block trace with the bot's take") + "</sup></span>" +
+        '<span class="sb-bar">' + bar + '</span><span class="sr">. Who lost: ' + BVH.BEATEN[k].short + ". Open for the split and sources.</span></summary>" +
+        '<div class="sb-body"><div class="sb-fill" aria-live="polite"></div></div></details>';
+    }
+    function fill(det, D) {
+      var r = rows.filter(function (x) { return x.id === det.getAttribute("data-id"); })[0]; if (!r) return;
+      var vic = V[r.id] || victimOf(r), s = BVH.moneySplit(r, vic), b = r.beaten, K = BVH.BEATEN[b.kind];
+      var trace = r.raw && (r.raw.trace || r.raw.block);
+      var takeTxt = s.priced ? "Took <b>" + BVH.eth2(s.gross) + "</b>" + (BVH.MIXED_ROWS[r.id] ? " plus unpriced tokens" : "") + BVH.rawA(trace, "raw", "Block trace with the bot's take") : "Took an amount in tokens, not priced in ETH";
+      var srcs = [BVH.moneySrc(r, D).replace(/^Sources: /, "").replace(/\.$/, ""), "who lost " + BVH.beatenEvidence(b)].filter(Boolean).join("; ");
+      var dodo = !s.priced && r.id === "dodo-v2-2021" ? (function () { var dm = /and ([\d.]+) ETH to/.exec(r.fate || ""); return '<p class="sb-plain">Antelope returned tokens' + (dm ? " and " + BVH.eth2(+dm[1]) : "") + " to DODO; the return is not reconciled with the take.</p>"; })() : "";
+      det.querySelector(".sb-fill").innerHTML =
+        '<p class="sb-take">' + takeTxt + (r.loot_scope && r.loot_scope !== "bot-tx" ? ' <span class="sb-scope">' + BVH.esc(r.loot_scope) + "</span>" : "") + "</p>" +
+        BVH.splitHTML(s, { inline: true, bar: false, labels: { bld: "To the builder and proposer", ret: "Returned to " + vic } }) + dodo +
+        '<p class="sb-lost bt-' + b.kind + '"><i aria-hidden="true"></i><span><span class="bt-k">Who lost: </span><b>' + K.short + "</b>" + (b.note ? " " + BVH.esc(b.note) : "") + "</span></p>" +
+        (o.extra ? '<div class="sb-extra">' + (o.extra(r, D) || "") + "</div>" : "") +
+        '<div class="sb-foot">' + BVH.sources(srcs, { inlineMax: 0 }) + '<a class="sb-go" href="' + BVH.raceHref(r) + '">Replay this race <span aria-hidden="true">&rarr;</span></a></div>';
+    }
+    var groups = o.group === false ? [["all", list]] : ["confirmed", "likely", "later"].map(function (k) { return [k, list.filter(function (r) { return r.beaten.kind === k; })]; });
+    el.classList.add("sb");
+    el.innerHTML = (o.key === false ? "" : BVH.SPLIT_KEY) + groups.map(function (g) {
+      if (!g[1].length) return "";
+      var rs = g[1].slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+      return (g[0] === "all" ? "" : '<h3 class="sb-g bt-' + g[0] + '"><i aria-hidden="true"></i><span class="sb-gn">' + rs.length + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who-lost verdicts and their counts") + "</sup></span> " + BVH.BEATEN[g[0]].group + "</h3>") + '<div class="sb-list">' + rs.map(rowHTML).join("") + "</div>";
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll(".sb-row"), function (det) {
+      det.addEventListener("toggle", function () {
+        if (!det.open || det._filled) return;
+        det._filled = true;
+        var r = rows.filter(function (x) { return x.id === det.getAttribute("data-id"); })[0];
+        fill(det, null);
+        BVH.json("data/incident/" + r.id + ".json").then(function (D) { fill(det, D); }).catch(function () { /* keep the row-level sources */ });
+      });
+    });
+    BVH.buildIn(el, "bars");
+    return el;
   };
 })();

@@ -30,7 +30,7 @@
 <body class="ev" data-part="3">
 <main id="main">
 
-  <!-- opener: the art is drawn in code from the data (assets/evolution.js, EVART.fog) -->
+  <!-- opener: the answer first. The art is drawn in code from the data (assets/evolution.js, EVART.fog) -->
   <header class="ev-hero night">
     <div class="ev-hero-art" id="hero-art" aria-hidden="true"></div>
     <div class="wrap ev-hero-in">
@@ -43,7 +43,15 @@
     </div>
   </header>
 
-  <!-- the cold open: why the question matters -->
+  <!-- the short answer: a 2x3 jump grid, one tile per chapter plus the takeaway -->
+  <section class="ev-short" id="short" aria-labelledby="short-h">
+    <div class="ev-wide">
+      <h2 class="ev-ansh" id="short-h">The short answer</h2>
+      <ol class="ev-tiles" id="toc"></ol>
+    </div>
+  </section>
+
+  <!-- the cold open: why the question matters, and the series headline -->
   <section class="ev-open" aria-labelledby="open-h">
     <div class="ev-col">
       <h2 class="sr" id="open-h">Why ask</h2>
@@ -51,23 +59,17 @@
     </div>
   </section>
 
-  <!-- primer for a cold reader (shared .primer box, BVH.primer) -->
-  <section class="ev-primer" id="primer" aria-label="What you need to know">
-    <div class="ev-col" id="primer-box"></div>
+  <!-- the path into a block (the diagram does the teaching); the term list is a closed drawer -->
+  <section class="ev-primer" id="primer" aria-labelledby="route-t">
     <div class="ev-wide">
-      <figure class="ev-fig ev-route" aria-labelledby="route-t">
-        <h3 class="ev-figt" id="route-t">The two ways into a block</h3>
+      <figure class="ev-fig ev-route">
+        <h2 class="ev-figt ev-route-h" id="route-t">The two ways into a block</h2>
         <div id="route" class="ev-chart"></div>
-        <figcaption class="ev-cap">The public route waits in the mempool, where anyone can read it, bots included. The private route goes straight to a builder and is seen by nobody until the block is out. A constructor-only attack creates its contract and attacks in one transaction, so whichever route it takes, there is no contract waiting on chain to copy first.</figcaption>
+        <figcaption class="ev-cap" id="route-cap"></figcaption>
       </figure>
     </div>
-  </section>
-
-  <!-- the short answer, after the terms it uses have been explained -->
-  <section class="ev-open ev-short" aria-labelledby="short-h">
     <div class="ev-col">
-      <h3 class="ev-ansh" id="short-h">The short answer</h3>
-      <ol class="ev-answer" id="toc" aria-labelledby="short-h"></ol>
+      <div id="primer-box"></div>
     </div>
   </section>
 
@@ -75,10 +77,10 @@
   <section class="ev-ch" id="ch1" aria-labelledby="h1t">
     <div class="ev-col">
       <header class="ev-chh"><span class="ev-n">1</span><h2 id="h1t">Attackers stopped waiting in public</h2></header>
-      <p class="ev-lede" id="ch1-lede"></p>
+      <div class="ev-open1" id="ch1-open"></div>
     </div>
     <div class="ev-wide">
-      <figure class="ev-fig" aria-labelledby="f1cap">
+      <figure class="ev-fig ev-fig1" aria-labelledby="f1cap">
         <h3 class="ev-figt">Seen in the public mempool before their block</h3>
         <div class="ev-vs" id="c1-vs"></div>
         <figcaption id="f1cap" class="ev-cap"></figcaption>
@@ -91,29 +93,25 @@
       </figure>
     </div>
     <div class="ev-col">
-      <div class="ev-prose" id="ch1-side"></div>
+      <details class="drawer ev-more"><summary><span class="dr-t">More from the data</span></summary><div class="dr-b">
+        <div class="ev-prose" id="ch1-side"></div>
+        <figure class="ev-fig ev-fig-in" aria-labelledby="f1ccap">
+          <h3 class="ev-figt">The archive kept catching ordinary traffic, not attackers</h3>
+          <div class="ev-chart" id="c1-q"></div>
+          <figcaption id="f1ccap" class="ev-cap"></figcaption>
+        </figure>
+      </div></details>
+      <details class="drawer ev-hwk"><summary><span class="dr-t">How we know</span></summary><div class="dr-b" id="ch1-how"></div></details>
     </div>
-    <div class="ev-wide">
-      <figure class="ev-fig" aria-labelledby="f1ccap">
-        <h3 class="ev-figt">The archive kept catching ordinary traffic, not attackers</h3>
-        <div class="ev-chart" id="c1-q"></div>
-        <figcaption id="f1ccap" class="ev-cap"></figcaption>
-      </figure>
-    </div>
-    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch1-how"></div></details></div>
   </section>
 
   <!-- 2 -->
   <section class="ev-ch" id="ch2" aria-labelledby="h2t">
     <div class="ev-col">
       <header class="ev-chh"><span class="ev-n">2</span><h2 id="h2t">Then they stopped leaving a second step</h2></header>
-      <p class="ev-lede" id="ch2-lede"></p>
+      <div class="ev-open1" id="ch2-open"></div>
     </div>
     <div class="ev-wide">
-      <figure class="ev-fig" aria-labelledby="f2acap">
-        <div class="ev-shapes" id="c2-shapes"></div>
-        <figcaption id="f2acap" class="ev-cap">A copier needs something to copy. The two-step attack leaves a contract on chain for as long as the attacker waits. The one-step attack leaves nothing until it has already landed.</figcaption>
-      </figure>
       <figure class="ev-fig" aria-labelledby="f2bcap">
         <h3 class="ev-figt">The forest of exploits: one tree per exploit, by year</h3>
         <ul class="fig-key ev-key" id="c2-key"></ul>
@@ -121,14 +119,23 @@
         <figcaption id="f2bcap" class="ev-cap"></figcaption>
       </figure>
     </div>
-    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch2-how"></div></details></div>
+    <div class="ev-col">
+      <details class="drawer ev-more"><summary><span class="dr-t">More from the data: two steps against one, drawn</span></summary><div class="dr-b">
+        <div class="ev-prose" id="ch2-more"></div>
+        <figure class="ev-fig ev-fig-in" aria-labelledby="f2acap">
+          <div class="ev-shapes" id="c2-shapes"></div>
+          <figcaption id="f2acap" class="ev-cap">A copier needs something to copy. The two-step attack leaves a contract on chain for as long as the attacker waits. The one-step attack leaves nothing until it has already landed.</figcaption>
+        </figure>
+      </div></details>
+      <details class="drawer ev-hwk"><summary><span class="dr-t">How we know</span></summary><div class="dr-b" id="ch2-how"></div></details>
+    </div>
   </section>
 
   <!-- 3 -->
   <section class="ev-ch" id="ch3" aria-labelledby="h3t">
     <div class="ev-col">
       <header class="ev-chh"><span class="ev-n">3</span><h2 id="h3t">The window shrank to about a minute</h2></header>
-      <p class="ev-lede" id="ch3-lede"></p>
+      <div class="ev-open1" id="ch3-open"></div>
     </div>
     <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f3acap">
@@ -138,27 +145,27 @@
       </figure>
     </div>
     <div class="ev-col">
-      <h3 class="ev-h3">What one block leaves a copier: Makina, January 2026</h3>
-      <p class="ev-p" id="ch3-mk"></p>
+      <a class="ev-watch" id="ch3-watch" href="race.html"></a>
+      <details class="drawer ev-more"><summary><span class="dr-t">More from the data: what one block leaves a copier</span></summary><div class="dr-b">
+        <p class="ev-p" id="ch3-more"></p>
+        <h3 class="ev-h3">Makina, January 2026</h3>
+        <p class="ev-p" id="ch3-mk"></p>
+        <figure class="ev-fig ev-fig-in ev-darkfig night" aria-labelledby="f3bcap">
+          <div class="ev-chart" id="c3-mk"></div>
+          <figcaption id="f3bcap" class="ev-cap"></figcaption>
+        </figure>
+        <p class="ev-p ev-p-gap" id="ch3-mk2"></p>
+        <ul class="ev-dw" id="c3-dw"></ul>
+      </div></details>
+      <details class="drawer ev-hwk"><summary><span class="dr-t">How we know</span></summary><div class="dr-b" id="ch3-how"></div></details>
     </div>
-    <div class="ev-wide">
-      <figure class="ev-fig ev-darkfig night" aria-labelledby="f3bcap">
-        <div class="ev-chart" id="c3-mk"></div>
-        <figcaption id="f3bcap" class="ev-cap"></figcaption>
-      </figure>
-    </div>
-    <div class="ev-col">
-      <p class="ev-p" id="ch3-mk2"></p>
-    </div>
-    <div class="ev-wide"><ul class="ev-dw" id="c3-dw"></ul></div>
-    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch3-how"></div></details></div>
   </section>
 
   <!-- 4 -->
   <section class="ev-ch" id="ch4" aria-labelledby="h4t">
     <div class="ev-col">
       <header class="ev-chh"><span class="ev-n">4</span><h2 id="h4t">Traced bots paid the builder; most attackers did not</h2></header>
-      <p class="ev-lede" id="ch4-lede"></p>
+      <div class="ev-open1" id="ch4-open"></div>
     </div>
     <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f4acap">
@@ -168,53 +175,57 @@
         <figcaption id="f4acap" class="ev-cap"></figcaption>
       </figure>
     </div>
-    <div class="ev-col"><p class="ev-p" id="ch4-mid"></p></div>
+    <div class="ev-col"><p class="ev-p ev-p-gap" id="ch4-mid"></p></div>
     <div class="ev-wide">
-      <figure class="ev-fig ev-darkfig night" aria-labelledby="f4bcap">
+      <figure class="ev-fig ev-fig-mid ev-darkfig night" aria-labelledby="f4bcap">
         <h3 class="ev-figt">In the races a bot won: how much of the take went to the builder</h3>
         <ul class="fig-key ev-key" id="c4-key"></ul>
         <div class="ev-chart" id="c4-races"></div>
-        <ul class="ev-eras" id="c4-eras"></ul>
         <figcaption id="f4bcap" class="ev-cap"></figcaption>
       </figure>
-      <figure class="ev-fig" aria-labelledby="f4ccap">
-        <h3 class="ev-figt" id="c4-split-t"></h3>
-        <div class="ev-split" id="c4-split"></div>
-        <figcaption id="f4ccap" class="ev-cap"></figcaption>
-      </figure>
     </div>
-    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch4-how"></div></details></div>
+    <div class="ev-col">
+      <details class="drawer ev-more"><summary><span class="dr-t">More from the data: era medians, and where the payments ended up</span></summary><div class="dr-b">
+        <ul class="ev-eras" id="c4-eras"></ul>
+        <figure class="ev-fig ev-fig-in" aria-labelledby="f4ccap">
+          <h3 class="ev-figt" id="c4-split-t"></h3>
+          <div class="ev-split" id="c4-split"></div>
+          <figcaption id="f4ccap" class="ev-cap"></figcaption>
+        </figure>
+      </div></details>
+      <details class="drawer ev-hwk"><summary><span class="dr-t">How we know</span></summary><div class="dr-b" id="ch4-how"></div></details>
+    </div>
   </section>
 
   <!-- 5 -->
   <section class="ev-ch" id="ch5" aria-labelledby="h5t">
     <div class="ev-col">
       <header class="ev-chh"><span class="ev-n">5</span><h2 id="h5t">The winning bots started copying setups</h2></header>
-      <p class="ev-lede" id="ch5-lede"></p>
+      <div class="ev-open1" id="ch5-open"></div>
     </div>
     <div class="ev-wide">
-      <figure class="ev-fig" aria-labelledby="f5acap">
-        <h3 class="ev-figt">Bot transactions against attacker transactions in the same exploit records</h3>
-        <div class="ev-db" id="c5-db"></div>
-        <figcaption id="f5acap" class="ev-cap"></figcaption>
-      </figure>
       <figure class="ev-fig" aria-labelledby="f5bcap">
         <h3 class="ev-figt" id="c5-lanes-t"></h3>
         <div class="ev-lanes" id="c5-lanes"></div>
         <figcaption id="f5bcap" class="ev-cap"></figcaption>
       </figure>
-    </div>
-    <div class="ev-col">
-      <div class="ev-prose" id="ch5-side"></div>
-    </div>
-    <div class="ev-wide">
       <aside class="ev-cb" id="c5-cb" aria-label="Where c0ffeebabe.eth appears"></aside>
     </div>
-    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch5-how"></div></details></div>
+    <div class="ev-col">
+      <details class="drawer ev-more"><summary><span class="dr-t">More from the data: where the winners sit in the block</span></summary><div class="dr-b">
+        <div class="ev-prose" id="ch5-side"></div>
+        <figure class="ev-fig ev-fig-in" aria-labelledby="f5acap">
+          <h3 class="ev-figt">Bot transactions against attacker transactions in the same exploit records</h3>
+          <div class="ev-db" id="c5-db"></div>
+          <figcaption id="f5acap" class="ev-cap"></figcaption>
+        </figure>
+      </div></details>
+      <details class="drawer ev-hwk"><summary><span class="dr-t">How we know</span></summary><div class="dr-b" id="ch5-how"></div></details>
+    </div>
   </section>
 
-  <!-- the takeaway -->
-  <section class="ev-end" aria-labelledby="hend">
+  <!-- the takeaway: a short recap under the closing image -->
+  <section class="ev-end" id="end" aria-labelledby="hend">
     <div class="ev-endband night">
       <div class="ev-col ev-endin">
         <h2 id="hend">So, has the dark forest changed?</h2>
@@ -228,37 +239,28 @@
         <p class="tk-big" id="end-lede"></p>
         <p class="tk-x" id="end-close"></p>
       </section>
-      <ol class="ev-take" id="sum"></ol>
     </div>
     <div class="ev-wide">
       <div data-partnav-slot></div>
     </div>
   </section>
 
-  <!-- the data layer -->
-  <section class="ev-data" id="data" aria-labelledby="hdata">
+  <!-- the data layer, folded: links to #data or #tables open it -->
+  <section class="ev-data" aria-labelledby="hdata">
     <div class="ev-wide">
-      <h2 id="hdata">Every number on this page</h2>
-      <p class="ev-p" id="data-intro"></p>
-      <div class="ev-tables" id="tables"></div>
-      <h3 class="ev-h3">Words used on this page</h3>
-      <dl class="ev-defs">
-        <dt>Public mempool</dt><dd>The shared waiting room where pending transactions are visible to every node before they land in a block.</dd>
-        <dt>Seen in the public mempool</dt><dd>The Mempool Dumpster archive recorded the transaction before its block was proposed. Not seen, when the archive saw many of the other transactions in the same block, is strong evidence that the transaction went privately to a builder.</dd>
-        <dt>Ordinary transactions in the same blocks</dt><dd>The other transactions in each exploit's block. Their seen share is the control for how much the archive was catching that day.</dd>
-        <dt>Constructor-only exploit</dt><dd>The attack runs inside the attack contract's constructor, so creating the contract and attacking are one transaction.</dd>
-        <dt>No watchable window</dt><dd>A constructor-only exploit, an attack contract created inside the attack transaction, or one deployed in the same block as the attack.</dd>
-        <dt>Fresh deploy-to-attack gap</dt><dd>Time from the block that created an attacker-owned contract to the block of the attack, for contracts created at most seven days before.</dd>
-        <dt>Paid the builder</dt><dd>A direct ETH transfer to the block's fee recipient (the builder) inside the transaction. It is how a transaction buys its place in the block.</dd>
-        <dt>Deploy-window copy</dt><dd>A bot used the attacker's own on-chain setup (a deployed contract, an upgrade or a prepare() call) before the attacker's own attack call landed.</dd>
-        <dt>PBS (proposer-builder separation)</dt><dd>The system since the Merge in which builders assemble blocks and the proposer chooses one. &ldquo;Early PBS&rdquo; is September 2022 to 2023, &ldquo;mature PBS&rdquo; 2024 onward; elsewhere on this page they are the early and mature builder eras.</dd>
-        <dt>Sample</dt><dd>Ethereum mainnet exploits reproduced in the DeFiHackLabs repository, with the sender of each listed transaction classified. It is a sample of public, reproduced incidents, not of all attacks.</dd>
-      </dl>
-      <h3 class="ev-h3">Downloads</h3>
-      <div class="ev-tw"><table class="ev-dl" id="t-dl"></table></div>
+      <details class="drawer ev-datadr" id="data">
+        <summary><h2 class="dr-t" id="hdata">Every number on this page</h2><span class="dr-m" id="data-sum"></span></summary>
+        <div class="dr-b">
+          <p class="ev-p" id="data-intro"></p>
+          <div class="ev-tables" id="tables"></div>
+          <h3 class="ev-h3" id="downloads">Downloads</h3>
+          <div class="ev-tw"><table class="ev-dl" id="t-dl"></table></div>
+        </div>
+      </details>
     </div>
   </section>
 </main>
+
 <script src="assets/common.js"></script>
 <script src="assets/evolution.js"></script>
 </body>

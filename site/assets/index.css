@@ -164,3 +164,74 @@
 table.cmp a.raw { white-space: normal; }
 table.cmp td[data-l="Winning builder"] { overflow-wrap: anywhere; min-width: 15ch; }
 @media (min-width: 1200px) { table.cmp td.first { width: 24%; } }
+
+/* =====================================================================================
+   v4 skim pass: hero fits one phone screen, compact race card, tiles, compact part rows
+   ===================================================================================== */
+.hx-kicker { max-width: none; }
+.hx-dek { font-size: clamp(19px, 2vw, 23px); line-height: 1.45; color: var(--ink); max-width: 38ch; margin-top: 22px; }
+.hx .lstrip { margin-top: 16px; }
+.hx-cta { margin-top: 22px; }
+.hx-cta .btn { padding: 12px 18px; }
+@media (max-width: 760px) {
+  .hx > .art { height: 168px; }
+  .hx > .wrap.hx-open { margin-top: -34px; padding-bottom: 72px; }
+  .hx h1 { font-size: clamp(46px, 13.4vw, 64px); }
+  .hx-kicker { margin-bottom: 12px; }
+  .hx-dek { font-size: 18px; margin-top: 14px; }
+  .hx .ls-key { font-size: 13px; }
+}
+/* the race card: chart on the right (left column: title, controls, source); on phones chart first, then controls */
+.hx-race { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); grid-template-areas: "top chart" "ctrl chart" "src chart"; grid-template-rows: auto auto 1fr; }
+.hx-ctrl { align-self: start; margin: 8px 0 0; }
+.hx-src { align-self: end; }
+@media (max-width: 1000px) {
+  .hx-race { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "chart" "ctrl" "src"; grid-template-rows: none; }
+  .hx-ctrl { margin-top: 10px; }
+}
+.hx-race-top p#hx-sum { margin-bottom: 12px; }
+/* a hairline showed through the translucent card where it overlaps the opener: the card is solid now */
+.hx-race { background: var(--bg2); }
+/* numbers: four tiles, the full sentences in a drawer */
+#numbers { padding-top: clamp(40px, 6vw, 72px); }
+#numbers .tiles { margin-top: 0; }
+#numbers .tile-big { white-space: nowrap; font-size: clamp(30px, 3.6vw, 42px); }
+#numbers .tile-big small { font-size: .46em; }
+@media (max-width: 420px) { #numbers .tile-big { font-size: 29px; } #numbers .tile-a { padding-right: 12px; padding-top: 30px; } #numbers .tile-l { font-size: 15px; } }
+.statfull { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.statfull li { font-size: 16.5px; line-height: 1.5; color: var(--ink2); }
+.statfull li b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+#stat-notes .statnote { font: 14.5px/1.55 var(--serif); color: var(--ink2); margin: 12px 0 0; }
+/* the series: three compact rows, a small piece of each part's art beside its number */
+.parts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.part { flex-direction: row; gap: 14px; padding: 14px; align-items: stretch; }
+.part::after { left: 14px; right: 14px; }
+.pt-art { flex: none; width: 88px; height: auto; min-height: 96px; margin: 0; border: 1px solid var(--glass-line); border-radius: var(--r2); }
+.pt-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.part h3 { margin: 4px 0 0; font-size: clamp(21px, 2vw, 25px); }
+.pt-tz { margin: 6px 0 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 2px; }
+.pt-big { font: 600 clamp(26px, 2.6vw, 32px)/1 var(--serif); letter-spacing: -.02em; color: var(--gold); }
+.pt-tz > span:last-child { font: 14.5px/1.4 var(--serif); color: var(--ink2); }
+@media (max-width: 900px) { .parts { grid-template-columns: 1fr; } .pt-art { width: 76px; } }
+/* scoreboard, chat */
+#races .sec-lede { margin-bottom: 10px; }
+.sb-more { margin: 18px 0 0; font: 600 14.5px/1.5 var(--mono); }
+.sb-more a { color: var(--accent); }
+.msgg-ctx { margin: 4px 0 0; font-size: var(--fs-small); color: var(--ink2); max-width: 60ch; }
+.msgg { margin: 0 0 28px; }
+.msgg h3 { margin: 18px 0 0; font-size: 20px; }
+.cb-extra { font: 13.5px/1.6 var(--mono); color: var(--muted); margin: 10px 0 0; }
+#said .drawer { margin-top: 26px; }
+/* data and evidence: drawers, full width */
+.ev-sec .drawer, .drawer.drawer-wide { max-width: none; }
+.ev-sec .drawer + .drawer { margin-top: 0; border-top: 0; }
+.ev-sec .drawer > .dr-b { padding-left: 0; }
+#numbers .tile-big small.pre { display: block; font-size: 14px; letter-spacing: 0; margin-bottom: 2px; font-family: var(--mono); }
+
+/* copycheck: series cards are a stretched link on the title, so the teaser numbers can carry their own source links */
+.part h3 a.pt-link { color: inherit; text-decoration: none; }
+.part h3 a.pt-link::before { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.part h3 a.pt-link:focus-visible { outline: none; }
+.part:has(a.pt-link:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+.part sup.fn { position: relative; z-index: 3; }
+.pt-big sup.fn { margin-left: 3px; }

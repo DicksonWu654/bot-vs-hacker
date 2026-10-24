@@ -29,18 +29,25 @@
 <body data-part="2">
 <main id="main" class="xp">
 
-  <!-- ===== Opener: the story first, art-04 as a framed plate (shown at or below half its pixel width) ===== -->
+  <!-- ===== Opener: the hook, the answer as three tiles, art-04 as a framed plate ===== -->
   <header class="xp-open night">
     <div class="wrap xp-open-grid">
       <div class="xp-open-text">
         <p data-series-kicker="2"></p>
         <h1 id="xp-h1">How Yoink copied a Ronin bridge payout in one block</h1>
-        <p class="xp-dek" id="dek">On 6 August 2024 a user asked the Ronin bridge to pay out about 2,641 USDC. That morning a broken check in the bridge meant a copy of the request could ask for far more. Seconds after the request showed up in public, a bot called Yoink had copied it, changed <b>3 of its 61 words</b>, and collected just under 2 million USDC instead.</p>
-        <p class="xp-promise">This is that bot, taken apart: what it watched, what it copied, what it paid to go first, and what it gave back.</p>
+        <p class="xp-dek" id="dek">On 6 August 2024 a bot called Yoink copied a user's Ronin bridge withdrawal of about 2,641 USDC, changed <b>3 of its 61 words</b> (the 32-byte slots of the bridge call), and collected just under 2 million USDC.</p>
+        <p class="xp-promise">A broken check in the bridge let the copy ask for more. Here is the bot, taken apart in ten steps.</p>
       </div>
       <figure class="xp-plate">
         <picture><img src="assets/art/art-04-copied-mechanism-1672.webp" srcset="assets/art/art-04-copied-mechanism-800.webp 800w, assets/art/art-04-copied-mechanism-1280.webp 1280w, assets/art/art-04-copied-mechanism-1672.webp 1672w" sizes="(max-width: 900px) calc(100vw - 32px), 820px" width="1672" height="941" alt="A brass mechanism hanging over still, dark water, its exact copy reflected beneath it." fetchpriority="high" decoding="async"></picture>
       </figure>
+      <div class="xp-tiles" id="xp-tiles">
+        <div class="tiles" role="list" aria-label="The answer in three numbers">
+          <div class="tile t-bot" role="listitem"><a class="tile-a" href="#copy"><b class="tile-big">58 <small>of 61</small></b><span class="tile-l">words of the request copied unchanged</span></a></div>
+          <div class="tile" role="listitem"><a class="tile-a" href="#bribe"><b class="tile-big">99.9%</b><span class="tile-l">of the ETH gain paid to the builder before refunds</span></a></div>
+          <div class="tile t-ret" role="listitem"><a class="tile-a" href="#return"><b class="tile-big">792.4557 <small>ETH</small></b><span class="tile-l">given back to Ronin the same afternoon</span></a></div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -48,7 +55,7 @@
   <section class="mirror night" aria-labelledby="mirror-h">
     <div class="wrap mirror-head">
       <h2 id="mirror-h">The whole trick, drawn from the two transactions</h2>
-      <p class="mirror-lede" id="mirror-lede">Above the line is the user's request, below it Yoink's copy, both read straight from the chain. Each column is one 32-byte word. Only three columns differ.</p>
+      <p class="mirror-lede" id="mirror-lede">Above the line, the user's request. Below it, Yoink's copy. Each column is one 32-byte word, and only three differ.</p>
     </div>
     <div class="mirror-stage">
       <p class="mirror-tag mirror-tag-u" aria-hidden="true">the user's request</p>
@@ -62,158 +69,242 @@
 
   <div class="wrap">
 
-    <!-- ===== Primer for a cold reader ===== -->
+    <!-- ===== Primer: the diagram teaches; the word list is a drawer ===== -->
     <section class="xp-primer" id="primer" aria-labelledby="primer-h">
       <div class="read">
-        <h2 id="primer-h">What you need to know first</h2>
-        <p>Every Ethereum transaction waits its turn to be written into a block. A bot watches the public queue, simulates a copy, and pays a builder to put its copy into the block before the original. Nine terms carry the whole story.</p>
+        <h2 id="primer-h">How a transaction gets into a block</h2>
+        <p id="primer-lede">A bot watches the <button type="button" class="term" data-term="mempool" aria-expanded="false">public mempool</button>, tests a copy of what it sees, and pays a <button type="button" class="term" data-term="builder" aria-expanded="false">block builder</button> to put that copy first.</p>
       </div>
       <figure class="flow" aria-labelledby="flow-cap">
         <div class="flow-svg" id="flow-svg"></div>
-        <figcaption id="flow-cap">How one transaction gets into a block. A request waits in the public mempool, a builder packs it into a block, and the proposer publishes the block it is paid most for. A bot that sees the request can place its own copy ahead of it, at position 0.</figcaption>
+        <figcaption id="flow-cap">The <button type="button" class="term" data-term="proposer" aria-expanded="false">proposer</button> usually publishes the highest bid. A bot can put its copy ahead, at <button type="button" class="term" data-term="position0" aria-expanded="false">position 0</button>.</figcaption>
       </figure>
-      <div id="primer-dl"></div>
+      <div id="gloss-slot"></div>
     </section>
 
-    <!-- ===== The machine: ten steps at a glance ===== -->
+    <!-- ===== The machine: ten steps; the list is the sticky step rail ===== -->
     <section class="machine" id="machine" aria-labelledby="mach-h">
       <div class="read">
         <h2 id="mach-h">The machine in ten steps</h2>
-        <p>Each step below uses the same race, the Ronin copy, with the real number from that day. Pick a step to read about it, or walk through them in order.</p>
+        <p>Every step uses the same race, the Ronin copy, with the real number from that day.</p>
       </div>
-      <div class="mach-ctrl" role="group" aria-label="Walk through the steps">
-        <button class="xbtn solid" type="button" id="m-play">Walk through the steps</button>
-        <button class="xbtn" type="button" id="m-prev" aria-label="Previous step">Back</button>
-        <button class="xbtn" type="button" id="m-next" aria-label="Next step">Next</button>
-        <button class="xbtn" type="button" id="m-all">Show all</button>
-      </div>
-      <ol class="mach" id="mach"></ol>
-      <div class="mach-prog" aria-hidden="true"><i id="m-prog"></i></div>
-      <p class="mach-cap" id="mach-cap" aria-live="polite"></p>
     </section>
 
-    <section class="xs" id="watch" aria-labelledby="h-watch">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 1 of 10</p>
-        <h2 id="h-watch">Watch for anything that pays</h2>
-        <p>A bot has to notice money it could take before anyone else does. That can be a request still waiting in the public mempool, a setup transaction that just landed, or a contract that was just deployed.</p>
-        <p>Here are three races, each read left to right in time: what became public first, then where the bot's copy landed.</p>
-      </div>
-      <div class="xs-vis" id="v-watch"><p class="loading">Loading the three races…</p></div>
-    </section>
+    <div class="steps" id="steps">
+      <nav class="rail" id="rail" aria-label="The ten steps">
+        <p class="rail-now" id="rail-now" aria-hidden="true">Ten steps</p>
+        <ol class="rail-l" id="rail-l"></ol>
+      </nav>
 
-    <section class="xs" id="simulate" aria-labelledby="h-simulate">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 2 of 10</p>
-        <h2 id="h-simulate">Run it in private first</h2>
-        <p>Before copying anything, a bot must know what a transaction does. It runs it on its own copy of the chain and reads off who ends up richer.</p>
-        <p>That morning an upgrade had broken a check in the Ronin bridge, so a withdrawal request with a different recipient, or a bigger amount, would still pay. We replayed the same tests on a local copy of the chain. Nothing was broadcast.</p>
-      </div>
-      <div class="xs-vis" id="v-simulate"><p class="loading">Loading the replays…</p></div>
-    </section>
+      <section class="xs" id="watch" aria-labelledby="h-watch">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 1 of 10</p>
+          <h2 id="h-watch">Watch for anything that pays</h2>
+          <div class="opener" id="b-watch"><p class="op-big">… s</p><p class="op-line">between the archive first seeing the user's request in public and the start of the slot that carried Yoink's copy.</p></div>
+        </div>
+        <div class="xs-vis" id="v-watch"><p class="loading">Loading the race…</p></div>
+        <details class="drawer" id="d-watch-x">
+          <summary><span class="dr-t">Two more races: Kelp and Makina</span><span class="dr-m">what else a bot can watch</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>A bot has to notice money it could take before anyone else does. That can be a request still waiting in the public mempool, a setup transaction that just landed, or a contract that was just deployed.</p>
+              <p>Each race reads left to right in time: what became public first, then where the bot's copy landed.</p>
+            </div>
+            <div id="d-watch"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="copy" aria-labelledby="h-copy">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 3 of 10</p>
-        <h2 id="h-copy">Copy it, and change who gets paid</h2>
-        <p>The user's request is 61 words of 32 bytes each. Yoink's copy kept 58 of them, including the 16 validator signatures that authorize this bridge payout.</p>
-        <p>It changed only the two recipient addresses, to its own contract, and the amount.</p>
-      </div>
-      <div class="xs-vis" id="v-copy"><p class="loading">Reading both transactions…</p></div>
-    </section>
+      <section class="xs" id="simulate" aria-labelledby="h-simulate">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 2 of 10</p>
+          <h2 id="h-simulate">Run it in private first</h2>
+          <div class="opener" id="b-simulate"><p class="op-big">Still pays</p><p class="op-line">In our replay on a local copy of the chain, the request still paid out with its recipient swapped.</p></div>
+        </div>
+        <div class="xs-vis" id="v-simulate"><p class="loading">Loading the replays…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">Show the replays</span><span class="dr-m">how much will a copy pay?</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Before copying anything, a bot must know what a transaction does. It runs it on its own copy of the chain and reads off who ends up richer.</p>
+              <p>That morning an upgrade had broken a check in the Ronin bridge, so a withdrawal request with a different recipient, or a bigger amount, would still pay. We replayed the same tests on a local copy of the chain. Nothing was broadcast.</p>
+            </div>
+            <div id="d-simulate"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="wrap" aria-labelledby="h-wrap">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 4 of 10</p>
-        <h2 id="h-wrap">Wrap the copy in a small program</h2>
-        <p>Yoink's contract has no fixed strategy. Calls to its main entry carry a little program: a header, then a list of operations run in order.</p>
-        <p>The copied request is just one operation. The rest turn the haul into ETH or send it to the bot's vault. At Ronin the program ran in this order:</p>
-        <ol class="xp-chain" aria-label="The Ronin program, in order"><li>submit the copied bridge withdrawal</li><li>swap the USDC for WETH</li><li>unwrap the WETH into ETH</li><li>check the profit (step 5)</li><li>pay the builder (step 6)</li></ol>
-        <p>Pick a race below to read its program operation by operation.</p>
-      </div>
-      <div class="xs-vis" id="v-wrap"><p class="loading">Decoding the programs…</p></div>
-    </section>
+      <section class="xs" id="copy" aria-labelledby="h-copy">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 3 of 10</p>
+          <h2 id="h-copy">Copy it, and change who gets paid</h2>
+          <div class="opener" id="b-copy"><p class="op-big">3 of 61</p><p class="op-line">words changed: both recipient addresses became Yoink's contract, and the amount became just under 2 million USDC.</p></div>
+        </div>
+        <div class="xs-vis" id="v-copy"><p class="loading">Reading both transactions…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">Show the bytes</span><span class="dr-m">the three changed words, in hex</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>The user's request is 61 words of 32 bytes each. Yoink's copy kept 58 of them, including the 16 validator signatures of the user's request. It changed only the two recipient addresses, to its own contract, and the amount.</p>
+            </div>
+            <div id="d-copy"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="check" aria-labelledby="h-check">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 5 of 10</p>
-        <h2 id="h-check">Refuse to lose money</h2>
-        <p>The contract notes its balance before the program runs and again after. If the gain is smaller than a minimum written in the header, the whole transaction undoes itself with the message <code>poor</code>.</p>
-        <p>If the check fails, everything the transaction did is rolled back. Only the gas is still spent.</p>
-      </div>
-      <div class="xs-vis" id="v-check"><p class="loading">Loading…</p></div>
-    </section>
+      <section class="xs" id="wrap" aria-labelledby="h-wrap">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 4 of 10</p>
+          <h2 id="h-wrap">Wrap the copy in a small program</h2>
+          <div class="opener" id="b-wrap"><p class="op-big">3 calls</p><p class="op-line">in one program: the copied withdrawal, a swap of the USDC for WETH, then an unwrap into ETH.</p></div>
+        </div>
+        <div class="xs-vis" id="v-wrap-chain">
+          <ol class="xp-chain" aria-label="The Ronin program, in order"><li>submit the copied bridge withdrawal</li><li>swap the USDC for <button type="button" class="term" data-term="weth" aria-expanded="false">WETH</button></li><li>unwrap the WETH into ETH</li><li>check the profit (step 5)</li><li>pay the builder (step 6)</li></ol>
+        </div>
+        <details class="drawer">
+          <summary><span class="dr-t">Show the bytes</span><span class="dr-m">decode three of Yoink's programs</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Yoink's contract has no fixed strategy. Calls to its main entry carry a little program: a header, then a list of operations run in order. The copied request is just one operation. The rest turn the haul into ETH or send it to the bot's vault.</p>
+            </div>
+            <div id="v-wrap"><p class="loading">Decoding the programs…</p></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="bribe" aria-labelledby="h-bribe">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 6 of 10</p>
-        <h2 id="h-bribe">Hand most of the profit to the block builder</h2>
-        <p>At Ronin, Yoink handed 99.9% of the profit to whoever built the block, as the payment for going first. Only the later refund in step 9 made the place cheap.</p>
-        <p>It sets that payment in the value field of its own call. Below 1,000 the value is a share of the profit in thousandths; at Ronin it was 999. From 1,000 up it is a fixed amount. Try the rule yourself; the presets are real transactions.</p>
-      </div>
-      <div class="xs-vis" id="v-bribe"><p class="loading">Loading…</p></div>
-    </section>
+      <section class="xs" id="check" aria-labelledby="h-check">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 5 of 10</p>
+          <h2 id="h-check">Refuse to lose money</h2>
+          <div class="opener" id="b-check"><p class="op-big">+… ETH</p><p class="op-line">gained, checked against a minimum written in the program. Had it fallen short, everything would have been undone.</p></div>
+        </div>
+        <div class="xs-vis" id="v-check"><p class="loading">Loading…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">More from the data</span><span class="dr-m">the minimum, and the rule</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>The contract notes its balance before the program runs and again after. If the gain is smaller than a minimum written in the header, the whole transaction undoes itself with the message <code>poor</code>. Only the gas is still spent.</p>
+            </div>
+            <div id="d-check"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="bid" aria-labelledby="h-bid">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 7 of 10</p>
-        <h2 id="h-bid">Win the auction for the block</h2>
-        <p>A payment to a builder matters only if that builder's block is the one the proposer publishes. Builders bid for each 12-second slot through relays, and the proposer picks one, normally the highest.</p>
-        <p>Every dot below is one bid for the Ronin block, in ETH, against seconds from the slot's start.</p>
-      </div>
-      <div class="xs-vis" id="v-bid"><p class="loading">Loading the bids…</p></div>
-    </section>
+      <section class="xs" id="bribe" aria-labelledby="h-bribe">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 6 of 10</p>
+          <h2 id="h-bribe">Hand most of the profit to the block builder</h2>
+          <div class="opener" id="b-bribe"><p class="op-big">99.9%</p><p class="op-line">of the profit went to the block's builder as the payment for going first. A refund in step 9 made it cheap.</p></div>
+        </div>
+        <div class="xs-vis" id="v-bribe"><p class="loading">Loading…</p></div>
+        <details class="drawer" id="d-bribe-x">
+          <summary><span class="dr-t">Try the rule yourself</span><span class="dr-m">four real transactions, or your own numbers</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Yoink sets that payment in the value field of its own call. Below 1,000 the value is a share of the profit in thousandths; at Ronin it was 999. From 1,000 up it is a fixed amount. The presets are real transactions.</p>
+            </div>
+            <div id="d-bribe"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="first" aria-labelledby="h-first">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 8 of 10</p>
-        <h2 id="h-first">Get in line ahead of the original</h2>
-        <p>Order inside a block decides who is paid. Yoink's copy ran near the top of its block. The user's own request came one block later and failed, because that withdrawal had already been paid.</p>
-      </div>
-      <div class="xs-vis" id="v-first"><p class="loading">Loading the blocks…</p></div>
-    </section>
+      <section class="xs" id="bid" aria-labelledby="h-bid">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 7 of 10</p>
+          <h2 id="h-bid">Win the auction for the block</h2>
+          <div class="opener" id="b-bid"><p class="op-big">… ETH</p><p class="op-line">won the auction for the block.</p></div>
+        </div>
+        <div class="xs-vis" id="v-bid"><p class="loading">Loading the bids…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">More from the data</span><span class="dr-m">how fast it bid, and the best rival</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>A payment to a builder matters only if that builder's block is the one the proposer publishes. Builders bid for each 12-second slot through <button type="button" class="term" data-term="relay" aria-expanded="false">relays</button>, and the proposer picks one, normally the highest.</p>
+            </div>
+            <div id="d-bid"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="payout" aria-labelledby="h-payout">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 9 of 10</p>
-        <h2 id="h-payout">Pay the builder, then get most of it back</h2>
-        <p>Inside the one transaction the USDC became ETH and the bribe went to the block's builder. Later in the same block the builder sent most of it straight back to Yoink's contract and paid the proposer the winning bid.</p>
-        <p>The refund pattern links the builder and Yoink, and so do the builder's name and EigenPhi's labelling, but the chain does not prove that they share an operator.</p>
-      </div>
-      <div class="xs-vis" id="v-payout"><p class="loading">Loading the block's payments…</p></div>
-    </section>
+      <section class="xs" id="first" aria-labelledby="h-first">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 8 of 10</p>
+          <h2 id="h-first">Get in line ahead of the original</h2>
+          <div class="opener" id="b-first"><p class="op-big">Position …</p><p class="op-line">in its block for Yoink's copy. The user's own request came one block later and failed.</p></div>
+        </div>
+        <div class="xs-vis" id="v-first"><p class="loading">Loading the blocks…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">More from the data</span><span class="dr-m">where Yoink landed in its other races</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Order inside a block decides who is paid. Yoink's copy ran near the top of its block. The user's own request failed because that withdrawal had already been paid.</p>
+            </div>
+            <div id="d-first"></div>
+          </div>
+        </details>
+      </section>
 
-    <section class="xs" id="return" aria-labelledby="h-return">
-      <div class="xs-text read">
-        <p class="xs-n"><i></i>Step 10 of 10</p>
-        <h2 id="h-return">Sometimes, give it back</h2>
-        <p>Returning the money was a choice made after winning, not part of the protocol's ordering rules. At Ronin, Yoink moved most of the proceeds before the team asked for a return. That afternoon most of it reached Ronin's multisignature Safe wallet.</p>
-        <p>Across Yoink's races in our data the answer varies, from almost everything returned to nothing found.</p>
-      </div>
-      <div class="xs-vis" id="v-return"><p class="loading">Loading the returns…</p></div>
-    </section>
+      <section class="xs" id="payout" aria-labelledby="h-payout">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 9 of 10</p>
+          <h2 id="h-payout">Pay the builder, then get most of it back</h2>
+          <div class="opener" id="b-payout"><p class="op-big">… ETH</p><p class="op-line">to the builder, and most of it came back to Yoink's contract later in the same block.</p></div>
+        </div>
+        <div class="xs-vis" id="v-payout"><p class="loading">Loading the block's payments…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t">More from the data</span><span class="dr-m">the net cost, and Kelp for contrast</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Inside the one transaction the USDC became ETH and the bribe went to the block's builder. Later in the same block the builder sent most of it straight back to Yoink's contract and paid the proposer the winning bid.</p>
+              <p>The refund pattern links the builder and Yoink, and so do the builder's name and EigenPhi's labelling, but the chain does not prove that they share an operator.</p>
+            </div>
+            <div id="d-payout"></div>
+          </div>
+        </details>
+      </section>
 
-    <!-- ===== Takeaway ===== -->
+      <section class="xs" id="return" aria-labelledby="h-return">
+        <div class="xs-text read">
+          <p class="xs-n"><i></i>Step 10 of 10</p>
+          <h2 id="h-return">Sometimes, give it back</h2>
+          <div class="opener" id="b-return"><p class="op-big">… ETH</p><p class="op-line">reached Ronin's <button type="button" class="term" data-term="safe" aria-expanded="false">Safe</button> wallet that afternoon. Giving it back was the bot's choice.</p></div>
+        </div>
+        <div class="xs-vis" id="v-return"><p class="loading">Loading the returns…</p></div>
+        <details class="drawer">
+          <summary><span class="dr-t" id="rec-sum">Yoink's record, and Kelp</span><span class="dr-m">single-transaction cases in our data</span></summary>
+          <div class="dr-b">
+            <div class="read">
+              <p>Returning the money was a choice made after winning, not part of the protocol's ordering rules. Across Yoink's cases in our data the answer varies, from almost everything returned to nothing found.</p>
+            </div>
+            <div id="d-return"></div>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <!-- ===== So what (the numbers are at the top) ===== -->
     <section class="takeaway" id="takeaway" aria-labelledby="tk-h">
-      <p class="tk-k" id="tk-h">The takeaway</p>
+      <p class="tk-k" id="tk-h">So what</p>
       <p class="tk-big">Taking the Ronin money took three changed words and a place near the top of one block, bought with almost all of the profit. Giving it back was up to the bot.</p>
-      <ol class="tk-list" id="tk-list"><li class="loading">Adding up the race…</li></ol>
     </section>
 
-    <section class="limits" aria-labelledby="h-limits">
-      <h2 id="h-limits">What we cannot see</h2>
-      <p class="limits-lede">The evidence is on-chain behaviour, saved relay and mempool responses, and our own local replays.</p>
-      <ul>
-        <li><b>The off-chain half.</b> How Yoink finds targets, how it simulates and how it picks the bribe all happen on its own servers. Steps 1 and 2 describe what any bot must do; the chain only shows the result.</li>
-        <li><b>Some names are ours.</b> The names of the swap operations (2 to 5) are inferred from what they do, and so is the reading that the Ronin amount came from a search for the largest payable amount.</li>
-        <li><b>"First seen" is the archive's clock.</b> It is when the Flashbots mempool archive's sources saw a transaction, not when Yoink did.</li>
-        <li><b>Builder and bot as one operator</b> is inferred from in-block refunds, the builder name and EigenPhi's statement. No operator statement or on-chain label confirms it.</li>
-      </ul>
-    </section>
+    <details class="drawer limits" id="limits">
+      <summary><span class="dr-t">What we cannot see</span><span class="dr-m">4 limits of this evidence</span></summary>
+      <div class="dr-b">
+        <p class="limits-lede">The evidence is on-chain behaviour, saved relay and mempool responses, and our own local replays.</p>
+        <ul>
+          <li><b>The off-chain half.</b> How Yoink finds targets, how it simulates and how it picks the bribe all happen on its own servers. Steps 1 and 2 describe what any bot must do; the chain only shows the result.</li>
+          <li><b>Some names are ours.</b> The names of the swap operations (2 to 5) are inferred from what they do, and so is the reading that the Ronin amount came from a search for the largest payable amount.</li>
+          <li><b>"First seen" is the archive's clock.</b> It is when the Flashbots mempool archive's sources saw a transaction, not when Yoink did.</li>
+          <li><b>Builder and bot as one operator</b> is inferred from in-block refunds, the builder name and EigenPhi's statement. No operator statement or on-chain label confirms it.</li>
+        </ul>
+      </div>
+    </details>
 
     <div data-partnav-slot></div>
   </div>
 </main>
+
 <script src="assets/common.js"></script>
 <script src="assets/explainer.js"></script>
 </body>

@@ -111,10 +111,9 @@
     var tMin = Math.min(B.first_ms, timed.length ? timed[0].t : B.first_ms, 0) - 600;
     var tMax = Math.max(B.last_ms, W.t_ms != null ? W.t_ms : -1e12, 0) + 350;
     var top = Math.max(B.max_eth || 0, winBid || 0) || 1, ystep = tickStep(top, 6), fullY = Math.ceil(top * 1.04 / ystep) * ystep;
-    /* the action is in the last few seconds: the quiet early part of the time axis is compressed (marked with a break) */
-    var act = timed.filter(function (e) { return /^(jump|react|lead|ten|win)$/.test(e.id); })[0], tBreak = null;
-    if (act && tMax - tMin > 9000) { var tb = Math.floor((act.t - 1200) / 1000) * 1000; if (tb - tMin > 3500 && tMax - tb > 2500) tBreak = tb; }
-    var F = tBreak != null ? 0.32 : null;
+    /* v4: the time axis is linear end to end (no break). The last seconds, where the bidding war happens, are shown
+       again in a zoom inset on the same linear ETH scale (see "zoom inset" below). */
+    var tBreak = null, F = null;
     /* bids drawn (the winning bid itself is the gold marker when its time is known) */
     var bids = B.series.filter(function (p) { return !((p[3] & 1) === 1 && W.t_ms != null); }).slice().sort(function (a, b) { return a[0] - b[0]; });
     var bidT = bids.map(function (p) { return p[0]; }), pmax = [], mx = 0;
@@ -222,46 +221,53 @@
         }
         return r;
       });
-      /* zoom inset: the first bids, too small to see once the axis reaches its full scale */
+      /* zoom inset (v4): the last seconds, where the bids climb, stretched in time on the SAME linear ETH scale
+         (0 to the full axis top). Drawn when the war is squeezed into a small part of the linear time axis. */
       L.inset = null;
-      if (jumpE && jumpE.prev < fullY * 0.02 && jumpE.eth < fullY * 0.5) {
-        var zx0 = Math.max(tMin, B.first_ms - 300), zx1 = Math.min(tMax, jumpE.t + 1100), zy1 = niceMax(jumpE.eth * 1.15);
-        var big = rec.filter(function (r) { return r[1] > fullY * 0.2; })[0], limT = Math.min(jumpE.t, big ? big[0] : tMax);
-        var avail = Math.min(x(limT) - 36, x(0) - (m.l + 14) >= 260 ? x(0) - 24 : 1e9) - (m.l + 14), host = svg, inChart = !narrow && avail >= 250, ib, gi;
+      var bigRec = rec.filter(function (r) { return r[1] > fullY * 0.02; })[0];
+      var zx0 = bigRec ? Math.max(tMin, Math.floor((bigRec[0] - 200) / 500) * 500) : null, zx1 = tMax;
+      if (o.inset !== false && zx0 != null && tMax - tMin > 6000 && (zx1 - zx0) < 0.45 * (tMax - tMin)) {
+        var avail = x(zx0) - 40 - (m.l + 14), host = svg, inChart = !narrow && avail >= 300, ib, gi;
+        var zLab = "Zoom: the last seconds, same ETH scale";
         if (inChart) {
-          ib = { x: m.l + 14, y: m.t + 8, w: Math.min(420, avail), h: 160 };
+          ib = { x: m.l + 14, y: m.t + 4, w: Math.min(560, avail), h: Math.min(230, H - m.t - m.b - 40) };
           gi = S("g", { class: "auc-inset" }, svg);
           S("rect", { x: ib.x, y: ib.y, width: ib.w, height: ib.h, rx: 8, class: "auc-insetbg" }, gi);
           S("line", { x1: ib.x + ib.w, y1: ib.y + ib.h, x2: x(zx1), y2: H - m.b - 6, class: "auc-zoomline" }, gi);
-          S("line", { x1: ib.x, y1: ib.y + ib.h, x2: x(zx0), y2: H - m.b - 6, class: "auc-zoomline" }, gi);
+          S("line", { x1: ib.x + ib.w, y1: ib.y, x2: x(zx0), y2: H - m.b - 6, class: "auc-zoomline" }, gi);
           S("rect", { x: x(zx0), y: H - m.b - 6, width: Math.max(4, x(zx1) - x(zx0)), height: 6, class: "auc-zoomsrc" }, gi);
         } else {
-          host = S("svg", { viewBox: "0 0 " + w + " 176", width: w, height: 176, class: "auc auc-inset2", role: "img", "aria-label": "Zoom on the first bids, 0 to " + zy1 + " ETH. " + jumpE.text }, box);
-          ib = { x: 0, y: 4, w: w, h: 166 }; gi = S("g", { class: "auc-inset" }, host);
+          host = S("svg", { viewBox: "0 0 " + w + " 206", width: w, height: 206, class: "auc auc-inset2", role: "img", "aria-label": zLab + ", 0 to " + fmtTick(fullY) + " ETH: the bids from " + sgn(zx0) + " to " + sgn(B.last_ms) + "." }, box);
+          ib = { x: 0, y: 4, w: w, h: 196 }; gi = S("g", { class: "auc-inset" }, host);
           S("rect", { x: ib.x + 0.5, y: ib.y, width: ib.w - 1, height: ib.h, rx: 8, class: "auc-insetbg" }, gi);
         }
-        var im = { l: 52, r: 16, t: 36, b: 24 }, ix = BVH.lin(zx0, zx1, ib.x + im.l, ib.x + ib.w - im.r), iy = BVH.lin(0, zy1, ib.y + ib.h - im.b, ib.y + im.t);
+        var im = { l: 46, r: 14, t: 34, b: 24 }, ix = BVH.lin(zx0, zx1, ib.x + im.l, ib.x + ib.w - im.r), iy = BVH.lin(0, fullY, ib.y + ib.h - im.b, ib.y + im.t);
         var dd = S("defs", null, host), cp2 = S("clipPath", { id: uid + "-zc" }, dd);
-        S("rect", { x: ib.x + im.l - 3, y: ib.y + im.t - 6, width: ib.w - im.l - im.r + 6, height: ib.h - im.t - im.b + 9 }, cp2);
-        S("text", { x: ib.x + 12, y: ib.y + 20, class: "auc-insettitle" }, gi, "Zoom: the first bids, 0 to " + zy1 + " ETH");
-        var ist = tickStep(zy1, 2);
-        for (var iv = 0; iv <= zy1 + 1e-9; iv += ist) { S("line", { x1: ib.x + im.l, x2: ib.x + ib.w - im.r, y1: iy(iv), y2: iy(iv), class: iv ? "auc-grid" : "auc-base" }, gi); S("text", { x: ib.x + im.l - 7, y: iy(iv) + 4, "text-anchor": "end", class: "auc-tick auc-tick-s" }, gi, iv ? fmtTick(+iv.toPrecision(6)) : "0"); }
-        var its = (zx1 - zx0) > 6000 ? 2000 : 1000;
-        for (var it = Math.ceil(zx0 / its) * its; it <= zx1; it += its) S("text", { x: ix(it), y: ib.y + ib.h - 6, "text-anchor": "middle", class: "auc-tick auc-tick-s" }, gi, sgn(it, 0));
+        S("rect", { x: ib.x + im.l - 3, y: ib.y + im.t - 8, width: ib.w - im.l - im.r + 6, height: ib.h - im.t - im.b + 11 }, cp2);
+        S("text", { x: ib.x + 12, y: ib.y + 20, class: "auc-insettitle" }, gi, zLab);
+        var ist = tickStep(fullY, 2);
+        for (var iv = 0; iv <= fullY + 1e-9; iv += ist) { S("line", { x1: ib.x + im.l, x2: ib.x + ib.w - im.r, y1: iy(iv), y2: iy(iv), class: iv ? "auc-grid" : "auc-base" }, gi); S("text", { x: ib.x + im.l - 7, y: iy(iv) + 4, "text-anchor": "end", class: "auc-tick auc-tick-s" }, gi, iv ? fmtTick(+iv.toPrecision(6)) : "0"); }
+        for (var it = Math.ceil(zx0 / 1000) * 1000; it <= zx1; it += 1000) S("text", { x: ix(it), y: ib.y + ib.h - 6, "text-anchor": "middle", class: "auc-tick auc-tick-s" }, gi, it === 0 ? "0" : sgn(it, 0));
+        if (zx0 < 0 && zx1 > 0) S("line", { x1: ix(0), x2: ix(0), y1: ib.y + im.t - 6, y2: iy(0), class: "inc-slotline" }, gi);
         var gcz = S("g", { "clip-path": "url(#" + uid + "-zc)" }, gi), zel = [];
         bids.forEach(function (p) {
           if (p[0] < zx0 || p[0] > zx1) return;
-          var iw = p[2] === winIdx, ipy = iy(Math.min(p[1], zy1 * 1.2)), ih = iy(0) - ipy;
+          var iw = p[2] === winIdx, ipy = iy(p[1]), ih = iy(0) - ipy;
           if (ih > 1.5) zel.push([p[0], S("rect", { x: (ix(p[0]) - 0.6).toFixed(1), y: ipy.toFixed(1), width: 1.2, height: ih.toFixed(1), class: iw ? "auc-col auc-col-w" : "auc-col" }, gcz)]);
-          zel.push([p[0], S("circle", { cx: ix(p[0]).toFixed(1), cy: ipy.toFixed(1), r: 2.2, class: iw ? "auc-dot auc-dot-w" : "auc-dot" }, gcz)]);
+          zel.push([p[0], S("circle", { cx: ix(p[0]).toFixed(1), cy: ipy.toFixed(1), r: 2, class: iw ? "auc-dot auc-dot-w" : "auc-dot" }, gcz)]);
         });
         rec.forEach(function (a, k) {
-          if (a[0] > zx1) return; var b = rec[k + 1], xe2 = ix(Math.min(zx1, b ? b[0] : B.last_ms));
-          zel.push([a[0], S("path", { d: "M" + ix(a[0]).toFixed(1) + " " + iy(Math.min(a[1], zy1 * 1.2)).toFixed(1) + "H" + xe2.toFixed(1) + (b && b[0] <= zx1 ? "V" + iy(Math.min(b[1], zy1 * 1.2)).toFixed(1) : ""), class: "auc-rec" }, gcz)]);
+          var b = rec[k + 1], aT = Math.max(a[0], zx0), bT = b ? b[0] : B.last_ms;
+          if (bT < zx0 || a[0] > zx1) return;
+          zel.push([a[0], S("path", { d: "M" + ix(aT).toFixed(1) + " " + iy(a[1]).toFixed(1) + "H" + ix(Math.min(zx1, bT)).toFixed(1) + (b && b[0] <= zx1 ? "V" + iy(b[1]).toFixed(1) : ""), class: (winIdx >= 0 && a[2] === winIdx) ? "auc-rec auc-rec-w" : "auc-rec" }, gcz)]);
         });
-        var jx = ix(jumpE.t), jy = iy(jumpE.eth), jr = jx > ib.x + ib.w * 0.55;
-        zel.push([jumpE.t, S("text", { x: jr ? jx - 9 : jx + 9, y: Math.max(ib.y + im.t + 8, jy + 4), "text-anchor": jr ? "end" : "start", class: "auc-lab" }, gi, BVH.eth(jumpE.prev, false) + " → " + BVH.eth(jumpE.eth, false) + " ETH")]);
-        L.inset = { g: gi, inChart: inChart, els: zel, zy1: zy1 };
+        if (W.t_ms != null && winBid != null && W.t_ms >= zx0) {
+          var wx2 = ix(W.t_ms), wy2 = iy(winBid);
+          zel.push([W.t_ms, S("circle", { cx: wx2.toFixed(1), cy: wy2.toFixed(1), r: 5, class: "auc-win glow-s" }, gi)]);
+          var wr = wx2 > ib.x + ib.w * 0.6;
+          zel.push([W.t_ms, S("text", { x: wr ? wx2 - 9 : wx2 + 9, y: wy2 + 4, "text-anchor": wr ? "end" : "start", class: "auc-lab" }, gi, E(W.eth))]);
+        }
+        L.inset = { g: gi, inChart: inChart, els: zel, zy1: fullY };
       }
       /* the cursor: a line of light at the current moment */
       L.cursor = S("line", { y1: m.t - 26, y2: H - m.b, class: "auc-cursor" }, svg);
@@ -352,7 +358,7 @@
       });
       /* the inset shows on the full scale, and whenever the reader stops on a scale too big for the first bids */
       if (L.inset) {
-        var showIn = !L.inset.inChart || (!st.playing && !st.hold && (t >= tMax - 1 || ym > 30 * L.inset.zy1));
+        var showIn = !L.inset.inChart || (!st.playing && !st.hold && t >= tMax - 1);
         L.inset.g.style.visibility = showIn ? "" : "hidden";
         L.inset.els.forEach(function (z) { z[1].style.visibility = z[0] <= t ? "" : "hidden"; });
       }
@@ -555,7 +561,8 @@
     stops.addEventListener("click", function (ev) { var b = ev.target.closest && ev.target.closest(".rp-stop"); if (!b) return; var e = timed[+b.getAttribute("data-n") - 1]; if (e) jump(e.t); });
     sync();
     if (o.autoplay === "inview" && !reduced && "IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); setTimeout(function () { if (!started) play(); }, 500); } }); }, { threshold: 0.5 });
+      /* v4: observe the chart itself with a small threshold, so a tall figure on a phone still starts */
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); setTimeout(function () { if (!started) play(); }, 500); } }); }, { threshold: o.threshold == null ? 0.3 : o.threshold });
       io.observe(o.observe || box.parentNode || box);
     }
     return { play: play, pause: pause, jump: jump, time: function () { return t; }, speedAt: speedAt, holdMs: holdMs, isPlaying: function () { return playing; }, holding: function () { return hold; } };
@@ -675,29 +682,14 @@
   var $ = function (s) { return document.querySelector(s); };
   BVH.chrome("race.html");
 
-  function dodoNote(row) {
-    var m = /and ([\d.]+) ETH to/.exec(row.fate || "");
-    return "Antelope later sent back tokens" + (m ? " and " + E(+m[1]) : "") + " to DODO; how much of the take that covers is not reconciled.";
-  }
   function punkNote(row) { return E(row.gross_eth - ((row.money && row.money.bot_net_eth) || 0) - (row.paid_to_builder_eth || 0), 2, false) + " ETH-equivalent of the take was sent on to the attacker. The bot kept a fee Punk agreed to and returned the rest."; }
   function kelpNote(row) { return "Taken as rsETH and valued in ETH at the swap rate inside the transaction."; }
-  var GALLERY = [
-    ["blueberry-2024", null, { victim: "Blueberry" }],
-    ["curve-vyper-2023--peth", null, { victim: "JPEG'd" }],
-    ["curve-vyper-2023--crv-eth-2", null, { victim: "Curve" }],
-    ["kelp-rseth-2026", null, { victim: "the Safe's owner", noteFn: kelpNote }],
-    ["punk-2021", null, { victim: "Punk", noteFn: punkNote }],
-    ["dodo-v2-2021", null, { victim: "DODO", noteFn: dodoNote }],
-    ["defiplaza-2024", null, { victim: "DeFi Plaza" }],
-    ["transitswap-2022", null, { victim: "Transit Swap" }],
-    ["earningfarm-2022", null, { victim: "Earning.Farm" }]
-  ];
-
-  Promise.all([BVH.json("data/incidents.json"), BVH.json("data/incident/makina-2026.json")])
+  Promise.all([BVH.json("data/incidents.json"), BVH.json("data/incident/makina-2026.json"), BVH.json("data/lineages.json").catch(function () { return null; })])
     .then(function (r) {
       var rows = r[0], D = r[1], row = rows.filter(function (x) { return x.id === "makina-2026"; })[0];
-      beats(D, row); hero(D, row); primer(); auction(D); windowStrip(D); block(D); money(D, row); aftermath(D);
-      gallery(rows); takeaway(D, row);
+      beats(D, row); hero(D, row); answer(D, row, rows); primer(); auction(D); windowStrip(D); block(D); money(D, row); aftermath(D); chat(r[2]);
+      gallery(rows);
+      BVH.openHash(null, true);
     })
     .catch(function (e) { BVH.loadError($("#r-hero-body"), e); });
 
@@ -708,13 +700,27 @@
     var gap = dep ? -dep.t : 12000, bot = D.txs.filter(function (t) { return t.role === "bot"; })[0];
     var botEv = (D.events || []).filter(function (e) { return e.kind === "tx" && /Copy of the attack/.test(e.detail || ""); })[0];
     var kept = botEv && botEv.derived && botEv.derived[0] ? botEv.derived[0].shown : null;
-    $("#r-dek").innerHTML = "At " + BVH.clock(depEv.t, false) + " UTC on " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina Finance, a DeFi protocol, through its DUSD/USDC pool on Curve" + fnHero(depEv.raws && depEv.raws[0] || depEv.raw, "Deploy transaction trace") +
-      ". " + Math.round(gap / 1000) + " seconds later, at the very top of the next block, someone else ran the same plan and paid " + E(bot.cb_eth) + " to the block builder to go first" + fnHero(D.incident_raw && D.incident_raw.copy_tx_trace || D.block.raw.trace, "Trace of the copy, with the payment to the builder") + ". No call from the attacker ever landed: the copy ran first.";
+    /* the old dek, word for word, now opens the "four steps" drawer */
+    $("#r-setup").innerHTML = "At " + BVH.clock(depEv.t, false) + " UTC on " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina Finance, a DeFi protocol, through its DUSD/USDC pool on Curve" + fnHero(depEv.raws && depEv.raws[0] || depEv.raw, "Deploy transaction trace") +
+      ". The next block, timestamped " + Math.round(gap / 1000) + " seconds later, held the copy and its " + E(bot.cb_eth) + " builder payment" + fnHero(D.incident_raw && D.incident_raw.copy_tx_trace || D.block.raw.trace, "Trace of the copy, with the payment to the builder") + ".";
+    $("#r-hero-note").innerHTML = "No attacker call was observed landing: the copy ran first.";
     var b0 = depEv.block, b1 = D.block.number;
     $("#r-blocks").innerHTML =
-      '<div class="rb rb-atk"><span class="rb-k">Block ' + b0.toLocaleString("en-US") + '</span><span class="rb-t">' + BVH.clock(depEv.t, false) + ' UTC</span><span class="rb-what"><i class="dot-atk" aria-hidden="true"></i>The attacker deploys the drain contract</span>' + '<span class="rb-src">' + BVH.rawA(depEv.raws && depEv.raws[0] || depEv.raw, "raw", "Deploy transaction trace") + "</span></div>" +
+      '<div class="rb rb-atk"><span class="rb-k">Block ' + b0.toLocaleString("en-US") + '</span><span class="rb-t">' + BVH.clock(depEv.t, false) + ' UTC</span><span class="rb-what"><i class="dot-atk" aria-hidden="true"></i><span>The attacker deploys the drain contract' + '<sup class="fn">' + BVH.rawA(depEv.raws && depEv.raws[0] || depEv.raw, "raw", "Deploy transaction trace") + "</sup></span></span></div>" +
       '<div class="rb-gap" aria-label="' + Math.round(gap / 1000) + ' seconds later"><span>' + Math.round(gap / 1000) + ' s</span></div>' +
-      '<div class="rb rb-bot"><span class="rb-k">Block ' + b1.toLocaleString("en-US") + ', position ' + D.bot_idx + '</span><span class="rb-t">' + BVH.clock(D.block.ts_ms, false) + ' UTC</span><span class="rb-what"><i class="dot-bot" aria-hidden="true"></i>A searcher runs the same calls, pays ' + E(bot.cb_eth) + " to the builder" + (kept ? " and keeps " + esc(kept) : "") + '</span><span class="rb-src">' + BVH.rawA(D.block.raw.block, "raw", "The block, with its timestamp") + BVH.rawA(D.incident_raw && D.incident_raw.copy_tx_trace, "trace", "Trace of the copy transaction") + "</span></div>";
+      '<div class="rb rb-bot"><span class="rb-k">Block ' + b1.toLocaleString("en-US") + ', position ' + D.bot_idx + '</span><span class="rb-t">' + BVH.clock(D.block.ts_ms, false) + ' UTC</span><span class="rb-what"><i class="dot-bot" aria-hidden="true"></i><span>A ' + BVH.term("searcher") + " runs the same calls first" + '<sup class="fn">' + BVH.rawA(D.block.raw.block, "raw", "The block, with its timestamp") + BVH.rawA(D.incident_raw && D.incident_raw.copy_tx_trace, "trace", "Trace of the copy transaction") + "</sup></span></span></div>";
+  }
+
+  /* answer first: the price of going first, and where it ended up */
+  function answer(D, row, rows) {
+    var bot = D.txs.filter(function (t) { return t.role === "bot"; })[0], ir = D.incident_raw || {};
+    var split = BVH.moneySplit(row, "Makina");
+    $("#r-ans").innerHTML = '<div class="opener op-bot"><p class="op-big">' + E(bot.cb_eth, 2, false) + '<small>ETH</small><sup class="fn">' + BVH.rawA(ir.copy_tx_trace, "raw", "Trace of the copy: the coinbase transfer to the builder") + "</sup></p>" +
+      '<p class="op-line">paid to the ' + BVH.term("builder", "block builder") + " to go first, out of the " + E(row.gross_eth) + " the copy took.</p></div>" +
+      '<div class="r-ans-split">' + BVH.splitHTML(split, { inline: true, labels: { bld: "To the builder and proposer", ret: "Returned to Makina" }, sources: BVH.sources(BVH.moneySrc(row, D)) }) + "</div>";
+    BVH.buildIn($("#r-ans"), "bars");
+    var n = rows.filter(function (x) { return x.headline; }).length;
+    Array.prototype.forEach.call(document.querySelectorAll('a[href="#gallery"]'), function (a) { a.textContent = "All " + n + " races"; });
   }
 
   function auction(D) {
@@ -726,12 +732,17 @@
     list.innerHTML = ev.map(function (e) {
       return '<li data-n="' + e.n + '" class="st-' + e.id + '"><span class="st-n">' + e.n + '</span><span class="st-time">' + sgn(e.t) + '<small>' + BVH.clock(D.t0_ms + e.t) + " UTC</small></span><span class=\"st-body\"><b>" + esc(e.title) + "</b> " + esc(e.text) + (e.rawHTML || BVH.rawA(e.raw, "raw", e.rawTitle)) + "</span></li>";
     }).join("");
+    $("#auc-moments-m").textContent = ev.length + " moments, each with its time and source";
     function mark(n) { Array.prototype.forEach.call(list.children, function (li) { li.classList.toggle("is-cur", +li.getAttribute("data-n") === n); li.classList.toggle("is-future", +li.getAttribute("data-n") > n && n > 0); }); }
     RV.warp($("#auc-ctrl"), chart, { t0: D.t0_ms, label: "Moment in the race, from the deploy to the last bid (drag to scrub)" });
-    var A = D.auction, B = A.bids;
-    $("#auc-src").innerHTML = "Each column of light is one block a builder offered the proposer for this slot, rising to the price it offered. " + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.bidsA(A) + "; " + B.n_shown + " are drawn, including every new best bid. Amber columns are builder " + esc(A.winner.builder) + "'s bids; the line is the best bid so far, amber while " + esc(A.winner.builder) + " holds it. Winning bid from the relay's delivery record" + BVH.rawA(A.raw.delivered, "raw", "Relay record of the payload delivered to the proposer") + ". The ETH axis is linear throughout; during playback it widens as the bids grow.";
+    var A = D.auction, B = A.bids, ser = B.series || [], W = A.winner || {};
+    /* chapter opener: the first bid and the winning bid */
+    $("#auc-open").innerHTML = BVH.opener({ big: BVH.eth(ser[0][1], false) + ' <span class="op-arrow" aria-hidden="true">&rarr;</span><span class="sr"> to </span> ' + E(W.eth, 2, false) + "<small>ETH</small>",
+      src: BVH.rawA(A.raw && A.raw.bids, "bids", "Relay bid file for this slot: the first bid") + BVH.rawA(A.raw && A.raw.delivered, "won", "Relay record of the block delivered to the proposer: the winning bid"),
+      text: "First saved bid and winning bid for block " + D.block.number.toLocaleString("en-US") + ", which held the copy.", cls: "op-bot op-sm" });
+    $("#auc-src").innerHTML = B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.sources(BVH.bidsA(A) + BVH.rawA(A.raw.delivered, "delivered", "Relay record of the payload delivered to the proposer"), { inlineMax: 1 }) + ", on a linear ETH scale. Amber is builder " + esc(W.builder) + ", the winner.";
+    $("#auc-how").innerHTML = "Each column of light is one block a builder offered the proposer for this slot, rising to the price it offered. " + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.bidsA(A) + "; " + B.n_shown + " are drawn, including every new best bid. Amber columns are builder " + esc(W.builder) + "'s bids; the line is the best bid so far, amber while " + esc(W.builder) + " holds it. Winning bid from the relay's delivery record" + BVH.rawA(A.raw.delivered, "raw", "Relay record of the payload delivered to the proposer") + ". The ETH axis is linear throughout; during playback it widens as the bids grow. Time is linear too; the zoom under the chart stretches the last seconds, where the bids climb, on the same ETH scale.";
   }
-
   /* section markers are times, read from the data */
   function beats(D, row) {
     var B = D.auction.bids, ev = RV.events(D), dep = ev[0], ret = (D.events || []).filter(function (e) { return e.kind === "return" && /RETURN/.test(e.detail || ""); })[0];
@@ -754,7 +765,7 @@
     var depEv = (D.events || []).filter(function (e) { return e.kind === "deploy" && /attack contract/i.test(e.detail || ""); })[0];
     /* the two block timestamps; the off-chain work and the proposer's choice are not timed by anything public */
     var gap = depEv && depEv.t != null ? D.block.ts_ms - depEv.t : null;
-    if (gap != null) $("#win-span").textContent = Math.round(gap / 1000) + " seconds";
+    if (gap != null) { $("#win-span2").textContent = Math.round(gap / 1000) + " seconds"; }
     $("#win-from").innerHTML = "<b>" + BVH.clock(D.t0_ms + dep.t, false) + "</b> block " + (D.block.number - 1).toLocaleString("en-US") + " carries the contract" + BVH.rawA(D.incident_raw && D.incident_raw.deploy_tx, "raw", "The deploy transaction");
     $("#win-to").innerHTML = "<b>" + BVH.clock(D.block.ts_ms, false) + "</b> block " + D.block.number.toLocaleString("en-US") + "'s timestamp" + BVH.rawA(D.block.raw.block, "raw", "The block, with its timestamp") + (win ? '<small>winning block first bid to the relay at ' + sgn(win.t) + "</small>" : "");
   }
@@ -765,8 +776,11 @@
     var cells = "";
     for (var i = 0; i < n; i++) {
       var s = strip[i] || [], cls = s[2] === "bot" ? "bc-bot" : s[2] === "builder" ? "bc-bld" : "bc-tx";
-      cells += '<i class="' + cls + '" title="position ' + i + (s[2] === "bot" ? ": the copy" : s[2] === "builder" ? ": builder pays the proposer" : "") + '"></i>';
+      cells += '<i class="bi-col ' + cls + '" title="position ' + i + (s[2] === "bot" ? ": the copy" : s[2] === "builder" ? ": builder pays the proposer" : "") + '"></i>';
     }
+    setTimeout(function () { BVH.buildIn($("#blk .blk-cells"), "grow"); }, 0);
+    $("#blk-open").innerHTML = BVH.opener({ big: "1st <small>of " + n + "</small>", src: BVH.rawA(D.block.raw.block, "raw", "The block, with its transactions in order"),
+      text: "The copy ran first in block " + D.block.number.toLocaleString("en-US") + ". The builder's payment to the " + BVH.term("proposer") + " ran last.", cls: "op-bot" });
     box.innerHTML = '<div class="blk-cells" role="img" aria-label="Block ' + D.block.number + ": " + n + " transactions. Position 0 is the copy; the last one is the builder paying the proposer.\">" + cells + "</div>" +
       '<div class="blk-keys"><div class="bk bk-bot"><span class="bk-p">Position 0</span><b>The copy.</b> Pays ' + E(bot.cb_eth) + " straight to the block's builder" + BVH.rawA(bot.raw && bot.raw.trace, "raw", "Block trace") + "</div>" +
       '<div class="bk bk-mid"><span class="bk-p">Positions 1 to ' + (n - 2) + "</span>" + (n - 2) + " ordinary transactions</div>" +
@@ -803,46 +817,56 @@
       Array.prototype.forEach.call(document.querySelectorAll("#ice .ic-row"), function (r) { r.classList.toggle("has-out", !!r.querySelector(".ic-out")); });
     }
     fit(); var ft; window.addEventListener("resize", function () { clearTimeout(ft); ft = setTimeout(fit, 100); });
+    var hm = document.getElementById("how-it-moved"); if (hm) hm.addEventListener("toggle", function () { if (hm.open) fit(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
     $("#ice-note").innerHTML = "Bars are drawn to scale against the " + E(G) + " taken. The builder kept " + E(F.builder_kept_eth) + " of this payment and later forwarded " + (fwdEth != null ? E(fwdEth, 1) : "it") + " to " + (fwd ? fwd[2].slice(0, 6) : "another address") + (fwdEth != null && fwdEth - F.builder_kept_eth > 1e-6 ? ", adding " + BVH.eth2(fwdEth - F.builder_kept_eth) + " of its own funds" : "") + ". The bot's " + (keptTxt && keptTxt.derived ? esc(keptTxt.derived[0].shown) : "") + " is " + esc(keptTxt && keptTxt.derived ? keptTxt.derived[0].how : "") + ".";
-    var split = BVH.moneySplit(row, "Makina");
-    $("#money-split").innerHTML = BVH.splitHTML(split, { sources: BVH.moneySrc(row, D) });
+    /* the full split is the answer tile under the hero; this section draws how the money moved */
   }
 
-  /* "What you need to know": Part 1 launches on its own, so a reader may arrive with no background */
+  /* the words this story uses: a closed drawer (Part 1 launches on its own); first uses in the text are tap-to-define */
   function primer() {
-    var el = $("#primer"); if (!el || !BVH.primer) return;
-    el.innerHTML = BVH.primer(["block", "builder", "proposer", "relay", "mempool", "position0", "searcher"], {
-      intro: "The words this story uses, each in one line. Nothing else is assumed."
+    var el = $("#primer"); if (!el) return;
+    el.innerHTML = BVH.glossary(["block", "builder", "proposer", "relay", "mempool", "position0", "searcher"], {
+      intro: "The words this story uses, each in one line. Nothing else is assumed.", id: "words"
     });
   }
-  function takeaway(D, row) {
-    var el = $("#takeaway"); if (!el) return;
-    var G = row.gross_eth, bot = D.txs.filter(function (t) { return t.role === "bot"; })[0], m = row.money || {};
-    var ret = m.returned_by_builder_eth, share = Math.round(100 * bot.cb_eth / G);
-    el.innerHTML = '<p class="tk-k">The takeaway</p>' +
-      '<p class="tk-big">A contract sat on chain for one block. That was enough for a copy to take the money first.</p>' +
-      '<p class="tk-x">Here the bot paid ' + E(bot.cb_eth) + " of the " + E(G) + " it took" + (share >= 99 ? ", nearly all of it," : ", about " + share + "%,") + " for the right to go first" +
-      (ret != null ? ", and " + E(ret, 1) + " of that later went back to Makina." : ".") + "</p>";
+
+  /* the human beat: the one on-chain message about this race, as a chat bubble (lineages.json messages, key "makina") */
+  function chat(L) {
+    var mm = L && L.messages, g = mm && (mm.groups || []).filter(function (x) { return x.key === "makina"; })[0];
+    if (!g) return;
+    $("#money-chat").innerHTML = '<p class="r-chat-k">About twelve hours later, on chain</p>' + BVH.chat(g.messages.map(function (m) {
+      var mine = m.dir === "from_yoink";
+      return { side: mine ? "out" : "in", who: mine ? "Yoink, another bot, wrote" : "Sent to Yoink", when: BVH.dateLong(m.time_utc.slice(0, 10)) + ", " + m.time_utc.slice(11, 16) + " UTC",
+        text: esc(m.text), tx: '<a class="raw" href="https://etherscan.io/tx/' + m.tx + '" target="_blank" rel="noopener" title="Open on Etherscan (external)">' + BVH.short(m.tx, 10, 6) + "</a>" + BVH.rawA(mm.raw, "raw", "Verbatim Etherscan row for this message transaction") + " block " + m.block.toLocaleString("en-US") };
+    }), { label: g.heading }) + '<p class="r-chat-x">' + esc(g.context) + "</p>";
   }
 
   function aftermath(D) {
     var after = (D.events || []).filter(function (e) { return e.t && e.t > D.block.ts_ms && (e.kind === "message" || e.kind === "return") && !/test transaction|Recovery Safe/i.test(e.detail || ""); });
+    $("#after-m").textContent = after.length + " messages and transfers, each with its source";
     $("#after").innerHTML = after.map(function (e) {
       var d = e.utc ? BVH.dateLong(e.utc.slice(0, 10)) + " " + e.utc.slice(11, 16) : "";
       return '<li class="af-' + e.kind + '"><span class="af-t">' + d + ' UTC</span><span class="af-k">' + (e.kind === "return" ? "funds move" : "on-chain message") + '</span><span class="af-d">' + esc(e.detail) + BVH.rawA(e.raw, "raw", "Saved source for this event") + '<small>' + esc(e.actor || "") + "</small></span></li>";
     }).join("");
   }
 
+  /* other races: the headline sentence, the who-lost dots, and the 19-race scoreboard; each row opens its bids */
+  /* DODO's return sentence is part of the shared scoreboard row, so it is not repeated here */
+  var NOTES = { "punk-2021": punkNote, "kelp-rseth-2026": kelpNote };
   function gallery(rows) {
-    var ids = GALLERY.map(function (g) { return g[0]; });
-    Promise.all(ids.map(function (id) { return BVH.json("data/incident/" + id + ".json").catch(function () { return null; }); })).then(function (ds) {
-      $("#gal").innerHTML = GALLERY.map(function (g, i) {
-        var row = rows.filter(function (r) { return r.id === g[0]; })[0];
-        if (!row) return "";
-        var o = Object.assign({}, g[2]); if (o.noteFn) o.note = o.noteFn(row);
-        return RV.raceCard(ds[i], row, o);
-      }).join("");
+    $("#gal-head").innerHTML = esc(BVH.headline(rows)) + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: verdict, note and evidence per race") + "</sup>";
+    $("#gal-strip").innerHTML = BVH.lostStrip(rows);
+    var KEY = '<div class="fig-key gal-key" aria-hidden="true"><span><i class="k-dot"></i>a builder\'s bid</span><span><i class="k-dot k-w"></i>winning builder\'s bids</span><span><i class="k-line"></i>best bid so far</span><span><i class="k-win"></i>winning bid</span><span><i class="k-seen"></i>attack first seen in the public mempool</span></div>';
+    BVH.scoreboard($("#gal"), rows, {
+      victims: { "makina-2026": "Makina", "kelp-rseth-2026": "the Safe's owner" },
+      extra: function (row, D) {
+        var note = NOTES[row.id] ? '<p class="rc-note">' + NOTES[row.id](row) + "</p>" : "";
+        if (!D) return note;
+        var hasBids = D.auction && D.auction.bids && D.auction.bids.series && D.auction.bids.series.length > 1;
+        return note + '<figure class="sb-bids"><figcaption>' + (hasBids ? "The bids for the bot's block, on a linear scale" + BVH.bidsA(D.auction) : "The bot's block, in order" + BVH.rawA(row.raw && row.raw.block, "block", "The block, with the bot's position in it")) + "</figcaption>" +
+          (hasBids ? RV.miniAuction(D, 340, 128) + KEY : RV.miniBlock(D, 340, 128)) + "</figure>";
+      }
     });
   }
 })();

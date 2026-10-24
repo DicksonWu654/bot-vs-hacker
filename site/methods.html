@@ -40,7 +40,9 @@
       </dl>
       <p>These verdicts are about who lost. They do not change the copy-and-order evidence that put each race in the headline count. Before August 2023 they rest on in-block evidence only.</p>
     </div>
+    <details class="drawer drawer-wide" id="wl-all"><summary><span class="dr-t">Every verdict, race by race</span><span class="dr-m">who lost, why, and the evidence</span></summary><div class="dr-b">
     <div style="overflow-x:auto"><table class="ops wl-table" id="wl-table"><thead><tr><th>race</th><th>who lost</th><th>why</th><th>evidence</th></tr></thead><tbody><tr><td colspan="4">Loading&hellip;</td></tr></tbody></table></div>
+    </div></details>
   </section>
 
   <section class="sec" id="raw">
@@ -54,6 +56,7 @@
 
   <section class="sec" id="sources">
     <h2>Sources</h2>
+    <details class="drawer drawer-wide" id="sources-table"><summary><span class="dr-t">What each source was used for</span><span class="dr-m">7 kinds of source</span></summary><div class="dr-b">
     <div style="overflow-x:auto"><table class="ops"><thead><tr><th>what</th><th>source</th><th>used for</th></tr></thead><tbody>
       <tr><td>Blocks, receipts, traces</td><td>Ethereum JSON-RPC: blocks, block receipts, and block and transaction traces</td><td>transaction order, coinbase transfers, call trees, builder payouts</td></tr>
       <tr><td>Builder bids</td><td>Relay data APIs: Flashbots, Ultrasound, Aestus, Agnostic, bloXroute (regulated), Titan, Relayooor, BTCS, EthGas, Wenmerge (<code>builder_blocks_received</code>)</td><td>bid-escalation curves, winning builder, first qualifying bid</td></tr>
@@ -63,6 +66,7 @@
       <tr><td>Exploit list</td><td>DeFiHackLabs reproduction repository (Ethereum mainnet entries)</td><td>the sample for the evolution study</td></tr>
       <tr><td>Postmortems and statements</td><td>Protocol and security-firm write-ups, linked on each race page</td><td>what happened to the money afterwards</td></tr>
     </tbody></table></div>
+    </div></details>
   </section>
 
   <section class="sec" id="evidence">
@@ -101,12 +105,14 @@
   <section class="sec" id="prior">
     <h2>Prior work</h2>
     <p class="prose small">Four works measured parts of this problem. Our contribution is different in kind: per-race reconstructions from relay bid streams and traces, rather than a system or a prevalence estimate.</p>
+    <details class="drawer drawer-wide" id="prior-table"><summary><span class="dr-t">The four works, side by side</span><span class="dr-m">what each did, and how it relates</span></summary><div class="dr-b">
     <div style="overflow-x:auto"><table class="ops"><thead><tr><th>work</th><th>what it did</th><th>how it relates</th></tr></thead><tbody>
       <tr><td><a href="https://arxiv.org/abs/2409.06213">BACKRUNNER</a> (2024)</td><td>Built a system that copies attacks to rescue funds. Measured 158 attack transactions between January 2023 and May 2024: 17 were visible in the public mempool, 18 were intercepted by its own bots. 50 of 54 attacks had the exploit contract deployed at least a second before the trigger.</td><td>Its 17 of 158 (10.8%, per transaction) is the closest comparison to our 4.5% (per exploit, a longer period). The two use different units and windows; over the shared window our attacker-only count is 8 of 67 (11.9%). It reports four constructor attacks in 1.5 years, against 62% of our 2025 exploits.</td></tr>
       <tr><td><a href="https://www.usenix.org/conference/usenixsecurity23/presentation/zhang-zhuo-exploit">STING</a> (2023)</td><td>Synthesises counterattack contracts from a pending exploit. Found that almost all attacks carry access control (<code>msg.sender</code> or <code>tx.origin</code> equal to a constant). General bots handled 12 of 62 exploits in its set.</td><td>Explains why a bot cannot always copy, which is why only some incidents here are races. It cannot see private transactions.</td></tr>
       <tr><td><a href="https://www.usenix.org/conference/usenixsecurity23/presentation/qin">APE</a> (2023)</td><td>Automated whitehat rescue by replaying attacks. Found that 10 of the 12 whitehat attack transactions it identified were privately propagated.</td><td>Shows the same private-flow shift from the rescue side.</td></tr>
       <tr><td><a href="https://www.paradigm.xyz/writing/ethereum-is-a-dark-forest">Ethereum is a Dark Forest</a> (2020)</td><td>An early and widely read public account of generalized front-runners copying other people's transactions, including a rescue.</td><td>The framing of this piece. The full list, with how well we verified each source, is in <a href="downloads/bibliography.json">bibliography.json</a>.</td></tr>
     </tbody></table></div>
+    </div></details>
   </section>
 
   <section class="sec" id="downloads">

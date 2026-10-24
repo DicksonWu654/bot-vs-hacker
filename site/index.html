@@ -34,38 +34,33 @@
     <div class="art art-canvas" data-art="gate" data-art-opts='{"id":"makina-2026","x":0.74}' role="img" aria-label="Drawn from the data: the Makina block as a gate built from its 105 transactions in block order. Position 0, the bot's copy, glows amber at the foot of the gate, where an amber streak arrives ahead of a green trail."></div>
     <div class="wrap hx-open">
       <div class="hx-text">
-        <p class="kick-line hx-kicker">A three-part series on the short race around an Ethereum exploit: who saw it, who paid to go first, and where the money went</p>
+        <p class="kick-line hx-kicker">A three-part series</p>
         <h1 id="h1">The bot beat the hacker.</h1>
-        <p class="hx-dek" id="hx-dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
-        <p class="hx-cta"><a class="btn" href="race.html">Read part 1: the race</a><a class="btn btn-ghost" href="#hx-race">Watch it here</a></p>
-        <p class="hx-primer" id="hx-primer">On Ethereum, a transaction can wait in a public queue before it is written into a block. A block builder puts the block together and a proposer publishes it; a copying bot can pay the builder to run its copy first.</p>
+        <!-- the decided headline sentence, word for word: BVH.headline(rows) in assets/common.js fills it from data/incidents.json -->
+        <p class="hx-dek" id="hx-dek">19 races where a bot got there first, in 15 hacks. In 13 the loser was the original attacker (8 confirmed, 5 likely); in 6 it was a later exploiter or we can't tell.</p>
+        <div id="hx-strip"></div>
+        <p class="hx-cta"><a class="btn" href="race.html">Part 1: the race</a><a class="btn btn-ghost" href="#races">All 19 races</a></p>
       </div>
     </div>
   </section>
 
-  <section class="wrap hx-race-sec" aria-label="The Makina race, playable">
-      <figure class="hx-race" id="hx-race" aria-labelledby="hx-race-h">
+  <section class="wrap hx-race-sec" aria-labelledby="hx-race-h">
+      <figure class="hx-race" id="hx-race">
         <div class="hx-race-top">
           <p class="hx-race-k">Watch one race</p>
           <h2 id="hx-race-h">Makina, <span id="hx-date">20 Jan 2026</span></h2>
           <p id="hx-sum">Loading the race&hellip;</p>
         </div>
-        <div class="hx-ctrl" id="hx-ctrl"></div>
         <div class="hx-chart" id="hx-chart"></div>
-        <div class="hx-split" id="hx-split"></div>
+        <div class="hx-ctrl" id="hx-ctrl"></div>
         <figcaption class="hx-src" id="hx-src"></figcaption>
       </figure>
   </section>
 
   <section class="sec wrap" id="numbers" aria-labelledby="num-h">
     <h2 id="num-h" class="sr">The headline numbers</h2>
-    <div class="nums" id="stats" role="list"></div>
-    <p class="statnote" id="statexact"></p>
-    <p class="statnote" id="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#data">the race table</a>, with a link to the saved source behind every value.</p>
-    <h3 class="wl-head" id="who-lost">Who lost each race</h3>
-    <p class="wl-lede" id="wl-lede"></p>
-    <div id="wholost"></div>
-    <p class="wl-foot" id="wl-foot"></p>
+    <div id="stats"></div>
+    <div id="stat-drawer"></div>
   </section>
 
   <section class="sec wrap" id="series" aria-labelledby="series-h">
@@ -73,20 +68,24 @@
     <div class="parts" id="parts"></div>
   </section>
 
-  <section class="art-band night fam-band" id="famous" aria-labelledby="famous-h">
-    <div class="art art-canvas" data-art="forest" data-art-opts='{"fade":"left"}' role="img" aria-label="Drawn from the data: one tree of light for each race a bot won, in date order from 2021 to 2026; each tree's amber light marks the bot's place in its block."></div>
-    <div class="wrap">
-      <p class="kick-line">Where the money went</p>
-      <h2 id="famous-h">Other races, and where the money went</h2>
-      <div class="prose"><p>Each bar is everything the bot took: what went back to the victim, what was paid to the block builder and proposer to go first, what the bot kept, and gas and other costs. Where money was later added from other funds, the bar includes it and says so underneath.</p></div>
-    </div>
-  </section>
-  <section class="sec wrap fam-sec" aria-label="Famous races, the whole money split">
-    <div class="fig-key fam-key" aria-hidden="true"><span><i class="s-ret"></i>returned to the victim</span><span><i class="s-bld"></i>builder and proposer</span><span><i class="s-bot"></i>kept by the bot</span><span><i class="s-oth"></i>gas and other</span><span><i class="s-unk"></i>unknown</span></div>
-    <ol class="famx" id="famlist"></ol>
+  <section class="sec wrap" id="races" aria-labelledby="races-h">
+    <p class="kick-line">Where the money went</p>
+    <h2 id="races-h">All 19 races, and who lost each one</h2>
+    <p class="sec-lede" id="races-lede">The bot can beat a later exploiter. Bars include extra funds where stated. Tap for amounts and sources.</p>
+    <div id="board"></div>
+    <div id="lost-drawer"></div>
+    <p class="sb-more"><a href="#data">Every race we checked, with every number's source <span aria-hidden="true">&rarr;</span></a></p>
   </section>
 
-  <section class="sec wrap ev-sec" id="data" aria-labelledby="data-h">
+  <section class="sec wrap" id="said" aria-labelledby="said-h">
+    <p class="kick-line">On chain, in plain text</p>
+    <h2 id="said-h">What the bot said</h2>
+    <p class="sec-lede" id="said-intro">Yoink&rsquo;s wallet has sent and received plain-text messages as transaction input data. Quoted exactly.</p>
+    <div id="said-one"></div>
+    <div id="said-more"></div>
+  </section>
+
+  <section class="sec wrap ev-sec" id="evidence" aria-labelledby="data-h">
     <div class="ev-head">
       <h2 id="data-h">Data and evidence</h2>
       <p class="ev-lede">Every race we checked, including the ones that turned out not to be races. Each row opens a replay; every number links the saved response it came from.</p>
@@ -96,38 +95,35 @@
         <li><a href="data/incidents.json"><b>incidents.json</b><span>the dataset behind this table</span></a></li>
       </ul>
     </div>
-    <div id="table">
-      <h3 id="table-h">Every race, side by side</h3>
-      <div class="tools">
-        <span id="filt-l">Show</span>
-        <div class="seg" role="group" aria-labelledby="filt-l">
-          <button type="button" id="f-head" aria-pressed="true">The 19 headline races</button>
-          <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
+    <details class="drawer drawer-wide" id="data">
+      <summary><span class="dr-t">Every race, side by side</span><span class="dr-m" id="data-meta">9 fields per race</span></summary>
+      <div class="dr-b" id="table">
+        <div class="tools">
+          <span id="filt-l">Show</span>
+          <div class="seg" role="group" aria-labelledby="filt-l">
+            <button type="button" id="f-head" aria-pressed="true">The 19 headline races</button>
+            <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
+          </div>
+          <span class="muted" id="count"></span>
         </div>
-        <span class="muted" id="count"></span>
+        <div class="tblwrap"><table class="cmp" id="cmp" aria-label="Every race, side by side"></table></div>
+        <p class="tblnote" id="tblnote"></p>
       </div>
-      <div class="tblwrap"><table class="cmp" id="cmp" aria-labelledby="table-h"></table></div>
-      <p class="tblnote" id="tblnote"></p>
-    </div>
-  </section>
-
-  <section class="sec wrap" id="types" aria-labelledby="types-h">
-    <h2 id="types-h">Seven kinds of race</h2>
-    <div class="prose"><p>Not every bot-and-attacker pair is a race the bot won, and some are not races at all. The headline count only includes the first two kinds, and only when the evidence is confirmed on chain.</p></div>
-    <div class="types" id="typelist"></div>
-  </section>
-
-  <section class="sec wrap" id="lineages" aria-labelledby="lin-h">
-    <h2 id="lin-h">Two bot lineages</h2>
-    <div class="prose"><p>Two of the bots in these races have long public histories. Both lineages were traced from Etherscan histories and the race blocks; no mempool data is involved.</p></div>
-    <div class="lins" id="linlist"></div>
-  </section>
-
-  <section class="sec wrap" id="said" aria-labelledby="said-h">
-    <h2 id="said-h">What the bot said, on chain</h2>
-    <div class="prose"><p id="said-intro">Yoink&rsquo;s wallet has sent and received plain-text messages as transaction input data. A few of them, quoted exactly.</p></div>
-    <div class="msgs" id="msglist"></div>
-    <p class="tblnote" id="msgnote"></p>
+    </details>
+    <details class="drawer drawer-wide" id="types">
+      <summary><span class="dr-t">Seven kinds of race</span><span class="dr-m">which ones count in the headline</span></summary>
+      <div class="dr-b">
+        <div class="prose"><p>Not every bot-and-attacker pair is a race the bot won, and some are not races at all. The headline count only includes the first two kinds, and only when the evidence is confirmed on chain.</p></div>
+        <div class="types" id="typelist"></div>
+      </div>
+    </details>
+    <details class="drawer drawer-wide" id="lineages">
+      <summary><span class="dr-t">Two bot lineages</span><span class="dr-m">Yoink, and the 0xa57 family</span></summary>
+      <div class="dr-b">
+        <div class="prose"><p>Two of the bots in these races have long public histories. Both lineages were traced from Etherscan histories and the race blocks; no mempool data is involved.</p></div>
+        <div class="lins" id="linlist"></div>
+      </div>
+    </details>
   </section>
 
 </main>
