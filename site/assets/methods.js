@@ -2,7 +2,10 @@
   "use strict";
   var esc = BVH.esc;
   BVH.chrome("methods.html");
-  BVH.json("data/headline_stats.json").then(function (H) {
+  var WL = null;
+  Promise.all([BVH.json("data/headline_stats.json"), BVH.json("data/incidents.json")]).then(function (r) {
+    var H = r[0], rows = r[1];
+    whoLost(rows, H);
     var d=H.detection_delay, s=H.sensitivity.excluding_c0ffeebabe_rows, r=H.loot.returns.gross.headline_rows;
     document.getElementById("timing-summary").textContent = d.n_measured + " races can be timed (" + d.headline_rows_measured.length + " headline), ranging from " + d.min_ms + " to " + d.max_ms + " ms. Median: " + d.median_ms + " ms. Bid contents and bot detection times remain unknown.";
     document.getElementById("sensitivity-summary").textContent = H.counts.headline_rows + " rows in " + H.counts.headline_incidents + " incidents; " + s.rows + " rows in " + s.incidents + " incidents excluding c0ffeebabe.eth rows with withheld comparisons.";
@@ -11,7 +14,7 @@
     var c = H.counts, hb = c.headline_by_race_type || {}, o = H.ordering || {}, pd = H.block_producer_share.headline_rows, ar = pd.after_refunds || {}, n = function (x, k) { return Number(x).toLocaleString("en-US", { maximumFractionDigits: k == null ? 0 : k, minimumFractionDigits: k == null ? 0 : k }); };
     var hn = [
       [c.headline_rows + " races in " + c.headline_incidents + " incidents",
-        "Out of " + c.rows + " races and sub-races investigated across " + c.incidents + " incidents. A race counts when the evidence is confirmed on chain and the bot either beat a pending attack (" + (hb["beat-pending-attack"] || 0) + " races) or used the attacker's own setup before the attacker's call (" + (hb["deploy-window-copy"] || 0) + "). " +
+        (WL ? "In " + WL.original + " of the " + c.headline_rows + " the loser was the original attacker (" + WL.confirmed + " confirmed, " + WL.likely + " likely); in " + WL.later + " it was a later exploiter or we can't tell (<a href=\"#who-lost\">who lost each race</a>). " : "") + "Out of " + c.rows + " races and sub-races investigated across " + c.incidents + " incidents. A race counts when the evidence is confirmed on chain and the bot either beat a pending attack (" + (hb["beat-pending-attack"] || 0) + " races) or used the attacker's own setup before the attacker's call (" + (hb["deploy-window-copy"] || 0) + "). " +
         (o["earlier-block"] || 0) + " landed a block or more ahead of the attacker, " + (o["same-block-earlier-index"] || 0) + " earlier in the same block, and in " + (o["before-attacker-call-landed"] || 0) + " the attacker's own call never landed. Copies of a user's withdrawal or a whitehat rescue (Ronin, for example), late copies and replays after a failure are in the table but not counted. The Euler copy is left out because its operator is unresolved. Before August 2023 there is no mempool archive, so those races rest on in-block evidence only."],
       [n(pd.sum_paid_eth) + " ETH",
         "The bots' direct payments to the block builder plus priority fees, summed over the " + pd.rows + " counted races with a priced take (" + n(pd.sum_paid_eth, 2) + " ETH, " + BVH.pct(pd.pooled_pct, 1) + " of the " + n(pd.sum_gross_eth) + " ETH they took). This is before refunds: some builders passed part of it back, and across the " + ar.rows + " rows where refunds are known the total after refunds is " + n(ar.sum_paid_minus_refund_eth, 2) + " ETH. A few large races carry most of the total. Pre-Merge races paid the miner through the gas price instead."],
@@ -22,9 +25,21 @@
     ];
     document.getElementById("hn-list").innerHTML = hn.map(function (x) { return "<dt>" + x[0] + "</dt><dd>" + x[1] + "</dd>"; }).join("");
   });
+  /* who lost each headline race: the counts, then one row per race with its verdict, note and saved evidence */
+  function whoLost(rows, H) {
+    var c = BVH.beatenCounts(rows);
+    if (c.total !== H.counts.headline_rows) { document.getElementById("wl-sum").textContent = "Verdicts are missing for some headline races."; return; }
+    WL = c;
+    document.getElementById("wl-sum").innerHTML = "Result: of the " + c.total + " headline races, <b>" + c.confirmed + "</b> were lost by the original attacker (confirmed), <b>" + c.likely + "</b> probably by the original attacker, and <b>" + c.later + "</b> by a later exploiter or an account we cannot place. So in " + c.original + " of the " + c.total + " races the loser was the original attacker; in " + c.later + " it was not, or we can't tell." + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: counts and rows") + "</sup>";
+    var order = { confirmed: 0, likely: 1, later: 2 };
+    var hr = rows.filter(function (r) { return r.headline && r.beaten; }).sort(function (a, b) { return order[a.beaten.kind] - order[b.beaten.kind] || (a.date < b.date ? -1 : 1); });
+    document.querySelector("#wl-table tbody").innerHTML = hr.map(function (r) {
+      return '<tr><td><a href="' + BVH.raceHref(r) + '">' + esc(BVH.raceShort(r)) + "</a> " + r.date.slice(0, 4) + '</td><td class="wl-k bt-' + r.beaten.kind + '"><span class="beaten-c"><i aria-hidden="true"></i><b>' + BVH.BEATEN[r.beaten.kind].short + "</b></span></td><td>" + esc(r.beaten.note || "") + "</td><td>" + BVH.beatenEvidence(r.beaten) + "</td></tr>";
+    }).join("");
+  }
   BVH.json("data/meta.json").then(function (M) {
     document.getElementById("built").textContent = "Built " + M.built.replace("T", " ").replace("Z", " UTC") + ". " + M.n_rows + " races, " + M.n_headline + " counted in the headline across " + M.n_headline_incidents + " incidents. " + M.raw_files.toLocaleString("en-US") + " saved responses (" + (M.raw_bytes / 1e6).toFixed(0) + " MB).";
-    var list = [{ path: "data/incidents.json", bytes: M.file_sizes["data/incidents.json"], desc: "One row per race, as shown on the home page" }, { path: "data/evolution.json", bytes: M.file_sizes["data/evolution.json"], desc: "Numbers behind the evolution charts" }, { path: "raw/MANIFEST.json", bytes: M.file_sizes["raw/MANIFEST.json"], desc: "Every saved response: origin, checksum, source address, time fetched" }].concat(M.downloads || []);
+    var list = [{ path: "data/incidents.json", bytes: M.file_sizes["data/incidents.json"], desc: "One row per race, as shown on the home page; the 19 headline rows carry who lost (beaten)" }, { path: "data/beaten_party.json", bytes: null, desc: "Who lost each headline race: counts, verdict, note and evidence per race" }, { path: "data/evolution.json", bytes: M.file_sizes["data/evolution.json"], desc: "Numbers behind the evolution charts" }, { path: "raw/MANIFEST.json", bytes: M.file_sizes["raw/MANIFEST.json"], desc: "Every saved response: origin, checksum, source address, time fetched" }].concat(M.downloads || []);
     document.getElementById("t-dl").innerHTML = "<thead><tr><th>file</th><th>what is in it</th><th>size</th></tr></thead><tbody>" + list.map(function (x) {
       var kb = x.bytes == null ? "" : x.bytes > 1e6 ? (x.bytes / 1e6).toFixed(1) + " MB" : Math.max(1, Math.round(x.bytes / 1e3)) + " kB";
       return '<tr><td><a href="' + esc(x.path) + '">' + esc(x.path.replace(/^downloads\//, "")) + "</a></td><td>" + esc(x.desc) + "</td><td>" + kb + "</td></tr>";

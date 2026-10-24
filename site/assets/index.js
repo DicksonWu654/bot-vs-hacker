@@ -26,39 +26,60 @@
     var bot = D.txs.filter(function (t) { return t.role === "bot"; })[0], m = row.money || {};
     var fn = RV.footnotes();
     $("#hx-date").textContent = BVH.dateLong(D.date);
-    $("#hx-sum").innerHTML = "An attacker deploys a contract to drain Makina. " + Math.round(-dep.t / 1000) + " seconds later, at position 0 of the next block, a searcher runs the same plan first and pays <b>" + E(bot.cb_eth) + "</b> to the block builder" + fn(D.incident_raw && D.incident_raw.copy_tx_trace, "Trace of the copy, with the payment to the builder") + ".";
-    var cap = $("#hx-cap");
-    var chart = RV.auction($("#hx-chart"), D, {
-      compact: true,
-      onStep: function (e) {
-        if (!e) { cap.innerHTML = '<span class="cap-t">Before the deploy</span>'; return; }
-        cap.innerHTML = '<span class="cap-n">' + e.n + '</span><span class="cap-t"><b>' + RV.sgn(e.t) + "</b> " + esc(e.title) + '</span><span class="cap-x">' + esc(e.text) + "</span>";
-      }
-    });
-    BVH.player($("#hx-ctrl"), {
-      min: 0, max: 1, step: 0.001, duration: 12000, label: "Time from the start of the slot",
-      stops: chart.events.map(function (e) { return { t: chart.frac(e.t), label: e.title }; }),
-      format: function (v) { return RV.sgn(chart.tAt(v)); },
-      onChange: function (v) { chart.set(chart.tAt(v)); },
-      autoplay: "inview"
-    });
+    $("#hx-sum").innerHTML = "Every bid for block " + D.block.number.toLocaleString("en-US") + ", the block the bot's copy ran in, against the clock. Press play to watch from the attacker's deploy; the replay slows down and pauses at each key moment.";
+    var nOther = headlineStats && headlineStats.counts ? headlineStats.counts.headline_rows - 1 : null;
+    $("#hx-dek").innerHTML = "On " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina. " + Math.round(-dep.t / 1000) +
+      " seconds later a bot ran the same plan first and paid " + E(bot.cb_eth) + " to the block builder for the right to go first" + fn(D.incident_raw && D.incident_raw.copy_tx_trace, "Trace of the copy, with the payment to the builder") + "." +
+      (nOther ? " This series replays that race and " + nOther + " others where a bot got to a live exploit first." : "");
+    var chart = RV.auction($("#hx-chart"), D, { compact: true });
+    RV.warp($("#hx-ctrl"), chart, { t0: D.t0_ms, label: "Time in the Makina race", autoplay: "inview" });
     $("#hx-split").innerHTML = '<p class="hx-split-h">Where the ' + E(row.gross_eth) + " it took went" + BVH.rawA(D.incident_raw && D.incident_raw.copy_tx_trace, "raw", "Trace of the copy") + "</p>" + BVH.splitHTML(BVH.moneySplit(row, "Makina"), { compact: true, labels: { bld: "Builder and proposer" }, sources: BVH.moneySrc(row, D) });
     $("#hx-src").innerHTML = "Bids for block " + D.block.number.toLocaleString("en-US") + " on a linear scale" + BVH.bidsA(D.auction) + ". <a href=\"race.html\">The whole race, second by second</a>";
   }
 
   /* ---------- headline numbers: one big figure, one plain sentence, a source marker ---------- */
+  /* ======================================================================================
+     HEADLINE COPY. Edit the words here; {names} are filled from data/headline_stats.json and
+     data/incidents.json so the numbers never drift from the data. Big numbers are rounded for
+     reading ("about 18,400 ETH"); the exact value is printed in the note under the numbers.
+     ====================================================================================== */
+  var HEADLINE = {
+    races:    ["{races}<small> races</small>", "in {incidents} hacks, {y0} to {y1}, where a bot got to a live exploit first. In {orig} the loser was the original attacker ({conf} confirmed, {likely} likely); in {later} it was a later exploiter or we can't tell."],
+    taken:    ["<small class=\"num-pre\">about </small>{takenRound}<small> ETH</small>", "taken first by the bots in those races. That total covers {priced} of the {races}: one take was paid in tokens that have no ETH price."],
+    returned: ["{retPct}%", "of what the bots took went back to the victims, across the {retRows} races where the outcome is known. In {retZero} of them, nothing came back."],
+    paid:     ["{paidPct}%", "of the take was paid to block builders for the right to go first: {paidEth} ETH, before any refunds."],
+    exact:    "Exact values: {takenExact} ETH taken in the {priced} priced races; {retExact} ETH returned of the {retGross} ETH taken in the {retRows} races with a known outcome; {paidExact} ETH paid to builders.",
+    /* who lost each race: one sentence over the three groups, one under them */
+    lostLede: "The series is called The Bot Beat the Hacker, but the one a bot beats is not always the person who started the hack. We checked who sent each losing transaction or setup. In {orig} of the {races} races it was the original attacker ({conf} confirmed, {likely} likely). In {later} it was a later exploiter, or we can't tell.",
+    lostFoot: "\u201cConfirmed\u201d means the loser's own setup trail or the victim's report ties it to the attack being intercepted; \u201clikely\u201d means a prepared attack with its origin not fully traced. Each race page shows its verdict and the saved responses behind it. <a href=\"methods.html#who-lost\">How we judged who lost</a>."
+  };
+  function fill(t, v) { return t.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }); }
+  function n0(x) { return Math.round(x).toLocaleString("en-US"); }
+  function n2(x) { return x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
   function stats() {
-    var H = headlineStats, c = H.counts, paid = H.block_producer_share.headline_rows, ret = H.loot.returns.gross.headline_rows, d = H.detection_delay, L = H.loot;
+    var H = headlineStats, c = H.counts, paid = H.block_producer_share.headline_rows, ret = H.loot.returns.gross.headline_rows, L = H.loot;
     var hr = rows.filter(function (r) { return r.headline; }), yrs = hr.map(function (r) { return +r.date.slice(0, 4); });
-    var y0 = Math.min.apply(null, yrs), y1 = Math.max.apply(null, yrs);
+    var v = {
+      races: c.headline_rows, incidents: c.headline_incidents, y0: Math.min.apply(null, yrs), y1: Math.max.apply(null, yrs),
+      takenRound: n0(Math.round(L.total_gross_loot_eth_headline_rows / 100) * 100), takenExact: n2(L.total_gross_loot_eth_headline_rows),
+      priced: c.headline_rows - (L.headline_rows_without_eth_price || []).length,
+      retPct: Math.round(ret.pooled_pct), retRows: ret.rows, retZero: ret.known_zero_rows,
+      retExact: n2(ret.sum_returned_eth), retGross: n2(ret.sum_denominator_eth),
+      paidPct: Math.round(paid.pooled_pct), paidEth: n0(paid.sum_paid_eth), paidExact: n2(paid.sum_paid_eth)
+    };
+    var bc = BVH.beatenCounts(rows);
+    v.orig = bc.original; v.conf = bc.confirmed; v.likely = bc.likely; v.later = bc.later;
     var src = '<sup class="fn">' + BVH.rawA("data/headline_stats.json", "data", "Computed in data/headline_stats.json from the race rows; method on the methods page") + "</sup>";
-    var items = [
-      [c.headline_rows + "<small> races</small>", "a bot won against a hacker in progress, in " + c.headline_incidents + " incidents, " + y0 + " to " + y1 + "."],
-      [Math.round(L.total_gross_loot_eth_headline_rows).toLocaleString("en-US") + "<small> ETH</small>", "taken first by the bots in those races (" + paid.rows + " with an ETH price)."],
-      [Math.round(ret.pooled_pct) + "%", "of what the bots took went back to the victims, across the " + ret.rows + " races with a known outcome; in " + ret.known_zero_rows + " of them, nothing came back."],
-      [Math.round(paid.pooled_pct) + "%", "of the take was paid to block builders to go first: " + Math.round(paid.sum_paid_eth).toLocaleString("en-US") + " ETH, before refunds."]
-    ];
-    $("#stats").innerHTML = items.map(function (it) { return '<div class="num" role="listitem"><b>' + it[0] + src + "</b><span>" + it[1] + "</span></div>"; }).join("");
+    var items = [HEADLINE.races, HEADLINE.taken, HEADLINE.returned, HEADLINE.paid];
+    $("#stats").innerHTML = items.map(function (it) { return '<div class="num" role="listitem"><b>' + fill(it[0], v) + src + "</b><span>" + fill(it[1], v) + "</span></div>"; }).join("");
+    var ex = $("#statexact"); if (ex) ex.textContent = fill(HEADLINE.exact, v);
+    /* who lost: only drawn when every headline race carries a verdict */
+    if (bc.total === c.headline_rows) {
+      $("#wl-lede").innerHTML = fill(HEADLINE.lostLede, v) + '<sup class="fn">' + BVH.rawA("data/beaten_party.json", "data", "Who lost each headline race: verdict, note and evidence per race") + "</sup>";
+      $("#wholost").innerHTML = BVH.whoLostHTML(rows);
+      $("#wl-foot").innerHTML = HEADLINE.lostFoot;
+    } else { $("#who-lost").hidden = true; }
   }
 
   /* ---------- the three parts ---------- */
@@ -69,8 +90,13 @@
     if (Ev && Ev.measured) tz[3] = ['<span class="pt-big">' + Ev.measured.attacker_seen_pct + "%</span>", "of attacker transactions were visible in the public mempool, against " + Ev.measured.control_seen_pct + "% of ordinary ones"];
     $("#parts").innerHTML = BVH.SERIES.map(function (s) {
       var t = tz[s.part];
-      return '<a class="part" href="' + s.href + '"><span class="pt-n">Part ' + s.part + '</span><h3>' + s.title + "</h3><p>" + s.blurb + "</p>" + (t ? '<p class="pt-tz">' + t[0] + "<span>" + t[1] + "</span></p>" : "") + '<span class="pt-go">Read part ' + s.part + "</span></a>";
+      return '<a class="part" href="' + s.href + '"><span class="pt-art night" data-pt-art="' + s.part + '" aria-hidden="true"></span><span class="pt-n">Part ' + s.part + '</span><h3>' + s.title + "</h3><p>" + s.blurb + "</p>" + (t ? '<p class="pt-tz">' + t[0] + "<span>" + t[1] + "</span></p>" : "") + '<span class="pt-go">Read part ' + s.part + "</span></a>";
     }).join("");
+    /* each card carries a small piece of its part's code-made art (same data as the part's opener) */
+    var ART = { 1: ["gate", { id: "makina-2026", x: 0.7, trails: false, fade: "none" }], 2: ["rain", { fade: "none" }], 3: ["fog", { fade: "none" }] };
+    if (window.BVHArt) Array.prototype.forEach.call(document.querySelectorAll("[data-pt-art]"), function (el) {
+      var a = ART[el.getAttribute("data-pt-art")]; if (a) BVHArt.draw(el, a[0], a[1]);
+    });
   }
 
   /* ---------- famous names first, each with the whole money split ---------- */
@@ -96,7 +122,7 @@
       if (kept && kept.eth < 0.0005) plain = "The bot kept nothing.";
       else if (kept && s.priced && kept.eth / s.gross < 0.001) plain = "The bot kept next to nothing.";
       return '<li class="fx"><div class="fx-id"><a class="fx-name" href="' + href + '">' + esc(name) + "</a>" + '<span class="fx-meta">' + r.date.slice(0, 4) + (sub ? ", " + esc(sub) : "") + "</span>" +
-        '<span class="fx-bot">' + esc(bot) + (r.headline ? "" : ' <span class="pill no" title="' + esc(BVH.RT[r.race_type] ? BVH.RT[r.race_type].def : "") + '">not in the headline count</span>') + "</span></div>" +
+        '<span class="fx-bot">' + esc(bot) + (r.headline ? "" : ' <span class="pill no" title="' + esc(BVH.RT[r.race_type] ? BVH.RT[r.race_type].def : "") + '">not in the headline count</span>') + "</span>" + (r.headline ? BVH.beatenHTML(r, { compact: true, note: true }) : '<p class="beaten-c fx-notrace">' + esc(BVH.RT[r.race_type] ? BVH.RT[r.race_type].def : "") + "</p>") + "</div>" +
         '<div class="fx-amt">' + (s.priced ? E(s.gross, s.gross >= 100 ? 0 : 2) : "tokens") + (s.priced ? '<small>taken' + BVH.rawA(r.raw && r.raw.trace, "raw", "Block trace with the bot's take") + "</small>" : "<small>not priced in ETH</small>") + "</div>" +
         '<div class="fx-split">' + BVH.splitHTML(s, { inline: true, labels: { bld: "To the builder and proposer", ret: "Returned to " + f[1] }, sources: BVH.moneySrc(r, DS[fi]) }) + (plain ? '<p class="fx-plain' + (s.priced ? "" : " fx-muted") + '">' + plain + "</p>" : "") + "</div></li>";
     }).join("");
@@ -170,7 +196,7 @@
         if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
         return (typeof x === "string" ? x.localeCompare(y) : x - y) * sortDir;
       });
-      $("#count").textContent = list.length + " races";
+      $("#count").textContent = list.length + " races" + (filter === "all" ? "" : ", each with who lost");
       var head = "<thead><tr>" + COLS.map(function (c) {
         var s = sortKey === c[0] ? (sortDir > 0 ? "ascending" : "descending") : "none";
         return '<th scope="col" class="' + (c[2] ? "num" : "") + '" aria-sort="' + s + '"><button type="button" data-k="' + c[0] + '">' + c[1] + "</button></th>";
@@ -183,7 +209,7 @@
         if (r.loot_scope && r.loot_scope !== "bot-tx" && r.slug !== "sushi-rp2-2023") pct += '<span class="sub">' + BVH.esc(r.loot_scope) + "</span>";
         return "<tr>" +
           '<td data-l="Date" class="mono">' + r.date + "</td>" +
-          '<td class="first"><span class="name">' + (r.stub ? BVH.esc(r.title) : '<a href="' + href(r) + '">' + BVH.esc(r.title) + "</a>") + '</span><span class="sub">' + BVH.esc(r.bot) + (r.stub && r.one_liner ? " &middot; " + BVH.esc(r.one_liner.length > 150 ? r.one_liner.slice(0, 147) + "..." : r.one_liner) : "") + "</span></td>" +
+          '<td class="first"><span class="name">' + (r.stub ? BVH.esc(r.title) : '<a href="' + href(r) + '">' + BVH.esc(r.title) + "</a>") + '</span><span class="sub">' + BVH.esc(r.bot) + (r.stub && r.one_liner ? " &middot; " + BVH.esc(r.one_liner.length > 150 ? r.one_liner.slice(0, 147) + "..." : r.one_liner) : "") + "</span>" + (r.headline ? BVH.beatenHTML(r, { compact: true, note: true }) : "") + "</td>" +
           '<td data-l="Race type" class="rt">' + rt + (r.headline ? ' <span class="pill yes" title="Counted in the headline">counted</span>' : ' <span class="pill no" title="' + (r.race_type === "no-race" ? "Rejected: no bot beat or copied anyone here. Shown so the line is visible." : "Not counted in the headline: the bot did not beat a pending attack here.") + '">' + (r.race_type === "no-race" ? "not a race" : "not counted") + "</span>") + "</td>" +
           '<td data-l="Builder bid response (ms)" class="num">' + reactCell(r) + "</td>" +
           '<td data-l="Blocks ahead" class="num">' + aheadCell(r) + "</td>" +
@@ -202,7 +228,7 @@
     $("#f-all").addEventListener("click", function () { setF("all"); });
     render();
     var bp = headlineStats.block_producer_share.by_era_headline["mature-pbs-2024-26"], sr = headlineStats.sensitivity.excluding_c0ffeebabe_rows, rr = headlineStats.loot.returns.gross.headline_rows;
-    $("#tblnote").innerHTML = '<b>Payment to the builder before refunds:</b> median ' + BVH.pct(bp.median_row_pct,1) + ' in ' + bp.rows + ' mature-PBS headline rows; after refunds, ' + BVH.pct(bp.after_refunds.median_row_pct,1) + '. Neemo, Kelp and BiFi paid under 2%. Ronin’s block paid 802.79 ETH before a 791.74 ETH refund (11.04 ETH after); Alkimiya 50.83 → 2.56 ETH; Paraswap 6.45 → 2.11 ETH; DeFi Plaza 66.32 → 61.56 ETH (<a href="paper.html#54-the-builder-round-trip">paper §5.4</a>). <b>Returns:</b> ' + BVH.pct(rr.pooled_pct,1) + ' across ' + rr.rows + ' priced headline rows, ' + rr.known_zero_rows + ' with known zero. <b>Sensitivity:</b> ' + sr.rows + ' rows / ' + sr.incidents + ' incidents excluding c0ffeebabe.eth rows. Our call-level comparison for these rows is withheld by publication policy; anyone can compare the public traces.<br><br>' + "Builder bid response (ms) runs from the trigger (attack, deploy or user withdrawal) first appearing in the public mempool archive to the first big step-up bid from the builder that went on to win the block. Bid contents are never visible, so this is an estimate with a stated upper bound; see the <a href=\"methods.html#delay\">methods page</a>. Rows marked as non-races are shown so the line between a race and a coincidence is visible. Payment to the builder before refunds is the coinbase transfer plus priority fee of the bot's main transaction divided by its gross take, where the take is known; a race page may add further bot transactions in the same block. Pre-Merge races have no relay and no bid stream; they are decided by gas price and position. Data: <a href=\"data/incidents.json\">incidents.json</a>.";
+    $("#tblnote").innerHTML = '<b>Payment to the builder before refunds:</b> median ' + BVH.pct(bp.median_row_pct,1) + ' in ' + bp.rows + ' headline rows from the mature builder era (2024 to 2026; PBS, proposer-builder separation, is the system in which builders assemble blocks and proposers choose one); after refunds, ' + BVH.pct(bp.after_refunds.median_row_pct,1) + '. Neemo, Kelp and BiFi paid under 2%. Ronin’s block paid 802.79 ETH before a 791.74 ETH refund (11.04 ETH after); Alkimiya 50.83 → 2.56 ETH; Paraswap 6.45 → 2.11 ETH; DeFi Plaza 66.32 → 61.56 ETH (<a href="paper.html#54-the-builder-round-trip">paper §5.4</a>). <b>Returns:</b> ' + BVH.pct(rr.pooled_pct,1) + ' across ' + rr.rows + ' priced headline rows, ' + rr.known_zero_rows + ' with known zero. <b>Sensitivity:</b> ' + sr.rows + ' rows / ' + sr.incidents + ' incidents excluding c0ffeebabe.eth rows. Our call-level comparison for these rows is withheld by publication policy; anyone can compare the public traces.<br><br>' + "Builder bid response (ms) runs from the trigger (attack, deploy or user withdrawal) first appearing in the public mempool archive to the first big step-up bid from the builder that went on to win the block. Bid contents are never visible, so this is an estimate with a stated upper bound; see the <a href=\"methods.html#delay\">methods page</a>. Rows marked as non-races are shown so the line between a race and a coincidence is visible. Payment to the builder before refunds is the coinbase transfer plus priority fee of the bot's main transaction divided by its gross take, where the take is known; a race page may add further bot transactions in the same block. Pre-Merge races have no relay and no bid stream; they are decided by gas price and position. Data: <a href=\"data/incidents.json\">incidents.json</a>.";
   }
 
   /* ---------- bot lineages + on-chain messages ---------- */

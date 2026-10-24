@@ -38,13 +38,13 @@
     if (!s) return "";
     return '<span class="sk-n">Part ' + s.part + ' of 3</span><span class="sk-t">The Bot Beat the Hacker</span>';
   };
-  /* previous / next part links + the evidence layer; auto-appended to <main> when the body declares data-part */
+  /* "More in this series": the other parts as optional reading (each part stands alone), plus the evidence layer.
+     Auto-appended to <main> when the body declares data-part. Same signature as v2. */
   BVH.partNav = function (part) {
     part = part || BVH.partOf();
-    var S = BVH.SERIES, prev = typeof part === "number" ? S[part - 2] : null, next = typeof part === "number" ? S[part] : S[0];
-    if (part === "data") { prev = null; next = S[0]; }
-    function card(s, rel) {
-      return '<a class="pn-card pn-' + rel + '" href="' + s.href + '"><span class="pn-dir">' + (rel === "prev" ? "Previous" : "Next") + ': part ' + s.part + '</span><span class="pn-title">' + s.title + '</span><span class="pn-blurb">' + s.blurb + '</span></a>';
+    var S = BVH.SERIES;
+    function card(s) {
+      return '<a class="pn-card pn-more" href="' + s.href + '"><span class="pn-dir"><b>Part ' + s.part + "</b> of the series</span><span class=\"pn-title\">" + s.title + '</span><span class="pn-blurb">' + s.blurb + "</span></a>";
     }
     if (part === "data") {
       /* data pages (methods, paper, race pages): all three parts, in order */
@@ -52,9 +52,39 @@
         return '<a class="pn-card" href="' + s.href + '"><span class="pn-dir">Part ' + s.part + '</span><span class="pn-title">' + s.title + '</span><span class="pn-blurb">' + s.blurb + "</span></a>";
       }).join("") + "</div></nav>";
     }
-    var h = '<nav class="partnav" aria-label="Series"><div class="pn-row">' + (prev ? card(prev, "prev") : '<a class="pn-card pn-prev pn-home" href="index.html"><span class="pn-dir">Start</span><span class="pn-title">The series</span><span class="pn-blurb">Three parts on the bots that beat hackers to live exploits.</span></a>') + (next ? card(next, "next") : '<a class="pn-card pn-next pn-home" href="index.html"><span class="pn-dir">Back to the start</span><span class="pn-title">The series</span><span class="pn-blurb">The landing page, the famous races and the headline numbers.</span></a>') + '</div>' +
-      '<p class="pn-data"><span>Data and evidence:</span> ' + BVH.DATA_LINKS.map(function (l) { return '<a href="' + l[0] + '">' + l[1] + "</a>"; }).join(" ") + "</p></nav>";
-    return h;
+    var others = S.filter(function (s) { return s.part !== part; });
+    return '<nav class="partnav" aria-label="More in this series"><h2 class="pn-more-h">More in this series</h2><div class="pn-row">' + others.map(card).join("") + "</div>" +
+      '<p class="pn-data"><span>Data and evidence:</span> ' + BVH.DATA_LINKS.map(function (l) { return '<a href="' + l[0] + '">' + l[1] + "</a>"; }).join(" ") + ' <a href="index.html">The series home</a></p></nav>';
+  };
+  /* plain definitions for the terms the parts use; each part shows the ones it needs in a short primer */
+  BVH.GLOSSARY = {
+    block: ["Block", "A batch of transactions added to Ethereum about every 12 seconds. Inside a block, transactions run strictly in order."],
+    slot: ["Slot", "The 12-second window in which one block is proposed. Times on this site count from the start of the slot."],
+    builder: ["Block builder", "A company that assembles blocks from waiting transactions. Builders compete to have their block chosen, and pay the proposer for it."],
+    proposer: ["Proposer", "The validator whose turn it is to add the next block. It takes the builder's block that pays it the most."],
+    relay: ["Relay", "A go-between that passes builders' blocks to the proposer. Relays publish the bids they receive, which is how the auction can be replayed."],
+    mempool: ["Public mempool", "The public waiting room for transactions that have been sent but are not yet in a block. Anyone can watch it."],
+    "private-flow": ["Private order flow", "Sending a transaction straight to a builder instead of the public mempool, so nobody else sees it before it lands."],
+    searcher: ["Searcher", "Someone who runs bots that look for profitable transactions to place, often paying builders to put them first."],
+    position0: ["Position 0", "The first transaction in a block. It runs before everything else, so whoever holds it reaches the money first."],
+    calldata: ["Calldata", "The instructions a transaction carries: which function to call, and with what values."],
+    bribe: ["Payment to go first", "What a bot pays the block builder, directly or as a tip, to have its transaction placed where it wants, usually first."],
+    constructor: ["Constructor", "Code that runs once, at the moment a contract is created. An attack that runs entirely inside it is over before anyone can see it waiting."],
+    flashloan: ["Flash loan", "A loan taken and repaid inside a single transaction. It lets anyone move huge sums for one transaction without owning them."],
+    whitehat: ["Whitehat", "Someone who uses an exploit to rescue funds and hand them back, rather than to steal them."],
+    simulate: ["Simulate", "Run a transaction against a copy of the current chain to see what it would do, without sending it."],
+    frontrun: ["Front-running bot", "Software that copies a transaction it has seen, puts itself in as the one who gets paid, and pays to go first."],
+    attacker: ["Attacker", "The account behind the exploit transaction or setup that the bot beat. It is not always whoever found the bug first, so each race says who lost: the original attacker, probably the original attacker, or a later exploiter."],
+    weth: ["WETH", "Wrapped ether: ETH held as a token, so contracts can trade it like any other token. Unwrapping turns it back into plain ETH."],
+    safe: ["Safe", "A multisignature wallet: a contract that moves funds only when enough of its owners sign."]
+  };
+  /* BVH.primer(["mempool", "builder"] or [["Term", "definition"], ...], { title, intro }) -> <aside class="primer"> */
+  BVH.primer = function (keys, o) {
+    o = o || {};
+    var items = (keys || []).map(function (k) { return typeof k === "string" ? BVH.GLOSSARY[k] : k; }).filter(Boolean);
+    return '<aside class="primer" aria-label="' + BVH.esc(o.title || "What you need to know") + '"><h2 class="primer-h">' + BVH.esc(o.title || "What you need to know") + "</h2>" +
+      (o.intro ? '<p class="primer-intro">' + o.intro + "</p>" : "") +
+      "<dl>" + items.map(function (t) { return "<dt>" + BVH.esc(t[0]) + "</dt><dd>" + t[1] + "</dd>"; }).join("") + "</dl></aside>";
   };
   BVH.chrome = function (active) {
     var skip = document.createElement("a");
@@ -102,7 +132,9 @@
     f.className = "foot";
     f.innerHTML = '<div class="wrap"><p>Every number on this site links to the saved response it came from (small <a class="raw" href="methods.html#raw">raw</a> tags). Where a value is derived, the link goes to the response it was derived from.</p>' +
       '<p>Yoink\'s executor is decoded from its on-chain code (<a href="explainer.html">How the bot works</a>). Other operators, including c0ffeebabe.eth, appear through their public transactions.</p>' +
-      '<p>Compiled with a swarm of AI agents, so there will be mistakes; every number links its saved source; <a href="https://github.com/DicksonWu654/bot-vs-hacker/issues">corrections welcome</a>.</p>' +
+      /* the launch pages (the hub and the three parts) end on the story; the data pages carry the full note */
+      (part === "data" ? '<p>Compiled with a swarm of AI agents, so there will be mistakes; every number links its saved source; <a href="https://github.com/DicksonWu654/bot-vs-hacker/issues">corrections welcome</a>.</p>'
+        : '<p>Found a mistake? <a href="https://github.com/DicksonWu654/bot-vs-hacker/issues">Corrections are welcome</a>; how the data was built is on the <a href="methods.html">methods page</a>.</p>') +
       '<p class="foot-links">' + BVH.SERIES.map(function (s) { return '<a href="' + s.href + '">Part ' + s.part + ": " + s.title + "</a>"; }).join(" ") + ' <a href="index.html#data">Every race</a> <a href="methods.html">Methods and data</a> <a href="paper.html">Paper</a> <a href="data/incidents.json">incidents.json</a></p></div>';
     document.body.appendChild(f);
   };
@@ -150,7 +182,9 @@
   /* ---------- raw links ---------- */
   BVH.rawA = function (url, text, title) {
     if (!url) return '<span class="raw-none" title="No single saved response backs this value (it is derived, or the source was not archived).">no raw</span>';
-    return '<a class="raw" href="' + BVH.esc(url) + '" title="' + BVH.esc(title || "Saved raw response") + '" target="_blank" rel="noopener">' + (text || "raw") + "</a>";
+    /* every source marker reads as "Source" to assistive technology; the visible tag keeps its short text */
+    var tt = title || "Saved raw response", vis = String(text || "raw").replace(/<[^>]*>/g, "");
+    return '<a class="raw" href="' + BVH.esc(url) + '" title="' + BVH.esc(tt) + '" aria-label="' + BVH.esc("Source, " + vis + ": " + tt) + '" target="_blank" rel="noopener">' + (text || "raw") + "</a>";
   };
   /* several saved responses back one value: link every one, numbered */
   BVH.derivedTxt = function (e) {
@@ -426,6 +460,71 @@
     "no-race": { name: "No race", def: "Looked like a race, but the attacker acted alone and nothing copied or beat them. Rejected after checking." }
   };
   BVH.rtName = function (k) { return (BVH.RT[k] || { name: k || "n/a" }).name; };
+
+  /* ---------- who lost each headline race (owner decision 2026-10-23) ----------
+     row.beaten = { verdict, kind: confirmed | likely | later, label, note, evidence: [raw urls] } on the 19 headline
+     rows of data/incidents.json (from data/incidents.json beaten_party; audit in launch/reports/v3-adversary.findings.md).
+     The series title stays "The Bot Beat the Hacker"; factual copy says who the bot actually beat. */
+  BVH.BEATEN = {
+    confirmed: { name: "The original attacker", short: "the original attacker", tag: "confirmed", group: "The original attacker, confirmed" },
+    likely: { name: "Probably the original attacker", short: "probably the original attacker", tag: "likely", group: "Probably the original attacker" },
+    later: { name: "A later exploiter, or we can't tell", short: "a later exploiter, or we can't tell", tag: "later or unknown", group: "A later exploiter, or we can't tell" }
+  };
+  BVH.beatenCounts = function (rows) {
+    var c = { confirmed: 0, likely: 0, later: 0, total: 0, rows: { confirmed: [], likely: [], later: [] } };
+    (rows || []).forEach(function (r) { var b = r.headline && r.beaten; if (!b || !c.rows[b.kind]) return; c[b.kind]++; c.total++; c.rows[b.kind].push(r); });
+    c.original = c.confirmed + c.likely;
+    return c;
+  };
+  /* a short name for each saved response behind a verdict, read from its file name */
+  function evName(u) {
+    var f = String(u).split("/").pop();
+    if (/^txlistint|_txlistinternal|txlistinternal/.test(f)) return "funding and internal txs";
+    if (/tokentx/.test(f)) return "token transfers";
+    if (/txlist/.test(f)) return "account history";
+    if (/^receipts_/.test(f)) return "receipts";
+    if (/^trace_block_/.test(f)) return "block trace";
+    if (/^trace_/.test(f)) return "trace";
+    if (/^tracefilter_/.test(f)) return "call scan";
+    if (/^tx_/.test(f)) return "transaction";
+    if (/^block_/.test(f)) return "block";
+    if (/\.csv\.rows\.csv$/.test(f)) return "mempool rows";
+    if (/\.html$|\.json$/.test(f) && /\/web/.test(u)) return "write-up";
+    return "raw";
+  }
+  BVH.beatenEvidence = function (b) {
+    var seen = {}, out = [];
+    ((b && b.evidence) || []).forEach(function (u) {
+      var n = evName(u); seen[n] = (seen[n] || 0) + 1;
+      out.push([u, n]);
+    });
+    return out.map(function (x, i) {
+      var n = x[1], dup = seen[n] > 1 ? " " + (out.slice(0, i + 1).filter(function (y) { return y[1] === n; }).length) : "";
+      return BVH.rawA(x[0], n + dup, "Saved response behind who lost this race: " + n);
+    }).join(" ");
+  };
+  BVH.raceShort = function (r) {
+    return String(r.title || r.name || r.id).replace(/^Curve \/ Vyper: (.*?)( pool)?$/, "Curve $1").replace(/^Unizen: /, "Unizen ").replace(/: Yoink X-token race$/, "").replace(/ holder Safe$/, "");
+  };
+  BVH.raceHref = function (r) { return "incident.html?slug=" + encodeURIComponent(r.slug) + (r.sub ? "&sub=" + encodeURIComponent(r.sub) : ""); };
+  /* three groups, one marker per race, each race linked to its page (where its verdict and evidence are) */
+  BVH.whoLostHTML = function (rows) {
+    var c = BVH.beatenCounts(rows);
+    return '<div class="wholost">' + ["confirmed", "likely", "later"].map(function (k) {
+      var K = BVH.BEATEN[k], list = c.rows[k].slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+      return '<div class="wl-g wl-' + k + '"><h3><span class="wl-n">' + c[k] + "</span>" + K.group + '</h3><div class="wl-dots" aria-hidden="true">' + list.map(function () { return '<span class="wl-dot"></span>'; }).join("") + '</div><ul class="wl-list">' +
+        list.map(function (r) { return '<li><a href="' + BVH.raceHref(r) + '" title="' + BVH.esc((r.beaten && r.beaten.note) || "") + '">' + BVH.esc(BVH.raceShort(r)) + "</a> " + r.date.slice(0, 4) + "</li>"; }).join("") + "</ul></div>";
+    }).join("") + "</div>";
+  };
+  /* opts.compact: one line (label + links), for tables and gallery cards */
+  BVH.beatenHTML = function (row, opts) {
+    opts = opts || {};
+    var b = row && row.beaten; if (!b || !BVH.BEATEN[b.kind]) return "";
+    var K = BVH.BEATEN[b.kind];
+    if (opts.compact) return '<p class="beaten beaten-c bt-' + b.kind + '"><i aria-hidden="true"></i><span><span class="bt-k">Who lost: </span><b>' + K.short + "</b>" + (opts.note && b.note ? ' <span class="bt-note">' + BVH.esc(b.note) + "</span>" : "") + " " + BVH.beatenEvidence(b) + "</span></p>";
+    return '<div class="beaten bt-' + b.kind + '"><p class="bt-head"><i aria-hidden="true"></i><span class="bt-k">Who lost this race</span><b>' + K.name + '</b><span class="bt-tag">' + K.tag + "</span></p>" +
+      (b.note ? '<p class="bt-note">' + BVH.esc(b.note) + "</p>" : "") + '<p class="bt-src">Evidence: ' + BVH.beatenEvidence(b) + ' <a href="methods.html#who-lost">How we judged who lost</a></p></div>';
+  };
   BVH.loadError = function (el, e) {
     el.innerHTML = '<div class="callout bad">Could not load the data (' + BVH.esc(e.message || e) + '). Serve the site over http, for example <code>python -m http.server</code> from the site folder, not from file://.</div>';
   };

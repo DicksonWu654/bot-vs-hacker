@@ -1,6 +1,6 @@
 # The Bot Beat the Hacker
 
-When a smart contract is exploited, the attacker is not the only one who can read the exploit. A generalized front-runner, a bot that copies a profitable transaction and swaps in its own beneficiary, can sometimes land its copy first. This repository reconstructs those races on Ethereum, second by second: 29 incidents split into 43 races, with the block-builder auction rebuilt from relay bid traces and the attacker's first-seen time from the Flashbots mempool archive wherever those exist. In 15 incidents (19 races) a bot beat the hacker, with the recorded verdicts. Euler is excluded because the copier may be the attacker’s own second account.
+When a smart contract is exploited, the attacker is not the only one who can read the exploit. A generalized front-runner, a bot that copies a profitable transaction and swaps in its own beneficiary, can sometimes land its copy first. This repository reconstructs those races on Ethereum, second by second: 29 incidents split into 43 races, with the block-builder auction rebuilt from relay bid traces and the attacker's first-seen time from the Flashbots mempool archive wherever those exist. In 15 incidents (19 races) a bot got there first. The loser was the original attacker in 8 confirmed and 5 likely cases, and a later exploiter or unresolved in 6. Euler is excluded because the copier may be the attacker’s own second account.
 
 - Live site: https://bot-beat-the-hacker.shadow654.chatgpt.site (source in `site/`), a three-part series: The race (`race.html`), How the bot works (`explainer.html`), Has the dark forest changed? (`evolution.html`)
 - Paper: https://bot-beat-the-hacker.shadow654.chatgpt.site/paper.html (also `paper/paper.md` here)
@@ -13,7 +13,7 @@ Compiled with a swarm of AI agents, so there will be mistakes; every number link
 | Finding | Figure |
 |:---|:---|
 | Races reconstructed | 43 races in 29 incidents, each with a written verdict rule and a race type |
-| A bot beat the hacker | 19 races in 15 incidents: 15 where the bot's transaction landed before a pending attack, 4 where it used the attacker's own deployed setup first |
+| A bot got there first | 19 races in 15 incidents: 8 confirmed original attackers, 5 likely original attackers, 6 later exploiters or unresolved losers; 15 pending-attack rows and 4 deploy-window rows |
 | How the bot landed first | 9 races in an earlier block, 6 in the same block at an earlier position, 4 before the attacker's call ever landed |
 | Builder bid response (ms) | 5 measurable races, 266 to 4138 ms (median 873 ms), from the trigger's first public sighting to the winning builder's first step-up bid |
 | Public mempool | the trigger was seen publicly before inclusion in 8 of 28 races from August 2023 onward |

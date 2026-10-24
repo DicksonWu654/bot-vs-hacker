@@ -3,15 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="When an exploit is in flight, the fastest bots on Ethereum copy it, pay the block builder to go first and take the money. 19 races, 2021 to 2026, rebuilt from relay bids, mempool archives and traces.">
+<!-- headline copy for the series hub: edit the link preview here; numbers on the page come from site/data (see HEADLINE in assets/index.js) -->
+<meta name="description" content="An attacker deployed a contract built to drain Makina. Twelve seconds later a bot ran the same plan first and paid the block builder to go first. A three-part series on 19 races in 15 hacks on Ethereum, 2021 to 2026, where a bot got to a live exploit first, rebuilt from relay bids, mempool archives and traces. In 13 the loser was the original attacker; in 6 it was a later exploiter or we can't tell.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/">
+<meta property="og:site_name" content="The Bot Beat the Hacker">
 <meta property="og:title" content="The Bot Beat the Hacker">
-<meta property="og:description" content="19 races where an MEV bot got to a live exploit before the hacker, rebuilt second by second from on-chain evidence.">
+<meta property="og:description" content="19 races in 15 hacks where an MEV bot got to a live exploit first, rebuilt second by second from on-chain evidence. In 13 the bot beat the original attacker. A three-part series, starting with twelve seconds at Makina.">
+<meta property="og:url" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/">
 <meta property="og:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-cover.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The bot beat the hacker. A series in three parts. Drawn from the data: one column of light for each race a bot won, 2021 to 2026, each with an amber light where the bot sat in its block.">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Bot Beat the Hacker">
+<meta name="twitter:description" content="19 races in 15 hacks where an MEV bot got to a live exploit first, rebuilt second by second from on-chain evidence. In 13 the bot beat the original attacker.">
+<meta name="twitter:image:alt" content="The bot beat the hacker. A series in three parts. Drawn from the data: one column of light for each race a bot won, 2021 to 2026, each with an amber light where the bot sat in its block.">
 <meta name="twitter:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-cover.png">
 <title>The Bot Beat the Hacker</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
@@ -24,14 +30,15 @@
 </head>
 <body data-page="index">
 <main id="main">
-  <section class="hx art-hero night" aria-labelledby="h1" style="--art-x:74%;--art-y:56%">
-    <picture class="art"><img src="assets/art/art-02-race-to-block-gate-1672.webp" srcset="assets/art/art-02-race-to-block-gate-800.webp 800w, assets/art/art-02-race-to-block-gate-1280.webp 1280w, assets/art/art-02-race-to-block-gate-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A green streak and an amber streak of light race across wet ground at night toward a tall glowing gate." fetchpriority="high" decoding="async"></picture>
+  <section class="hx art-hero night" aria-labelledby="h1">
+    <div class="art art-canvas" data-art="gate" data-art-opts='{"id":"makina-2026","x":0.74}' role="img" aria-label="Drawn from the data: the Makina block as a gate built from its 105 transactions in block order. Position 0, the bot's copy, glows amber at the foot of the gate, where an amber streak arrives ahead of a green trail."></div>
     <div class="wrap hx-open">
       <div class="hx-text">
-        <p class="kick-line hx-kicker">A three-part series on the dark forest, 2021 to 2026</p>
+        <p class="kick-line hx-kicker">A three-part series on the short race around an Ethereum exploit: who saw it, who paid to go first, and where the money went</p>
         <h1 id="h1">The bot beat the hacker.</h1>
-        <p class="hx-dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
-        <p class="hx-cta"><a class="btn" href="race.html">Start with part 1: the race</a><a class="btn btn-ghost" href="#data">Data and evidence</a></p>
+        <p class="hx-dek" id="hx-dek">When an exploit is in flight, some of the fastest software on Ethereum notices, copies it, pays the block builder to go first, and takes the money. Sometimes it gives the money back.</p>
+        <p class="hx-cta"><a class="btn" href="race.html">Read part 1: the race</a><a class="btn btn-ghost" href="#hx-race">Watch it here</a></p>
+        <p class="hx-primer" id="hx-primer">On Ethereum, a transaction can wait in a public queue before it is written into a block. A block builder puts the block together and a proposer publishes it; a copying bot can pay the builder to run its copy first.</p>
       </div>
     </div>
   </section>
@@ -44,7 +51,6 @@
           <p id="hx-sum">Loading the race&hellip;</p>
         </div>
         <div class="hx-ctrl" id="hx-ctrl"></div>
-        <div class="hx-cap" id="hx-cap" aria-live="polite"></div>
         <div class="hx-chart" id="hx-chart"></div>
         <div class="hx-split" id="hx-split"></div>
         <figcaption class="hx-src" id="hx-src"></figcaption>
@@ -54,7 +60,12 @@
   <section class="sec wrap" id="numbers" aria-labelledby="num-h">
     <h2 id="num-h" class="sr">The headline numbers</h2>
     <div class="nums" id="stats" role="list"></div>
+    <p class="statnote" id="statexact"></p>
     <p class="statnote" id="statnote"><a href="methods.html#headline-numbers">How we count these numbers</a>. Each one is broken down race by race in <a href="#data">the race table</a>, with a link to the saved source behind every value.</p>
+    <h3 class="wl-head" id="who-lost">Who lost each race</h3>
+    <p class="wl-lede" id="wl-lede"></p>
+    <div id="wholost"></div>
+    <p class="wl-foot" id="wl-foot"></p>
   </section>
 
   <section class="sec wrap" id="series" aria-labelledby="series-h">
@@ -62,12 +73,12 @@
     <div class="parts" id="parts"></div>
   </section>
 
-  <section class="art-band night fam-band" id="famous" aria-labelledby="famous-h" style="--art-x:72%;--art-y:50%">
-    <picture class="art"><img src="assets/art/art-05-stopwatch-returned-envelope-1672.webp" srcset="assets/art/art-05-stopwatch-returned-envelope-800.webp 800w, assets/art/art-05-stopwatch-returned-envelope-1280.webp 1280w, assets/art/art-05-stopwatch-returned-envelope-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A silver stopwatch resting against a dark envelope on wet stone." loading="lazy" decoding="async"></picture>
+  <section class="art-band night fam-band" id="famous" aria-labelledby="famous-h">
+    <div class="art art-canvas" data-art="forest" data-art-opts='{"fade":"left"}' role="img" aria-label="Drawn from the data: one tree of light for each race a bot won, in date order from 2021 to 2026; each tree's amber light marks the bot's place in its block."></div>
     <div class="wrap">
       <p class="kick-line">Where the money went</p>
-      <h2 id="famous-h">Hacks you may have heard of</h2>
-      <div class="prose"><p>Where the money went in the best-known races. Each bar is everything the bot took: what went back to the victim, what was paid to the block builder and proposer to go first, what the bot kept, and gas and other costs. Where money was later added from other funds, the bar includes it and says so underneath.</p></div>
+      <h2 id="famous-h">Other races, and where the money went</h2>
+      <div class="prose"><p>Each bar is everything the bot took: what went back to the victim, what was paid to the block builder and proposer to go first, what the bot kept, and gas and other costs. Where money was later added from other funds, the bar includes it and says so underneath.</p></div>
     </div>
   </section>
   <section class="sec wrap fam-sec" aria-label="Famous races, the whole money split">
@@ -90,7 +101,7 @@
       <div class="tools">
         <span id="filt-l">Show</span>
         <div class="seg" role="group" aria-labelledby="filt-l">
-          <button type="button" id="f-head" aria-pressed="true">Bot beat the hacker</button>
+          <button type="button" id="f-head" aria-pressed="true">The 19 headline races</button>
           <button type="button" id="f-all" aria-pressed="false">All races, including non-races</button>
         </div>
         <span class="muted" id="count"></span>
@@ -121,6 +132,7 @@
 
 </main>
 <script src="assets/common.js"></script>
+<script src="assets/art.js"></script>
 <script src="assets/race.js"></script>
 <script src="assets/index.js"></script>
 </body>

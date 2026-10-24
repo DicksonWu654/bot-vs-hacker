@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-22T09:46:49Z",
+ "generated": "2026-10-24T01:40:18Z",
  "counts": {
   "rows": 43,
   "incidents": 29,
@@ -78,6 +78,38 @@
    "Antelope (DODO)": 1,
    "0xa57 (Earning.Farm bot)": 1,
    "Makina searcher 0x935b": 1
+  },
+  "beaten_party": {
+   "confirmed": 8,
+   "likely": 5,
+   "later_or_unresolved": 6,
+   "rows": {
+    "confirmed": [
+     "alkimiya-2025",
+     "dodo-v2-2021",
+     "kelp-rseth-2026",
+     "makina-2026",
+     "neemo-2025",
+     "punk-2021",
+     "transitswap-2022",
+     "uncx-2026/yoink-X"
+    ],
+    "likely": [
+     "bifi-2026",
+     "blueberry-2024",
+     "curve-vyper-2023/pETH",
+     "earningfarm-2022",
+     "shoco-2023"
+    ],
+    "later_or_unresolved": [
+     "curve-vyper-2023/msETH",
+     "curve-vyper-2023/CRV-ETH-wave2",
+     "defiplaza-2024",
+     "unizen-2024/pending-ads",
+     "unizen-2024/pending-usdt",
+     "unizen-2024/pending-xi"
+    ]
+   }
   },
   "verdict_by_race_type": {
    "beat-pending-attack": {

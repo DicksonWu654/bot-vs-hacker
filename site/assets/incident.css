@@ -17,9 +17,9 @@
 .ik.ik-bld { border-top-color: var(--bld); }
 .ik.ik-win { border-top-color: var(--gold); }
 .ik.ik-bot { border-top-color: var(--bot); }
-.ik-k { font: 12px/1.3 var(--mono); color: var(--muted); }
+.ik-k { font: 13.5px/1.3 var(--mono); color: var(--muted); }
 .ik-v { font: 600 clamp(22px, 2.6vw, 30px)/1.1 var(--mono); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.ik-s { font: 12px/1.35 var(--mono); color: var(--ink2); }
+.ik-s { font: 14px/1.4 var(--serif); color: var(--ink2); }
 .ik-r { margin-top: auto; }
 .ik-r .raw:first-child { margin-left: 0; }
 
@@ -61,7 +61,7 @@
 .inc-steps .st-winline .st-n, .inc-steps .st-win .st-n { background: var(--gold); }
 .inc-steps .st-untimed .st-n { background: var(--bg3); color: var(--ink2); box-shadow: inset 0 0 0 1px var(--line2); }
 .inc-steps .st-untimed .st-time { color: var(--muted); font-weight: 500; }
-.inc-steps .st-note { display: block; margin-top: 4px; font: 11.5px/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.inc-steps .st-note { display: block; margin-top: 4px; font: 13px/1.5 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 
 /* ---------- no bid stream: gas-price chart ---------- */
 .inc-why { font-size: 17.5px; line-height: 1.55; color: var(--ink2); max-width: 66ch; margin: 0 0 14px; }
@@ -99,7 +99,7 @@
 .inc-flow .f-oth, .inc-flowkey .f-oth i { background: var(--oth); }
 .inc-flowkey { max-width: 760px; }
 .inc-after { margin-top: 10px; }
-.inc-after .af-t small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
+.inc-after .af-t small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
 
 /* ---------- evidence tables ---------- */
 .inc-tbl { overflow-x: auto; }
@@ -117,7 +117,7 @@
 @media (max-width: 520px) {
   .inc-keys { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .ik-v { font-size: 18px; letter-spacing: -.04em; }
-  .ik-k, .ik-s { font-size: 11px; }
+  .ik-k, .ik-s { font-size: 13px; }
 }
 /* one row, whatever the block size: ordinary cells share the width, marked cells keep a fixed width */
 .inc-cells { flex-wrap: nowrap; overflow: hidden; }
@@ -134,3 +134,11 @@
 .inc-cells.is-dense2 i.bc-tx { min-width: 0; }
 
 :root[data-theme="light"] .ik { background: var(--bg2); border-color: var(--line); }
+
+/* v3: the race's own block, drawn from its transactions, beside the title */
+.inc-head-art { position: relative; }
+.inc-art { position: absolute; top: 0; right: calc(-1 * var(--gutter)); width: 40%; height: min(100%, 420px); min-height: 300px; border-radius: 0 0 0 var(--r3); pointer-events: none; }
+@media (min-width: 900px) { .inc-head-art > :not(.inc-art) { max-width: 58%; } }
+@media (max-width: 899px) { .inc-art { position: relative; right: auto; width: auto; height: 190px; min-height: 0; margin: 0 calc(-1 * var(--gutter)) 18px; border-radius: 0; } }
+.inc-art { -webkit-mask-image: radial-gradient(ellipse 72% 78% at 58% 42%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 72% 78% at 58% 42%, #000 58%, transparent 100%); }
+@media (max-width: 899px) { .inc-art { -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); } }

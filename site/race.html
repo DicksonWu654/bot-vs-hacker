@@ -4,13 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The race | The Bot Beat the Hacker</title>
-<meta name="description" content="Part 1: the Makina race, second by second. An attacker deploys a drain contract; twelve seconds later a searcher runs the same plan at position 0 of the next block and pays 1,299 ETH to the builder. Where every ETH went.">
+<!-- headline copy for this part: edit the title, dek and link preview here; numbers in the page body come from site/data -->
+<meta name="description" content="Part 1 of The Bot Beat the Hacker. An attacker deployed a contract built to drain Makina. Twelve seconds later, at position 0 of the next block, a bot ran the same plan first and paid 1,299.05 ETH to the block builder. The race, second by second, and where every ETH went.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="The race: twelve seconds at Makina">
-<meta property="og:description" content="An attacker deploys a drain contract. Twelve seconds later a bot runs the same plan first and pays 1,299 ETH to go first. Second by second, from relay bids and traces.">
-<meta property="og:image" content="assets/og-cover.png">
+<meta property="og:site_name" content="The Bot Beat the Hacker">
+<meta property="og:title" content="Twelve seconds at Makina: the bot beat the hacker">
+<meta property="og:description" content="An attacker deployed a drain contract. Twelve seconds later a bot ran the same plan first, at position 0 of the next block, and paid 1,299.05 ETH to go first. Replayed bid by bid from relay records and traces.">
+<meta property="og:url" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/race.html">
+<meta property="og:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-race.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Block 24,273,362 drawn as a gate of its 105 transactions; position 0 glows amber where the bot's copy ran first. Title: Twelve seconds at Makina.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="assets/og-cover.png">
+<meta name="twitter:title" content="Twelve seconds at Makina: the bot beat the hacker">
+<meta name="twitter:description" content="A drain contract went public. Twelve seconds later a bot ran it first and paid 1,299.05 ETH for position 0. Part 1 of The Bot Beat the Hacker.">
+<meta name="twitter:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-race.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +29,8 @@
 <body data-part="1" data-page="race">
 <main id="main">
 
-  <header class="r-hero art-hero night" style="--art-x:58%;--art-y:40%">
-    <picture class="art"><img src="assets/art/art-07-block-gate-overhead-1672.webp" srcset="assets/art/art-07-block-gate-overhead-800.webp 800w, assets/art/art-07-block-gate-overhead-1280.webp 1280w, assets/art/art-07-block-gate-overhead-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="Seen from above at night: a dark stone gate on wet ground, an amber streak and a green streak of light running into it." fetchpriority="high" decoding="async"></picture>
+  <header class="r-hero art-hero night">
+    <div class="art art-canvas" data-art="gate" data-art-opts='{"id":"makina-2026","x":0.76}' role="img" aria-label="Drawn from the data: block 24,273,362 as a gate built from its 105 transactions in block order. Position 0, the bot's copy, glows amber at the foot of the gate; the last transaction, the builder's payment to the proposer, glows gold. An amber streak reaches the gate ahead of a green trail."></div>
     <div class="wrap" id="r-hero-body">
       <p data-series-kicker></p>
       <h1>Twelve seconds at&nbsp;Makina</h1>
@@ -31,31 +39,15 @@
     </div>
   </header>
 
-  <section class="r-sec r-sec-art" id="auction" aria-labelledby="auc-h">
-   <div class="art-band night" style="--art-x:70%;--art-y:60%">
-    <picture class="art"><img src="assets/art/art-03-auction-light-columns-1672.webp" srcset="assets/art/art-03-auction-light-columns-800.webp 800w, assets/art/art-03-auction-light-columns-1280.webp 1280w, assets/art/art-03-auction-light-columns-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="Thin columns of green and amber light rising from a wet, reflective floor in the dark; the tallest column is amber." loading="lazy" decoding="async"></picture>
-    <div class="wrap"><div class="r-head">
-      <p class="r-beat" id="beat-auc">The auction</p>
-      <h2 id="auc-h">How the bids for the next block moved</h2>
-      <p class="r-lede">Every twelve seconds, block builders bid for the right to fill the next block, and the proposer picks one. Here is every bid for block <span id="auc-blockno">24,273,362</span>, in ETH, against the clock.</p>
-    </div></div>
-   </div>
-   <div class="wrap">
-    <figure class="auc-fig">
-      <div class="auc-ctrl" id="auc-ctrl"></div>
-      <div class="auc-cap" id="auc-cap" aria-live="polite"></div>
-      <div class="auc-box" id="auc"></div>
-      <figcaption class="auc-src" id="auc-src"></figcaption>
-    </figure>
-    <ol class="auc-steps" id="auc-steps" aria-label="Key moments, in order"></ol>
-   </div>
+  <section class="r-sec wrap r-primer" aria-label="What you need to know">
+    <div id="primer"></div>
   </section>
 
   <section class="r-sec wrap" id="window" aria-labelledby="win-h">
     <div class="r-head">
       <p class="r-beat" id="beat-win">The window</p>
       <h2 id="win-h">What had to happen between the two blocks</h2>
-      <p class="r-lede" id="win-lede">The contract was public the moment its block landed. The next block is stamped <span id="win-span">12 seconds</span> later. To get the money first, any bot had to do four things before then, or very soon after.</p>
+      <p class="r-lede" id="win-lede">As soon as block 24,273,361 landed, the contract's code was readable on chain. That gave a copier one block to act: the next block is stamped <span id="win-span">12 seconds</span> later. To get the money first, any bot had to do four things before then, or very soon after. The two ends are on chain; the four steps happen off chain, where nobody can see them.</p>
     </div>
     <div class="win">
       <div class="win-ends"><span id="win-from"></span><span id="win-to"></span></div>
@@ -63,10 +55,29 @@
         <li><span class="ws-n">1</span><h3>See it</h3><p>Notice a brand new contract in the latest block and decide it is worth a look.</p></li>
         <li><span class="ws-n">2</span><h3>Simulate it</h3><p>Run its plan against the current state of the chain and learn that it pays out over a thousand ETH.</p></li>
         <li><span class="ws-n">3</span><h3>Rewrite the beneficiary</h3><p>The attacker's contract was built to pay out to the attacker, so the same calls had to be rebuilt to pay a new address.</p></li>
-        <li><span class="ws-n">4</span><h3>Bid</h3><p>Send the bundle to builders with a payment big enough to sit at position 0, before the bids close.</p></li>
+        <li><span class="ws-n">4</span><h3>Bid</h3><p>Send the copied transaction to builders with an ETH payment large enough to put it first in the block, before the bidding closes.</p></li>
       </ol>
       <p class="win-note">These are the steps the situation required of anyone, read from the public record. How this searcher actually did them is not visible on chain.</p>
     </div>
+  </section>
+
+  <section class="r-sec r-sec-art" id="auction" aria-labelledby="auc-h">
+   <div class="art-band night">
+    <div class="art art-canvas" data-art="columns" data-art-opts='{"id":"makina-2026"}' role="img" aria-label="Drawn from the data: the bids for block 24,273,362 as columns of light on a wet floor, time running left to right. Builder 0x75's bids are amber; its winning bid is a lamp near the top."></div>
+    <div class="wrap"><div class="r-head">
+      <p class="r-beat" id="beat-auc">The auction</p>
+      <h2 id="auc-h">How the bids for the next block moved</h2>
+      <p class="r-lede">Every 12-second slot, builders each assemble a candidate block and offer ETH to the proposer, the validator who chooses which block gets published. Here is every offer for block <span id="auc-blockno">24,273,362</span>, in ETH, against the clock. The war jumps from fractions of an ETH to hundreds of ETH while the block is being put together. The winning block held the copy; the later offers are in the relay data, but it does not say why they lost.</p>
+    </div></div>
+   </div>
+   <div class="wrap">
+    <figure class="auc-fig">
+      <div class="auc-ctrl" id="auc-ctrl"></div>
+      <div class="auc-box" id="auc"></div>
+      <figcaption class="auc-src" id="auc-src"></figcaption>
+    </figure>
+    <ol class="auc-steps" id="auc-steps" aria-label="Key moments, in order"></ol>
+   </div>
   </section>
 
   <section class="r-sec wrap" id="block" aria-labelledby="blk-h">
@@ -78,9 +89,8 @@
     <div class="blk" id="blk"></div>
   </section>
 
-  <section class="r-sec r-sec-art" id="money" aria-labelledby="money-h">
-   <div class="art-band night" style="--art-x:70%;--art-y:50%">
-    <picture class="art"><img src="assets/art/art-05-stopwatch-returned-envelope-1672.webp" srcset="assets/art/art-05-stopwatch-returned-envelope-800.webp 800w, assets/art/art-05-stopwatch-returned-envelope-1280.webp 1280w, assets/art/art-05-stopwatch-returned-envelope-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A silver stopwatch resting against a dark envelope on wet stone." loading="lazy" decoding="async"></picture>
+  <section class="r-sec" id="money" aria-labelledby="money-h">
+   <div>
     <div class="wrap"><div class="r-head">
       <p class="r-beat" id="beat-money">The money</p>
       <h2 id="money-h">Where the <span id="money-amt">1,299 ETH</span> went</h2>
@@ -99,15 +109,24 @@
    </div>
   </section>
 
-  <section class="r-sec wrap" id="gallery" aria-labelledby="gal-h">
-    <div class="r-head">
+  <section class="r-sec r-sec-art" id="gallery" aria-labelledby="gal-h">
+   <div class="art-band night">
+    <div class="art art-canvas" data-art="forest" data-art-opts='{"fade":"left"}' role="img" aria-label="Drawn from the data: one tree of light for each race the bot won, in date order from 2021 to 2026; each tree's amber light marks the bot's place in its block, at the foot of the tree for position 0."></div>
+    <div class="wrap"><div class="r-head">
       <p class="r-beat">2021 to 2026</p>
       <h2 id="gal-h">Other races, same picture</h2>
-      <p class="r-lede">The same visual for other races: bids for the bot's block on a linear scale (or, before relays existed, the order inside the block), and the whole money split.</p>
-    </div>
+      <p class="r-lede">The same picture for other races: who the bot beat, the bids for the bot's block on a linear scale (or, before relays existed, the order inside the block), and the whole money split. The bot did not always beat the original attacker; each card says who lost.</p>
+    </div></div>
+   </div>
+   <div class="wrap">
     <div class="fig-key gal-key" aria-hidden="true"><span><i class="k-dot"></i>a builder's bid</span><span><i class="k-dot k-w"></i>winning builder's bids</span><span><i class="k-line"></i>best bid so far</span><span><i class="k-line k-line-w"></i>best bid, held by the winning builder</span><span><i class="k-win"></i>winning bid</span><span><i class="k-seen"></i>attack first seen in the public mempool</span></div>
     <div class="gal" id="gal"></div>
-    <p class="gal-more">All races, including the ones that do not count as a bot beating a hacker, are in <a href="index.html#data">the race table</a>.</p>
+    <p class="gal-more">Every race we checked, including the ones that do not count in the headline, is in <a href="index.html#data">the race table</a>, with who lost each one.</p>
+   </div>
+  </section>
+
+  <section class="wrap" aria-label="The takeaway">
+    <div class="takeaway" id="takeaway"></div>
   </section>
 
   <section class="r-sec wrap r-know" id="how-we-know" aria-labelledby="know-h">
@@ -122,6 +141,7 @@
 
 </main>
 <script src="assets/common.js"></script>
+<script src="assets/art.js"></script>
 <script src="assets/race.js"></script>
 </body>
 </html>

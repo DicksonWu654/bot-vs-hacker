@@ -83,7 +83,7 @@
       text: "Builder " + W.builder + " takes the lead at " + BVH.eth(lead[1]) + " and keeps raising." });
     if (W.eth != null && W.t_ms != null) ev.push({ id: "win", t: W.t_ms, eth: W.eth, raw: A.raw && A.raw.delivered, rawTitle: "Relay record of the block delivered to the proposer (it has no timestamp)",
       rawHTML: BVH.bidsA(A, "Relay bid file: the winning block's bid, its value and arrival time") + BVH.rawA(A.raw && A.raw.delivered, "delivered", "Relay record of the block delivered to the proposer (it has no timestamp)"),
-      title: "The winning block reaches the relay", short: "winning bid",
+      title: "The winning builder sends its block to a relay", short: "winning bid",
       text: "The block that won, " + W.builder + "'s at " + E(W.eth) + ", was first bid to " + relayName(B.relays) + " at " + sgn(W.t_ms) + ". It holds the copy at position " + (D.bot_idx != null ? D.bot_idx : "0") + (W.relays && W.relays.length ? "; the delivery record is from " + W.relays.map(function (x) { return RELAY_NAMES[x] || x; }).join(", ") + ", which does not record when the proposer chose it" : "") + "." });
     var last = rec[rec.length - 1];
     if (last && W.t_ms != null && last[0] > W.t_ms && last[1] > W.eth) ev.push({ id: "late", t: last[0], eth: last[1], raw: A.raw && A.raw.bids, rawTitle: "Relay bid file for this slot",
@@ -94,181 +94,471 @@
     return ev;
   };
 
-  /* ---------- the auction chart: LINEAR ETH axis against seconds from slot start ----------
-     o: { compact, onStep(ev), height } -> { set(tMs), events, tMin, tMax } */
+  /* ---------- the auction chart: LINEAR ETH axis against seconds from slot start (v3) ----------
+     RV.auction(box, D, o) draws every relay bid as a column of light, the best bid so far, the winning bid and the
+     race's key moments. The ETH axis is always linear with labelled ticks; it can rescale smoothly as the bids grow
+     (start zoomed on the tiny early bids, end on the full scale plus a zoom inset). Driven by RV.warp (the player).
+     o: { events (default RV.events(D)), compact, height, onStep(e, t), label }
+     -> { update(t, {hold, holdFrac, playing, dt}), events, timed, tMin, tMax, frac(t), tAt(f), ymaxAt(t), full } */
+  function fmtTick(v) { if (v === 0) return "0"; if (v >= 1000) return v.toLocaleString("en-US"); if (v >= 1) return String(+v.toFixed(2)); return String(+v.toPrecision(2)); }
+  RV.fmtTick = fmtTick;
+  function bsearch(arr, t) { var lo = 0, hi = arr.length; while (lo < hi) { var mid = (lo + hi) >> 1; if (arr[mid] <= t) lo = mid + 1; else hi = mid; } return lo; }
   RV.auction = function (box, D, o) {
     o = o || {};
-    var A = D.auction, B = A.bids, W = A.winner || {}, ev = RV.events(D);
+    var A = D.auction, B = A.bids, W = A.winner || {}, winBid = W.eth_bid != null ? W.eth_bid : W.eth;
+    var ev = o.events || RV.events(D), timed = ev.filter(function (e) { return e.t != null; });
     var winIdx = W.builder ? B.builders.indexOf(W.builder) : -1;
-    var tMin = Math.min(B.first_ms, ev.length ? ev[0].t : B.first_ms) - 600, tMax = Math.max(B.last_ms, W.t_ms || 0) + 350;
-    var state = { t: tMax }, svg, els = [], evEls = [], cursor, cursorLab, insetBox;
-    var ystep = tickStep(B.max_eth, 7), ymax = Math.ceil(B.max_eth * 1.03 / ystep) * ystep;
-    /* the action is in the last few seconds: compress the quiet early part of the time axis (marked with a break) */
-    var tBreak = (tMax - tMin > 9000 && W.t_ms != null) ? Math.min(-3000, W.t_ms - 3000) : null;
+    var tMin = Math.min(B.first_ms, timed.length ? timed[0].t : B.first_ms, 0) - 600;
+    var tMax = Math.max(B.last_ms, W.t_ms != null ? W.t_ms : -1e12, 0) + 350;
+    var top = Math.max(B.max_eth || 0, winBid || 0) || 1, ystep = tickStep(top, 6), fullY = Math.ceil(top * 1.04 / ystep) * ystep;
+    /* the action is in the last few seconds: the quiet early part of the time axis is compressed (marked with a break) */
+    var act = timed.filter(function (e) { return /^(jump|react|lead|ten|win)$/.test(e.id); })[0], tBreak = null;
+    if (act && tMax - tMin > 9000) { var tb = Math.floor((act.t - 1200) / 1000) * 1000; if (tb - tMin > 3500 && tMax - tb > 2500) tBreak = tb; }
+    var F = tBreak != null ? 0.32 : null;
+    /* bids drawn (the winning bid itself is the gold marker when its time is known) */
+    var bids = B.series.filter(function (p) { return !((p[3] & 1) === 1 && W.t_ms != null); }).slice().sort(function (a, b) { return a[0] - b[0]; });
+    var bidT = bids.map(function (p) { return p[0]; }), pmax = [], mx = 0;
+    bids.forEach(function (p) { mx = Math.max(mx, p[1]); pmax.push(mx); });
+    var rec = B.record.slice().sort(function (a, b) { return a[0] - b[0]; });
+    var jumpE = ev.filter(function (e) { return e.id === "jump"; })[0];
+    var yFloor = bids.length ? Math.max(bids[0][1] * 2, 1e-6) : fullY;
+    /* the axis top that fits every bid seen by time t (linear, a little headroom); the full scale at the end */
+    function ymaxAt(t) {
+      if (t >= tMax - 1) return fullY;
+      var k = bsearch(bidT, t), m2 = k ? pmax[k - 1] : 0;
+      return Math.min(fullY, Math.max(yFloor, m2 * 1.22));
+    }
+    var st = { t: tMax, ymax: fullY, hold: null, holdFrac: 0, playing: false }, L = {};
+    var call = document.createElement("div");
+    call.className = "auc-call"; call.setAttribute("aria-live", "polite"); call.hidden = true;
+    var uid = "au" + Math.random().toString(36).slice(2, 7);
+
     function draw() {
-      box.innerHTML = "";
-      var w = Math.max(300, box.clientWidth || 700), narrow = w < 640, compact = o.compact || narrow;
-      var H = o.height || (compact ? (narrow ? 320 : 340) : 480);
-      var m = { l: narrow ? 40 : 64, r: narrow ? 12 : 24, t: compact ? 34 : 44, b: 44 };
-      var x = timeScale(tMin, tBreak, tMax, m.l, w - m.r, narrow ? 0.3 : 0.32), y = BVH.lin(0, ymax, H - m.b, m.t);
-      svg = S("svg", { viewBox: "0 0 " + w + " " + H, width: w, height: H, class: "auc", role: "img",
-        "aria-label": "Builder bids for block " + D.block.number + " on a linear scale, " + B.n_total + " bids from " + sgn(B.first_ms) + " to " + sgn(B.last_ms) + " around the slot start. " + ev.map(function (e) { return sgn(e.t) + ": " + e.text; }).join(" ") }, box);
-      els = []; evEls = [];
-      /* the two slots */
-      var x0 = x(0), xd = x(Math.max(tMin, -12000));
-      S("rect", { x: x0, y: m.t - 26, width: w - m.r - x0, height: H - m.b - m.t + 26, class: "auc-slot" }, svg);
-      S("text", { x: w - m.r - 6, y: m.t - 12, "text-anchor": "end", class: "auc-slotlab" }, svg, narrow ? "slot starts" : "block " + D.block.number.toLocaleString("en-US") + "'s slot");
-      if (!compact) S("text", { x: xd + 8, y: m.t - 12, class: "auc-slotlab" }, svg, "block " + (D.block.number - 1).toLocaleString("en-US") + "'s slot");
-      /* grid + axes */
-      var ys = compact ? tickStep(ymax, 4) : ystep;
-      for (var v = 0; v <= ymax + 1e-9; v += ys) {
-        S("line", { x1: m.l, x2: w - m.r, y1: y(v), y2: y(v), class: v === 0 ? "auc-base auc-floor" : "auc-grid" }, svg);
-        S("text", { x: m.l - 8, y: y(v) + 4, "text-anchor": "end", class: "auc-tick" }, svg, v === 0 ? "0" : (v >= 1000 ? v.toLocaleString("en-US") : String(+v.toFixed(3))) + (narrow ? "" : " ETH"));
-      }
-      if (narrow) S("text", { x: m.l - 8, y: m.t - 12, "text-anchor": "end", class: "auc-tick" }, svg, "ETH");
-      var ticks = [];
+      box.innerHTML = ""; box.classList.add("auc-host");
+      var w = Math.max(300, Math.round(box.clientWidth) || 700), narrow = w < 640, compact = o.compact || narrow;
+      var band = 0;
+      var H = band + (o.height || (compact ? (narrow ? 330 : 380) : 500));
+      var m = { l: narrow ? 44 : 70, r: narrow ? 14 : 26, t: band + (compact ? 40 : 48), b: 48 };
+      var x = timeScale(tMin, tBreak, tMax, m.l, w - m.r, F || 0.32);
+      L = { w: w, H: H, m: m, x: x, narrow: narrow, compact: compact, band: band };
+      var svg = L.svg = S("svg", { viewBox: "0 0 " + w + " " + H, width: w, height: H, class: "auc", role: "img",
+        "aria-label": (o.label || "Builder bids for block " + D.block.number) + " on a linear ETH scale: " + B.n_total + " bids from " + sgn(B.first_ms) + " to " + sgn(B.last_ms) + " around the slot start. " + timed.map(function (e) { return sgn(e.t) + ": " + e.title + ". " + e.text; }).join(" ") }, box);
+      var defs = S("defs", null, svg), cp = S("clipPath", { id: uid + "-plot" }, defs);
+      S("rect", { x: m.l - 6, y: m.t - 18, width: w - m.r - m.l + 12, height: H - m.t + 18 }, cp);
+      /* static: this block's slot, the slot labels, the time axis and its break */
+      var x0 = x(0);
+      S("rect", { x: x0, y: m.t - 30, width: Math.max(0, w - m.r - x0), height: H - m.b - m.t + 30, class: "auc-slot" }, svg);
+      S("line", { x1: x0, x2: x0, y1: m.t - 30, y2: H - m.b, class: "inc-slotline" }, svg);
+      var room = w - m.r - x0, slotTxt = narrow ? "slot starts" : "block " + D.block.number.toLocaleString("en-US") + "'s slot";
+      S("text", room > slotTxt.length * 8 + 14 ? { x: x0 + 8, y: m.t - 14, class: "auc-slotlab" } : { x: x0 - 8, y: m.t - 14, "text-anchor": "end", class: "auc-slotlab" }, svg, slotTxt);
+      if (!compact && x0 - m.l > 260) S("text", { x: Math.max(m.l, x(Math.max(tMin, -12000))) + 8, y: m.t - 14, class: "auc-slotlab inc-prevslot" }, svg, "block " + (D.block.number - 1).toLocaleString("en-US") + "'s slot");
+      var ticks = [], t;
       if (x.rb != null) {
-        for (var t = Math.ceil(tMin / 3000) * 3000; t < tBreak - 1500; t += 3000) ticks.push(t);
-        for (t = tBreak; t <= tMax; t += 1000) ticks.push(t);
-      } else { var xs = narrow ? 4000 : 2000; for (t = Math.ceil(tMin / xs) * xs; t <= tMax; t += xs) ticks.push(t); }
+        for (t = Math.ceil(tMin / 3000) * 3000; t < tBreak - 1500; t += 3000) ticks.push(t);
+        var stp = (tMax - tBreak) > 9000 && narrow ? 2000 : 1000;
+        for (t = tBreak; t <= tMax; t += stp) ticks.push(t);
+      } else { var xs = narrow ? (tMax - tMin > 8000 ? 4000 : 2000) : (tMax - tMin > 16000 ? 4000 : 2000); for (t = Math.ceil(tMin / xs) * xs; t <= tMax; t += xs) ticks.push(t); }
       ticks.forEach(function (t) {
         S("line", { x1: x(t), x2: x(t), y1: H - m.b, y2: H - m.b + 5, class: "auc-base" }, svg);
-        S("text", { x: x(t), y: H - m.b + 19, "text-anchor": "middle", class: "auc-tick" }, svg, t === 0 ? "0" : (narrow ? sgn(t, 0).replace(" s", "") : sgn(t, 0)));
+        S("text", { x: x(t), y: H - m.b + 21, "text-anchor": "middle", class: "auc-tick" }, svg, t === 0 ? "0" : (narrow ? sgn(t, 0).replace(" s", "") : sgn(t, 0)));
       });
       if (x.rb != null) {
-        /* the break: a gap in the baseline with two slashes, and a note that the scale changes */
         var bx = x.rb, by = H - m.b;
         S("rect", { x: bx - 5, y: by - 3, width: 10, height: 6, class: "auc-breakgap" }, svg);
         S("path", { d: "M" + (bx - 7) + " " + (by + 5) + "l5 -10M" + (bx + 1) + " " + (by + 5) + "l5 -10", class: "auc-break" }, svg);
-        S("line", { x1: bx, x2: bx, y1: m.t - 26, y2: by - 6, class: "auc-breakline" }, svg);
-        var ratio = (x(1000) - x(0)) / (x(tMin + 1000) - x(tMin));
-        if (!narrow && !o.compact) S("text", { x: bx, y: H - m.b + 36, "text-anchor": "middle", class: "auc-axlab auc-breaklab" }, svg, "time scale " + ratio.toFixed(0) + "× wider from here");
-        else if (!narrow) S("text", { x: bx + 6, y: m.t - 12, class: "auc-axlab auc-breaklab" }, svg, ratio.toFixed(0) + "× wider →");
+        S("line", { x1: bx, x2: bx, y1: m.t - 30, y2: by - 6, class: "auc-breakline" }, svg);
+        var ratio = (x(tBreak + 1000) - x(tBreak)) / (x(tMin + 1000) - x(tMin));
+        var breakTxt = "from here, time is drawn " + ratio.toFixed(0) + "× wider";
       }
-      S("text", { x: w - m.r, y: H - 2, "text-anchor": "end", class: "auc-axlab" }, svg, narrow ? "seconds from slot start" : "seconds from the start of the slot, " + BVH.clock(D.t0_ms, false) + " UTC");
-      /* bids as light in the dark: each bid is a thin column rising from the floor (zero ETH) to its price, with a
-         point of light on top and a short reflection under the floor. Other builders in pale mist, the winning
-         builder in the amber streak. Heights stay linear in ETH; the reflection sits below zero and carries no value. */
-      var gC = S("g", { class: "auc-cols" }, svg), gF = S("g", { class: "auc-refl", "aria-hidden": "true" }, svg), gD = S("g", { class: "auc-dots" }, svg), gW = S("g", { class: "auc-dots-w glow-s" }, svg);
-      var y0 = y(0);
-      B.series.forEach(function (p) {
-        var isW = p[2] === winIdx, isWin = (p[3] & 1) === 1;
-        if (isWin) return;
-        var px = x(p[0]), py = y(p[1]), hh = y0 - py;
-        if (hh > 1.5) {
-          els.push([p[0], S("rect", { x: (px - 0.6).toFixed(1), y: py.toFixed(1), width: 1.2, height: hh.toFixed(1), class: isW ? "auc-col auc-col-w" : "auc-col" }, gC)]);
-          els.push([p[0], S("rect", { x: (px - 0.6).toFixed(1), y: (y0 + 1.5).toFixed(1), width: 1.2, height: Math.min(14, 3 + hh * 0.08).toFixed(1), class: isW ? "auc-rf auc-rf-w" : "auc-rf" }, gF)]);
-        }
-        els.push([p[0], S("circle", { cx: px.toFixed(1), cy: py.toFixed(1), r: isW ? 2.5 : 1.9, class: isW ? "auc-dot auc-dot-w" : "auc-dot" }, isW ? gW : gD)]);
+      /* bottom-row labels: the long forms only when both fit side by side (about 7.9px per mono character at 13px) */
+      var axTxt = "seconds from the start of the slot, " + BVH.clock(D.t0_ms, false) + " UTC", CW = 7.9;
+      if (narrow || (breakTxt && x.rb + 8 + CW * breakTxt.length + 24 > w - m.r - CW * axTxt.length)) axTxt = "seconds from slot start";
+      if (breakTxt && !narrow) {
+        if (x.rb + 8 + CW * breakTxt.length + 24 > w - m.r - CW * axTxt.length) breakTxt = "time " + ratio.toFixed(0) + "× wider from here";
+        if (x.rb + 8 + CW * breakTxt.length + 24 <= w - m.r - CW * axTxt.length) S("text", { x: x.rb + 8, y: H - 4, class: "auc-axlab auc-breaklab" }, svg, breakTxt);
+      }
+      S("text", { x: w - m.r, y: H - 4, "text-anchor": "end", class: "auc-axlab" }, svg, axTxt);
+      /* dynamic layers (their y follows the axis) */
+      L.gGrid = S("g", { class: "auc-ygrid" }, svg);
+      var plot = S("g", { "clip-path": "url(#" + uid + "-plot)" }, svg);
+      L.gC = S("g", { class: "auc-cols" }, plot); L.gF = S("g", { class: "auc-refl", "aria-hidden": "true" }, svg);
+      L.gD = S("g", { class: "auc-dots" }, plot); L.gW = S("g", { class: "auc-dots-w glow-s" }, plot);
+      L.gR = S("g", { class: "auc-recs" }, plot); L.gRW = S("g", { class: "auc-recs-w glow" }, plot);
+      L.bids = bids.map(function (p) {
+        var isW = p[2] === winIdx, px = x(p[0]);
+        return { t: p[0], eth: p[1], x: px, w: isW,
+          col: S("rect", { x: (px - 0.6).toFixed(1), width: 1.2, class: isW ? "auc-col auc-col-w" : "auc-col" }, L.gC),
+          rf: S("rect", { x: (px - 0.6).toFixed(1), width: 1.2, class: isW ? "auc-rf auc-rf-w" : "auc-rf" }, L.gF),
+          dot: S("circle", { cx: px.toFixed(1), r: isW ? 2.6 : 2, class: isW ? "auc-dot auc-dot-w" : "auc-dot" }, isW ? L.gW : L.gD), on: null };
       });
-      /* best bid so far: a step line, drawn in pieces so it can reveal with the cursor; while the winning builder
-         holds the best bid the line is the amber streak */
-      var rec = B.record, gR = S("g", { class: "auc-recs" }, svg), gRW = S("g", { class: "auc-recs-w glow" }, svg);
-      for (var i = 0; i < rec.length; i++) {
-        var a = rec[i], b = rec[i + 1], xe = b ? x(b[0]) : x(B.last_ms), isWin = a[2] === winIdx;
-        var seg = S("path", { d: "M" + x(a[0]).toFixed(1) + " " + y(a[1]).toFixed(1) + "H" + xe.toFixed(1) + (b ? "V" + y(b[1]).toFixed(1) : ""), class: isWin ? "auc-rec auc-rec-w" : "auc-rec" }, isWin ? gRW : gR);
-        els.push([a[0], seg]);
-      }
-      /* the deploy marker on the time axis */
-      ev.forEach(function (e) {
-        var g = S("g", { class: "auc-ev auc-ev-" + e.id }, svg), ex = x(e.t);
-        if (e.id === "deploy") {
-          S("line", { x1: ex, x2: ex, y1: m.t - 22, y2: H - m.b, class: "auc-depline" }, g);
-          S("path", { d: "M" + ex + " " + (H - m.b - 8) + "l8 8-8 8-8-8z", class: "auc-dep" }, g);
-          S("text", { x: ex + 8, y: H - m.b - (narrow ? 52 : 60), class: "auc-lab auc-lab-atk" }, g, narrow ? "deploy" : "attack contract deployed");
+      L.recs = rec.map(function (a, i) { var isW = winIdx >= 0 && a[2] === winIdx; return { a: a, b: rec[i + 1], el: S("path", { class: isW ? "auc-rec auc-rec-w" : "auc-rec" }, isW ? L.gRW : L.gR) }; });
+      /* events: eth-independent parts are static, the rest are moved every frame */
+      L.gE = S("g", { class: "auc-evs" }, svg);
+      L.ev = ev.map(function (e) {
+        var g = S("g", { class: "auc-ev auc-ev-" + e.id }, L.gE), ex = e.t != null ? x(e.t) : null, r = { e: e, g: g, x: ex };
+        if (e.id === "deploy" || e.id === "seen") {
+          S("line", { x1: ex, x2: ex, y1: m.t - 26, y2: H - m.b, class: e.id === "deploy" ? "auc-depline" : "auc-seen" }, g);
+          if (e.id === "deploy") S("path", { d: "M" + ex + " " + (H - m.b - 8) + "l8 8-8 8-8-8z", class: "auc-dep" }, g);
+          var left = e.id === "seen" && ex - 8 - (narrow ? 110 : 190) > m.l;
+          S("text", { x: left ? ex - 9 : ex + 9, y: H - m.b - (e.id === "deploy" ? 62 : 14), "text-anchor": left ? "end" : "start", class: "auc-lab auc-lab-atk" }, g, narrow ? (e.id === "deploy" ? "deploy" : "seen in public") : e.short);
+          r.badge = badge(g, e, "auc-num-atk"); place(r.badge, ex, H - m.b - 36);
+        } else if (e.id === "slot") {
+          r.badge = badge(g, e, "inc-num-slot"); place(r.badge, ex, m.t - 2);
         } else if (e.id === "win") {
-          S("circle", { cx: ex, cy: y(e.eth), r: 13, class: "auc-win-halo" }, g);
-          S("circle", { cx: ex, cy: y(e.eth), r: 7.5, class: "auc-win glow-s" }, g);
-          var right = ex > w * 0.62;
-          S("text", { x: right ? ex - 13 : ex + 13, y: y(e.eth) - 10, "text-anchor": right ? "end" : "start", class: "auc-lab auc-lab-big" }, g, "winning bid " + E(e.eth));
-          S("text", { x: right ? ex - 13 : ex + 13, y: y(e.eth) + 6, "text-anchor": right ? "end" : "start", class: "auc-lab" }, g, W.builder + " at " + sgn(e.t));
+          r.halo = S("circle", { cx: ex, r: 14, class: "auc-win-halo" }, g); r.dot = S("circle", { cx: ex, r: 7.5, class: "auc-win glow-s" }, g);
+          r.l1 = S("text", { class: "auc-lab auc-lab-big" }, g, "winning bid " + E(e.eth)); r.l2 = S("text", { class: "auc-lab" }, g, (narrow ? trunc(W.builder || "", 16) : W.builder) + " at " + sgn(e.t));
+          r.badge = badge(g, e, "auc-num-win");
         } else if (e.id === "late") {
-          S("circle", { cx: ex, cy: y(e.eth), r: 4.5, class: "auc-late" }, g);
-          if (!compact) S("text", { x: ex - 16, y: y(e.eth) - 14, "text-anchor": "end", class: "auc-lab" }, g, "highest later bid " + E(e.eth));
+          r.dot = S("circle", { cx: ex, r: 4.5, class: "auc-late" }, g);
+          if (!compact) r.l1 = S("text", { "text-anchor": "end", class: "auc-lab" }, g, "highest later bid " + E(e.eth));
+          r.badge = badge(g, e);
+        } else if (e.id === "winline") {
+          r.line = S("line", { x1: m.l, x2: w - m.r, class: "auc-winline" }, g);
+          r.l1 = S("text", { x: narrow ? m.l + 8 : w - m.r - 8, "text-anchor": narrow ? "start" : "end", class: "auc-lab auc-lab-big inc-lab-win" }, g, "winning bid " + E(e.eth) + (narrow ? "" : ", time not recorded"));
+        } else if (e.id === "nowin") {
+          S("text", { x: w - m.r - 6, y: m.t + 22, "text-anchor": "end", class: "auc-lab inc-lab-nowin" }, g, narrow ? "no winning bid on record" : "winning bid not in the relay records");
+        } else if (e.eth != null) {
+          r.lead = S("line", { x1: ex, x2: ex, class: "auc-lead" }, g); r.badge = badge(g, e);
         }
-        if (e.id !== "deploy") {
-          var ny = e.eth != null ? y(e.eth) : H - m.b, big = e.id === "win";
-          if (!big) {
-            var lx = ex, ly = Math.max(m.t + 10, ny - 18);
-            if (e.id === "first" || e.id === "jump") ly = H - m.b - (e.id === "jump" ? 46 : 24);
-            S("line", { x1: ex, x2: lx, y1: ny, y2: ly + 8, class: "auc-lead" }, g);
-            var c = S("g", { class: "auc-num" }, g);
-            S("circle", { cx: lx, cy: ly, r: 9 }, c); S("text", { x: lx, y: ly + 4, "text-anchor": "middle" }, c, String(e.n));
-          }
-        } else {
-          var c2 = S("g", { class: "auc-num auc-num-atk" }, g);
-          S("circle", { cx: ex, cy: H - m.b - 34, r: 9 }, c2); S("text", { x: ex, y: H - m.b - 30, "text-anchor": "middle" }, c2, String(e.n));
-        }
-        evEls.push([e.t, g]);
+        return r;
       });
-      /* winning-bid number marker */
-      var we = ev.filter(function (e) { return e.id === "win"; })[0];
-      if (we) { var cw = S("g", { class: "auc-num auc-num-win" }), wx = x(we.t), wy = y(we.eth); svg.appendChild(cw); S("circle", { cx: wx, cy: wy - 24, r: 9 }, cw); S("text", { x: wx, y: wy - 20, "text-anchor": "middle" }, cw, String(we.n)); evEls.push([we.t, cw]); }
-      /* zoom inset for the bids too small to see on a linear scale */
-      insetBox = null;
-      var je = ev.filter(function (e) { return e.id === "jump"; })[0];
-      if (je && !o.compact) {
-        var zx0 = B.first_ms - 300, zx1 = je.t + 1100, zy1 = niceMax(je.eth * 1.15), gi, ib;
-        S("rect", { x: x(zx0), y: y(0) - 6, width: x(zx1) - x(zx0), height: 6, class: "auc-zoomsrc" }, svg);
-        if (narrow) {
-          var svg2 = S("svg", { viewBox: "0 0 " + w + " 170", width: w, height: 170, class: "auc auc-inset2", role: "img", "aria-label": "Zoom on the first bids, 0 to " + zy1 + " ETH: " + je.text }, box);
-          ib = { x: 0, y: 4, w: w, h: 160 }; gi = S("g", { class: "auc-inset" }, svg2);
-          S("rect", { x: ib.x + 0.5, y: ib.y, width: ib.w - 1, height: ib.h, rx: 6, class: "auc-insetbg" }, gi);
-        } else {
-          ib = { x: x(Math.max(tMin + 400, -11400)), y: m.t + 10, w: 380, h: 160 };
-          ib.w = Math.max(260, Math.min(ib.w, x(-600) - ib.x));
+      /* zoom inset: the first bids, too small to see once the axis reaches its full scale */
+      L.inset = null;
+      if (jumpE && jumpE.prev < fullY * 0.02 && jumpE.eth < fullY * 0.5) {
+        var zx0 = Math.max(tMin, B.first_ms - 300), zx1 = Math.min(tMax, jumpE.t + 1100), zy1 = niceMax(jumpE.eth * 1.15);
+        var big = rec.filter(function (r) { return r[1] > fullY * 0.2; })[0], limT = Math.min(jumpE.t, big ? big[0] : tMax);
+        var avail = Math.min(x(limT) - 36, x(0) - (m.l + 14) >= 260 ? x(0) - 24 : 1e9) - (m.l + 14), host = svg, inChart = !narrow && avail >= 250, ib, gi;
+        if (inChart) {
+          ib = { x: m.l + 14, y: m.t + 8, w: Math.min(420, avail), h: 160 };
           gi = S("g", { class: "auc-inset" }, svg);
-          S("rect", { x: ib.x, y: ib.y, width: ib.w, height: ib.h, rx: 6, class: "auc-insetbg" }, gi);
-          S("line", { x1: ib.x + ib.w, y1: ib.y + ib.h, x2: x(zx1), y2: y(0) - 6, class: "auc-zoomline" }, gi);
-          S("line", { x1: ib.x, y1: ib.y + ib.h, x2: x(zx0), y2: y(0) - 6, class: "auc-zoomline" }, gi);
+          S("rect", { x: ib.x, y: ib.y, width: ib.w, height: ib.h, rx: 8, class: "auc-insetbg" }, gi);
+          S("line", { x1: ib.x + ib.w, y1: ib.y + ib.h, x2: x(zx1), y2: H - m.b - 6, class: "auc-zoomline" }, gi);
+          S("line", { x1: ib.x, y1: ib.y + ib.h, x2: x(zx0), y2: H - m.b - 6, class: "auc-zoomline" }, gi);
+          S("rect", { x: x(zx0), y: H - m.b - 6, width: Math.max(4, x(zx1) - x(zx0)), height: 6, class: "auc-zoomsrc" }, gi);
+        } else {
+          host = S("svg", { viewBox: "0 0 " + w + " 176", width: w, height: 176, class: "auc auc-inset2", role: "img", "aria-label": "Zoom on the first bids, 0 to " + zy1 + " ETH. " + jumpE.text }, box);
+          ib = { x: 0, y: 4, w: w, h: 166 }; gi = S("g", { class: "auc-inset" }, host);
+          S("rect", { x: ib.x + 0.5, y: ib.y, width: ib.w - 1, height: ib.h, rx: 8, class: "auc-insetbg" }, gi);
         }
-        var im = { l: 46, r: 14, t: 34, b: 22 }, ix = BVH.lin(zx0, zx1, ib.x + im.l, ib.x + ib.w - im.r), iy = BVH.lin(0, zy1, ib.y + ib.h - im.b, ib.y + im.t);
-        S("text", { x: ib.x + 10, y: ib.y + 16, class: "auc-insettitle" }, gi, "zoom: the first bids, 0 to " + zy1 + " ETH");
+        var im = { l: 52, r: 16, t: 36, b: 24 }, ix = BVH.lin(zx0, zx1, ib.x + im.l, ib.x + ib.w - im.r), iy = BVH.lin(0, zy1, ib.y + ib.h - im.b, ib.y + im.t);
+        var dd = S("defs", null, host), cp2 = S("clipPath", { id: uid + "-zc" }, dd);
+        S("rect", { x: ib.x + im.l - 3, y: ib.y + im.t - 6, width: ib.w - im.l - im.r + 6, height: ib.h - im.t - im.b + 9 }, cp2);
+        S("text", { x: ib.x + 12, y: ib.y + 20, class: "auc-insettitle" }, gi, "Zoom: the first bids, 0 to " + zy1 + " ETH");
         var ist = tickStep(zy1, 2);
-        for (var iv = 0; iv <= zy1 + 1e-9; iv += ist) { S("line", { x1: ib.x + im.l, x2: ib.x + ib.w - im.r, y1: iy(iv), y2: iy(iv), class: iv ? "auc-grid" : "auc-base" }, gi); S("text", { x: ib.x + im.l - 6, y: iy(iv) + 3.5, "text-anchor": "end", class: "auc-tick auc-tick-s" }, gi, iv ? +iv.toFixed(3) + "" : "0"); }
-        for (var it = Math.ceil(zx0 / 2000) * 2000; it <= zx1; it += 2000) S("text", { x: ix(it), y: ib.y + ib.h - 7, "text-anchor": "middle", class: "auc-tick auc-tick-s" }, gi, sgn(it, 0));
-        B.series.forEach(function (p) {
-          if (p[0] < zx0 || p[0] > zx1 || p[1] > zy1) return;
-          var iw = p[2] === winIdx, ih = iy(0) - iy(p[1]);
-          if (ih > 1.5) els.push([p[0], S("rect", { x: (ix(p[0]) - 0.6).toFixed(1), y: iy(p[1]).toFixed(1), width: 1.2, height: ih.toFixed(1), class: iw ? "auc-col auc-col-w" : "auc-col" }, gi)]);
-          els.push([p[0], S("circle", { cx: ix(p[0]).toFixed(1), cy: iy(p[1]).toFixed(1), r: 2, class: iw ? "auc-dot auc-dot-w" : "auc-dot" }, gi)]);
+        for (var iv = 0; iv <= zy1 + 1e-9; iv += ist) { S("line", { x1: ib.x + im.l, x2: ib.x + ib.w - im.r, y1: iy(iv), y2: iy(iv), class: iv ? "auc-grid" : "auc-base" }, gi); S("text", { x: ib.x + im.l - 7, y: iy(iv) + 4, "text-anchor": "end", class: "auc-tick auc-tick-s" }, gi, iv ? fmtTick(+iv.toPrecision(6)) : "0"); }
+        var its = (zx1 - zx0) > 6000 ? 2000 : 1000;
+        for (var it = Math.ceil(zx0 / its) * its; it <= zx1; it += its) S("text", { x: ix(it), y: ib.y + ib.h - 6, "text-anchor": "middle", class: "auc-tick auc-tick-s" }, gi, sgn(it, 0));
+        var gcz = S("g", { "clip-path": "url(#" + uid + "-zc)" }, gi), zel = [];
+        bids.forEach(function (p) {
+          if (p[0] < zx0 || p[0] > zx1) return;
+          var iw = p[2] === winIdx, ipy = iy(Math.min(p[1], zy1 * 1.2)), ih = iy(0) - ipy;
+          if (ih > 1.5) zel.push([p[0], S("rect", { x: (ix(p[0]) - 0.6).toFixed(1), y: ipy.toFixed(1), width: 1.2, height: ih.toFixed(1), class: iw ? "auc-col auc-col-w" : "auc-col" }, gcz)]);
+          zel.push([p[0], S("circle", { cx: ix(p[0]).toFixed(1), cy: ipy.toFixed(1), r: 2.2, class: iw ? "auc-dot auc-dot-w" : "auc-dot" }, gcz)]);
         });
-        var d = "";
-        rec.forEach(function (a, k) { if (a[0] > zx1 || a[1] > zy1) return; var b = rec[k + 1]; var xe = b && b[0] <= zx1 ? ix(b[0]) : ix(Math.min(zx1, b ? b[0] : zx1)); d += (d ? "" : "M" + ix(a[0]).toFixed(1) + " " + iy(a[1]).toFixed(1)) + "H" + xe.toFixed(1) + (b && b[1] <= zy1 && b[0] <= zx1 ? "V" + iy(b[1]).toFixed(1) : ""); });
-        var ip = S("path", { d: d, class: "auc-rec" }, gi); els.push([zx0, ip]);
-        var jx = ix(je.t), jy = iy(je.eth);
-        var jl = S("g", {}, gi);
-        S("text", { x: jx - 8, y: jy - 8, "text-anchor": "end", class: "auc-lab" }, jl, BVH.eth(je.prev, false) + " \u2192 " + BVH.eth(je.eth, false) + " ETH");
-        evEls.push([je.t, jl]);
-        insetBox = ib;
+        rec.forEach(function (a, k) {
+          if (a[0] > zx1) return; var b = rec[k + 1], xe2 = ix(Math.min(zx1, b ? b[0] : B.last_ms));
+          zel.push([a[0], S("path", { d: "M" + ix(a[0]).toFixed(1) + " " + iy(Math.min(a[1], zy1 * 1.2)).toFixed(1) + "H" + xe2.toFixed(1) + (b && b[0] <= zx1 ? "V" + iy(Math.min(b[1], zy1 * 1.2)).toFixed(1) : ""), class: "auc-rec" }, gcz)]);
+        });
+        var jx = ix(jumpE.t), jy = iy(jumpE.eth), jr = jx > ib.x + ib.w * 0.55;
+        zel.push([jumpE.t, S("text", { x: jr ? jx - 9 : jx + 9, y: Math.max(ib.y + im.t + 8, jy + 4), "text-anchor": jr ? "end" : "start", class: "auc-lab" }, gi, BVH.eth(jumpE.prev, false) + " → " + BVH.eth(jumpE.eth, false) + " ETH")]);
+        L.inset = { g: gi, inChart: inChart, els: zel, zy1: zy1 };
       }
-      /* the cursor */
-      cursor = S("line", { x1: 0, x2: 0, y1: m.t - 22, y2: H - m.b, class: "auc-cursor" }, svg);
-      cursorLab = S("text", { x: 0, y: H - m.b - 4, class: "auc-cursorlab" }, svg);
-      state.x = x; state.H = H; state.m = m; state.w = w;
-      apply();
+      /* the cursor: a line of light at the current moment */
+      L.cursor = S("line", { y1: m.t - 26, y2: H - m.b, class: "auc-cursor" }, svg);
+      L.cursorLab = S("text", { y: H - m.b - 6, class: "auc-cursorlab" }, svg);
+      L.leader = S("path", { class: "auc-callead" }, svg);
+      if (narrow) {
+        /* phones: the caption sits in its own band above the plot, sized for the longest caption so nothing jumps */
+        box.insertBefore(call, svg); call.className = "auc-call auc-call-band"; call.hidden = false; call.style.minHeight = "";
+        var mh = 0;
+        timed.forEach(function (e) { call.innerHTML = '<span class="ac-n">' + e.n + '</span><span class="ac-t"><b>' + sgn(e.t) + "</b> " + esc(e.title) + '</span><span class="ac-x">' + esc(e.text) + '</span><span class="ac-hold"><i></i></span>'; mh = Math.max(mh, call.offsetHeight); });
+        L.callMin = mh + "px"; lastCall = null;
+      } else box.appendChild(call);
+      render(true);
     }
-    function apply() {
-      var t = state.t, x = state.x;
-      els.forEach(function (e) { e[1].style.visibility = e[0] <= t ? "" : "hidden"; });
-      evEls.forEach(function (e) { e[1].style.visibility = e[0] <= t + 1 ? "" : "hidden"; });
-      var full = t >= tMax - 1;
-      cursor.style.visibility = full ? "hidden" : "";
-      cursorLab.style.visibility = full ? "hidden" : "";
-      var cx = x(t);
-      cursor.setAttribute("x1", cx); cursor.setAttribute("x2", cx);
-      cursorLab.setAttribute("x", cx + (cx > state.w - 70 ? -6 : 6)); cursorLab.setAttribute("text-anchor", cx > state.w - 70 ? "end" : "start");
-      cursorLab.textContent = sgn(t);
-      if (o.onStep) { var cur = null; ev.forEach(function (e) { if (e.t <= t + 1) cur = e; }); o.onStep(cur, t); }
+    function badge(g, e, cls) {
+      var c = S("g", { class: "auc-num" + (cls ? " " + cls : "") }, g);
+      S("circle", { r: 10.5 }, c); S("text", { y: 4.5, "text-anchor": "middle" }, c, String(e.n));
+      return c;
+    }
+    function place(b, x, y) { b.setAttribute("transform", "translate(" + x.toFixed(1) + "," + y.toFixed(1) + ")"); b._x = x; b._y = y; }
+
+    /* draw the state: bids up to t, the axis at st.ymax */
+    function render(snap) {
+      var t = st.t, m = L.m, H = L.H, x = L.x, ym = st.ymax, y = BVH.lin(0, ym, H - m.b, m.t), y0 = y(0);
+      /* y axis: linear, labelled ticks at every moment */
+      L.gGrid.textContent = "";
+      var ys = tickStep(ym, L.compact ? 4 : 5);
+      for (var k = 0; k * ys <= ym * 1.0001; k++) {
+        var v = +(k * ys).toPrecision(8), yy = y(v);
+        S("line", { x1: m.l, x2: L.w - m.r, y1: yy, y2: yy, class: v === 0 ? "auc-base auc-floor" : "auc-grid" }, L.gGrid);
+        S("text", { x: m.l - 9, y: yy + 4.5, "text-anchor": "end", class: "auc-tick" }, L.gGrid, fmtTick(v));
+      }
+      S("text", { x: m.l - 9, y: m.t - 14, "text-anchor": "end", class: "auc-tick auc-yunit" }, L.gGrid, "ETH");
+      /* bids */
+      L.bids.forEach(function (b) {
+        var on = b.t <= t;
+        if (on !== b.on) { b.col.style.visibility = b.rf.style.visibility = b.dot.style.visibility = on ? "" : "hidden"; b.on = on; }
+        if (!on) return;
+        var py = Math.max(m.t - 16, y(b.eth)), hh = y0 - py;
+        b.col.setAttribute("y", py.toFixed(1)); b.col.setAttribute("height", Math.max(0, hh).toFixed(1));
+        b.rf.setAttribute("y", (y0 + 1.5).toFixed(1)); b.rf.setAttribute("height", (hh > 1.5 ? Math.min(14, 3 + hh * 0.08) : 0).toFixed(1));
+        b.dot.setAttribute("cy", py.toFixed(1));
+      });
+      /* best bid so far: the line grows with the cursor */
+      L.recs.forEach(function (r) {
+        var a = r.a, b = r.b;
+        if (a[0] > t) { r.el.style.visibility = "hidden"; return; }
+        r.el.style.visibility = "";
+        var xe = b && b[0] <= t ? x(b[0]) : x(Math.min(t, b ? b[0] : B.last_ms));
+        r.el.setAttribute("d", "M" + x(a[0]).toFixed(1) + " " + y(a[1]).toFixed(1) + "H" + xe.toFixed(1) + (b && b[0] <= t ? "V" + y(b[1]).toFixed(1) : ""));
+      });
+      /* events */
+      var placed = [];
+      /* the winning-bid line's label (untimed) is reserved first so numbered badges step around it */
+      L.ev.forEach(function (r) {
+        if (r.e.id !== "winline" || !r.l1) return;
+        var wl0 = y(r.e.eth); if (wl0 < m.t - 10) return;
+        var ly0 = L.narrow || wl0 - 8 < m.t + 4 ? wl0 + 18 : wl0 - 8, len = (r.l1.textContent || "").length * 7.9;
+        var px0 = r.l1.getAttribute("text-anchor") === "end" ? L.w - m.r - 8 - len : m.l + 8;
+        for (var px = px0; px <= px0 + len; px += 16) placed.push([px, ly0 - 4]);
+      });
+      L.ev.forEach(function (r) {
+        var e = r.e, on = e.t == null || e.t <= t + 1;
+        r.g.style.visibility = on ? "" : "hidden";
+        if (!on) return;
+        if (r.badge && (e.id === "deploy" || e.id === "seen" || e.id === "slot")) { placed.push([r.badge._x, r.badge._y]); return; }
+        if (e.id === "win") {
+          var wy = y(e.eth), right = r.x + 14 + 190 > L.w - m.r, below = wy - 14 < m.t + 4;
+          r.halo.setAttribute("cy", wy); r.dot.setAttribute("cy", wy);
+          var lx = right ? r.x - 15 : r.x + 15;
+          [r.l1, r.l2].forEach(function (l) { l.setAttribute("x", lx); l.setAttribute("text-anchor", right ? "end" : "start"); });
+          r.l1.setAttribute("y", below ? wy + 26 : wy - 11); r.l2.setAttribute("y", below ? wy + 43 : wy + 7);
+          var by2 = below ? wy + 60 : wy - 28; place(r.badge, r.x, avoid(placed, r.x, by2)); placed.push([r.x, r.badge._y]);
+        } else if (e.id === "late") {
+          var ly = y(e.eth); r.dot.setAttribute("cy", ly);
+          if (r.l1) { r.l1.setAttribute("x", r.x - 16); r.l1.setAttribute("y", ly - 14); }
+          place(r.badge, r.x + 16, avoid(placed, r.x + 16, ly + 4)); placed.push([r.badge._x, r.badge._y]);
+        } else if (e.id === "winline") {
+          var wl = y(e.eth), vis = wl >= m.t - 10;
+          r.line.style.visibility = r.l1.style.visibility = vis ? "" : "hidden";
+          r.line.setAttribute("y1", wl); r.line.setAttribute("y2", wl); r.l1.setAttribute("y", L.narrow || wl - 8 < m.t + 4 ? wl + 18 : wl - 8);
+        } else if (r.lead) {
+          var ny = Math.max(m.t - 10, y(e.eth)), by = ny - 24;
+          if ((e.id === "first" || e.id === "jump") && ny > H - m.b - 30) by = H - m.b - (e.id === "jump" ? 50 : 26);
+          by = avoid(placed, r.x, Math.max(m.t - 2, by)); place(r.badge, r.x, by); placed.push([r.x, by]);
+          r.lead.setAttribute("y1", ny); r.lead.setAttribute("y2", by + 10);
+        }
+      });
+      /* the inset shows on the full scale, and whenever the reader stops on a scale too big for the first bids */
+      if (L.inset) {
+        var showIn = !L.inset.inChart || (!st.playing && !st.hold && (t >= tMax - 1 || ym > 30 * L.inset.zy1));
+        L.inset.g.style.visibility = showIn ? "" : "hidden";
+        L.inset.els.forEach(function (z) { z[1].style.visibility = z[0] <= t ? "" : "hidden"; });
+      }
+      var full = t >= tMax - 1, cx = x(Math.min(t, tMax));
+      L.cursor.style.visibility = L.cursorLab.style.visibility = full ? "hidden" : "";
+      L.cursor.setAttribute("x1", cx); L.cursor.setAttribute("x2", cx);
+      var labRight = cx > L.w - 90;
+      L.cursorLab.setAttribute("x", cx + (labRight ? -7 : 7)); L.cursorLab.setAttribute("text-anchor", labRight ? "end" : "start");
+      L.cursorLab.textContent = sgn(t);
+      callout(y);
+    }
+    function avoid(placed, cx, cy) {
+      var tries = 0;
+      while (tries < 8 && placed.some(function (p) { return Math.abs(p[0] - cx) < 22 && Math.abs(p[1] - cy) < 22; })) { cy -= 24; tries++; }
+      return Math.max(L.m.t - 4, cy);
+    }
+    /* the caption sits next to its moment in the chart (on phones, in a band above the plot with a leader line) */
+    var lastCall = null;
+    function current() { var c = null; timed.forEach(function (e) { if (e.t <= st.t + 1) c = e; }); return c; }
+    function callout(y) {
+      var e = st.hold || current(), full = st.t >= tMax - 1 && !st.hold;
+      if (o.onStep) o.onStep(e, st.t);
+      L.svg.setAttribute("data-call", full || !e ? "" : e.id);
+      if (full || !e) {
+        L.leader.style.visibility = "hidden";
+        if (L.narrow) {
+          call.hidden = false; call.className = "auc-call auc-call-band is-idle"; call.style.minHeight = "";
+          call.innerHTML = full ? '<span class="ac-t">' + (o.idleText || "The whole race, every bid on the full linear scale.") + '</span><span class="ac-x">Press play to watch it from the start, slowed down where it matters.</span>' : '<span class="ac-t">' + sgn(st.t) + '</span><span class="ac-x">Waiting for the first moment.</span>';
+          lastCall = null;
+        } else { call.hidden = true; lastCall = null; }
+        return;
+      }
+      var key = e.n + "|" + (st.hold ? 1 : 0);
+      if (key !== lastCall) {
+        call.innerHTML = '<span class="ac-n' + (e.id === "deploy" || e.id === "seen" ? " ac-atk" : e.id === "win" ? " ac-win" : "") + '">' + e.n + '</span><span class="ac-t"><b>' + sgn(e.t) + "</b> " + esc(e.title) + '</span><span class="ac-x">' + esc(e.text) + '</span><span class="ac-hold" aria-hidden="true"><i></i></span>';
+        lastCall = key;
+      }
+      call.hidden = false;
+      call.className = "auc-call" + (L.narrow ? " auc-call-band" : "") + (st.hold ? " is-hold" : "");
+      if (L.narrow) call.style.minHeight = L.callMin || "";
+      var bar = call.querySelector(".ac-hold i"); if (bar) bar.style.transform = "scaleX(" + (st.hold ? st.holdFrac : 0).toFixed(3) + ")";
+      /* the anchor point of the moment */
+      var m = L.m, px = L.x(e.t), py = e.eth != null ? Math.max(m.t - 10, y(e.eth)) : (e.id === "slot" ? m.t : L.H - m.b - 40);
+      var cw = call.offsetWidth, ch = call.offsetHeight;
+      if (L.narrow) {
+        var ax = Math.max(14, Math.min(L.w - 14, px));
+        L.leader.setAttribute("d", "M" + ax.toFixed(1) + " 0V" + (py - 12).toFixed(1));
+        L.leader.style.visibility = "";
+        return;
+      }
+      /* prefer the empty sky above and to the left of the moment; inside the slot, stay left of the slot line so the
+         bidding war itself stays visible */
+      var x0 = L.x(0), re = px - 30;
+      if (px > x0 + 20 && x0 - 12 - cw > m.l + 4) re = Math.min(re, x0 - 12);
+      var leftSide = re - cw > m.l + 4, cl = leftSide ? re - cw : Math.min(px + 30, L.w - m.r - cw);
+      var ct = Math.max(m.t - 26, Math.min(py - ch - 40, L.H - m.b - ch - 8));
+      call.style.left = cl.toFixed(0) + "px"; call.style.top = ct.toFixed(0) + "px";
+      var ex = leftSide ? cl + cw : cl, ey = Math.max(ct + 14, Math.min(ct + ch - 14, py));
+      L.leader.setAttribute("d", "M" + ex.toFixed(1) + " " + ey.toFixed(1) + "L" + (px + (leftSide ? -11 : 11)).toFixed(1) + " " + py.toFixed(1));
+      L.leader.style.visibility = "";
     }
     draw();
-    var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(draw, 120); });
-    BVH.onTheme.push(function () { /* colours are CSS variables: nothing to redraw */ });
-    /* playback runs at an even pace across the drawn axis (the compressed quiet seconds pass quickly) */
-    var F = tBreak != null ? 0.32 : null;
+    var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { if (Math.round(box.clientWidth) !== L.w) draw(); }, 120); });
     function frac(t) { if (F == null) return (t - tMin) / (tMax - tMin); return t <= tBreak ? F * (t - tMin) / (tBreak - tMin) : F + (1 - F) * (t - tBreak) / (tMax - tBreak); }
     function tAt(f) { if (F == null) return tMin + f * (tMax - tMin); return f <= F ? tMin + (f / F) * (tBreak - tMin) : tBreak + ((f - F) / (1 - F)) * (tMax - tBreak); }
-    return { set: function (t) { state.t = t; apply(); }, events: ev, tMin: tMin, tMax: tMax, frac: frac, tAt: tAt };
+    return {
+      /* s: { hold: event|null, holdFrac, playing, dt: wall ms since the last frame (smooth axis) or undefined (snap) } */
+      update: function (t, s) {
+        s = s || {};
+        st.t = Math.max(tMin, Math.min(tMax, t)); st.hold = s.hold || null; st.holdFrac = s.holdFrac || 0; st.playing = !!s.playing;
+        var target = ymaxAt(st.t);
+        if (s.dt == null || target < st.ymax) st.ymax = target;
+        else st.ymax += (target - st.ymax) * (1 - Math.exp(-s.dt / 260));
+        render();
+      },
+      events: ev, timed: timed, tMin: tMin, tMax: tMax, frac: frac, tAt: tAt, ymaxAt: ymaxAt, fullY: fullY,
+      bidTimes: bidT, state: st
+    };
+  };
+  function trunc(t, n) { t = String(t); return t.length > n ? t.slice(0, n - 1) + "…" : t; }
+
+  /* ---------- the race player: an event-driven time-warp (v3) ----------
+     RV.warp(ctrlBox, chart, o) builds the controls and plays chart from its first moment to its last.
+     Quiet stretches run fast, playback slows to near real time or slower where the bids are dense and around each
+     key moment, and it HOLDS on every key moment long enough to read its caption. The real clock and the current
+     playback speed are always shown ("slowed 3x"), so the warp is honest. Pause, step and scrub work at any time.
+     Reduced motion: loads on the complete end state with a big "Play the race from the start" button; motion only
+     ever starts when the reader presses it. o: { t0 (slot start, ms epoch), autoplay: "inview", fast, slow } */
+  RV.warp = function (box, chart, o) {
+    o = o || {};
+    var tMin = chart.tMin, tMax = chart.tMax, timed = chart.timed, reduced = BVH.reduced();
+    var FAST = o.fast || 5, SLOW = o.slow || 0.3, STEP = 10;
+    /* speed profile on a 10 ms grid: sim ms per wall ms */
+    var n = Math.ceil((tMax - tMin) / STEP) + 1, sp = new Float32Array(n), bt = chart.bidTimes;
+    var dens = new Float32Array(n);
+    bt.forEach(function (t) { var i = Math.round((t - tMin) / STEP); for (var k = -10; k <= 10; k++) if (i + k >= 0 && i + k < n) dens[i + k] += 1; });
+    for (var i = 0; i < n; i++) {
+      var t = tMin + i * STEP, v = FAST / (1 + dens[i] / 1.6);
+      timed.forEach(function (e) { var d = Math.abs(t - e.t); if (d < 700) v = Math.min(v, SLOW + (FAST - SLOW) * Math.pow(d / 700, 1.5)); });
+      sp[i] = Math.max(SLOW * 0.85, Math.min(FAST, v));
+    }
+    /* smooth the slowness so the warp eases in and out */
+    var slow = new Float32Array(n), R = 18;
+    for (i = 0; i < n; i++) { var s = 0, c = 0; for (var k = -R; k <= R; k++) if (i + k >= 0 && i + k < n) { s += 1 / sp[i + k]; c++; } slow[i] = s / c; }
+    function speedAt(t) { var j = Math.max(0, Math.min(n - 1, Math.floor((t - tMin) / STEP))); return 1 / slow[j]; }
+    function holdMs(e) { return Math.max(2800, Math.min(7000, 900 + 36 * ((e.title || "").length + (e.text || "").length))); }
+
+    var uid = "rp" + Math.random().toString(36).slice(2, 7);
+    box.classList.add("rp");
+    box.innerHTML =
+      '<div class="rp-row">' +
+        '<button type="button" class="rp-play" aria-describedby="' + uid + '-st"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-play" d="M4 2.5v11l9-5.5z"/><path class="i-pause" d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg><span>Play the race from the start</span></button>' +
+        '<button type="button" class="rp-step rp-prev" aria-label="Previous moment"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h2v11H3zM14 2.5v11L6 8z"/></svg></button>' +
+        '<button type="button" class="rp-step rp-next" aria-label="Next moment"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2.5h2v11h-2zM2 2.5v11L10 8z"/></svg></button>' +
+        '<div class="rp-read" id="' + uid + '-st"><span class="rp-clock"></span><span class="rp-speed" data-mode="full"></span></div>' +
+      '</div>' +
+      '<div class="rp-track"><input type="range" class="rp-range" min="0" max="1000" step="1" aria-label="' + BVH.esc(o.label || "Moment in the race (drag to scrub)") + '"><div class="rp-stops"></div></div>';
+    var bp = box.querySelector(".rp-play"), bl = bp.querySelector("span"), rg = box.querySelector(".rp-range"), clk = box.querySelector(".rp-clock"), spd = box.querySelector(".rp-speed"), stops = box.querySelector(".rp-stops");
+    stops.innerHTML = timed.map(function (e) { return '<button type="button" class="rp-stop' + (e.id === "deploy" || e.id === "seen" ? " is-atk" : e.id === "win" ? " is-win" : "") + '" style="left:' + (100 * chart.frac(e.t)).toFixed(2) + '%" data-n="' + e.n + '" aria-label="Jump to moment ' + e.n + ": " + BVH.esc(e.title) + '"><span>' + e.n + "</span></button>"; }).join("");
+    /* keep the moment buttons on the track at least 26 px apart (they sit at their moment's place, nudged if crowded) */
+    function layoutStops() {
+      var stopsW = stops.clientWidth; if (!stopsW) return;
+      var bs = Array.prototype.slice.call(stops.children), xs = bs.map(function (b, k) { return chart.frac(timed[k].t) * stopsW; }), gap = 26;
+      for (var k = 1; k < xs.length; k++) xs[k] = Math.max(xs[k], xs[k - 1] + gap);
+      if (xs.length && xs[xs.length - 1] > stopsW) { xs[xs.length - 1] = stopsW; for (k = xs.length - 2; k >= 0; k--) xs[k] = Math.min(xs[k], xs[k + 1] - gap); }
+      bs.forEach(function (b, k) { b.style.left = xs[k].toFixed(1) + "px"; });
+    }
+    layoutStops(); window.addEventListener("resize", layoutStops);
+    var t = tMax, playing = false, hold = null, holdLeft = 0, holdTotal = 1, raf = 0, last = 0, started = false;
+    var nextI = 0;
+    function idxAfter(tt) { for (var j = 0; j < timed.length; j++) if (timed[j].t > tt + 0.5) return j; return timed.length; }
+    function label() {
+      var atEnd = t >= tMax - 1;
+      bl.textContent = playing ? "Pause" : atEnd ? "Play the race from the start" : started ? "Resume" : "Play";
+      box.classList.toggle("is-playing", playing); box.classList.toggle("is-end", atEnd && !playing);
+      bp.setAttribute("aria-pressed", playing ? "true" : "false");
+    }
+    function readout() {
+      var abs = o.t0 != null ? BVH.clock(o.t0 + t) + " UTC" : "";
+      clk.innerHTML = (abs ? "<b>" + abs.replace(" UTC", "") + "</b> UTC " : "") + '<span class="rp-rel">' + sgn(t) + " from the slot start</span>";
+      var mode, txt;
+      if (hold) { mode = "hold"; txt = "Paused on moment " + hold.n + " of " + timed.length + " to read it"; }
+      else if (playing) {
+        var v = speedAt(t);
+        if (v > 1.2) { mode = "fast"; txt = "Sped up " + (v >= 2 ? Math.round(v) : v.toFixed(1)) + "× (quiet)"; }
+        else if (v < 0.85) { mode = "slow"; txt = "Slowed " + (1 / v >= 2 ? Math.round(1 / v) : (1 / v).toFixed(1)) + "×"; }
+        else { mode = "real"; txt = "Real time"; }
+      } else if (t >= tMax - 1) { mode = "full"; txt = "The whole race"; }
+      else { mode = "paused"; txt = "Paused"; }
+      spd.setAttribute("data-mode", mode); spd.textContent = txt;
+      Array.prototype.forEach.call(stops.children, function (b) { var k = +b.getAttribute("data-n"), e = timed[k - 1]; b.classList.toggle("is-past", !!e && e.t <= t + 1); b.classList.toggle("is-cur", !!hold && hold.n === k); });
+    }
+    function sync(dt) {
+      chart.update(t, { hold: hold, holdFrac: hold ? 1 - holdLeft / holdTotal : 0, playing: playing, dt: dt });
+      rg.value = Math.round(1000 * chart.frac(t)); label(); readout();
+    }
+    function frame(ts) {
+      if (!playing) return;
+      var dt = last ? Math.min(100, ts - last) : 16; last = ts;
+      var wall = dt;
+      if (hold) {
+        holdLeft -= wall;
+        if (holdLeft > 0) { sync(dt); raf = requestAnimationFrame(frame); return; }
+        wall = -holdLeft; hold = null;
+      }
+      while (wall > 0 && t < tMax) {
+        var v = speedAt(t), cellEnd = tMin + (Math.floor((t - tMin) / STEP) + 1) * STEP, nxt = nextI < timed.length ? timed[nextI].t : Infinity;
+        var lim = Math.min(cellEnd, nxt, tMax), need = (lim - t) / v;
+        if (need <= wall) { wall -= need; t = lim; } else { t += wall * v; wall = 0; }
+        if (nextI < timed.length && t >= timed[nextI].t) { hold = timed[nextI]; nextI++; holdTotal = holdLeft = holdMs(hold); break; }
+      }
+      if (t >= tMax && !hold) { t = tMax; playing = false; sync(); return; }
+      sync(dt); raf = requestAnimationFrame(frame);
+    }
+    function play() {
+      if (t >= tMax - 1) { t = tMin; nextI = 0; hold = null; }
+      else nextI = idxAfter(t - 1);
+      started = true; playing = true; last = 0; sync(); raf = requestAnimationFrame(frame);
+    }
+    function pause() { playing = false; cancelAnimationFrame(raf); if (hold) { t = hold.t; hold = null; } sync(); }
+    function jump(tt) { playing = false; cancelAnimationFrame(raf); hold = null; t = Math.max(tMin, Math.min(tMax, tt)); started = t < tMax - 1; nextI = idxAfter(t); sync(); }
+    bp.addEventListener("click", function () { if (playing) pause(); else play(); });
+    rg.addEventListener("input", function () { jump(chart.tAt(+rg.value / 1000)); });
+    box.querySelector(".rp-prev").addEventListener("click", function () {
+      var ref = hold ? hold.t - 1 : t - 1, tt = tMin;
+      for (var j = timed.length - 1; j >= 0; j--) if (timed[j].t < ref) { tt = timed[j].t; break; }
+      jump(tt);
+    });
+    box.querySelector(".rp-next").addEventListener("click", function () {
+      /* while playing, Next skips the rest of a hold (or jumps to the next moment and holds there) */
+      if (playing) {
+        if (hold) { holdLeft = 0; return; }
+        if (nextI < timed.length) { t = timed[nextI].t; hold = timed[nextI]; nextI++; holdTotal = holdLeft = holdMs(hold); sync(); }
+        return;
+      }
+      var tt = tMax;
+      for (var j = 0; j < timed.length; j++) if (timed[j].t > t + 1) { tt = timed[j].t; break; }
+      jump(tt);
+    });
+    stops.addEventListener("click", function (ev) { var b = ev.target.closest && ev.target.closest(".rp-stop"); if (!b) return; var e = timed[+b.getAttribute("data-n") - 1]; if (e) jump(e.t); });
+    sync();
+    if (o.autoplay === "inview" && !reduced && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); setTimeout(function () { if (!started) play(); }, 500); } }); }, { threshold: 0.5 });
+      io.observe(o.observe || box.parentNode || box);
+    }
+    return { play: play, pause: pause, jump: jump, time: function () { return t; }, speedAt: speedAt, holdMs: holdMs, isPlaying: function () { return playing; }, holding: function () { return hold; } };
   };
 
   /* ---------- mini race card visuals (gallery + landing) ---------- */
@@ -360,15 +650,17 @@
     var split = BVH.moneySplit(row, victim);
     var href = "incident.html?slug=" + encodeURIComponent(row.slug) + (row.sub ? "&sub=" + encodeURIComponent(row.sub) : "");
     var ahead = row.blocks_ahead, pos = "";
-    if (row.race_type === "deploy-window-copy") pos = "used the attacker's deployed contract before the attacker called it";
-    else if (ahead === 0 && row.bot_idx != null && row.atk_idx != null) pos = "same block, position " + row.bot_idx + " ahead of the attacker's " + row.atk_idx;
-    else if (ahead > 0) pos = ahead + " block" + (ahead > 1 ? "s" : "") + " ahead of the attacker";
+    /* who the bot beat is not always the original attacker (row.beaten); the card says "the exploiter" when it was not */
+    var them = row.beaten && row.beaten.kind === "later" ? "the exploiter" : "the attacker";
+    if (row.race_type === "deploy-window-copy") pos = "used " + them + "'s deployed contract before " + them + " called it";
+    else if (ahead === 0 && row.bot_idx != null && row.atk_idx != null) pos = "same block, position " + row.bot_idx + " ahead of " + them + "'s " + row.atk_idx;
+    else if (ahead > 0) pos = ahead + " block" + (ahead > 1 ? "s" : "") + " ahead of " + them;
     var bot = String(row.bot || "").replace(/\s*\(.*\)\s*$/, "").trim();
     var src = row.raw && (row.raw.trace || row.raw.block);
     return '<article class="rc">' +
       '<header class="rc-h"><h3><a href="' + href + '">' + esc(name) + "</a></h3><span class=\"rc-d\">" + BVH.dateLong(row.date) + "</span></header>" +
       (sub ? '<p class="rc-sub">' + esc(sub) + "</p>" : "") +
-      '<p class="rc-who"><b>' + esc(bot) + "</b>" + (pos ? " " + esc(pos) : "") + BVH.rawA(row.raw && row.raw.block, "block", "The block: its date, and the bot's position in it") + (row.headline ? "" : ' <span class="pill no" title="' + esc(BVH.RT[row.race_type] ? BVH.RT[row.race_type].def : "") + '">not in the headline count</span>') + "</p>" +
+      '<p class="rc-who"><b>' + esc(bot) + "</b>" + (pos ? " " + esc(pos) : "") + BVH.rawA(row.raw && row.raw.block, "block", "The block: its date, and the bot's position in it") + (row.headline ? "" : ' <span class="pill no" title="' + esc(BVH.RT[row.race_type] ? BVH.RT[row.race_type].def : "") + '">not in the headline count</span>') + "</p>" + (row.headline ? BVH.beatenHTML(row, { compact: true, note: true }) : "") +
       '<div class="rc-vis">' + vis + "</div>" +
       '<p class="rc-take">Took <b>' + (split.priced ? BVH.eth(split.gross) : "an unpriced token amount") + "</b>" + (split.priced ? BVH.rawA(src, "raw", "Block trace with the bot's take") : "") + "</p>" +
       BVH.splitHTML(split, { compact: true, labels: { bld: "Builder and proposer", ret: "Returned to " + victim }, sources: BVH.moneySrc(row, D) }) +
@@ -404,8 +696,8 @@
   Promise.all([BVH.json("data/incidents.json"), BVH.json("data/incident/makina-2026.json")])
     .then(function (r) {
       var rows = r[0], D = r[1], row = rows.filter(function (x) { return x.id === "makina-2026"; })[0];
-      beats(D, row); hero(D, row); auction(D); windowStrip(D); block(D); money(D, row); aftermath(D);
-      gallery(rows);
+      beats(D, row); hero(D, row); primer(); auction(D); windowStrip(D); block(D); money(D, row); aftermath(D);
+      gallery(rows); takeaway(D, row);
     })
     .catch(function (e) { BVH.loadError($("#r-hero-body"), e); });
 
@@ -416,8 +708,8 @@
     var gap = dep ? -dep.t : 12000, bot = D.txs.filter(function (t) { return t.role === "bot"; })[0];
     var botEv = (D.events || []).filter(function (e) { return e.kind === "tx" && /Copy of the attack/.test(e.detail || ""); })[0];
     var kept = botEv && botEv.derived && botEv.derived[0] ? botEv.derived[0].shown : null;
-    $("#r-dek").innerHTML = "At " + BVH.clock(depEv.t, false) + " UTC on " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina Finance" + fnHero(depEv.raws && depEv.raws[0] || depEv.raw, "Deploy transaction trace") +
-      ". " + Math.round(gap / 1000) + " seconds later, at the very top of the next block, someone else ran the same plan and paid " + E(bot.cb_eth) + " to the block builder to go first" + fnHero(D.incident_raw && D.incident_raw.copy_tx_trace || D.block.raw.trace, "Trace of the copy, with the payment to the builder") + ". The attacker never got to press the button.";
+    $("#r-dek").innerHTML = "At " + BVH.clock(depEv.t, false) + " UTC on " + BVH.dateLong(D.date) + ", an attacker put a contract on Ethereum built to drain Makina Finance, a DeFi protocol, through its DUSD/USDC pool on Curve" + fnHero(depEv.raws && depEv.raws[0] || depEv.raw, "Deploy transaction trace") +
+      ". " + Math.round(gap / 1000) + " seconds later, at the very top of the next block, someone else ran the same plan and paid " + E(bot.cb_eth) + " to the block builder to go first" + fnHero(D.incident_raw && D.incident_raw.copy_tx_trace || D.block.raw.trace, "Trace of the copy, with the payment to the builder") + ". No call from the attacker ever landed: the copy ran first.";
     var b0 = depEv.block, b1 = D.block.number;
     $("#r-blocks").innerHTML =
       '<div class="rb rb-atk"><span class="rb-k">Block ' + b0.toLocaleString("en-US") + '</span><span class="rb-t">' + BVH.clock(depEv.t, false) + ' UTC</span><span class="rb-what"><i class="dot-atk" aria-hidden="true"></i>The attacker deploys the drain contract</span>' + '<span class="rb-src">' + BVH.rawA(depEv.raws && depEv.raws[0] || depEv.raw, "raw", "Deploy transaction trace") + "</span></div>" +
@@ -426,27 +718,18 @@
   }
 
   function auction(D) {
-    var ev = null, cap = $("#auc-cap"), list = $("#auc-steps");
+    var list = $("#auc-steps");
     var chart = RV.auction($("#auc"), D, {
-      onStep: function (e) {
-        if (!e) { cap.innerHTML = '<span class="cap-t">' + "Before the deploy" + "</span>"; mark(-1); return; }
-        cap.innerHTML = '<span class="cap-n">' + e.n + '</span><span class="cap-t"><b>' + sgn(e.t) + "</b> " + esc(e.title) + '</span><span class="cap-x">' + esc(e.text) + "</span>";
-        mark(e.n);
-      }
+      onStep: function (e) { mark(e ? e.n : -1); }
     });
-    ev = chart.events;
+    var ev = chart.events;
     list.innerHTML = ev.map(function (e) {
-      return '<li data-n="' + e.n + '" class="st-' + e.id + '"><span class="st-n">' + e.n + '</span><span class="st-time">' + sgn(e.t) + '<small>' + BVH.clock(D.t0_ms + e.t) + "</small></span><span class=\"st-body\"><b>" + esc(e.title) + "</b> " + esc(e.text) + (e.rawHTML || BVH.rawA(e.raw, "raw", e.rawTitle)) + "</span></li>";
+      return '<li data-n="' + e.n + '" class="st-' + e.id + '"><span class="st-n">' + e.n + '</span><span class="st-time">' + sgn(e.t) + '<small>' + BVH.clock(D.t0_ms + e.t) + " UTC</small></span><span class=\"st-body\"><b>" + esc(e.title) + "</b> " + esc(e.text) + (e.rawHTML || BVH.rawA(e.raw, "raw", e.rawTitle)) + "</span></li>";
     }).join("");
     function mark(n) { Array.prototype.forEach.call(list.children, function (li) { li.classList.toggle("is-cur", +li.getAttribute("data-n") === n); li.classList.toggle("is-future", +li.getAttribute("data-n") > n && n > 0); }); }
-    BVH.player($("#auc-ctrl"), {
-      min: 0, max: 1, step: 0.001, duration: 16000, label: "Time from the start of the slot",
-      stops: ev.map(function (e) { return { t: chart.frac(e.t), label: e.title }; }),
-      format: function (v) { return sgn(chart.tAt(v)); },
-      onChange: function (v) { chart.set(chart.tAt(v)); }
-    });
+    RV.warp($("#auc-ctrl"), chart, { t0: D.t0_ms, label: "Moment in the race, from the deploy to the last bid (drag to scrub)" });
     var A = D.auction, B = A.bids;
-    $("#auc-src").innerHTML = "Each dot is one block a builder offered the proposer for this slot, at the price it offered. " + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.bidsA(A) + "; " + B.n_shown + " are drawn, including every new best bid. Each bid is a thin column of light from zero up to its price. Amber columns are builder " + esc(A.winner.builder) + "'s bids; the line is the best bid so far, amber while " + esc(A.winner.builder) + " holds it. Winning bid from the relay's delivery record" + BVH.rawA(A.raw.delivered, "raw", "Relay record of the payload delivered to the proposer") + ".";
+    $("#auc-src").innerHTML = "Each column of light is one block a builder offered the proposer for this slot, rising to the price it offered. " + B.n_total + " bids from " + (A.n_builders || B.builders.length) + " builders" + BVH.bidsA(A) + "; " + B.n_shown + " are drawn, including every new best bid. Amber columns are builder " + esc(A.winner.builder) + "'s bids; the line is the best bid so far, amber while " + esc(A.winner.builder) + " holds it. Winning bid from the relay's delivery record" + BVH.rawA(A.raw.delivered, "raw", "Relay record of the payload delivered to the proposer") + ". The ETH axis is linear throughout; during playback it widens as the bids grow.";
   }
 
   /* section markers are times, read from the data */
@@ -462,7 +745,7 @@
     set("money-amt", Math.floor(row.gross_eth).toLocaleString("en-US") + " ETH");
     /* the byte overlap: both raw inputs (the bot's calldata, the attacker's deployed code) and our count, which is derived */
     var ir = D.incident_raw || {}, k = /shares ([\d,]+) of ([\d,]+) non-zero bytes \((\d+)%\)/.exec((D.narrative || []).join(" "));
-    if (k) set("know-copy", "<b>The copy.</b> The attacker never sent a call, so there is no attack transaction to compare with. Instead, " + k[3] + "% of the bot's non-zero calldata bytes (" + k[1] + " of " + k[2] + ") appear verbatim in the attacker's contract code, in runs of 16 bytes or more. Compare the bot's transaction" + BVH.rawA(ir.copy_tx, "raw", "The bot's transaction, with its calldata") + " with the attacker's deployed code" + BVH.rawA(ir.attack_contract_code, "raw", "The attacker contract's runtime code") + "; our count is in the race data" + BVH.rawA("data/incident/makina-2026.json", "data", "Derived: the byte-overlap count, in the race's narrative") + ".");
+    if (k) set("know-copy", "<b>The copy.</b> No call from the attacker was ever observed, so there is no attack transaction to compare with. We match the copy to the deployed contract by long runs of identical bytes: " + k[3] + "% of the bot's non-zero calldata bytes (" + k[1] + " of " + k[2] + ") appear verbatim in the attacker's contract code, in runs of 16 bytes or more. Compare the bot's transaction" + BVH.rawA(ir.copy_tx, "raw", "The bot's transaction, with its calldata") + " with the attacker's deployed code" + BVH.rawA(ir.attack_contract_code, "raw", "The attacker contract's runtime code") + "; our count is in the race data" + BVH.rawA("data/incident/makina-2026.json", "data", "Derived: the byte-overlap count, in the race's narrative") + ".");
     set("know-mem", "<b>The mempool.</b> The public mempool archive covers that day" + BVH.rawA(ir.mempool_dumpster_index, "index", "The archive's month index, listing that day's file") + " but has neither the deploy nor the copy" + BVH.rawA(ir.mempool_dumpster_day, "day rows", "Rows cut from that day's archive file for the cited transactions: none matched") + ", so neither was broadcast publicly before landing, or every archive source missed them.");
   }
 
@@ -524,6 +807,23 @@
     $("#ice-note").innerHTML = "Bars are drawn to scale against the " + E(G) + " taken. The builder kept " + E(F.builder_kept_eth) + " of this payment and later forwarded " + (fwdEth != null ? E(fwdEth, 1) : "it") + " to " + (fwd ? fwd[2].slice(0, 6) : "another address") + (fwdEth != null && fwdEth - F.builder_kept_eth > 1e-6 ? ", adding " + BVH.eth2(fwdEth - F.builder_kept_eth) + " of its own funds" : "") + ". The bot's " + (keptTxt && keptTxt.derived ? esc(keptTxt.derived[0].shown) : "") + " is " + esc(keptTxt && keptTxt.derived ? keptTxt.derived[0].how : "") + ".";
     var split = BVH.moneySplit(row, "Makina");
     $("#money-split").innerHTML = BVH.splitHTML(split, { sources: BVH.moneySrc(row, D) });
+  }
+
+  /* "What you need to know": Part 1 launches on its own, so a reader may arrive with no background */
+  function primer() {
+    var el = $("#primer"); if (!el || !BVH.primer) return;
+    el.innerHTML = BVH.primer(["block", "builder", "proposer", "relay", "mempool", "position0", "searcher"], {
+      intro: "The words this story uses, each in one line. Nothing else is assumed."
+    });
+  }
+  function takeaway(D, row) {
+    var el = $("#takeaway"); if (!el) return;
+    var G = row.gross_eth, bot = D.txs.filter(function (t) { return t.role === "bot"; })[0], m = row.money || {};
+    var ret = m.returned_by_builder_eth, share = Math.round(100 * bot.cb_eth / G);
+    el.innerHTML = '<p class="tk-k">The takeaway</p>' +
+      '<p class="tk-big">A contract sat on chain for one block. That was enough for a copy to take the money first.</p>' +
+      '<p class="tk-x">Here the bot paid ' + E(bot.cb_eth) + " of the " + E(G) + " it took" + (share >= 99 ? ", nearly all of it," : ", about " + share + "%,") + " for the right to go first" +
+      (ret != null ? ", and " + E(ret, 1) + " of that later went back to Makina." : ".") + "</p>";
   }
 
   function aftermath(D) {

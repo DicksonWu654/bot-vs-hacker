@@ -21,6 +21,34 @@ ERA_ORDER = ["pre-2021", "mev-geth-2021-22", "early-pbs-2022-23", "mature-pbs-20
 ORDER = {"slug": 0}
 GAS_NOTE = "priority_fee_paid_eth is the bot tx's own gas priority fee"
 
+# Attribution is a separate dimension from the on-chain copy/order verdict. These
+# entries mirror the v3 adversary audit and are keyed by the public row id.
+BEATEN_PARTY = {
+    "alkimiya-2025": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "Yoink pre-empted the account that had spent nearly an hour preparing and testing this exploit.", "evidence": ["data/raw/etherscan/alk_att_txlist.json", "data/raw/etherscan/alk_att_txlistinternal.json", "data/raw/web-alkimiya/verichains_alkimiya.html"]},
+    "bifi-2026": {"verdict": "likely-attacker", "label": "probably the original attacker", "note": "A bot took the funds after this account deployed its setup, but its intended finishing transaction and originality remain unproved.", "evidence": ["data/raw/etherscan/bifi_attacker_txlist.json", "data/raw/etherscan/bifi_txlist_0x8c0d729d03cb8ecbc79a62a68cdd67ccfa6a7b92_all.json", "data/raw/etherscan/bifi_att_txlistinternal_all.json"]},
+    "blueberry-2024": {"verdict": "likely-attacker", "label": "probably the original attacker", "note": "The bot beat a public, prepared exploit attempt; the losing account is a likely attacker, with original authorship unresolved.", "evidence": ["data/raw/etherscan/bb_attacker_eoa_txlist.json", "data/raw/mempool-dumpster/2024-02-23.csv.zip", "data/raw/web-blueberry/cointelegraph_blueberry.html"]},
+    "curve-vyper-2023/pETH": {"verdict": "likely-attacker", "label": "probably the original attacker", "note": "A bot beat the likely source pETH attempt, followed by other exploit copiers.", "evidence": ["data/raw/etherscan/txlist_0x172f6fde_0_17830000.json", "data/raw/etherscan/txlistinternal_0x172f6fde_0_17806100.json", "data/raw/rpc/trace_block_17806056.json"]},
+    "curve-vyper-2023/msETH": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "The bot beat a known pETH copier adapting the exploit to msETH; whether that copier was another bot is unknown.", "evidence": ["data/raw/etherscan/txlist_0x19c7849d_0_17830000.json"]},
+    "curve-vyper-2023/CRV-ETH-wave2": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "The bot beat the same known adapter during a later CRV/ETH wave, with another follow-on participant nearby.", "evidence": ["data/raw/etherscan/txlist_0x19c7849d_0_17830000.json", "data/raw/rpc/block_17808683.json"]},
+    "defiplaza-2024": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "Yoink beat a prepared exploiter, but another address exposed exactly the same deployment earlier, leaving the original source unresolved.", "evidence": ["data/raw/rpc/tx_0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0.json", "data/raw/rpc/tx_0xbb5dffb00d103d5b9ef3a29eb01c166cd766265fe251e0bd89863d7f2d96ff2a.json", "data/raw/mempool-dumpster/2024-07-05.csv.zip", "data/raw/etherscan/p2_atk_txlist.json", "data/raw/etherscan/p2_atk_txlistinternal.json", "data/raw/web-p2/lido_defiplaza_rfc.json"]},
+    "dodo-v2-2021": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "Antelope beat the postmortem’s initiating attacker after that attacker staged the pool.", "evidence": ["data/raw/etherscan/dodo_hippo_txlist.json", "data/raw/web/chaincatcher_2060103.html", "data/raw/rpc/receipts_12000022.json"]},
+    "earningfarm-2022": {"verdict": "likely-attacker", "label": "probably the original attacker", "note": "The bot beat a prepared exploit attempt by an account that later retried successfully; originality remains likely.", "evidence": ["data/raw/etherscan/efatt_txlist_0_15710400.json", "data/raw/etherscan/ef_att_txlist_15700000_15760000.json", "data/raw/etherscan/efatt_txlistinternal_0_15710400.json", "data/raw/rpc/receipts_15746200.json", "data/raw/web/threadreader_mevrefund.html"]},
+    "kelp-rseth-2026": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "Yoink pre-empted the attack’s own preparer, with a second searcher attempt in the same block.", "evidence": ["data/raw/etherscan/k_txlist_0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66.json", "data/raw/rpc/trace_0xd07ce4dc6acf73501467cda47400ea5768b3fa7093cca9f634ef33203b38717c.json", "data/raw/etherscan/txlistint_attacker_kelp.json"]},
+    "makina-2026": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "The protocol identifies the original attack deployment that the winning searcher pre-empted; no attacker finishing call landed.", "evidence": ["data/raw/web-makina/makina_postmortem.html", "data/raw/etherscan/txlist_all_0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc.json", "data/raw/etherscan/txlist_all_0x2c19b916b29e5170f75628d690623dedcafeca4c.json", "data/raw/etherscan/txlistinternal_0x27bbb53d632ab883343e1b4cda1b3b3599b494ce_0_99999999.json"]},
+    "neemo-2025": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "A bot used the setup installed through the compromised administrator account before any finishing call by that account was observed.", "evidence": ["data/raw/rpc/tx_0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486.json", "data/raw/rpc/tx_0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373.json", "data/raw/etherscan/txlist_0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d.json", "data/raw/web-neemo/defimon_1476.html", "data/raw/rpc/tracefilter_to_0x54cd23460df45559fd5feeaada7ba25f89c13525_22855560_22856500.json"]},
+    "punk-2021": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "The victim’s report and the attacker’s own setup identify the original attack the whitehat bot beat.", "evidence": ["data/raw/web/punk_medium_incident_report_wayback.html", "data/raw/web/punk_rekt.html", "data/raw/etherscan/punk_att_eoa_txlist.json", "data/raw/etherscan/punk_att_eoa_txlistinternal.json", "data/raw/rpc/receipts_12995895.json"]},
+    "shoco-2023": {"verdict": "likely-attacker", "label": "probably the original attacker", "note": "An anonymous bot beat a prepared exploiter, but the saved record does not prove that exploiter originated the plan.", "evidence": ["data/raw/etherscan/txlist_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json", "data/raw/etherscan/txlistinternal_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json", "data/raw/rpc/receipts_16440979.json"]},
+    "transitswap-2022": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "Yoink beat the established campaign attacker’s ninth Ethereum attempt after eight earlier attacks had succeeded.", "evidence": ["data/raw/etherscan/ts_att2_txlist.json", "data/raw/rpc/receipts_15655281.json", "data/raw/rpc/tx_0x57a98ef275569be4727b2e4109e90aa083a875e2f56983275522a1b74d8130d5.json"]},
+    "uncx-2026/yoink-X": {"verdict": "original-attacker-confirmed", "label": "the original attacker", "note": "Yoink beat the account that initiated this Ethereum exploit campaign, while other bots or copiers appeared much later on another token.", "evidence": ["data/raw/etherscan/tl_txlist_0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3_0_99999999_asc.json", "data/raw/web-w4/uncx2026_odaily_525326.html"]},
+    "unizen-2024/pending-ads": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "Yoink beat a later sender whose recipient links to the first theft, but the sender’s ownership and role remain unresolved.", "evidence": ["data/raw/etherscan/unizen_txlist_0x13a99ecc.json", "data/raw/etherscan/unizen_txlist_0xb660cae1.json"]},
+    "unizen-2024/pending-usdt": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "Yoink beat an exploiter using almost the same deployment as the earlier thief; it could have been a copier bot or a related account.", "evidence": ["data/raw/etherscan/unizen_txlist_0xb660cae1.json", "data/raw/etherscan/unizen_txlist_0x4e2ce48f.json", "data/raw/web-unizen/rekt_unizen.html"]},
+    "unizen-2024/pending-xi": {"verdict": "later-exploiter-or-unresolved", "label": "a later exploiter or unknown", "note": "Yoink beat a known follow-on exploiter to the remaining XI; whether it intercepted a pending attempt or copied the landed first half is unresolved.", "evidence": ["data/raw/etherscan/unizen_txlist_0x2ad8aed8.json", "data/raw/mempool-dumpster/2024-03-08.csv.zip"]},
+}
+
+
+def row_id(row):
+    return row["slug"] + ("/" + row["sub"] if row.get("sub") else "")
+
 
 def era_of(date_utc, block):
     d = date_utc[:10]
@@ -158,6 +186,11 @@ def build_rows():
         L["builder_refund_eth"] = L.get("builder_refund_to_bot_eth")   # schema alias
         RS.apply_overrides(o)
         LD.apply(o)
+        if o["headline"]:
+            rid = row_id(o)
+            if rid not in BEATEN_PARTY:
+                raise SystemExit(f"missing beaten-party attribution for headline row {rid}")
+            o["beaten_party"] = copy.deepcopy(BEATEN_PARTY[rid])
         F = o["fate"]
         if num(F.get("returned_total_eth")) is None and (num(F.get("returned_by_bot_eth")) is not None or num(F.get("returned_by_builder_eth")) is not None):
             F["returned_total_eth"] = (num(F.get("returned_by_bot_eth")) or 0) + (num(F.get("returned_by_builder_eth")) or 0)
@@ -350,6 +383,10 @@ def stats(rows, sensitivity=True):
                 c[v] = c.get(v, 0) + 1
         return dict(sorted(c.items(), key=lambda kv: -kv[1]))
     H = [o for o in rows if o["headline"]]
+    beaten_party_rows = {
+        verdict: [row_id(o) for o in H if o["beaten_party"]["verdict"] == verdict]
+        for verdict in ("original-attacker-confirmed", "likely-attacker", "later-exploiter-or-unresolved")
+    }
     slugs = lambda rs: sorted({o["slug"] for o in rs})
     def botkey(o):
         return normalize_label(o["bot"].get("label")) or o["bot"].get("label") or "unknown"
@@ -386,6 +423,16 @@ def stats(rows, sensitivity=True):
             "headline_by_race_type": cnt(lambda o: o["race_type"], lambda o: o["headline"]),
             "headline_by_era": cnt(lambda o: o["era"], lambda o: o["headline"]),
             "headline_by_bot": cnt(botkey, lambda o: o["headline"]),
+            "beaten_party": {
+                "confirmed": len(beaten_party_rows["original-attacker-confirmed"]),
+                "likely": len(beaten_party_rows["likely-attacker"]),
+                "later_or_unresolved": len(beaten_party_rows["later-exploiter-or-unresolved"]),
+                "rows": {
+                    "confirmed": beaten_party_rows["original-attacker-confirmed"],
+                    "likely": beaten_party_rows["likely-attacker"],
+                    "later_or_unresolved": beaten_party_rows["later-exploiter-or-unresolved"],
+                },
+            },
             "verdict_by_race_type": {rt: cnt(lambda o: o["verdict"], lambda o, rt=rt: o["race_type"] == rt) for rt in sorted({o["race_type"] for o in rows})},
         },
         "ordering": cnt(lambda o: (o.get("ordering") or "n/a").split(" (")[0], lambda o: o["headline"]),

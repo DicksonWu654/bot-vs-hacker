@@ -955,6 +955,34 @@ def overlay(row, cons):
     return row
 
 
+# Who lost each headline race (owner decision 2026-10-23; audit launch/reports/v3-adversary.findings.md).
+# verdict / label / note / evidence come from data/incidents.json `beaten_party`. BEATEN_EXTRA adds saved responses
+# for the same facts that the site can publish (the loser's transactions, the mempool day rows) for rows whose own
+# cited files are account lists the site does not otherwise carry.
+BEATEN_EXTRA = {
+    "unizen-2024--pending-ads": ["data/raw/mempool-dumpster/2024-03-08.csv.zip",
+                                 "data/raw/rpc/tx_0x44ca0e6b77d75b63e9969323ad4a09509d806e2cc1b812caa001864a5c89ba88.json"],
+    "unizen-2024--pending-xi": ["data/raw/rpc/tx_0x7234dfac08015dd1a71cf1e831a3a720ed7d3be9e98d38c606b443b6ee8c8b87.json",
+                                "data/raw/rpc/tx_0x5cfe50df6e9bb8e07d36f7f5a031adad672550695106f4b94e227928b86efe61.json"],
+    "defiplaza-2024": ["data/raw/etherscan/p2_907f_txlist.json"],
+}
+BEATEN_KIND = {"original-attacker-confirmed": "confirmed", "likely-attacker": "likely", "later-exploiter-or-unresolved": "later"}
+
+
+def beaten_of(bp, row_id, exists=None):
+    """The site's `beaten` field for one headline row: {verdict, kind, label, note, evidence: [site urls]}.
+    `exists` (optional) filters the urls to files already published, for a data-only patch without the raw copy."""
+    if not isinstance(bp, dict) or not bp.get("verdict"):
+        return None
+    urls = []
+    for p in list(bp.get("evidence") or []) + BEATEN_EXTRA.get(row_id, []):
+        u = raw(p, [])
+        if u and u not in urls and (exists is None or exists(u)):
+            urls.append(u)
+    return dict(verdict=bp["verdict"], kind=BEATEN_KIND.get(bp["verdict"], "later"), label=bp.get("label"),
+                note=bp.get("note"), evidence=urls)
+
+
 def money_of(cons):
     """v2 money split: where every ETH of the take went (bot net, returns by side, bounty). Copied from the
     consolidated loot/fate records so pages can show the whole split (returned / builder+proposer / bot / other)."""
@@ -1843,6 +1871,8 @@ def main():
         if cons and "headline" in cons and isinstance(cons["headline"], bool):
             row["headline"] = cons["headline"]
         detail["headline"] = row["headline"]
+        if row["headline"] and cons and cons.get("beaten_party"):
+            row["beaten"] = beaten_of(cons["beaten_party"], row["id"])
         detail, row = scrub_c0(detail, row)
         scrub_makina_narrative(detail)
         # every relay bid file behind the row's bid total, so the race table can link all of them (not just Flashbots)

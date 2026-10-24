@@ -1,0 +1,230 @@
+{
+ "counts": {
+  "confirmed": 8,
+  "likely": 5,
+  "later_or_unresolved": 6,
+  "rows": {
+   "confirmed": [
+    "alkimiya-2025",
+    "dodo-v2-2021",
+    "kelp-rseth-2026",
+    "makina-2026",
+    "neemo-2025",
+    "punk-2021",
+    "transitswap-2022",
+    "uncx-2026/yoink-X"
+   ],
+   "likely": [
+    "bifi-2026",
+    "blueberry-2024",
+    "curve-vyper-2023/pETH",
+    "earningfarm-2022",
+    "shoco-2023"
+   ],
+   "later_or_unresolved": [
+    "curve-vyper-2023/msETH",
+    "curve-vyper-2023/CRV-ETH-wave2",
+    "defiplaza-2024",
+    "unizen-2024/pending-ads",
+    "unizen-2024/pending-usdt",
+    "unizen-2024/pending-xi"
+   ]
+  }
+ },
+ "rows": {
+  "alkimiya-2025": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "Yoink pre-empted the account that had spent nearly an hour preparing and testing this exploit.",
+   "evidence": [
+    "site/raw/etherscan/alk_att_txlist.json",
+    "site/raw/etherscan/alk_att_txlistinternal.json",
+    "site/raw/web-alkimiya/verichains_alkimiya.html"
+   ]
+  },
+  "bifi-2026": {
+   "verdict": "likely-attacker",
+   "label": "probably the original attacker",
+   "note": "A bot took the funds after this account deployed its setup, but its intended finishing transaction and originality remain unproved.",
+   "evidence": [
+    "data/raw/etherscan/bifi_attacker_txlist.json",
+    "data/raw/etherscan/bifi_txlist_0x8c0d729d03cb8ecbc79a62a68cdd67ccfa6a7b92_all.json",
+    "site/raw/etherscan/bifi_att_txlistinternal_all.json"
+   ]
+  },
+  "blueberry-2024": {
+   "verdict": "likely-attacker",
+   "label": "probably the original attacker",
+   "note": "The bot beat a public, prepared exploit attempt; the losing account is a likely attacker, with original authorship unresolved.",
+   "evidence": [
+    "site/raw/etherscan/bb_attacker_eoa_txlist.json",
+    "data/raw/mempool-dumpster/2024-02-23.csv.zip",
+    "site/raw/web-blueberry/cointelegraph_blueberry.html"
+   ]
+  },
+  "curve-vyper-2023/pETH": {
+   "verdict": "likely-attacker",
+   "label": "probably the original attacker",
+   "note": "A bot beat the likely source pETH attempt, followed by other exploit copiers.",
+   "evidence": [
+    "data/raw/etherscan/txlist_0x172f6fde_0_17830000.json",
+    "site/raw/etherscan/txlistinternal_0x172f6fde_0_17806100.json",
+    "site/raw/rpc/trace_block_17806056.json"
+   ]
+  },
+  "curve-vyper-2023/msETH": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "The bot beat a known pETH copier adapting the exploit to msETH; whether that copier was another bot is unknown.",
+   "evidence": [
+    "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json"
+   ]
+  },
+  "curve-vyper-2023/CRV-ETH-wave2": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "The bot beat the same known adapter during a later CRV/ETH wave, with another follow-on participant nearby.",
+   "evidence": [
+    "site/raw/etherscan/txlist_0x19c7849d_0_17830000.json",
+    "site/raw/rpc/block_17808683.json"
+   ]
+  },
+  "defiplaza-2024": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "Yoink beat a prepared exploiter, but another address exposed exactly the same deployment earlier, leaving the original source unresolved.",
+   "evidence": [
+    "site/raw/rpc/tx_0x8f029510dbcc4885d5f5242f3583f4d31f9134d9eddaa30a1afa353f6bd4f7b0.json",
+    "data/raw/rpc/tx_0xbb5dffb00d103d5b9ef3a29eb01c166cd766265fe251e0bd89863d7f2d96ff2a.json",
+    "data/raw/mempool-dumpster/2024-07-05.csv.zip",
+    "site/raw/etherscan/p2_atk_txlist.json",
+    "site/raw/etherscan/p2_atk_txlistinternal.json",
+    "site/raw/web-p2/lido_defiplaza_rfc.json"
+   ]
+  },
+  "dodo-v2-2021": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "Antelope beat the postmortem’s initiating attacker after that attacker staged the pool.",
+   "evidence": [
+    "site/raw/etherscan/dodo_hippo_txlist.json",
+    "site/raw/web/chaincatcher_2060103.html",
+    "site/raw/rpc/receipts_12000022.json"
+   ]
+  },
+  "earningfarm-2022": {
+   "verdict": "likely-attacker",
+   "label": "probably the original attacker",
+   "note": "The bot beat a prepared exploit attempt by an account that later retried successfully; originality remains likely.",
+   "evidence": [
+    "site/raw/etherscan/efatt_txlist_0_15710400.json",
+    "site/raw/etherscan/ef_att_txlist_15700000_15760000.json",
+    "site/raw/etherscan/efatt_txlistinternal_0_15710400.json",
+    "site/raw/rpc/receipts_15746200.json",
+    "data/raw/web/threadreader_mevrefund.html"
+   ]
+  },
+  "kelp-rseth-2026": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "Yoink pre-empted the attack’s own preparer, with a second searcher attempt in the same block.",
+   "evidence": [
+    "site/raw/etherscan/k_txlist_0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66.json",
+    "site/raw/rpc/trace_0xd07ce4dc6acf73501467cda47400ea5768b3fa7093cca9f634ef33203b38717c.json",
+    "site/raw/etherscan/txlistint_attacker_kelp.json"
+   ]
+  },
+  "makina-2026": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "The protocol identifies the original attack deployment that the winning searcher pre-empted; no attacker finishing call landed.",
+   "evidence": [
+    "site/raw/web-makina/makina_postmortem.html",
+    "site/raw/etherscan/txlist_all_0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc.json",
+    "site/raw/etherscan/txlist_all_0x2c19b916b29e5170f75628d690623dedcafeca4c.json",
+    "site/raw/etherscan/txlistinternal_0x27bbb53d632ab883343e1b4cda1b3b3599b494ce_0_99999999.json"
+   ]
+  },
+  "neemo-2025": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "A bot used the setup installed through the compromised administrator account before any finishing call by that account was observed.",
+   "evidence": [
+    "site/raw/rpc/tx_0x1040fe774fb487caa0102e876d13c5850e7181b6ee6cdf383a5cffd3d004e486.json",
+    "site/raw/rpc/tx_0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373.json",
+    "site/raw/etherscan/txlist_0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d.json",
+    "site/raw/web-neemo/defimon_1476.html",
+    "site/raw/rpc/tracefilter_to_0x54cd23460df45559fd5feeaada7ba25f89c13525_22855560_22856500.json"
+   ]
+  },
+  "punk-2021": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "The victim’s report and the attacker’s own setup identify the original attack the whitehat bot beat.",
+   "evidence": [
+    "data/raw/web/punk_medium_incident_report_wayback.html",
+    "data/raw/web/punk_rekt.html",
+    "site/raw/etherscan/punk_att_eoa_txlist.json",
+    "site/raw/etherscan/punk_att_eoa_txlistinternal.json",
+    "site/raw/rpc/receipts_12995895.json"
+   ]
+  },
+  "shoco-2023": {
+   "verdict": "likely-attacker",
+   "label": "probably the original attacker",
+   "note": "An anonymous bot beat a prepared exploiter, but the saved record does not prove that exploiter originated the plan.",
+   "evidence": [
+    "site/raw/etherscan/txlist_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json",
+    "site/raw/etherscan/txlistinternal_0x14d8Ada7A0BA91f59Dc0Cb97C8F44F1d177c2195_0_99999999_asc_1_40.json",
+    "site/raw/rpc/receipts_16440979.json"
+   ]
+  },
+  "transitswap-2022": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "Yoink beat the established campaign attacker’s ninth Ethereum attempt after eight earlier attacks had succeeded.",
+   "evidence": [
+    "site/raw/etherscan/ts_att2_txlist.json",
+    "site/raw/rpc/receipts_15655281.json",
+    "data/raw/rpc/tx_0x57a98ef275569be4727b2e4109e90aa083a875e2f56983275522a1b74d8130d5.json"
+   ]
+  },
+  "uncx-2026/yoink-X": {
+   "verdict": "original-attacker-confirmed",
+   "label": "the original attacker",
+   "note": "Yoink beat the account that initiated this Ethereum exploit campaign, while other bots or copiers appeared much later on another token.",
+   "evidence": [
+    "site/raw/etherscan/tl_txlist_0x78c9b11853e4f183a34c63ffd1924d2319a2f5b3_0_99999999_asc.json",
+    "site/raw/web-w4/uncx2026_odaily_525326.html"
+   ]
+  },
+  "unizen-2024/pending-ads": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "Yoink beat a later sender whose recipient links to the first theft, but the sender’s ownership and role remain unresolved.",
+   "evidence": [
+    "data/raw/etherscan/unizen_txlist_0x13a99ecc.json",
+    "data/raw/etherscan/unizen_txlist_0xb660cae1.json"
+   ]
+  },
+  "unizen-2024/pending-usdt": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "Yoink beat an exploiter using almost the same deployment as the earlier thief; it could have been a copier bot or a related account.",
+   "evidence": [
+    "data/raw/etherscan/unizen_txlist_0xb660cae1.json",
+    "site/raw/etherscan/unizen_txlist_0x4e2ce48f.json",
+    "site/raw/web-unizen/rekt_unizen.html"
+   ]
+  },
+  "unizen-2024/pending-xi": {
+   "verdict": "later-exploiter-or-unresolved",
+   "label": "a later exploiter or unknown",
+   "note": "Yoink beat a known follow-on exploiter to the remaining XI; whether it intercepted a pending attempt or copied the landed first half is unresolved.",
+   "evidence": [
+    "data/raw/etherscan/unizen_txlist_0x2ad8aed8.json",
+    "data/raw/mempool-dumpster/2024-03-08.csv.zip"
+   ]
+  }
+ }
+}

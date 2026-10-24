@@ -4,7 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Has the dark forest changed? | The Bot Beat the Hacker</title>
-<meta name="description" content="Part 3 of The Bot Beat the Hacker. Attackers went private, started doing the whole job in one transaction, and stopped leaving bots a window. The bots that still win changed too.">
+<meta name="description" content="Part 3 of The Bot Beat the Hacker. Since August 2023 only 9 of 202 attacker transactions in our sample were seen in the public mempool. Exploits moved out of public view and into one transaction, and the window a bot can use shrank to a block or two. The bots that still win changed too.">
+<!-- link preview (headline copy: edit here and in COPY at the top of assets/evolution.js) -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Bot Beat the Hacker">
+<meta property="og:title" content="Ethereum's dark forest changed: only 9 of 202 exploit transactions were public">
+<meta property="og:description" content="In a sample of 281 reproduced exploits, only 9 of 202 attacker transactions since August 2023 showed up in the public mempool, against 62.5% of ordinary ones. Exploits moved into one transaction, and the window a bot can use is now measured in blocks. Part 3 of The Bot Beat the Hacker.">
+<meta property="og:url" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/evolution.html">
+<meta property="og:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-evolution.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A dark forest under fog with 202 faint points of light, 9 of them bright, and the title Has the dark forest changed?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ethereum's dark forest changed: only 9 of 202 exploit transactions were public">
+<meta name="twitter:description" content="Only 9 of 202 attacker transactions in our sample were seen in the public mempool since August 2023, against 62.5% of ordinary ones. Part 3 of The Bot Beat the Hacker.">
+<meta name="twitter:image:alt" content="A dark forest under fog with 202 faint points of light, 9 of them bright, and the title Has the dark forest changed?">
+<meta name="twitter:image" content="https://bot-beat-the-hacker.shadow654.chatgpt.site/assets/og-evolution.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070d0b'/%3E%3Cpath d='M16 6l8 10-8 10-8-10z' fill='%233ddc97'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,187 +30,216 @@
 <body class="ev" data-part="3">
 <main id="main">
 
-  <header class="ev-hero art-hero night" style="--art-x:62%;--art-y:50%">
-    <picture class="art"><img src="assets/art/art-01-dark-forest-1672.webp" srcset="assets/art/art-01-dark-forest-800.webp 800w, assets/art/art-01-dark-forest-1280.webp 1280w, assets/art/art-01-dark-forest-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A dark pine forest seen from above at night, a glowing green trail winding through the trees." fetchpriority="high" decoding="async"></picture>
+  <!-- opener: the art is drawn in code from the data (assets/evolution.js, EVART.fog) -->
+  <header class="ev-hero night">
+    <div class="ev-hero-art" id="hero-art" aria-hidden="true"></div>
     <div class="wrap ev-hero-in">
       <div class="ev-hero-txt">
         <p data-series-kicker></p>
-        <h1>Has the dark forest changed?</h1>
-        <p class="ev-dek">Ethereum used to be a place where a hacker's transaction sat in public for a few seconds and any bot could copy it. That world is mostly gone. Here is what changed, measured on 281 exploits from 2017 to 2026.</p>
+        <h1 id="ev-title">Has the dark forest changed?</h1>
+        <p class="ev-dek" id="ev-dek"></p>
       </div>
-      <ol class="ev-toc" id="toc" aria-label="Five changes, one per chapter"></ol>
+      <p class="ev-artnote" id="hero-note"></p>
     </div>
   </header>
 
+  <!-- the cold open: why the question matters -->
+  <section class="ev-open" aria-labelledby="open-h">
+    <div class="ev-col">
+      <h2 class="sr" id="open-h">Why ask</h2>
+      <div class="ev-story" id="open-story"></div>
+    </div>
+  </section>
+
+  <!-- primer for a cold reader (shared .primer box, BVH.primer) -->
+  <section class="ev-primer" id="primer" aria-label="What you need to know">
+    <div class="ev-col" id="primer-box"></div>
+    <div class="ev-wide">
+      <figure class="ev-fig ev-route" aria-labelledby="route-t">
+        <h3 class="ev-figt" id="route-t">The two ways into a block</h3>
+        <div id="route" class="ev-chart"></div>
+        <figcaption class="ev-cap">The public route waits in the mempool, where anyone can read it, bots included. The private route goes straight to a builder and is seen by nobody until the block is out. A constructor-only attack creates its contract and attacks in one transaction, so whichever route it takes, there is no contract waiting on chain to copy first.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- the short answer, after the terms it uses have been explained -->
+  <section class="ev-open ev-short" aria-labelledby="short-h">
+    <div class="ev-col">
+      <h3 class="ev-ansh" id="short-h">The short answer</h3>
+      <ol class="ev-answer" id="toc" aria-labelledby="short-h"></ol>
+    </div>
+  </section>
+
   <!-- 1 -->
   <section class="ev-ch" id="ch1" aria-labelledby="h1t">
-    <div class="wrap">
-      <header class="ev-chh">
-        <span class="ev-n" aria-hidden="true">1</span>
-        <div>
-          <h2 id="h1t">Attackers stopped waiting in public</h2>
-          <p class="ev-lede" id="ch1-lede"></p>
-        </div>
-      </header>
-
+    <div class="ev-col">
+      <header class="ev-chh"><span class="ev-n">1</span><h2 id="h1t">Attackers stopped waiting in public</h2></header>
+      <p class="ev-lede" id="ch1-lede"></p>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f1cap">
+        <h3 class="ev-figt">Seen in the public mempool before their block</h3>
         <div class="ev-vs" id="c1-vs"></div>
         <figcaption id="f1cap" class="ev-cap"></figcaption>
       </figure>
-
-      <figure class="ev-fig ev-night" aria-labelledby="f1bcap">
-        <h3 class="ev-figt" id="c1-gridt">The resolved attacker transactions since the archive began, one square each. Lit: the archive saw it in public.</h3>
-        <div class="ev-lights" id="c1-grid" role="img"></div>
-        <div id="c1-key"></div>
+      <figure class="ev-fig ev-darkfig night" aria-labelledby="f1bcap">
+        <h3 class="ev-figt" id="c1-gridt"></h3>
+        <ul class="fig-key ev-key" id="c1-key"></ul>
+        <div class="ev-chart" id="c1-lights"></div>
         <figcaption id="f1bcap" class="ev-cap"></figcaption>
       </figure>
-      <div class="ev-cols3" id="ch1-side"></div>
-
+    </div>
+    <div class="ev-col">
+      <div class="ev-prose" id="ch1-side"></div>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f1ccap">
-        <h3 class="ev-figt">Quarter by quarter: the archive kept seeing ordinary traffic, not attackers</h3>
+        <h3 class="ev-figt">The archive kept catching ordinary traffic, not attackers</h3>
         <div class="ev-chart" id="c1-q"></div>
         <figcaption id="f1ccap" class="ev-cap"></figcaption>
       </figure>
-      <p class="ev-how" id="ch1-how"></p>
     </div>
+    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch1-how"></div></details></div>
   </section>
 
   <!-- 2 -->
   <section class="ev-ch" id="ch2" aria-labelledby="h2t">
-    <div class="wrap">
-      <header class="ev-chh">
-        <span class="ev-n" aria-hidden="true">2</span>
-        <div>
-          <h2 id="h2t">Then they stopped leaving a second step</h2>
-          <p class="ev-lede" id="ch2-lede"></p>
-        </div>
-      </header>
-
+    <div class="ev-col">
+      <header class="ev-chh"><span class="ev-n">2</span><h2 id="h2t">Then they stopped leaving a second step</h2></header>
+      <p class="ev-lede" id="ch2-lede"></p>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f2acap">
         <div class="ev-shapes" id="c2-shapes"></div>
         <figcaption id="f2acap" class="ev-cap">A copier needs something to copy. The two-step attack leaves a contract on chain for as long as the attacker waits. The one-step attack leaves nothing until it has already landed.</figcaption>
       </figure>
-
       <figure class="ev-fig" aria-labelledby="f2bcap">
-        <h3 class="ev-figt">Share of exploits that left a bot no window, by year</h3>
-        <ul class="ev-key"><li><i style="background:var(--atk)"></i>constructor-only, one transaction</li><li><i style="background:var(--atk);opacity:.38"></i>other ways to leave no window</li></ul>
-        <div class="ev-chart" id="c2-bars"></div>
+        <h3 class="ev-figt">The forest of exploits: one tree per exploit, by year</h3>
+        <ul class="fig-key ev-key" id="c2-key"></ul>
+        <div class="ev-chart" id="c2-forest"></div>
         <figcaption id="f2bcap" class="ev-cap"></figcaption>
       </figure>
-      <p class="ev-how" id="ch2-how"></p>
     </div>
+    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch2-how"></div></details></div>
   </section>
 
   <!-- 3 -->
   <section class="ev-ch" id="ch3" aria-labelledby="h3t">
-    <div class="wrap">
-      <header class="ev-chh">
-        <span class="ev-n" aria-hidden="true">3</span>
-        <div>
-          <h2 id="h3t">The window shrank to about a minute</h2>
-          <p class="ev-lede" id="ch3-lede"></p>
-        </div>
-      </header>
-
+    <div class="ev-col">
+      <header class="ev-chh"><span class="ev-n">3</span><h2 id="h3t">The window shrank to about a minute</h2></header>
+      <p class="ev-lede" id="ch3-lede"></p>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f3acap">
-        <h3 class="ev-figt">How long a fresh attack contract waited before it struck (median, minutes)</h3>
+        <h3 class="ev-figt">How long a fresh attack contract waited before it struck (median)</h3>
         <div class="ev-chart" id="c3-gap"></div>
         <figcaption id="f3acap" class="ev-cap"></figcaption>
       </figure>
-
-      <div class="ev-story">
-        <h3 class="ev-h3">What one block leaves a copier: Makina, January 2026</h3>
-        <p class="ev-p" id="ch3-mk"></p>
-        <figure class="ev-fig" aria-labelledby="f3bcap">
-          <div class="ev-chart" id="c3-mk"></div>
-          <figcaption id="f3bcap" class="ev-cap"></figcaption>
-        </figure>
-        <p class="ev-p" id="ch3-mk2"></p>
-        <ul class="ev-dw" id="c3-dw"></ul>
-      </div>
-      <p class="ev-how" id="ch3-how"></p>
     </div>
+    <div class="ev-col">
+      <h3 class="ev-h3">What one block leaves a copier: Makina, January 2026</h3>
+      <p class="ev-p" id="ch3-mk"></p>
+    </div>
+    <div class="ev-wide">
+      <figure class="ev-fig ev-darkfig night" aria-labelledby="f3bcap">
+        <div class="ev-chart" id="c3-mk"></div>
+        <figcaption id="f3bcap" class="ev-cap"></figcaption>
+      </figure>
+    </div>
+    <div class="ev-col">
+      <p class="ev-p" id="ch3-mk2"></p>
+    </div>
+    <div class="ev-wide"><ul class="ev-dw" id="c3-dw"></ul></div>
+    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch3-how"></div></details></div>
   </section>
 
   <!-- 4 -->
   <section class="ev-ch" id="ch4" aria-labelledby="h4t">
-    <div class="wrap">
-      <header class="ev-chh">
-        <span class="ev-n" aria-hidden="true">4</span>
-        <div>
-          <h2 id="h4t">Bots pay the builders, attackers mostly don't</h2>
-          <p class="ev-lede" id="ch4-lede"></p>
-        </div>
-      </header>
-
+    <div class="ev-col">
+      <header class="ev-chh"><span class="ev-n">4</span><h2 id="h4t">Traced bots paid the builder; most attackers did not</h2></header>
+      <p class="ev-lede" id="ch4-lede"></p>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f4acap">
         <h3 class="ev-figt">Share of transactions that paid the block builder directly</h3>
-        <ul class="ev-key"><li><i style="background:var(--atk)"></i>attacker transactions, by year</li><li><i style="background:var(--bot)"></i>bot transactions, all years</li></ul>
+        <ul class="fig-key ev-key"><li><i style="background:var(--atk)"></i>attacker transactions, by year</li><li><i style="background:var(--bot)"></i>bot transactions, all years</li></ul>
         <div class="ev-chart" id="c4-att"></div>
         <figcaption id="f4acap" class="ev-cap"></figcaption>
       </figure>
-
-      <figure class="ev-fig" aria-labelledby="f4bcap">
-        <h3 class="ev-figt">In the races a bot won: share of the take paid to the block builder</h3>
+    </div>
+    <div class="ev-col"><p class="ev-p" id="ch4-mid"></p></div>
+    <div class="ev-wide">
+      <figure class="ev-fig ev-darkfig night" aria-labelledby="f4bcap">
+        <h3 class="ev-figt">In the races a bot won: how much of the take went to the builder</h3>
+        <ul class="fig-key ev-key" id="c4-key"></ul>
         <div class="ev-chart" id="c4-races"></div>
+        <ul class="ev-eras" id="c4-eras"></ul>
         <figcaption id="f4bcap" class="ev-cap"></figcaption>
       </figure>
-
       <figure class="ev-fig" aria-labelledby="f4ccap">
         <h3 class="ev-figt" id="c4-split-t"></h3>
         <div class="ev-split" id="c4-split"></div>
         <figcaption id="f4ccap" class="ev-cap"></figcaption>
       </figure>
-      <p class="ev-how" id="ch4-how"></p>
     </div>
+    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch4-how"></div></details></div>
   </section>
 
   <!-- 5 -->
   <section class="ev-ch" id="ch5" aria-labelledby="h5t">
-    <div class="wrap">
-      <header class="ev-chh">
-        <span class="ev-n" aria-hidden="true">5</span>
-        <div>
-          <h2 id="h5t">The bots that still win changed too</h2>
-          <p class="ev-lede" id="ch5-lede"></p>
-        </div>
-      </header>
-
+    <div class="ev-col">
+      <header class="ev-chh"><span class="ev-n">5</span><h2 id="h5t">The winning bots started copying setups</h2></header>
+      <p class="ev-lede" id="ch5-lede"></p>
+    </div>
+    <div class="ev-wide">
       <figure class="ev-fig" aria-labelledby="f5acap">
-        <h3 class="ev-figt">Bot transactions against attacker transactions in the same exploit listings</h3>
+        <h3 class="ev-figt">Bot transactions against attacker transactions in the same exploit records</h3>
         <div class="ev-db" id="c5-db"></div>
         <figcaption id="f5acap" class="ev-cap"></figcaption>
       </figure>
-
       <figure class="ev-fig" aria-labelledby="f5bcap">
-        <h3 class="ev-figt">The 19 races a bot won, by year and by what the bot copied</h3>
+        <h3 class="ev-figt" id="c5-lanes-t"></h3>
         <div class="ev-lanes" id="c5-lanes"></div>
         <figcaption id="f5bcap" class="ev-cap"></figcaption>
       </figure>
-
-      <div class="ev-two ev-two-even">
-        <div class="ev-side prose" id="ch5-side"></div>
-        <aside class="ev-cb" id="c5-cb" aria-label="Where c0ffeebabe.eth appears"></aside>
-      </div>
-      <p class="ev-how" id="ch5-how"></p>
     </div>
+    <div class="ev-col">
+      <div class="ev-prose" id="ch5-side"></div>
+    </div>
+    <div class="ev-wide">
+      <aside class="ev-cb" id="c5-cb" aria-label="Where c0ffeebabe.eth appears"></aside>
+    </div>
+    <div class="ev-col"><details class="ev-how"><summary>How we know</summary><div id="ch5-how"></div></details></div>
   </section>
 
+  <!-- the takeaway -->
   <section class="ev-end" aria-labelledby="hend">
-    <div class="art-band night ev-endband" style="--art-x:50%;--art-y:30%">
-      <picture class="art"><img src="assets/art/art-06-dark-forest-bottom-band-1672.webp" srcset="assets/art/art-06-dark-forest-bottom-band-800.webp 800w, assets/art/art-06-dark-forest-bottom-band-1280.webp 1280w, assets/art/art-06-dark-forest-bottom-band-1672.webp 1672w" sizes="100vw" width="1672" height="941" alt="A glowing green trail running across a dark forest canopy seen from above." loading="lazy" decoding="async"></picture>
-      <div class="wrap"><p class="kick-line">The answer</p><h2 id="hend">So, has it changed?</h2></div>
+    <div class="ev-endband night">
+      <div class="ev-col ev-endin">
+        <h2 id="hend">So, has the dark forest changed?</h2>
+      </div>
+      <div class="ev-endart" id="end-art" aria-hidden="true"></div>
     </div>
-    <div class="wrap">
-      <div class="ev-sum" id="sum"></div>
+    <div class="ev-col">
+      <p class="ev-artnote ev-artnote-end" id="end-note"></p>
+      <section class="takeaway" aria-label="The takeaway">
+        <p class="tk-k">The takeaway</p>
+        <p class="tk-big" id="end-lede"></p>
+        <p class="tk-x" id="end-close"></p>
+      </section>
+      <ol class="ev-take" id="sum"></ol>
+    </div>
+    <div class="ev-wide">
       <div data-partnav-slot></div>
     </div>
   </section>
 
-  <section class="ev-data" aria-labelledby="hdata">
-    <div class="wrap">
+  <!-- the data layer -->
+  <section class="ev-data" id="data" aria-labelledby="hdata">
+    <div class="ev-wide">
       <h2 id="hdata">Every number on this page</h2>
-      <p class="ev-p muted" id="data-intro"></p>
+      <p class="ev-p" id="data-intro"></p>
       <div class="ev-tables" id="tables"></div>
       <h3 class="ev-h3">Words used on this page</h3>
       <dl class="ev-defs">
@@ -207,9 +251,11 @@
         <dt>Fresh deploy-to-attack gap</dt><dd>Time from the block that created an attacker-owned contract to the block of the attack, for contracts created at most seven days before.</dd>
         <dt>Paid the builder</dt><dd>A direct ETH transfer to the block's fee recipient (the builder) inside the transaction. It is how a transaction buys its place in the block.</dd>
         <dt>Deploy-window copy</dt><dd>A bot used the attacker's own on-chain setup (a deployed contract, an upgrade or a prepare() call) before the attacker's own attack call landed.</dd>
+        <dt>PBS (proposer-builder separation)</dt><dd>The system since the Merge in which builders assemble blocks and the proposer chooses one. &ldquo;Early PBS&rdquo; is September 2022 to 2023, &ldquo;mature PBS&rdquo; 2024 onward; elsewhere on this page they are the early and mature builder eras.</dd>
         <dt>Sample</dt><dd>Ethereum mainnet exploits reproduced in the DeFiHackLabs repository, with the sender of each listed transaction classified. It is a sample of public, reproduced incidents, not of all attacks.</dd>
       </dl>
-      <table class="ev-dl" id="t-dl"></table>
+      <h3 class="ev-h3">Downloads</h3>
+      <div class="ev-tw"><table class="ev-dl" id="t-dl"></table></div>
     </div>
   </section>
 </main>

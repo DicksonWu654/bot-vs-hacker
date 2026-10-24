@@ -15,7 +15,7 @@
 <main id="main" class="wrap">
   <header class="ihead">
     <h1>Methods and data</h1>
-    <p class="lede" style="margin-top:20px">What we looked at, how we decided a bot had beaten a hacker, and where the evidence stops.</p>
+    <p class="lede" style="margin-top:20px">What we looked at, how we decided a bot got to an exploit first, how we judged who it beat, and where the evidence stops.</p>
     <p class="small mono muted" id="built"></p>
   </header>
 
@@ -24,8 +24,23 @@
     <div class="prose">
       <p>The four numbers at the top of the home page, with the fine print. All four are read from <a href="data/headline_stats.json">headline_stats.json</a>, which is rebuilt from the per-race rows in <a href="data/incidents.json">incidents.json</a>; each row links its saved sources in <a href="index.html#table">the race table</a>.</p>
       <dl class="defs" id="hn-list"><dt>Loading&hellip;</dt></dl>
-      <p>Mempool exposure, block position and exploits that ran entirely inside a constructor are summarised on <a href="evolution.html">Has it evolved?</a></p>
+      <p>Mempool exposure, block position and exploits that ran entirely inside a constructor are summarised in Part 3, <a href="evolution.html">Has the dark forest changed?</a></p>
     </div>
+  </section>
+
+  <section class="sec" id="who-lost" aria-labelledby="wl-h">
+    <h2 id="wl-h">Who lost each race</h2>
+    <div class="prose">
+      <p>The headline test shows that a bot got to a prepared exploit transaction, or to an attacker's on-chain setup, before that transaction or setup paid out. It does not by itself show that the account the bot beat was the original attacker. So we checked every loser separately: its own preparation history (deployments, tests, earlier attempts), where its code came from, how it was funded, and what the victim's report or other write-ups say. The series is still called The Bot Beat the Hacker; in this series, &ldquo;attacker&rdquo; means the account behind the exploit transaction or setup that the bot beat.</p>
+      <p id="wl-sum">Loading&hellip;</p>
+      <dl class="defs">
+        <dt>The original attacker, confirmed</dt><dd>The loser's own setup trail (deployments, tests, earlier attempts in the same campaign) or the victim's report ties it to the attack the bot intercepted. This does not prove a human was behind it, or that no unseen private transaction existed.</dd>
+        <dt>Probably the original attacker</dt><dd>The loser prepared the attack itself, but where the plan came from is not fully traced: funding, code origin or authorship stay open.</dd>
+        <dt>A later exploiter, or we can't tell</dt><dd>The loser is a demonstrated follow-on exploiter (for example an account that had already copied the same exploit on another pool), or its link to the original attack is unresolved. It may have been another bot, a related account, or someone else; we do not say which.</dd>
+      </dl>
+      <p>These verdicts are about who lost. They do not change the copy-and-order evidence that put each race in the headline count. Before August 2023 they rest on in-block evidence only.</p>
+    </div>
+    <div style="overflow-x:auto"><table class="ops wl-table" id="wl-table"><thead><tr><th>race</th><th>who lost</th><th>why</th><th>evidence</th></tr></thead><tbody><tr><td colspan="4">Loading&hellip;</td></tr></tbody></table></div>
   </section>
 
   <section class="sec" id="raw">
@@ -65,7 +80,7 @@
   <section class="sec" id="delay">
     <h2>Builder bid response (ms)</h2>
     <div class="prose">
-      <p>Builder bid response (ms) measures the gap between the first public sighting of the trigger (the hacker's transaction, their contract deployment, or a user's withdrawal) and the first big step-up bid from the builder that went on to win the block. A step-up is a bid at least twice that builder's own best earlier bid and at least 0.5 ETH.</p>
+      <p>Builder bid response (ms) measures the gap between the first public sighting of the trigger (the attacker's transaction, their contract deployment, or a user's withdrawal) and the first big step-up bid from the builder that went on to win the block. A step-up is a bid at least twice that builder's own best earlier bid and at least 0.5 ETH.</p>
       <p>Bid <em>contents</em> are never visible, only the amount and the time. So the bid we pick might not contain the bot's transaction, and a bot that reacted earlier with a smaller bid would be missed. Where a second estimate exists we show it as an upper bound. The response can be timed only when the trigger was seen before inclusion. <span id="timing-summary"></span></p>
     </div>
   </section>

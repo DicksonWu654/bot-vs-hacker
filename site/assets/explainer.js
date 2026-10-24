@@ -141,22 +141,204 @@
     var X = r[0], R = r[1]; if (!X || !R) return;
     var seen = mem(R, "attacker")[0];
     var gap = seen ? (R.t0_ms - seen.t_ms) / 1000 : null;
-    $("#dek").innerHTML = "On 6 August 2024 a user asked the Ronin bridge to pay out <span class=\"q\">" + num(X.attacker_quantity_usdc, 2) + " USDC</span>" + fn(X.raw.user_tx, "The user's withdrawal transaction") +
-      ". " + (gap != null ? fix(gap, 1) + " seconds" : "Seconds") + " after that request first showed up in public" + (seen ? fn(seen.raw.sourcelog, "Mempool archive: first-seen times for the user's request") : "") +
-      ", a bot called Yoink had copied it, changed <b>" + X.words_different + " of its " + X.words_total + " words</b>, and collected <span class=\"q\">" + num(X.yoink_quantity_usdc, 3) + " USDC</span>" + fn(X.raw.yoink_trace, "Trace of Yoink's copy") + " instead. This page takes that bot apart, one step at a time.";
+    /* large numbers in words so they cannot be misread; the exact values sit in the source titles and in step 3 */
+    $("#dek").innerHTML = "On 6 August 2024 a user asked the Ronin bridge to pay out about " + num(Math.round(X.attacker_quantity_usdc), 0) + " USDC" + fn(X.raw.user_tx, "The user's withdrawal transaction: exactly " + num(X.attacker_quantity_usdc, 6) + " USDC") +
+      ". That morning a broken check in the bridge meant a copy of the request could ask for far more. " + (gap != null ? fix(gap, 1) + " seconds" : "Seconds") + " after the request first showed up in public" + (seen ? fn(seen.raw.sourcelog, "Mempool archive: first-seen times for the user's request") : "") +
+      ", a bot called Yoink had copied it, changed <b>" + X.words_different + " of its " + X.words_total + " words</b>, and collected just under 2 million USDC instead" + fn(X.raw.yoink_trace, "Trace of Yoink's copy: exactly " + num(X.yoink_quantity_usdc, 3) + " USDC") + ".";
   });
 
   /* ---------- hero figure: both requests as 61 word-bars ---------- */
+  /* "The mirror": the real calldata of both transactions, drawn on a canvas at device pixel ratio.
+     The user's request stands above a waterline; Yoink's copy is its reflection below. Every glyph is a real byte.
+     Identical bytes reflect in the green trail; the three changed words burn ember above and amber below.
+     Static: it is complete on first paint and identical under reduced motion. Always a night scene. */
+  var NIGHT = { bg: "#050b08", mist: "169,194,180", trail: "95,227,161", amber: "255,146,56", ember: "228,80,92", gold: "255,226,122" };
+  function drawMirror(host, Wd) {
+    var W = Math.max(280, Math.round(host.clientWidth)), dpr = Math.min(3, window.devicePixelRatio || 1);
+    var nW = Wd.nW, nB = 32, colW = W / nW, glyph = colW >= 17;
+    var fs = glyph ? Math.min(13, colW * 0.46) : 0;
+    var rowH = glyph ? Math.round(fs * 1.28 * 10) / 10 : (W < 480 ? 6 : 7.5);
+    var topH = nB * rowH, gap = glyph ? 18 : 12, refK = 0.62, refH = nB * rowH * refK, padT = glyph ? 26 : 16, padB = glyph ? 22 : 12;
+    var H = Math.round(padT + topH + gap + refH + padB);
+    var cv = host.querySelector("canvas") || document.createElement("canvas");
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+    cv.setAttribute("aria-hidden", "true");
+    if (!cv.parentNode) { host.innerHTML = ""; host.appendChild(cv); }
+    var c = cv.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = NIGHT.bg; c.fillRect(0, 0, W, H);
+    var wl = padT + topH + gap / 2; /* the waterline */
+    /* faint light columns behind the changed words, rising from the water */
+    Wd.diff.forEach(function (w) {
+      var x0 = w * colW, g = c.createLinearGradient(0, padT - 10, 0, H);
+      g.addColorStop(0, "rgba(" + NIGHT.ember + ",0)"); g.addColorStop(0.45, "rgba(" + NIGHT.ember + ",.10)");
+      g.addColorStop(0.55, "rgba(" + NIGHT.amber + ",.16)"); g.addColorStop(1, "rgba(" + NIGHT.amber + ",0)");
+      c.fillStyle = g; c.fillRect(x0 - colW * 0.3, padT - 10, colW * 1.6, H - padT + 10);
+    });
+    function bytePair(word, k) { return word.substr(k * 2, 2); }
+    if (glyph) { c.font = "500 " + fs.toFixed(1) + "px 'Spline Sans Mono', ui-monospace, monospace"; c.textAlign = "center"; c.textBaseline = "middle"; }
+    for (var i = 0; i < nW; i++) {
+      var changed = Wd.diff.indexOf(i) >= 0, cx = (i + 0.5) * colW, u = Wd.uw[i], y = Wd.yw[i];
+      for (var k = 0; k < nB; k++) {
+        var ub = bytePair(u, k), yb = bytePair(y, k), uz = ub === "00", yz = yb === "00", differs = ub !== yb;
+        /* above: the user's request, top to bottom */
+        var a = changed ? (differs ? 1 : uz ? 0.32 : 0.7) : (uz ? 0.13 : 0.62);
+        var col = changed ? NIGHT.ember : NIGHT.mist, ty = padT + (k + 0.5) * rowH;
+        c.fillStyle = "rgba(" + col + "," + a + ")";
+        if (glyph) c.fillText(ub, cx, ty); else c.fillRect(i * colW + 0.6, ty - rowH * 0.36, colW - 1.2, rowH * 0.72);
+        /* below: the copy, mirrored about the waterline (the last byte nearest the water), fading with depth */
+        var depth = nB - 1 - k, ry = wl + gap / 2 + (depth + 0.5) * rowH * refK;
+        var fade = 1 - 0.78 * depth / (nB - 1), ripple = Math.sin(depth * 1.7 + i * 0.35) * colW * 0.07 * (depth / nB);
+        var ra = (changed ? (differs ? 1 : yz ? 0.28 : 0.62) : (yz ? 0.10 : 0.5)) * fade;
+        c.fillStyle = "rgba(" + (changed ? NIGHT.amber : NIGHT.trail) + "," + ra.toFixed(3) + ")";
+        if (changed && differs) { c.shadowColor = "rgba(" + NIGHT.amber + ",.85)"; c.shadowBlur = glyph ? 9 : 5; }
+        if (glyph) { c.save(); c.translate(cx + ripple, ry); c.scale(1, -refK); c.fillText(yb, 0, 0); c.restore(); }
+        else c.fillRect(i * colW + 0.6 + ripple, ry - rowH * refK * 0.36, colW - 1.2, rowH * refK * 0.72);
+        c.shadowBlur = 0;
+      }
+    }
+    /* the waterline: a thin luminous trail, brightest under the changed words */
+    var gl = c.createLinearGradient(0, 0, W, 0);
+    gl.addColorStop(0, "rgba(" + NIGHT.trail + ",0)"); gl.addColorStop(0.12, "rgba(" + NIGHT.trail + ",.55)");
+    gl.addColorStop(0.88, "rgba(" + NIGHT.trail + ",.55)"); gl.addColorStop(1, "rgba(" + NIGHT.trail + ",0)");
+    c.fillStyle = gl; c.shadowColor = "rgba(" + NIGHT.trail + ",.7)"; c.shadowBlur = 8; c.fillRect(0, wl - 0.75, W, 1.5); c.shadowBlur = 0;
+    /* a soft mist over the deepest part of the reflection */
+    var mg = c.createLinearGradient(0, wl, 0, H);
+    mg.addColorStop(0, "rgba(5,11,8,0)"); mg.addColorStop(1, "rgba(5,11,8,.55)");
+    c.fillStyle = mg; c.fillRect(0, wl + 1, W, H - wl);
+    return { colW: colW, padT: padT, wl: wl, H: H, W: W, rowH: rowH };
+  }
   D.words.then(function (Wd) {
-    var f = $("#hero-words"); if (!Wd) throw new Error("raw transactions missing");
-    var X = Wd.X;
-    function row(cls) { var o = '<div class="hw-row ' + cls + '" aria-hidden="true">'; for (var i = 0; i < Wd.nW; i++) o += '<i class="' + (Wd.diff.indexOf(i) >= 0 ? "d" : "") + '"></i>'; return o + "</div>"; }
-    var mids = Wd.diff.map(function (w) { return '<span style="left:' + (100 * (w + 0.5) / Wd.nW) + '%">' + w + "</span>"; }).join("");
-    f.innerHTML = '<div class="hw-l"><b>the user\'s request</b><span>' + num(X.attacker_quantity_usdc, 2) + " USDC" + rawA(X.raw.user_tx, "tx") + "</span></div>" + row("u") +
-      '<div class="hw-mid" aria-hidden="true">' + mids + "</div>" + row("y") +
-      '<div class="hw-l"><b>Yoink\'s copy</b><span>' + num(X.yoink_quantity_usdc, 3) + " USDC" + rawA(X.raw.yoink_tx, "tx") + "</span></div>" +
-      "<figcaption>Each bar is one 32-byte word of the withdrawal request. " + (Wd.nW - Wd.diff.length) + " of " + Wd.nW + " are identical; words " + Wd.diff.join(", ").replace(/, (\d+)$/, " and $1") + ' were changed: the recipient, twice, and the amount. <a href="#copy">See every word</a></figcaption>';
-  }).catch(function (e) { fail($("#hero-words"), e); });
+    var host = $("#mirror-art"); if (!Wd) throw new Error("raw transactions missing");
+    var X = Wd.X, geo = drawMirror(host, Wd);
+    /* word markers on the waterline: solid chips, so no text sits on the art without a scrim */
+    function marks() {
+      Array.prototype.forEach.call(host.querySelectorAll(".mk"), function (e) { e.remove(); });
+      Wd.diff.forEach(function (w) {
+        var m = document.createElement("span"); m.className = "mk"; m.setAttribute("aria-hidden", "true");
+        m.style.left = (100 * (w + 0.5) / Wd.nW) + "%"; m.style.top = geo.wl + "px"; m.textContent = w;
+        host.appendChild(m);
+      });
+    }
+    marks();
+    var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { geo = drawMirror(host, Wd); marks(); }, 120); });
+    /* hover: which word, and both values */
+    host.addEventListener("mousemove", function (e) {
+      var r = host.getBoundingClientRect(), i = Math.floor((e.clientX - r.left) / geo.colW);
+      if (i < 0 || i >= Wd.nW) { BVH.tipHide(); return; }
+      var d = Wd.diff.indexOf(i) >= 0;
+      BVH.tipShow("<b>Word " + i + ": " + esc(wordName(i)) + "</b><br>" + (d ? "changed by Yoink" : "identical in both"), e.clientX, e.clientY);
+    });
+    host.addEventListener("mouseleave", BVH.tipHide);
+    var same = Wd.nW - Wd.diff.length;
+    $("#mirror-foot").innerHTML =
+      '<p class="mf-big"><b>' + same + " of " + Wd.nW + "</b> words are identical, including the 16 validator signatures that authorize this bridge payout" + rawA(X.raw.user_tx, "user tx") + rawA(X.raw.yoink_tx, "Yoink tx") + ". " + same + " words copied as they were, " + (Wd.diff.length - 1) + " recipient words changed, 1 amount word changed.</p>" +
+      '<ul class="mf-list">' +
+      '<li><span class="mf-n">2</span><span><b>Recipient on Ethereum.</b> The user\'s address became Yoink\'s contract.</span></li>' +
+      '<li><span class="mf-n">5</span><span><b>Recipient on Ronin.</b> The same swap, the same new address.</span></li>' +
+      '<li><span class="mf-n">10</span><span><b>The amount.</b> ' + num(X.attacker_quantity_usdc, 2) + ' USDC became <span class="nb">' + num(X.yoink_quantity_usdc, 3) + " USDC</span>, just under 2 million.</span></li></ul>" +
+      '<p class="mf-note">Every glyph is one real byte, in hexadecimal. Above the line: ember marks the user\'s changed words. Below: amber marks the copy\'s. Each word is checked byte by byte in <a href="#copy">step 3</a>.</p>';
+  }).catch(function (e) { fail($("#mirror-art"), e); });
+
+  /* ======================================================================
+     Primer: how a transaction reaches a block (hand-drawn SVG, two layouts) and six terms
+     ====================================================================== */
+  var TERMS = [
+    ["Public mempool", "The waiting room for sent transactions. Anyone running a node can read what is in it before it reaches a block."],
+    ["Searcher, or bot", "A program that looks for transactions it can profit from and sends its own version first. Yoink is one."],
+    ["Calldata", "The inputs of a transaction: which function to call and with what values, laid out in 32-byte words."],
+    ["Block builder", "Packs transactions into the next block and sets their order. A transaction can pay the builder directly; on this site that payment is the bribe."],
+    ["Relay and proposer", "Builders bid for each 12-second slot through relays. The proposer, the validator whose turn it is, publishes one block, normally the highest bid."],
+    ["Position 0", "The first place in a block. Transactions run in order, so when two try to take the same money, the earlier one gets it."]
+  ];
+  (function () {
+    var host = $("#primer-dl"); if (!host) return;
+    /* the series glossary keeps wording identical across the three parts; local text only if it is missing */
+    var G = BVH.GLOSSARY, keys = ["mempool", "frontrun", "calldata", "builder", "relay", "proposer", "position0", "weth", "safe"];
+    var list = G && keys.every(function (k) { return G[k]; }) ? keys.map(function (k) { return G[k]; }) : TERMS;
+    host.innerHTML = '<dl class="terms">' + list.map(function (t, i) { return '<div class="term"><dt><span class="tn" aria-hidden="true">' + (i + 1) + "</span>" + esc(t[0]) + "</dt><dd>" + esc(t[1]) + "</dd></div>"; }).join("") + "</dl>";
+  })();
+  function drawFlow() {
+    var host = $("#flow-svg"); if (!host) return;
+    var W = Math.max(300, host.clientWidth || 800), vert = W < 700;
+    var H = vert ? 500 : 300, S = BVH.svg;
+    host.innerHTML = "";
+    var svg = S("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img", "aria-label": "A user's request goes into the public mempool. A bot reads it there and sends a copy to a block builder, which places the copy at position 0 and the original later. Builders bid through a relay; the proposer publishes the best block." }, host);
+    var defs = S("defs", null, svg);
+    var rg = S("radialGradient", { id: "xp-fog", cx: "50%", cy: "50%", r: "50%" }, defs);
+    S("stop", { offset: "0%", "stop-color": "rgb(" + NIGHT.mist + ")", "stop-opacity": ".16" }, rg);
+    S("stop", { offset: "100%", "stop-color": "rgb(" + NIGHT.mist + ")", "stop-opacity": "0" }, rg);
+    /* node centres */
+    var P;
+    if (!vert) {
+      var y0 = 172, xs = [0.07, 0.27, 0.0, 0.56, 0.78, 0.93].map(function (f) { return f * W; });
+      P = { req: [xs[0], y0], pool: [xs[1], y0], bot: [W * 0.405, 64], blk: [xs[3], y0], relay: [xs[4], y0], prop: [xs[5], y0] };
+    } else {
+      var cx = Math.max(140, Math.min(W * 0.42, 170)), st = 92;
+      P = { req: [cx, 40], pool: [cx, 40 + st], bot: [36, 40 + st * 1.72], blk: [cx, 40 + st * 2.45], relay: [cx, 40 + st * 3.55], prop: [cx, 40 + st * 4.6] };
+    }
+    function line(a, b, cls, bend) {
+      var d = "M" + a[0] + "," + a[1] + (bend ? " Q" + bend[0] + "," + bend[1] + " " : " L") + b[0] + "," + b[1];
+      return S("path", { d: d, class: cls, fill: "none" }, svg);
+    }
+    var bw = vert ? 132 : Math.min(150, W * 0.13), bh = vert ? 46 : 64, nS = 10;
+    var blkX = P.blk[0] - bw / 2, blkY = P.blk[1] - bh / 2, sw = bw / nS;
+    var s0 = [blkX + sw / 2, blkY + bh / 2], s6 = [blkX + sw * 6.5, blkY + bh / 2];
+    /* paths first, so nodes sit on top */
+    line(P.req, P.pool, "fl-trail");
+    line([P.pool[0] + (vert ? 0 : 18), P.pool[1] + (vert ? 18 : 0)], vert ? [s6[0], blkY] : [blkX, s6[1]], "fl-trail");
+    line([P.pool[0] + (vert ? -6 : 10), P.pool[1] + (vert ? 8 : -8)], P.bot, "fl-read", vert ? [P.pool[0] - 40, P.bot[1] - 2] : [P.bot[0] - 40, P.pool[1] - 50]);
+    line(P.bot, vert ? [s0[0], blkY] : [s0[0], blkY], "fl-amber glow-s", vert ? [P.bot[0] + 4, blkY - 10] : [s0[0] - 6, P.bot[1] + 30]);
+    line(vert ? [P.blk[0], blkY + bh] : [blkX + bw, P.blk[1]], P.relay, "fl-moon");
+    line(P.relay, P.prop, "fl-moon");
+    /* 1. the request */
+    S("rect", { x: P.req[0] - 14, y: P.req[1] - 10, width: 28, height: 20, rx: 3, class: "fl-req" }, svg);
+    S("path", { d: "M" + (P.req[0] - 14) + "," + (P.req[1] - 10) + " L" + P.req[0] + "," + (P.req[1] + 2) + " L" + (P.req[0] + 14) + "," + (P.req[1] - 10), class: "fl-req-flap", fill: "none" }, svg);
+    /* 2. the mempool: fog with faint lights, one of them the request */
+    S("ellipse", { cx: P.pool[0], cy: P.pool[1], rx: vert ? 70 : 78, ry: vert ? 34 : 46, fill: "url(#xp-fog)" }, svg);
+    for (var i = 0; i < 16; i++) {
+      var a = i * 2.39996, r = 8 + (i * 37 % 28);
+      S("circle", { cx: P.pool[0] + Math.cos(a) * r * (vert ? 1.6 : 1.7), cy: P.pool[1] + Math.sin(a) * r * (vert ? 0.85 : 1.2), r: 1.6, class: "fl-dot" }, svg);
+    }
+    S("circle", { cx: P.pool[0], cy: P.pool[1], r: 4.5, class: "fl-lit glow-s" }, svg);
+    /* 3. the bot */
+    S("rect", { x: P.bot[0] - 10, y: P.bot[1] - 10, width: 20, height: 20, transform: "rotate(45 " + P.bot[0] + " " + P.bot[1] + ")", class: "fl-bot glow-s" }, svg);
+    /* 4. the block, as a gate of transaction slivers: position 0 amber, the original later in ember */
+    S("rect", { x: blkX - 4, y: blkY - 4, width: bw + 8, height: bh + 8, rx: 4, class: "fl-gate" }, svg);
+    for (var j = 0; j < nS; j++) S("rect", { x: blkX + j * sw + 1, y: blkY + 2, width: sw - 2, height: bh - 4, rx: 1.5, class: j === 0 ? "fl-s0 glow-s" : j === 6 ? "fl-s-atk" : "fl-s" }, svg);
+    /* 5. relay, 6. proposer */
+    S("rect", { x: P.relay[0] - 4, y: P.relay[1] - 20, width: 8, height: 40, rx: 2, class: "fl-relay" }, svg);
+    S("circle", { cx: P.prop[0], cy: P.prop[1], r: 11, class: "fl-prop glow-s" }, svg);
+    /* labels */
+    function label(p, t1, t2, side) {
+      var x = p[0], y = p[1], anchor = "middle";
+      if (side === "below") y += vert ? 0 : 58;
+      if (side === "above") y -= 34;
+      if (side === "right") { x += 30; anchor = "start"; y -= 4; }
+      if (side === "left") { x -= 30; anchor = "end"; y -= 4; }
+      S("text", { x: x, y: y, "text-anchor": anchor, class: "fl-t" }, svg, t1);
+      if (t2) S("text", { x: x, y: y + 19, "text-anchor": anchor, class: "fl-t2" }, svg, t2);
+    }
+    if (!vert) {
+      label(P.req, "a request", "is sent", "below");
+      label(P.pool, "public mempool", "anyone can read it", "below");
+      label([P.bot[0] - 2, P.bot[1] + 2], "a bot", "copies it", "left");
+      label([P.blk[0], P.blk[1] + 4], "the builder", "sets the order", "below");
+      S("text", { x: s0[0], y: blkY - 12, "text-anchor": "middle", class: "fl-t2 fl-amb" }, svg, "position 0");
+      label(P.relay, "relay", "carries bids", "below");
+      label(P.prop, "proposer", "publishes one", "below");
+    } else {
+      label(P.req, "a request is sent", null, "right");
+      label(P.pool, "public mempool", "anyone can read it", "right");
+      S("text", { x: 6, y: P.bot[1] - 42, "text-anchor": "start", class: "fl-t" }, svg, "a bot");
+      S("text", { x: 6, y: P.bot[1] - 23, "text-anchor": "start", class: "fl-t2" }, svg, "copies it");
+      label([P.blk[0] + bw / 2 - 16, P.blk[1] - 14], "the builder", "sets the order", "right");
+      S("text", { x: s0[0] + 4, y: blkY + bh + 22, "text-anchor": "middle", class: "fl-t2 fl-amb" }, svg, "position 0");
+      label([P.relay[0], P.relay[1]], "relay", "carries bids", "right");
+      label([P.prop[0], P.prop[1]], "proposer", "publishes one block", "right");
+    }
+  }
+  drawFlow();
+  (function () { var rt, lw = 0; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { var w = ($("#flow-svg") || {}).clientWidth; if (w !== lw) { lw = w; drawFlow(); } }, 120); }); })();
 
   /* ======================================================================
      The machine: ten stations, a caption, play / step / show all.
@@ -176,7 +358,7 @@
     var s = ST[i]; if (!s) return "";
     return '<span class="k">Step ' + (i + 1) + " of 10: " + esc(s.verb) + "</span>" + (s.cap || "") + ' <a class="jump" href="#' + s.id + '">Read step ' + (i + 1) + "</a>";
   }
-  function capAll() { return '<span class="k">All ten steps</span>' + (M.allCap || "Pick a step, or press play to walk through them in order.") ; }
+  function capAll() { return '<span class="k">All ten steps</span>' + (M.allCap || "Pick a step, or walk through them in order.") ; }
   function render() {
     Array.prototype.forEach.call(mach.children, function (li, i) {
       li.className = cur < 0 ? "" : i < cur ? "" : i === cur ? "on" : "todo";
@@ -186,14 +368,14 @@
     $("#m-prog").style.width = (cur < 0 ? 100 : (cur + 1) * 10) + "%";
     $("#m-prev").disabled = cur === 0; $("#m-next").disabled = cur === ST.length - 1;
   }
-  function stop() { if (timer) { clearInterval(timer); timer = null; } $("#m-play").textContent = "Play"; $("#m-play").setAttribute("aria-pressed", "false"); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } $("#m-play").textContent = cur >= 0 && cur < ST.length - 1 ? "Keep walking" : "Walk through the steps"; $("#m-play").setAttribute("aria-pressed", "false"); }
   function go(i) { cur = Math.max(0, Math.min(ST.length - 1, i)); render(); }
   $("#m-play").addEventListener("click", function () {
     if (timer) { stop(); return; }
     if (cur < 0 || cur >= ST.length - 1) cur = -1;
     go(cur + 1);
     this.textContent = "Pause"; this.setAttribute("aria-pressed", "true");
-    timer = setInterval(function () { if (cur >= ST.length - 1) { stop(); return; } go(cur + 1); }, 2600);
+    timer = setInterval(function () { if (cur >= ST.length - 1) { stop(); return; } go(cur + 1); }, 4200);
   });
   $("#m-prev").addEventListener("click", function () { stop(); go(cur < 0 ? ST.length - 1 : cur - 1); });
   $("#m-next").addEventListener("click", function () { stop(); go(cur < 0 ? 0 : cur + 1); });
@@ -297,13 +479,13 @@
     function show(w) {
       Array.prototype.forEach.call(box.querySelectorAll(".wcell"), function (c) { c.classList.toggle("sel", +c.getAttribute("data-w") === w); });
       var d = diff.indexOf(w) >= 0;
-      det.innerHTML = "<b>Word " + w + ": " + esc(wordName(w)) + "</b> " + (d ? '<span style="color:var(--bot)">changed</span>' : "identical") + "<br>user&nbsp; " + uw[w] + "<br>Yoink " + yw[w];
+      det.innerHTML = "<b>Word " + w + ": " + esc(wordName(w)) + "</b> " + (d ? '<span style="color:var(--bot-ink);font-weight:600">changed</span>' : "identical") + "<br>user&nbsp; " + uw[w] + "<br>Yoink " + yw[w];
     }
     box.querySelector(".wd-groups").addEventListener("click", function (e) { var c = e.target.closest(".wcell"); if (c) show(+c.getAttribute("data-w")); });
     box.querySelector(".wd-groups").addEventListener("focusin", function (e) { var c = e.target.closest(".wcell"); if (c) show(+c.getAttribute("data-w")); });
     show(diff[0] != null ? diff[0] : 0);
     setVal("copy", diff.length + " of " + nW + " words changed");
-    capSet("copy", "Yoink copied the request and changed " + diff.length + " of its " + nW + " words: both recipient addresses became its own contract and the amount rose from " + num(X.attacker_quantity_usdc, 2) + " to " + num(X.yoink_quantity_usdc, 3) + " USDC.");
+    capSet("copy", "Yoink copied the request and changed " + diff.length + " of its " + nW + " words: both recipient addresses became its own contract and the amount rose from " + num(X.attacker_quantity_usdc, 2) + " USDC to " + num(X.yoink_quantity_usdc, 3) + " USDC, just under 2 million.");
   }).catch(function (e) { fail($("#v-copy"), e); });
 
   /* ======================================================================
@@ -521,12 +703,14 @@
     if (seenT != null) {
       BVH.svg("line", { x1: x(seenT / 1000), x2: x(seenT / 1000), y1: top - 6, y2: top + H1 + gap + H2, class: "seen" }, g);
       BVH.svg("text", { x: x(seenT / 1000) + 5, y: top + 6, class: "ann" }, g, "user's request");
-      BVH.svg("text", { x: x(seenT / 1000) + 5, y: top + 20, class: "ann2" }, g, "first seen " + BVH.sec(seenT, true));
+      BVH.svg("text", { x: x(seenT / 1000) + 5, y: top + 22, class: "ann2" }, g, "first seen " + BVH.sec(seenT, true));
     }
     BVH.svg("line", { x1: x(0), x2: x(0), y1: top - 6, y2: top + H1 + gap + H2, class: "vl" }, g);
     BVH.svg("text", { x: x(0) - 5, y: top + H1 + gap + H2 + 18, "text-anchor": "end", class: "ann2" }, g, "");
-    BVH.svg("text", { x: x(0) + (narrow ? -5 : 5), y: top + 6, "text-anchor": narrow ? "end" : "start", class: "ann" }, g, "slot starts");
-    BVH.svg("text", { x: x(0) + (narrow ? -5 : 5), y: top + 20, "text-anchor": narrow ? "end" : "start", class: "ann2" }, g, BVH.clock(R.t0_ms, false) + " UTC");
+    if (!narrow) {
+      BVH.svg("text", { x: x(0) + 5, y: top + 6, "text-anchor": "start", class: "ann" }, g, "slot starts");
+      BVH.svg("text", { x: x(0) + 5, y: top + 22, "text-anchor": "start", class: "ann2" }, g, BVH.clock(R.t0_ms, false) + " UTC");
+    }
     // dots
     var own = [], riv = [];
     S.forEach(function (b) { (b[2] === wi ? own : riv).push(b); });
@@ -571,7 +755,7 @@
     var A = R.auction, rc = R.reaction || {};
     var h = '<div class="vf bidc"><h3>Bids for block ' + R.block.number + " (" + A.bids.n_total + " bids from " + A.n_builders + " builders in the saved relay data)" + BVH.bidsA(A) + "</h3>";
     h += '<div id="bid-svg"></div>';
-    h += '<div class="bid-legend"><span><i style="background:var(--bot)"></i>' + esc(A.winner.builder) + ' (the builder our data ties to Yoink)</span><span><i style="background:var(--gold)"></i>winning bid</span><span><i style="background:var(--mist)"></i>other builders</span></div>';
+    h += '<div class="bid-legend"><span><i style="background:var(--bot)"></i>' + esc(A.winner.builder) + ' (the builder our data ties to Yoink)</span><span><i style="background:var(--gold)"></i>winning bid</span><span><i style="background:var(--mist)"></i>other builders</span><span><i class="dash"></i>the slot starts at 0 s, ' + BVH.clock(R.t0_ms, false) + ' UTC</span></div>';
     h += '<div class="bstats"><div><b>' + BVH.sec(rc.delay_ms) + "</b>from the user's request first seen" + BVH.memA((mem(R, "attacker")[0] || {}).raw) + " to Yoink's builder's first big bid" + BVH.bidsA(A, "Relay bid file: the builder's first big bid and its arrival time") + "</div><div><b>" + fix(A.winner.eth, 2) + " ETH</b>winning bid, paid to the proposer" + rawA(A.raw.delivered, "relay") + "</div><div><b>" + fix(A.runner_up.eth, 2) + " ETH</b>best rival bid, from " + esc(A.runner_up.builder) + BVH.bidsA(A) + "</div></div>";
     h += '<p class="cap">Linear scale. Seconds are relative to the start of the slot (the block\'s timestamp). The builder raised its bid in steps, ' + (function () { var l = -1, o = []; A.bids.series.forEach(function (b) { if (b[2] === A.bids.builders.indexOf(A.winner.builder) && b[1] !== l) { o.push(fix(b[1], 2)); l = b[1]; } }); return o.join(" → "); })() + " ETH, ending far above any rival. Who decides those steps is not visible on chain.</p></div>";
     box.innerHTML = h;
@@ -601,7 +785,7 @@
     if (yo.length) {
       h += '<h3 style="margin-top:20px">Where Yoink landed in its other headline races</h3><div class="pos-strip">' + yo.map(function (x) { return '<a href="incident.html?slug=' + encodeURIComponent(x.slug) + (x.sub ? "&amp;sub=" + encodeURIComponent(x.sub) : "") + '"><b>' + esc(x.title) + "</b>position " + x.bot_idx + ", block " + x.block + "</a>"; }).join("") + "</div>";
     }
-    h += '<p class="cap">Position 0 of the block is the top of the line. The failed request reverted with error ' + "<code>0x4f13df61</code>, which we read as \"withdrawal already used\".</p></div>";
+    h += '<p class="cap">Position 0 is the first transaction in the block. Yoink\'s copy was at position ' + R.bot_idx + (R.bot_idx === 1 ? ", right behind one other transaction" : "") + '. The failed request reverted with error ' + "<code>0x4f13df61</code>, which we read as \"withdrawal already used\".</p></div>";
     box.innerHTML = h;
     setVal("first", "position " + R.bot_idx + ", block " + R.block.number, BVH.clock(R.t0_ms, false) + " UTC");
     capSet("first", "Yoink's copy ran at position " + R.bot_idx + " of block " + R.block.number + ". The user's own request landed 12 seconds later at position " + R.atk_idx + " of the next block, and failed.");
@@ -662,7 +846,7 @@
     h += '<li class="bot"><span class="tt">' + (land ? land.utc.slice(11, 19) : "10:11:47") + "</span>Yoink's copy lands and takes the USDC" + (land ? rawA(land.raw, "block") : "") + "</li>";
     if (out) h += '<li class="bot"><span class="tt">' + out.utc.slice(11, 19) + "</span>Yoink moves " + (outAmt ? outAmt[1] : "800") + " ETH out of its contract to a new address, before any contact from Ronin" + rawA(out.raw, "txs") + "</li>";
     if (msg) h += '<li class="msg"><span class="tt">' + msg.utc.slice(11, 19) + "</span>Ronin's first on-chain message to Yoink" + rawA(msg.raw, "txs") + (quote ? "<q>" + esc(quote[1]) + "</q>" : "") + "</li>";
-    if (back) h += '<li class="ret"><span class="tt">' + back.utc.slice(11, 19) + "</span><b>" + (backAmt ? backAmt[1] : "?") + " ETH</b> reaches a Ronin Safe" + rawA(back.raw, "txs") + "</li>";
+    if (back) h += '<li class="ret"><span class="tt">' + back.utc.slice(11, 19) + "</span><b>" + (backAmt ? backAmt[1] : "?") + " ETH</b> reaches Ronin's Safe, a multisignature wallet" + rawA(back.raw, "txs") + "</li>";
     h += "</ol></div>";
     // full split for Ronin and Kelp
     var rr = rows.filter(function (x) { return x.id === "ronin-2024--yoink"; })[0], kk = rows.filter(function (x) { return x.id === "kelp-rseth-2026"; })[0];
@@ -698,9 +882,27 @@
     box.innerHTML = h;
     var spR = rr && split(rr);
     setVal("return", backAmt ? backAmt[1] + " ETH back" : "returned", back ? back.utc.slice(11, 19) + " UTC" : "");
-    capSet("return", "Yoink moved the money out " + (out ? Math.round((Date.parse(out.utc) - R.t0_ms) / 60000) + " minutes after the take" : "soon after") + ", before Ronin got in touch. " + (backAmt ? backAmt[1] + " ETH" : "Most of it") + " reached a Ronin Safe that afternoon" + (spR ? ": " + BVH.pct(100 * spR.ret / spR.g, 1) + " of the take" : "") + ".");
-    M.allCap = "A user's withdrawal request, copied with " + (M.diff ? M.diff.length : 3) + " words changed, wrapped in a program, paid for with a bribe to the builder, placed ahead of the original, and mostly handed back the same day. Pick a step, or press play.";
+    capSet("return", "Yoink moved the money out " + (out ? Math.round((Date.parse(out.utc) - R.t0_ms) / 60000) + " minutes after the take" : "soon after") + ", before Ronin got in touch. " + (backAmt ? backAmt[1] + " ETH" : "Most of it") + " reached Ronin's multisignature Safe wallet that afternoon" + (spR ? ": " + BVH.pct(100 * spR.ret / spR.g, 1) + " of the take" : "") + ".");
+    M.allCap = "A user's withdrawal request, copied with " + (M.diff ? M.diff.length : 3) + " words changed, wrapped in a program, paid for with a bribe to the builder, placed ahead of the original, and mostly handed back the same day. Pick a step, or walk through them in order.";
     render();
     void nRet; void nKept;
   }).catch(function (e) { fail($("#v-return"), e); });
+
+  /* ======================================================================
+     The takeaway: three numbers that carry the page, each with its source
+     ====================================================================== */
+  all(["words", "ronin", "rows", "ronProfit"]).then(function (r) {
+    var Wd = r[0], R = r[1], rows = r[2] || [], pw = r[3], box = $("#tk-list");
+    if (!Wd || !R) throw new Error("race files missing");
+    var X = Wd.X, dm = R.dataset_money, raw = R.block.raw;
+    var profit = pw != null ? Number(weiStr(pw, 6).replace(/,/g, "")) : null;
+    var back = ev(R, "return", "2024-08-06T17:05"), backAmt = back && /([\d,.]+) ETH to Safe/.exec(back.detail);
+    var yo = rows.filter(function (x) { return /Yoink/.test(x.bot || "") && x.fate_kind !== "n-a" && x.loot_scope === "bot-tx" && x.gross_eth != null; });
+    var nNone = yo.filter(function (x) { return x.fate_kind === "kept"; }).length;
+    var h = "";
+    h += '<li><span class="tk-n">' + (Wd.nW - Wd.diff.length) + " of " + Wd.nW + '</span><span><b>The copy was nearly free.</b> Yoink kept ' + (Wd.nW - Wd.diff.length) + " of the request's " + Wd.nW + " words as they were and rewrote only who gets paid and how much" + rawA(X.raw.user_tx, "user tx") + rawA(X.raw.yoink_tx, "Yoink tx") + ".</span></li>";
+    h += '<li><span class="tk-n">' + (profit ? BVH.pct(100 * dm.coinbase_eth / profit, 1) : "99.9%") + '</span><span><b>Going first was bought with almost all of the profit.</b> ' + eth(dm.coinbase_eth, 2) + (profit ? " of the " + eth(profit, 2) + " profit" : "") + " went to the block's builder" + rawA(raw.trace, "trace") + ". " + eth(dm.builder_refund_eth, 2) + " came back to Yoink's contract later in the same block" + rawA(raw.block, "block") + ", so for this transaction the place near the top cost " + eth(dm.coinbase_eth - dm.builder_refund_eth, 2) + ' net. <a href="#payout">Step 9</a></span></li>';
+    h += '<li><span class="tk-n">' + (backAmt ? backAmt[1] : "?") + ' ETH</span><span><b>Giving it back was a choice.</b> ' + (backAmt ? backAmt[1] + " ETH" : "Most of it") + " reached Ronin's Safe the same afternoon" + (back ? rawA(back.raw, "txs") : "") + ". Nothing in the protocol required it: in " + nNone + " of Yoink's " + yo.length + " single-transaction races in our data we found no return" + rawA("data/incidents.json", "incidents.json") + '. <a href="#return">Step 10</a></span></li>';
+    box.innerHTML = h;
+  }).catch(function (e) { fail($("#tk-list"), e); });
 })();

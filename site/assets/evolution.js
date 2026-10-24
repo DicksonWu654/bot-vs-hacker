@@ -1,6 +1,187 @@
-/* Part 3: Has the dark forest changed? Every number is read from site/data at render time. */
+/* Part 3: Has the dark forest changed? Every number is read from site/data at render time.
+   The art on this page is drawn in code from the same data (EVART below); no image files. */
 (function () {
   "use strict";
+
+  /* =====================================================================================
+     EVART: code-drawn, data-driven art. Canvas at device pixel ratio, static (no animation),
+     seeded so it draws the same picture on every load. Exported so the link-preview card
+     (launch/v3/og-C/og-evolution.html) draws the same scene.
+     ===================================================================================== */
+  var EVART = (window.EVART = {});
+  function rng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  EVART.rng = rng;
+  /* mount a canvas that fills el and redraws on resize; draw(ctx, w, h) works in CSS pixels */
+  EVART.mount = function (el, draw) {
+    var cv = document.createElement("canvas"), last = "";
+    cv.setAttribute("aria-hidden", "true");
+    el.appendChild(cv);
+    function go() {
+      var w = Math.max(1, Math.round(el.clientWidth)), h = Math.max(1, Math.round(el.clientHeight)), dpr = Math.min(3, window.devicePixelRatio || 1);
+      var key = w + "x" + h + "@" + dpr; if (key === last) return; last = key;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cv.style.width = w + "px"; cv.style.height = h + "px";
+      var ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+      draw(ctx, w, h);
+    }
+    go();
+    var timer;
+    if (window.ResizeObserver) new ResizeObserver(function () { clearTimeout(timer); timer = setTimeout(go, 80); }).observe(el);
+    else window.addEventListener("resize", function () { clearTimeout(timer); timer = setTimeout(go, 80); });
+    return go;
+  };
+  function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+  var C = { bg: [5, 11, 8], mist: [169, 194, 180], gold: [255, 226, 122], amber: [255, 146, 56], ink: [233, 241, 235], trail: [95, 227, 161] };
+  function blob(ctx, x, y, r, col, a, sx) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(sx || 1, 1);
+    var g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+    g.addColorStop(0, rgba(col, a)); g.addColorStop(1, rgba(col, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  }
+  /* one pine: stacked tiers with a slightly ragged outline */
+  function pine(ctx, x, base, h, R) {
+    var tiers = 4 + Math.floor(R() * 2), top = base - h;
+    ctx.moveTo(x, top);
+    for (var k = 0; k < tiers; k++) {
+      var ty = top + h * (k + 1) / (tiers + 0.6), hw = h * (0.1 + 0.075 * (k + 1)) * (0.85 + R() * 0.3);
+      ctx.lineTo(x + hw, ty); ctx.lineTo(x + hw * 0.42, ty - h * 0.03);
+    }
+    ctx.lineTo(x + h * 0.035, base); ctx.lineTo(x - h * 0.035, base);
+    for (k = tiers - 1; k >= 0; k--) {
+      ty = top + h * (k + 1) / (tiers + 0.6); hw = h * (0.1 + 0.075 * (k + 1)) * (0.85 + R() * 0.3);
+      ctx.lineTo(x - hw * 0.42, ty - h * 0.03); ctx.lineTo(x - hw, ty);
+    }
+    ctx.closePath();
+  }
+  /* a treeline: rows of pines from back (lighter, misted) to front (darkest) */
+  EVART.treeline = function (ctx, w, h, opt) {
+    var R = rng(opt.seed || 7), layers = opt.layers || [
+      { y: 0.80, hmin: 0.10, hmax: 0.22, col: "#0d1a14", gap: 0.55 },
+      { y: 0.88, hmin: 0.13, hmax: 0.28, col: "#08120d", gap: 0.6 },
+      { y: 0.99, hmin: 0.16, hmax: 0.36, col: "#030805", gap: 0.62 }
+    ];
+    var unit = opt.unit || Math.min(h, 520);
+    layers.forEach(function (L, li) {
+      ctx.fillStyle = L.col; ctx.beginPath();
+      var x = -20;
+      while (x < w + 20) {
+        var th = unit * (L.hmin + R() * (L.hmax - L.hmin));
+        pine(ctx, x, h * L.y + R() * unit * 0.02, th, R);
+        x += th * (0.18 + R() * 0.22) * L.gap * 1.6;
+      }
+      ctx.fill();
+      ctx.fillRect(0, h * L.y, w, h);
+      /* mist between layers gives depth */
+      if (li < layers.length - 1) {
+        var g = ctx.createLinearGradient(0, h * (L.y - 0.16), 0, h * L.y + 4);
+        g.addColorStop(0, rgba(C.mist, 0)); g.addColorStop(1, rgba(C.mist, opt.mist == null ? 0.07 : opt.mist));
+        ctx.fillStyle = g; ctx.fillRect(0, h * (L.y - 0.16), w, h * 0.16 + 4);
+      }
+    });
+  };
+  /* THE FOG: the public mempool as fog, one mote of light per attacker transaction since the archive began
+     (x = date, left to right). The ones the archive saw in public are lit, with a column of light down to the canopy.
+     dots: [{d: "YYYY-MM-DD", lit: bool}], opt: {x0, x1 (fractions), seed, labels: [left, right], small} */
+  EVART.fog = function (ctx, w, h, dots, opt) {
+    opt = opt || {};
+    var R = rng(opt.seed || 20230807);
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, "#030806"); sky.addColorStop(0.55, "#07120d"); sky.addColorStop(1, "#050b08");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+    var X0 = w * (opt.x0 == null ? 0.05 : opt.x0), X1 = w * (opt.x1 == null ? 0.95 : opt.x1);
+    /* moonlight behind the fog, over the motes */
+    blob(ctx, X0 + (X1 - X0) * 0.62, h * 0.30, Math.max(w, h) * 0.55, C.mist, 0.10, 1.4);
+    blob(ctx, X0 + (X1 - X0) * 0.25, h * 0.55, Math.max(w, h) * 0.35, C.trail, 0.025, 1.6);
+    /* fog banks: wide soft ellipses, densest in the band where the motes float */
+    var n = Math.round(60 + w * h / 9000);
+    for (var i = 0; i < n; i++) {
+      var fx = X0 - 80 + R() * (X1 - X0 + 160), fy = h * (0.12 + R() * 0.62), fr = 40 + R() * Math.min(w, 900) * 0.18;
+      blob(ctx, fx, fy, fr, C.mist, 0.012 + R() * 0.03, 1.8 + R() * 1.6);
+    }
+    var t0 = Date.parse(dots[0].d), t1 = Date.parse(dots[dots.length - 1].d);
+    var bandT = h * 0.16, bandB = h * (opt.bandB || 0.70), sc = opt.small ? 0.8 : 1;
+    var P = dots.map(function (d) {
+      var x = X0 + (Date.parse(d.d) - t0) / (t1 - t0 || 1) * (X1 - X0) + (R() - 0.5) * 6;
+      var y = bandT + Math.pow(R(), 0.85) * (bandB - bandT);
+      return { x: x, y: y, lit: d.lit, r: R() };
+    });
+    /* dim motes first */
+    P.forEach(function (p) {
+      if (p.lit) return;
+      blob(ctx, p.x, p.y, 7 * sc, C.mist, 0.07);
+      ctx.fillStyle = rgba(C.mist, 0.34 + p.r * 0.2); ctx.beginPath(); ctx.arc(p.x, p.y, (1.15 + p.r * 0.6) * sc, 0, Math.PI * 2); ctx.fill();
+    });
+    /* the canopy sits over the motes' columns */
+    var canopy = h * 0.80;
+    P.forEach(function (p) {
+      if (!p.lit) return;
+      var col = ctx.createLinearGradient(0, p.y, 0, canopy);
+      col.addColorStop(0, rgba(C.gold, 0.30)); col.addColorStop(1, rgba(C.gold, 0));
+      ctx.fillStyle = col; ctx.fillRect(p.x - 1.1 * sc, p.y, 2.2 * sc, canopy - p.y);
+      blob(ctx, p.x, canopy - 4, 26 * sc, C.gold, 0.08, 2.2);
+      blob(ctx, p.x, p.y, 34 * sc, C.gold, 0.26);
+      blob(ctx, p.x, p.y, 10 * sc, C.gold, 0.55);
+      ctx.fillStyle = "#fff6cf"; ctx.beginPath(); ctx.arc(p.x, p.y, 2.6 * sc, 0, Math.PI * 2); ctx.fill();
+    });
+    EVART.treeline(ctx, w, h, { seed: 31, unit: Math.min(h, 560) * (opt.small ? 0.8 : 1) });
+    /* low fog over the trees, then fade into the page */
+    for (i = 0; i < 18; i++) blob(ctx, R() * w, h * (0.84 + R() * 0.1), 80 + R() * 220, C.mist, 0.02 + R() * 0.02, 3);
+    var fade = ctx.createLinearGradient(0, h * 0.86, 0, h);
+    fade.addColorStop(0, rgba(C.bg, 0)); fade.addColorStop(1, rgba(C.bg, 1));
+    ctx.fillStyle = fade; ctx.fillRect(0, h * 0.86, w, h * 0.14 + 1);
+    if (opt.labels) {
+      ctx.font = "500 " + (opt.small ? 12.5 : 13.5) + "px 'Spline Sans Mono', ui-monospace, monospace";
+      ctx.fillStyle = "rgba(233,241,235,.78)"; ctx.textBaseline = "alphabetic";
+      ctx.textAlign = "left"; ctx.fillText(opt.labels[0], X0, h * 0.13);
+      ctx.textAlign = "right"; ctx.fillText(opt.labels[1], X1, h * 0.13);
+      ctx.strokeStyle = "rgba(233,241,235,.28)"; ctx.lineWidth = 1; ctx.beginPath();
+      var mid = ctx.measureText(opt.labels[1]).width;
+      ctx.moveTo(X0 + ctx.measureText(opt.labels[0]).width + 12, h * 0.13 - 4.5); ctx.lineTo(X1 - mid - 12, h * 0.13 - 4.5); ctx.stroke();
+    }
+    return P;
+  };
+  /* THE END BAND: the treeline at night with one lamp per race a bot won, placed by date */
+  EVART.lamps = function (ctx, w, h, races, opt) {
+    opt = opt || {};
+    var R = rng(19);
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, "#050b08"); sky.addColorStop(0.6, "#08140f"); sky.addColorStop(1, "#050b08");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+    for (var i = 0; i < 40; i++) blob(ctx, R() * w, h * (0.3 + R() * 0.45), 60 + R() * 200, C.mist, 0.012 + R() * 0.025, 2.4);
+    var X0 = w * (opt.x0 == null ? 0.06 : opt.x0), X1 = w * (opt.x1 == null ? 0.94 : opt.x1);
+    var t0 = Date.parse(opt.from || "2021-01-01"), t1 = Date.parse(opt.to || "2026-12-31"), canopy = h * 0.74;
+    var seenX = {};
+    races.forEach(function (r) {
+      var x = X0 + (Date.parse(r.d) - t0) / (t1 - t0) * (X1 - X0), k = Math.round(x / 8);
+      seenX[k] = (seenX[k] || 0) + 1;
+      var y = h * (0.20 + 0.12 * ((seenX[k] - 1) % 4)) + R() * h * 0.10;
+      var col = r.alt ? C.gold : C.amber;
+      var g = ctx.createLinearGradient(0, y, 0, canopy);
+      g.addColorStop(0, rgba(col, 0.32)); g.addColorStop(1, rgba(col, 0));
+      ctx.fillStyle = g; ctx.fillRect(x - 1, y, 2, canopy - y);
+      blob(ctx, x, canopy - 2, 30, col, 0.10, 2.4);
+      blob(ctx, x, y, 30, col, 0.30);
+      blob(ctx, x, y, 9, col, 0.6);
+      ctx.fillStyle = r.alt ? "#fff6cf" : "#ffe0c2"; ctx.beginPath(); ctx.arc(x, y, 2.4, 0, Math.PI * 2); ctx.fill();
+    });
+    EVART.treeline(ctx, w, h, { seed: 5, unit: Math.min(h, 420), layers: [
+      { y: 0.80, hmin: 0.14, hmax: 0.26, col: "#0c1913", gap: 0.55 },
+      { y: 0.90, hmin: 0.16, hmax: 0.34, col: "#07100c", gap: 0.6 },
+      { y: 1.01, hmin: 0.2, hmax: 0.42, col: "#030805", gap: 0.62 }] });
+    var fade = ctx.createLinearGradient(0, 0, 0, h * 0.14);
+    fade.addColorStop(0, rgba(C.bg, 1)); fade.addColorStop(1, rgba(C.bg, 0));
+    ctx.fillStyle = fade; ctx.fillRect(0, 0, w, h * 0.14);
+    if (opt.labels) {
+      ctx.font = "500 13px 'Spline Sans Mono', ui-monospace, monospace"; ctx.fillStyle = "rgba(233,241,235,.8)";
+      for (var yr = 2021; yr <= 2026; yr++) {
+        var xx = X0 + (Date.parse(yr + "-07-01") - t0) / (t1 - t0) * (X1 - X0);
+        ctx.textAlign = "center"; ctx.fillText(String(yr), xx, h * 0.97);
+      }
+    }
+  };
+
+  /* the page itself (the og card loads this file for EVART only) */
+  if (!document.body || !document.body.classList.contains("ev")) return;
+
   var $ = function (s) { return document.querySelector(s); };
   var esc = BVH.esc;
   BVH.chrome("evolution.html");
@@ -30,6 +211,9 @@
   function pctT(x) { return x == null ? "n/a" : x >= 99 && x < 100 ? (+x).toFixed(2) + "%" : x > 0 && x < 0.1 ? "under 0.1%" : pctS(x); }
   function pctS(x) { return x == null ? "n/a" : (Math.abs(x - Math.round(x)) < 0.05 ? Math.round(x) : (+x).toFixed(1)) + "%"; }
   function num(x, d) { return x == null ? "n/a" : Number(x).toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  /* big ETH amounts in running text: rounded and said plainly, so "1,906.02" cannot be read as a decimal;
+     the exact value always appears in the figure, caption or "How we know" next to it */
+  function aboutEth(x) { return x >= 1000 ? "about " + num(Math.round(x)) + " ETH" : BVH.eth(x); }
   function wilson(k, n) {
     if (!n) return [0, 0];
     var z = 1.96, p = k / n, den = 1 + z * z / n, c = (p + z * z / (2 * n)) / den, h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den;
@@ -37,16 +221,22 @@
   }
   function gapTxt(s) {
     if (s == null) return "n/a";
-    if (s < 120) return Math.round(s) + "\u00a0s";
-    if (s < 7200) return (s / 60).toFixed(1) + "\u00a0min";
-    return (s / 3600).toFixed(1) + "\u00a0h";
+    if (s < 120) return Math.round(s) + " s";
+    if (s < 7200) return (s / 60).toFixed(1) + " min";
+    return (s / 3600).toFixed(1) + " h";
   }
   function month(iso) { var d = new Date(iso + "T00:00:00Z"); return d.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" }); }
+  function monthLong(iso) { var d = new Date(iso + "T00:00:00Z"); return d.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }); }
   function tms(iso) { return Date.parse(iso + "T00:00:00Z"); }
   function utcTime(s) { return s ? s.slice(11, 19) : "n/a"; }
   function short(r) { return (r.title || r.id).split(":")[0].trim(); }
   function incA(r, text) { return '<a href="incident.html?slug=' + encodeURIComponent(r.id) + '">' + esc(text || short(r)) + "</a>"; }
+  function list(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; }
+  var WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+  function word(n) { return WORDS[n] || String(n); }
+  function Word(n) { var s = word(n); return s.charAt(0).toUpperCase() + s.slice(1); }
 
+  /* SVG chart mount: redraws at container width (ResizeObserver) and on theme change */
   function mount(el, label, draw) {
     var last = 0, timer;
     function go() {
@@ -63,7 +253,7 @@
     BVH.onTheme.push(function () { last = 0; go(); });
   }
   function hit(parent, attrs, html) {
-    attrs["class"] = "hit"; attrs.tabindex = 0; attrs.role = "img"; attrs["aria-label"] = html.replace(/<[^>]+>/g, "");
+    attrs["class"] = "hit"; attrs.tabindex = 0; attrs.role = "img"; attrs["aria-label"] = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     var r = S(attrs.r != null ? "circle" : "rect", attrs, parent);
     BVH.tipFor(r, function () { return html; });
     return r;
@@ -71,58 +261,201 @@
   function gridY(svg, y, x0, x1, ticks, fmt) {
     ticks.forEach(function (t) {
       S("line", { x1: x0, x2: x1, y1: y(t), y2: y(t), "class": t === 0 ? "g-base" : "g-grid" }, svg);
-      T(svg, x0 - 8, y(t) + 4, fmt(t), "t-ax", "end");
+      T(svg, x0 - 8, y(t) + 4.5, fmt(t), "t-ax", "end");
     });
   }
+  function halo(svg, id, color) {
+    var d = S("defs", {}, svg), g = S("radialGradient", { id: id }, d);
+    S("stop", { offset: "0", style: "stop-color:" + color + ";stop-opacity:.55" }, g);
+    S("stop", { offset: ".45", style: "stop-color:" + color + ";stop-opacity:.16" }, g);
+    S("stop", { offset: "1", style: "stop-color:" + color + ";stop-opacity:0" }, g);
+    return "url(#" + id + ")";
+  }
+
+  /* =====================================================================================
+     HEADLINE COPY. Every sentence that makes a headline claim lives here, so it can be edited in one place
+     (who lost each race follows the owner's 2026-10-23 wording, from data/incidents.json `beaten`). Numbers are filled
+     from the data (d) at render time; keep the source marks (d.SE, d.SF, d.SH) next to the numbers.
+     The page <title>, description and link-preview text are static in evolution.html <head>.
+     ===================================================================================== */
+  var COPY = {
+    dek: function (d) { return "Ethereum's &ldquo;dark forest&rdquo; is its public waiting room, where a pending exploit transaction can be read and copied before it lands. Since " + month(d.m.since) + ", only " + d.m.public + " of " + d.resolved + " attacker transactions were seen there first." + d.SF + " Here is what changed, measured on a sample of " + num(d.ov.n) + " reproduced Ethereum mainnet exploits, " + d.y0 + " to " + d.y1 + "." + d.SE; },
+    open: function (d) {
+      return "<p>In 2020, two researchers at Paradigm gave Ethereum a nickname: <a href=\"https://www.paradigm.xyz/writing/ethereum-is-a-dark-forest\" target=\"_blank\" rel=\"noopener\">a dark forest</a>. Anything sent to the network waited a few seconds in a public room where anyone could read it. Bots watched that room. If a transaction would make money, a bot copied it, sent the money to itself, and paid to go first.</p>" +
+        "<p>An exploit sent through that room gave copy bots a visible target. This series is about the times a bot got there first: <b>" + d.head.length + " races in " + d.headInc + " hacks</b>, from " + d.raceY0 + " to " + d.raceY1 + "." + d.SH +
+        (d.wl ? " In " + d.wl.original + " of them the loser was the original attacker (" + d.wl.confirmed + " confirmed, " + d.wl.likely + " likely); in " + d.wl.later + " it was a later exploiter or we can't tell." + d.SB : "") + "</p>" +
+        "<p>When an exploit skips the public room, or runs while its contract is being created, a copying bot has less time and less to see, and that includes a bot that would have handed the money back. Part 3 asks whether the forest is still that dark. We followed a sample of " + num(d.ov.n) + " reproduced exploits on Ethereum mainnet from " + d.y0 + " to " + d.y1 + " and measured what attackers did differently.</p>";
+    },
+    answer: function (d) {
+      return [
+        ["#ch1", d.m.public + " of " + d.resolved, "gold", "attacker transactions showed up in the public mempool since " + month(d.m.since) + " (" + pct(d.m.attacker_seen_pct) + "). Ordinary ones in the same blocks: " + pct(d.m.control_seen_pct) + "."],
+        ["#ch2", pctS(d.y25.constructor_pct), "atk", "of sampled " + d.y25.year + " exploits ran inside the constructor, the code that runs when the attack contract is created. The attack was over before a separate call could wait to be copied."],
+        ["#ch3", gapTxt(d.y25.gap_s_median), "ink", "median wait in " + d.y25.year + " between deploying an attack contract and using it, about " + Math.round(d.y25.gap_s_median / 12) + " blocks of 12 seconds. Before 2021 it was " + gapTxt(d.e1.gap_s) + "."],
+        ["#ch4", pctS(d.bot.bribe_paid_pct_of_measured), "bot", "of the " + d.bot.n_measured + " bot transactions we traced (a selected sample, not all bots) paid the block builder directly. Attacker transactions did so " + pct(d.ov.bribe_pct) + " of the time."],
+        ["#ch5", d.dw.length + " of " + d.head.length, "gold", "races a bot won by copying the attacker's on-chain setup. All " + d.dw.length + " came in " + d.dwYears + "."]
+      ];
+    },
+    endLede: function () { return "Yes. The forest got darker for the bots, because the attackers learned to hide in it."; },
+    takeaways: function (d) {
+      return [
+        ["Attackers hid", pct(d.m.attacker_seen_pct) + " of attacker transactions were seen in the public mempool" + (d.noneSince ? ", and none after " + month(d.lastSeen.d) : "") + ". Ordinary transactions in the same blocks: " + pct(d.m.control_seen_pct) + "."],
+        ["The window closed", pctS(d.y25.constructor_pct) + " of " + d.y25.year + " exploits were constructor-only, and " + pctS(d.y25.same_tx_pct) + " deployed and attacked in the same transaction. Where a fresh contract went up first, the median wait was " + gapTxt(d.y25.gap_s_median) + " (" + d.y25.gap_n + " exploits)."],
+        ["The bots adapted", "Winning bots sit at the top of the block, pay the builder for it, and since " + d.dw[0].date.slice(0, 4) + " have also won by copying the attacker's setup instead of the attack (" + d.dw.length + " of the " + d.head.length + " races)."]
+      ];
+    },
+    close: function () { return "A bot can still win, but only where the attacker leaves something on chain before the attack lands, and only for a block or two. Part 1 shows one of those blocks second by second. Part 2 shows what a bot does inside it."; }
+  };
+
+  /* the primer: page-specific wording for the six terms this part uses (shared look: BVH.primer / .primer) */
+  var PRIMER = [
+    ["Public mempool", "The waiting room. A transaction sent the normal way sits here for a few seconds before it lands in a block, and anyone can read it."],
+    ["Private route", "Sending a transaction straight to a block builder, so it skips the waiting room. Nobody outside sees it until the block is out."],
+    ["Builder and proposer", "Builders pack transactions into blocks and bid to have theirs used. Every 12 seconds one proposer, an Ethereum validator, takes one of those blocks."],
+    ["Position 0", "The first transaction in a block. If two transactions try to take the same money, the earlier one gets it."],
+    ["Front-running bot", "A program that copies a profitable transaction, points the payout at itself, and pays the builder to land first. In this series the profit is a live hack."],
+    ["Attack contract", "A small program the attacker puts on chain to run the exploit. Deploying it and using it can be two steps, or one."],
+    ["Constructor", "Code that runs once, at the moment a contract is created. An attack that runs entirely inside it is over before anyone can see it waiting."]
+  ];
 
   var E, HS, INC, MK, META;
   Promise.all([BVH.json(F.evo), BVH.json(F.hs), BVH.json(F.inc), BVH.json("data/incident/makina-2026.json"), BVH.json("data/meta.json")])
     .then(function (r) { E = r[0]; HS = r[1]; INC = r[2]; MK = r[3]; META = r[4]; build(); })
-    .catch(function (e) { var d = document.createElement("div"); d.className = "wrap"; $("#main").insertBefore(d, $("#ch1")); BVH.loadError(d, e); });
+    .catch(function (e) { var d = document.createElement("div"); d.className = "ev-col"; $("#main").insertBefore(d, $(".ev-open")); BVH.loadError(d, e); });
 
   function build() {
     var Y = {}; E.years.forEach(function (y) { Y[y.year] = y; });
     var m = E.measured, ov = E.overall, eras = E.eras, bot = E.bot_side.overall, vv = E.v1_vs_v2;
-    var resolved = m.public + m.private;
     var head = INC.filter(function (r) { return r.headline; });
     var dw = head.filter(function (r) { return r.race_type === "deploy-window-copy"; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
-    var dwYears = dw.map(function (r) { return +r.date.slice(0, 4); });
-    var dwMin = Math.min.apply(null, dwYears), dwMax = Math.max.apply(null, dwYears);
-    var y25 = Y[2025], y26 = Y[2026];
+    var dwY = dw.map(function (r) { return +r.date.slice(0, 4); }), dwMin = Math.min.apply(null, dwY), dwMax = Math.max.apply(null, dwY);
     var archive = E.dots.filter(function (d) { return d.d >= m.since && (d.exp === "public" || d.exp === "private-bundle"); })
       .sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
     var seen = archive.filter(function (d) { return d.exp === "public"; });
     var lastSeen = seen[seen.length - 1];
-    var timesLess = Math.round(1 / m.relative_visibility);
-    var x0Years = E.years.filter(function (y) { return y.year < 2020; });
-    var e1 = eras[0], e4 = eras[3];
+    var raceDates = head.map(function (r) { return r.date; }).sort();
+    var D = {
+      m: m, ov: ov, bot: bot, head: head, dw: dw, y25: Y[2025], y26: Y[2026], e1: eras[0], resolved: m.public + m.private,
+      y0: E.years[0].year, y1: E.years[E.years.length - 1].year, raceY0: raceDates[0].slice(0, 4), raceY1: raceDates[raceDates.length - 1].slice(0, 4),
+      dwYears: dwMin === dwMax ? String(dwMin) : dwMin + " and " + dwMax, lastSeen: lastSeen,
+      noneSince: E.quarters.filter(function (q) { return q.q > "2025Q1"; }).every(function (q) { return q.public === 0; }),
+      SE: SE(), SF: SF(), SH: SH(),
+      headInc: head.map(function (r) { return r.slug; }).filter(function (s, i, a) { return a.indexOf(s) === i; }).length,
+      wl: (function () { var c = BVH.beatenCounts(INC); return c.total === head.length ? c : null; })(),
+      SB: src("data/beaten_party.json", "Who lost each headline race: verdict, note and evidence per race")
+    };
 
-    /* ---------- hero ---------- */
-    $(".ev-dek").innerHTML = "Ethereum used to be a place where a hacker's transaction sat in public for a few seconds, and any bot could copy it. That world is mostly gone. Here is what changed, measured on " + num(ov.n) + " exploits from " + E.years[0].year + " to " + E.years[E.years.length - 1].year + "." + SE();
-    var toc = [
-      ["#ch1", pct(m.attacker_seen_pct), "atk", "of attacker transactions showed up in the public mempool, against " + pct(m.control_seen_pct) + " of ordinary ones."],
-      ["#ch2", pctS(y25.constructor_pct), "atk", "of " + y25.year + " exploits ran the whole attack inside the attack contract's constructor, leaving nothing pending to copy."],
-      ["#ch3", gapTxt(y25.gap_s_median), "gold", "median wait between deploying an attack contract and using it in " + y25.year + ". Before 2021 it was " + gapTxt(e1.gap_s) + "."],
-      ["#ch4", pctS(bot.bribe_paid_pct_of_measured), "bot", "of bot transactions paid the block builder directly. Attackers did so " + pct(ov.bribe_pct) + " of the time."],
-      ["#ch5", dw.length + " of " + head.length, "gold", "races a bot won by copying the attacker's on-chain setup. All " + dw.length + " came in " + (dwMin === dwMax ? dwMin : dwMin + " and " + dwMax) + "."]
-    ];
-    $("#toc").innerHTML = toc.map(function (t, i) {
-      return '<li><a href="' + t[0] + '"><span class="i">' + (i + 1) + '</span><span class="v ' + t[2] + '">' + esc(t[1]) + '</span><span class="d">' + esc(t[3]) + "</span></a></li>";
+    hero(archive, seen, m);
+    $("#ev-dek").innerHTML = COPY.dek(D);
+    $("#open-story").innerHTML = COPY.open(D);
+    $("#toc").innerHTML = COPY.answer(D).map(function (t) {
+      return '<li><a href="' + t[0] + '"><span class="v ' + t[2] + '">' + esc(t[1]) + '</span><span class="d">' + esc(t[3]) + "</span></a></li>";
     }).join("");
+    $("#primer-box").innerHTML = BVH.primer(PRIMER, { intro: "Seven terms come up on this page. Most are stops on the path a transaction takes into a block, drawn below." });
+    route();
 
-    ch1(m, resolved, archive, seen, lastSeen, timesLess);
-    ch2(Y, y25, y26, x0Years);
-    ch3(Y, y25, y26, eras, dw);
+    ch1(m, D.resolved, archive, seen, lastSeen);
+    ch2(Y, D.y25, D.y26);
+    ch3(Y, D.y25, D.y26, eras, dw);
     ch4(Y, ov, bot, head);
     ch5(head, bot, vv, dw);
-    ending(m, seen, lastSeen, y25, dw);
+    ending(D, head, dw);
     tables(head);
     downloads();
   }
 
+  /* ================= opener art ================= */
+  function hero(archive, seen, m) {
+    var dots = archive.map(function (d) { return { d: d.d, lit: d.exp === "public" }; });
+    var el = $("#hero-art");
+    EVART.mount(el, function (ctx, w, h) {
+      var wide = w >= 900;
+      EVART.fog(ctx, w, h, dots, { x0: wide ? 0.5 : 0.06, x1: wide ? 0.96 : 0.94, small: !wide, bandB: wide ? 0.68 : 0.7, labels: [month(archive[0].d), month(archive[archive.length - 1].d)] });
+    });
+    $("#hero-note").innerHTML = "Drawn from the data: " + archive.length + " points of light in the fog, one for each attacker transaction since the public mempool archive began, in date order. The " + word(seen.length) + " bright ones were seen in public before their block." + SE();
+  }
+
+  /* ================= primer: the two routes into a block ================= */
+  function route() {
+    mount($("#route"), "Diagram. A transaction can take the public route, waiting a few seconds in the public mempool where anyone, including bots, can read it, or the private route straight to a block builder. The builder packs a block; position 0 is the first slot. Every 12 seconds a proposer takes one block.", function (svg, w) {
+      var wide = w >= 680;
+      var hg = halo(svg, "ev-rt-halo", "var(--bot)");
+      function box(x, y, bw, bh, title, sub, cls) {
+        S("rect", { x: x, y: y, width: bw, height: bh, rx: 10, "class": "rt-box " + (cls || "") }, svg);
+        T(svg, x + 14, y + 25, title, "t-labb");
+        if (sub) [].concat(sub).forEach(function (s, i) { T(svg, x + 14, y + 46 + i * 18, s, "t-lab"); });
+      }
+      function arrow(d, dashed) {
+        S("path", { d: d, "class": "rt-line" + (dashed ? " dash" : "") }, svg);
+      }
+      function head(x, y, dir) {
+        var a = dir === "down" ? "M" + (x - 5) + " " + (y - 8) + "L" + x + " " + y + "L" + (x + 5) + " " + (y - 8) : "M" + (x - 8) + " " + (y - 5) + "L" + x + " " + y + "L" + (x - 8) + " " + (y + 5);
+        S("path", { d: a, "class": "rt-line" }, svg);
+      }
+      function fogBox(x, y, bw, bh) {
+        S("rect", { x: x, y: y, width: bw, height: bh, rx: bh / 2, "class": "rt-fog" }, svg);
+        var R = rng(4);
+        for (var i = 0; i < 30; i++) { var top = i % 2 === 0; S("circle", { cx: x + 30 + R() * (bw - 60), cy: top ? y + 7 + R() * 7 : y + bh - 14 + R() * 7, r: 1.4 + R() * 1.2, "class": "rt-mote" }, svg); }
+        /* bots watching: three amber eyes of light at the edge of the fog */
+        [0.3, 0.55, 0.8].forEach(function (f) { var cx = x + bw * f, cy = y + bh + 2; S("circle", { cx: cx, cy: cy, r: 14, fill: hg }, svg); S("circle", { cx: cx, cy: cy, r: 3.6, "class": "rt-bot" }, svg); });
+      }
+      function block(x, y, bw, bh) {
+        var n = 18, cw = bw / n;
+        for (var k = 0; k < n; k++) S("rect", { x: x + k * cw + 1, y: y, width: Math.max(1, cw - 2), height: bh, rx: 1.5, "class": k === 0 ? "rt-p0" : "rt-tx" }, svg);
+      }
+      if (wide) {
+        var H = 290, bx = Math.round(w * 0.56), blx = Math.round(w * 0.78);
+        box(0, 108, 150, 70, "A transaction", "someone sends it");
+        /* public route */
+        arrow("M150 130 C 175 130, 180 70, 205 70");
+        var fx = 205, fw = bx - 30 - fx;
+        fogBox(fx, 22, fw, 96);
+        T(svg, fx + fw / 2, 52, "Public mempool", "t-labb", "middle");
+        T(svg, fx + fw / 2, 74, "waits a few seconds, readable by anyone", "t-lab", "middle");
+        T(svg, fx + fw / 2, 148, "front-running bots watch here", "t-lab rt-botlab", "middle");
+        arrow("M" + (fx + fw) + " 70 C " + (bx - 10) + " 70, " + (bx - 14) + " 112, " + bx + " 118"); head(bx, 118);
+        /* private route */
+        arrow("M150 158 C 200 158, 200 236, 250 236 L " + (bx - 60) + " 236 C " + (bx - 20) + " 236, " + (bx - 20) + " 164, " + bx + " 160", true); head(bx, 160);
+        T(svg, 262, 258, "private route: straight to a builder, unseen", "t-lab");
+        box(bx, 96, blx - bx - 34, 86, "Block builder", ["packs a block,", "bids to have it used"]);
+        arrow("M" + (blx - 34) + " 139 L " + (blx - 4) + " 139"); head(blx - 4, 139);
+        var bw2 = w - blx - 2;
+        T(svg, blx, 92, "The block", "t-labb");
+        block(blx, 104, bw2, 70);
+        T(svg, blx, 196, "position 0: first in line", "t-lab rt-botlab");
+        S("path", { d: "M" + (blx + bw2 / 36) + " 176 L " + (blx + bw2 / 36) + " 182", "class": "rt-line" }, svg);
+        T(svg, blx, 236, "Proposer: takes one", "t-lab");
+        T(svg, blx, 255, "block every 12 seconds", "t-lab");
+        return H;
+      }
+      /* phones: top to bottom */
+      var cx = w / 2, y = 0;
+      box(0, y, w, 62, "A transaction", "someone sends it"); y += 62;
+      var lx = 0, lw = Math.round(w * 0.6);
+      arrow("M" + (lw / 2) + " " + y + " L " + (lw / 2) + " " + (y + 26)); head(lw / 2, y + 26, "down");
+      arrow("M" + (w - 40) + " " + y + " L " + (w - 40) + " " + (y + 196), true); head(w - 40, y + 196, "down");
+      T(svg, w - 52, y + 54, "private", "t-lab", "end"); T(svg, w - 52, y + 72, "route,", "t-lab", "end"); T(svg, w - 52, y + 90, "unseen", "t-lab", "end");
+      y += 28;
+      fogBox(lx, y, lw, 110);
+      T(svg, lw / 2, y + 38, "Public mempool", "t-labb", "middle");
+      T(svg, lw / 2, y + 60, "readable by anyone", "t-lab", "middle");
+      T(svg, lw / 2, y + 142, "bots watch here", "t-lab rt-botlab", "middle");
+      y += 150;
+      arrow("M" + (lw / 2) + " " + y + " L " + (lw / 2) + " " + (y + 18)); head(lw / 2, y + 18, "down");
+      y += 18;
+      box(0, y, w, 64, "Block builder", "packs a block, bids to have it used"); y += 64;
+      arrow("M" + cx + " " + y + " L " + cx + " " + (y + 20)); head(cx, y + 20, "down"); y += 30;
+      T(svg, 0, y + 14, "The block", "t-labb"); y += 24;
+      block(0, y, w, 46); y += 46;
+      T(svg, 0, y + 22, "position 0: first in line", "t-lab rt-botlab");
+      T(svg, 0, y + 46, "Proposer: takes one block every 12 seconds", "t-lab");
+      return y + 56;
+    });
+  }
+
   /* ================= 1. visibility ================= */
-  function ch1(m, resolved, archive, seen, lastSeen, timesLess) {
+  function ch1(m, resolved, archive, seen, lastSeen) {
     var since = BVH.dateLong(m.since);
+    var timesLess = Math.round(1 / m.relative_visibility);
     $("#ch1-lede").innerHTML = "Since a public archive of the mempool began on " + since + ", only <b>" + m.public + " of " + resolved + "</b> attacker transactions were seen there before they landed. In the very same blocks, the archive saw <b>" + pct(m.control_seen_pct) + "</b> of everyone else's." + SF() + " Attacker transactions now almost never show up in the public pool before they land; most likely they go privately to block builders. A bot watching the public pool then has nothing to copy.";
 
     var rows = [
@@ -130,326 +463,359 @@
       ["atk", "Attacker transactions", m.public + " of " + resolved, m.attacker_seen_pct, pct(m.attacker_seen_pct)]
     ];
     $("#c1-vs").innerHTML = rows.map(function (r) {
-      return '<div class="ev-vsrow ' + r[0] + '"><div class="l"><b>' + r[1] + "</b>" + esc(r[2]) + '</div><div class="track" role="img" aria-label="' + r[1] + ": " + r[4] + ' seen in the public mempool"><div class="fill" style="width:' + r[3] + '%"></div></div><div class="v">' + r[4] + "</div></div>";
+      return '<div class="ev-vsrow ' + r[0] + '"><div class="l"><b>' + r[1] + "</b><span>" + esc(r[2]) + '</span></div><div class="track" role="img" aria-label="' + r[1] + ": " + r[4] + ' seen in the public mempool"><div class="fill" style="width:' + r[3] + '%"></div></div><div class="v">' + r[4] + "</div></div>";
     }).join("") + '<div class="ev-vsaxis" aria-hidden="true"><div></div><div><span style="left:0">0%</span><span style="left:25%">25%</span><span style="left:50%">50%</span><span style="left:75%">75%</span><span style="left:100%">100%</span></div><div></div></div>';
     $("#f1cap").innerHTML = "Share seen in the public mempool archive before the block was proposed, " + since + " to October 2026. Attackers were about " + timesLess + " times less visible than the transactions around them." + SF();
 
-    /* lights */
-    $("#c1-gridt").textContent = archive.length + " resolved attacker transactions since the archive began, one square each" + (m.unknown ? "; " + m.unknown + (m.unknown === 1 ? " more could not be resolved and is not drawn" : " more could not be resolved and are not drawn") : "") + ". Lit: the archive saw it in public.";
-    var g = $("#c1-grid");
-    g.setAttribute("aria-label", archive.length + " squares, one per attacker transaction since " + since + "; " + seen.length + " are lit because the archive saw them");
-    archive.forEach(function (d) {
-      var i = document.createElement("i");
-      if (d.exp === "public") {
-        i.className = "on"; i.tabIndex = 0;
-        BVH.tipFor(i, function () { return "<b>" + esc(d.n) + "</b>, " + BVH.dateLong(d.d) + "<br>seen in the public mempool before its block"; });
+    /* lights over time: one dot per attacker transaction, stacked by month */
+    $("#c1-gridt").textContent = archive.length + " resolved attacker transactions since the archive began, one dot each" + (m.unknown ? "; " + m.unknown + (m.unknown === 1 ? " more could not be resolved and is not drawn" : " more could not be resolved and are not drawn") : "");
+    $("#c1-key").innerHTML = '<li><i class="k-lit"></i>seen in the public mempool (' + seen.length + ')</li><li><i class="k-dim"></i>never seen in public (' + (archive.length - seen.length) + ")</li>";
+    var months = [], mi = {};
+    (function () {
+      var y = +archive[0].d.slice(0, 4), mo = +archive[0].d.slice(5, 7), ly = +archive[archive.length - 1].d.slice(0, 4), lm = +archive[archive.length - 1].d.slice(5, 7);
+      while (y < ly || (y === ly && mo <= lm)) { var k = y + "-" + (mo < 10 ? "0" : "") + mo; mi[k] = months.length; months.push({ k: k, items: [] }); mo++; if (mo > 12) { mo = 1; y++; } }
+    })();
+    archive.forEach(function (d) { months[mi[d.d.slice(0, 7)]].items.push(d); });
+    var maxN = Math.max.apply(null, months.map(function (x) { return x.items.length; }));
+    var early = seen.filter(function (d) { return d.d < "2024-05-01"; });
+    mount($("#c1-lights"), archive.length + " dots by month from " + month(archive[0].d) + " to " + month(archive[archive.length - 1].d) + ". " + seen.length + " are lit: " + seen.map(function (d) { return d.n + " (" + month(d.d) + ")"; }).join(", ") + ".", function (svg, w) {
+      var wide = w >= 700, l = 4, r = 4, cw = (w - l - r) / months.length;
+      var pitch = Math.max(6, Math.min(15, cw * 0.9)), rad = pitch * 0.36, top = wide ? 74 : 54, ph = maxN * pitch, base = top + ph;
+      var hl = halo(svg, "ev-lit-halo", "var(--gold)");
+      /* the "lights went out" bracket */
+      var iMay = mi["2024-05"];
+      if (iMay != null) {
+        var xa = l + iMay * cw, xb = w - r;
+        S("path", { d: "M" + xa + " " + (top - 18) + " L " + xa + " " + (top - 26) + " L " + xb + " " + (top - 26) + " L " + xb + " " + (top - 18), "class": "g-ann", fill: "none" }, svg);
+        var after = seen.length - early.length;
+        T(svg, xa + 8, top - 34, wide ? "From May 2024: " + word(after) + " sighting" + (after === 1 ? "" : "s") + " in " + (months.length - iMay) + " months" : "From May 2024: " + after + " sighting" + (after === 1 ? "" : "s"), "t-lab", "start");
+        var xe = l + (mi[early[early.length - 1].d.slice(0, 7)] + 1) * cw, x0e = l + mi[early[0].d.slice(0, 7)] * cw;
+        S("path", { d: "M" + x0e + " " + (top - 18) + " L " + x0e + " " + (top - 26) + " L " + xe + " " + (top - 26) + " L " + xe + " " + (top - 18), "class": "g-ann-lit", fill: "none" }, svg);
+        if (wide) T(svg, x0e, top - 34, early.length + " sightings", "t-lab t-gold", "start");
       }
-      g.appendChild(i);
+      months.forEach(function (mo, i) {
+        var cx = l + (i + 0.5) * cw;
+        mo.items.forEach(function (d, j) {
+          var cy = base - (j + 0.5) * pitch;
+          if (d.exp === "public") {
+            S("circle", { cx: cx, cy: cy, r: rad * 3.4, fill: hl }, svg);
+            S("circle", { cx: cx, cy: cy, r: rad * 1.12, "class": "lt-on" }, svg);
+            hit(svg, { cx: cx, cy: cy, r: Math.max(9, rad * 2) }, "<b>" + esc(d.n) + "</b>, " + BVH.dateLong(d.d) + "<br>seen in the public mempool before its block");
+          } else S("circle", { cx: cx, cy: cy, r: rad, "class": "lt-off" }, svg);
+        });
+        if (mo.k.slice(5) === "01" || i === 0) {
+          S("line", { x1: l + i * cw, x2: l + i * cw, y1: base + 4, y2: base + 12, "class": "g-tick" }, svg);
+          T(svg, l + i * cw + (i === 0 ? 0 : 4), base + 28, i === 0 ? (wide ? month(archive[0].d) : mo.k.slice(0, 4)) : mo.k.slice(0, 4), "t-ax", "start");
+        }
+      });
+      if (lastSeen && wide) {
+        var li = mi[lastSeen.d.slice(0, 7)], lx = l + (li + 0.5) * cw, ly = base - 0.5 * pitch;
+        S("line", { x1: lx, x2: lx, y1: ly - rad * 2.2, y2: top - 2, "class": "g-ann-lit" }, svg);
+        T(svg, lx + 6, top + 12, esc(lastSeen.n) + ", " + month(lastSeen.d) + ": the last one seen", "t-lab t-gold", "start");
+      }
+      return base + 40;
     });
-    var key = '<ul class="ev-lightkey"><li><i></i>seen in the public mempool (' + seen.length + ')</li><li><i class="off"></i>never seen in public (' + (archive.length - seen.length) + ")</li></ul>";
-    $("#c1-key").innerHTML = key;
-    $("#f1bcap").innerHTML = "In date order, " + month(archive[0].d) + " at the top left to " + month(archive[archive.length - 1].d) + " at the bottom right. The " + seen.length + " that were seen:" +
-      '<ul class="ev-seen">' + seen.map(function (d) { return "<li>" + esc(d.n) + " <span>" + month(d.d) + "</span></li>"; }).join("") + "</ul>" + src(F.per, "per_exploit_v2.json: one row per exploit, with its mempool label");
+    $("#f1bcap").innerHTML = "Each column is one month, " + month(archive[0].d) + " to " + month(archive[archive.length - 1].d) + ". The " + word(seen.length) + " that were seen: " + list(seen.map(function (d) { return esc(d.n) + " (" + month(d.d) + ")"; })) + "." + src(F.per, "per_exploit_v2.json: one row per exploit, with its mempool label");
 
-    var early = seen.filter(function (d) { return d.d < "2024-05-01"; }).length;
     var Q = E.quarters;
     $("#ch1-side").innerHTML =
-      "<p>The lights went out early. " + early + " of the " + seen.length + " sightings came before May 2024. Since then the archive has caught one attacker in public: " + esc(lastSeen.n) + ", in " + month(lastSeen.d) + ". Every attacker transaction after that went unseen." + SE() + "</p>" +
+      "<p>The lights went out early. " + Word(early.length) + " of the " + word(seen.length) + " sightings came before May 2024. Since then the archive has caught one attacker in public: " + esc(lastSeen.n) + ", in " + monthLong(lastSeen.d) + ". Every attacker transaction after that went unseen." + SE() + "</p>" +
       "<p>Even the ones that were seen gave little warning: a median of " + m.lead_time_s_median.toFixed(1) + " seconds before their block." + SF() + "</p>" +
       "<p>The archive itself caught less over time, " + pct(Y_(2023).control_pct) + " of ordinary transactions in 2023 and " + pct(Y_(2026).control_pct) + " in 2026. That is why every comparison here is against the other transactions in the same blocks.</p>";
 
     mount($("#c1-q"), "Quarterly share seen in the public mempool: ordinary transactions stay between " + Math.round(Math.min.apply(null, Q.map(function (q) { return q.control_pct; }))) + " and " + Math.round(Math.max.apply(null, Q.map(function (q) { return q.control_pct; }))) + " percent, attacker transactions between 0 and " + Math.round(Math.max.apply(null, Q.map(function (q) { return q.attacker_pct; }))) + " percent.", function (svg, w) {
-      var wide = w >= 640, l = 44, r = wide ? 16 : 8, t = 18, ph = wide ? 260 : 220, b = wide ? 74 : 44;
+      var wide = w >= 640, l = 50, r = wide ? 16 : 8, t = 20, ph = wide ? 240 : 200, b = wide ? 76 : 48;
       var n = Q.length, bw = (w - l - r) / n;
       var x = function (i) { return l + (i + .5) * bw; }, y = BVH.lin(0, 100, t + ph, t);
       gridY(svg, y, l, w - r, [0, 25, 50, 75, 100], function (v) { return v + "%"; });
-      /* control */
-      S("polyline", { points: Q.map(function (q, i) { return x(i) + "," + y(q.control_pct); }).join(" "), fill: "none", stroke: "var(--muted)", "stroke-width": 2 }, svg);
-      Q.forEach(function (q, i) { S("circle", { cx: x(i), cy: y(q.control_pct), r: 3.5, fill: "var(--muted)" }, svg); });
-      /* attacker: interval + dot */
+      S("polyline", { points: Q.map(function (q, i) { return x(i) + "," + y(q.control_pct); }).join(" "), fill: "none", stroke: "var(--mist)", "stroke-width": 2 }, svg);
+      Q.forEach(function (q, i) { S("circle", { cx: x(i), cy: y(q.control_pct), r: 4, fill: "var(--mist)", stroke: "var(--bg)", "stroke-width": 2 }, svg); });
       S("polyline", { points: Q.map(function (q, i) { return x(i) + "," + y(q.attacker_pct); }).join(" "), fill: "none", stroke: "var(--atk)", "stroke-width": 2 }, svg);
       Q.forEach(function (q, i) { S("circle", { cx: x(i), cy: y(q.attacker_pct), r: 5, fill: "var(--atk)", stroke: "var(--bg)", "stroke-width": 2 }, svg); });
-      /* direct labels */
-      var c0 = Q[0];
-      T(svg, x(0) - 4, y(c0.control_pct) - 12, "ordinary transactions", "t-labb", "start");
+      T(svg, x(0) - 4, y(Q[0].control_pct) - 14, "ordinary transactions", "t-labb", "start");
       var qn = Q.length - 1;
-      T(svg, x(qn) + 4, y(Q[qn].attacker_pct) - (wide ? 14 : 22), "attacker transactions", "t-labb", "end", { fill: "var(--atk)" });
-      /* x axis */
+      T(svg, x(qn) + 4, wide ? y(Math.max.apply(null, Q.slice(-3).map(function (q) { return q.attacker_pct; }))) - 16 : y(30), "attacker transactions", "t-labb t-atk", "end");
       Q.forEach(function (q, i) {
         var yr = q.q.slice(0, 4), qq = q.q.slice(4);
-        T(svg, x(i), t + ph + 16, wide ? qq : qq.slice(1), "t-ax", "middle");
-        if (i === 0 || qq === "Q1") T(svg, x(i) - bw / 2 + 2, t + ph + 32, yr, "t-lab", "start");
-        if (wide) {
-          T(svg, x(i), t + ph + 52, q.public + "/" + (q.public + q.private), "t-ax", "middle");
-        }
+        if (wide) T(svg, x(i), t + ph + 20, qq, "t-ax", "middle");
+        if (i === 0 || qq === "Q1") T(svg, x(i) - bw / 2 + 2, t + ph + (wide ? 40 : 22), wide ? yr : "'" + yr.slice(2), "t-lab", "start");
+        if (wide) T(svg, x(i), t + ph + 64, q.public + "/" + (q.public + q.private), "t-ax", "middle");
         hit(svg, { x: x(i) - bw / 2, y: t, width: bw, height: ph }, "<b>" + yr + " " + qq + "</b><br>attacker transactions seen: " + q.public + " of " + (q.public + q.private) + " (" + pct(q.attacker_pct) + ")<br>ordinary transactions seen: " + pct(q.control_pct));
       });
-      if (wide) T(svg, l - 8, t + ph + 52, "seen", "t-ax", "end");
+      if (wide) T(svg, l - 8, t + ph + 64, "seen", "t-ax", "end");
       return t + ph + b;
     });
-    $("#f1ccap").innerHTML = "Share seen in the public mempool archive, by quarter. Grey: the other transactions in the same blocks. Red: attacker transactions. Some quarters hold only a handful of exploits, so the row under the axis gives seen / total for each." + SE();
+    $("#f1ccap").innerHTML = "Share seen in the public mempool archive, by quarter. Grey: the other transactions in the same blocks. Red: attacker transactions. Some quarters hold only a handful of exploits; on wide screens the row under the axis gives seen / total for each, and every quarter is in the tables at the end." + SE();
 
     var bc = HS.backrunner_comparison, bp = bc.backrunner_paper, ow = bc.ours_w6_v2_same_window_attacker_only;
-    $("#ch1-how").innerHTML = "<b>How we know.</b> The Mempool Dumpster archive starts on " + since + "; we have no mempool archive for earlier exploits, so they have in-block evidence only. A transaction counts as private when the archive covered that day, saw many other transactions in the same block, and never saw this one. That is strong evidence, not proof. An independent study (BACKRUNNER) found " + bp.visible_in_public_mempool + " of " + bp.attack_txs + " attack transactions public from January 2023 to May 2024 (" + pct(bp.public_pct) + "); over the overlapping window we find " + ow.public + " of " + ow.resolved + " (" + pct(ow.public_pct) + ")." + SH();
+    $("#ch1-how").innerHTML = "<p>The Mempool Dumpster archive starts on " + since + "; we have no mempool archive for earlier exploits, so they have in-block evidence only. A transaction counts as private when the archive covered that day, saw many other transactions in the same block, and never saw this one. That is strong evidence, not proof.</p><p>An independent study (BACKRUNNER) found " + bp.visible_in_public_mempool + " of " + bp.attack_txs + " attack transactions public from January 2023 to May 2024 (" + pct(bp.public_pct) + "); over the overlapping window we find " + ow.public + " of " + ow.resolved + " (" + pct(ow.public_pct) + ")." + SH() + "</p>";
   }
   var _Y = null;
   function Y_(yr) { if (!_Y) { _Y = {}; E.years.forEach(function (y) { _Y[y.year] = y; }); } return _Y[yr]; }
 
   /* ================= 2. constructor-only ================= */
-  function ch2(Y, y25, y26, x0Years) {
+  function ch2(Y, y25, y26) {
     var pre = E.years.filter(function (y) { return y.year >= 2020 && y.year < 2025; });
     var lo = Math.min.apply(null, pre.map(function (y) { return y.constructor_pct; })), hi = Math.max.apply(null, pre.map(function (y) { return y.constructor_pct; }));
     $("#ch2-lede").innerHTML = "In a two-step attack the contract sits on chain before it is used, and a bot can read it. In " + y25.year + ", <b>" + pctS(y25.constructor_pct) + " of exploits (" + y25.constructor_k + " of " + y25.constructor_n + ")</b> skipped that step: the whole attack ran inside the transaction that created the contract. Through 2024 the share had been between " + pctS(lo) + " and " + pctS(hi) + "." + SE();
 
     $("#c2-shapes").innerHTML =
       '<div class="ev-shape"><h4>Two steps</h4><p>Deploy a contract, wait, then call it.</p>' +
-      '<div class="ev-track"><div class="ev-tx">1. Deploy the attack contract<small>lands in a block, readable by anyone</small></div><div class="ev-wait">the contract waits on chain <em>seconds to minutes</em></div><div class="ev-tx">2. Call attack()<small>usually never seen in the public pool</small></div></div>' +
-      '<p class="ev-copy yes"><i></i><span>A copier can read the deployed contract and run the same plan first. That is how the Makina race was won.</span></p></div>' +
-      '<div class="ev-shape"><h4>One step, constructor-only</h4><p>The attack runs while the contract is being created.</p>' +
-      '<div class="ev-track one"><div class="ev-tx">1. Create the contract; its constructor runs the whole attack<small>one transaction</small></div><div class="ev-wait none">no wait <em>nothing sits on chain</em></div><div class="ev-tx ghost">no second step<small>the attack is already over</small></div></div>' +
-      '<p class="ev-copy no"><i></i><span>Nothing exists on chain until the attack has landed. If the transaction also skipped the public pool, nothing is available in the public mempool or in prior on-chain state for an outside copier.</span></p></div>';
+      '<ol class="ev-track"><li class="ev-tx">Deploy the attack contract<small>lands in a block, readable by anyone</small></li><li class="ev-wait">the contract waits on chain, seconds to minutes</li><li class="ev-tx">Call attack()<small>usually never seen in the public pool</small></li></ol>' +
+      '<p class="ev-copy yes">A copier can read the deployed contract and run the same plan first. That is how the Makina race was won.</p></div>' +
+      '<div class="ev-shape one"><h4>One step, constructor-only</h4><p>The attack runs while the contract is being created.</p>' +
+      '<ol class="ev-track"><li class="ev-tx">Create the contract; its constructor runs the whole attack<small>one transaction</small></li><li class="ev-wait none">no wait, nothing sits on chain</li><li class="ev-tx ghost">No second step<small>the attack is already over</small></li></ol>' +
+      '<p class="ev-copy no">Nothing exists on chain until the attack has landed. If the transaction also skipped the public pool, nothing is available in the public mempool or in prior on-chain state for an outside copier.</p></div>';
 
+    /* the forest: one tree per exploit; constructor-only trees burn ember, other no-window trees are ember outlines */
     var yrs = E.years.filter(function (y) { return y.year >= 2020; });
-    mount($("#c2-bars"), "Bar chart by year of the share of exploits with no watchable window, split into constructor-only and other. " + yrs.map(function (y) { return y.year + ": " + pctS(y.constructor_pct) + " constructor-only, " + pctS(y.no_window_pct) + " no window"; }).join("; "), function (svg, w) {
-      var wide = w >= 640, l = 44, r = 8, t = 26, ph = wide ? 280 : 230, b = 46;
-      var n = yrs.length, bw = (w - l - r) / n, barW = Math.min(64, bw * .62);
-      var y = BVH.lin(0, 100, t + ph, t);
-      gridY(svg, y, l, w - r, [0, 25, 50, 75, 100], function (v) { return v + "%"; });
-      yrs.forEach(function (d, i) {
-        var cx = l + (i + .5) * bw, x0 = cx - barW / 2, faint = d.n < 10;
-        var g = S("g", faint ? { opacity: .5 } : {}, svg);
-        var yc = y(d.constructor_pct), yn = y(d.no_window_pct), y0 = y(0);
-        if (d.constructor_pct > 0) S("rect", { x: x0, y: yc, width: barW, height: Math.max(0, y0 - yc), rx: 3, fill: "var(--atk)" }, g);
-        if (d.no_window_pct - d.constructor_pct > 0.05) S("rect", { x: x0, y: yn, width: barW, height: Math.max(0, yc - yn - 2), rx: 3, fill: "var(--atk)", opacity: .38 }, g);
-        /* interval for the constructor share */
-        var ci = d.constructor_ci;
-        if (ci && d.n >= 10 && wide) {
-          var wx = x0 + barW + 6;
-          S("line", { x1: wx, x2: wx, y1: y(ci[0]), y2: y(ci[1]), "class": "g-ann" }, g);
-          S("line", { x1: wx - 3, x2: wx + 3, y1: y(ci[0]), y2: y(ci[0]), "class": "g-ann" }, g);
-          S("line", { x1: wx - 3, x2: wx + 3, y1: y(ci[1]), y2: y(ci[1]), "class": "g-ann" }, g);
+    yrs.forEach(function (y) { y._nw = Math.round(y.no_window_pct * y.n / 100); y._c = y.constructor_k; });
+    $("#c2-key").innerHTML = '<li><i class="k-ctor"></i>constructor-only, one transaction</li><li><i class="k-nw"></i>other ways to leave no window</li><li><i class="k-tree"></i>left a window</li>';
+    mount($("#c2-forest"), "One tree per exploit, by year from 2020. " + yrs.map(function (y) { return y.year + ": " + y.n + " exploits, " + y._c + " constructor-only (" + pctS(y.constructor_pct) + "), " + pctS(y.no_window_pct) + " left no window"; }).join("; "), function (svg, w) {
+      var wide = w >= 700, n = yrs.length, gap = wide ? 22 : 6, gw = (w - gap * (n - 1)) / n;
+      var per = wide ? 6 : (w < 420 ? 4 : 5), slot = gw / per, th = slot * 1.18, rows = Math.max.apply(null, yrs.map(function (y) { return Math.ceil(y.n / per); }));
+      var top = wide ? 64 : 46, base = top + rows * th;
+      yrs.forEach(function (d, gi) {
+        var gx = gi * (gw + gap), hlY = d.year >= 2025;
+        for (var k = 0; k < d.n; k++) {
+          var row = Math.floor(k / per), col = k % per;
+          var cx = gx + (col + 0.5) * slot, b = base - row * th, hh = th * 0.92, hw = slot * 0.42;
+          var cls = k < d._c ? "tr-ctor" : k < d._nw ? "tr-nw" : "tr-tree";
+          S("path", { d: "M" + cx + " " + (b - hh) + " L " + (cx + hw) + " " + (b - hh * 0.18) + " L " + (cx + hw * 0.2) + " " + (b - hh * 0.18) + " L " + (cx + hw * 0.2) + " " + b + " L " + (cx - hw * 0.2) + " " + b + " L " + (cx - hw * 0.2) + " " + (b - hh * 0.18) + " L " + (cx - hw) + " " + (b - hh * 0.18) + " Z", "class": cls }, svg);
         }
-        T(g, cx, yn - 8, pctS(d.no_window_pct), d.year === y25.year ? "t-big" : "t-labb", "middle", wide ? null : { style: "font-size:11px" });
-        if (y0 - yc > 22 && wide) T(g, cx, y0 - 8, pctS(d.constructor_pct), "t-labb", "middle", { fill: "var(--bg)" });
-        T(g, cx, t + ph + 17, String(d.year), "t-lab", "middle");
-        T(g, cx, t + ph + 33, "n=" + d.n, "t-ax", "middle");
-        hit(svg, { x: cx - bw / 2, y: t, width: bw, height: ph }, "<b>" + d.year + "</b> (" + d.n + " exploits)<br>constructor-only: " + pct(d.constructor_pct) + " (" + d.constructor_k + " of " + d.constructor_n + ", 95% interval " + d.constructor_ci[0].toFixed(1) + " to " + d.constructor_ci[1].toFixed(1) + "%)<br>no watchable window at all: " + pct(d.no_window_pct));
+        var stackTop = base - Math.ceil(d.n / per) * th;
+        T(svg, gx + gw / 2, stackTop - (wide ? 30 : 10), pctS(d.constructor_pct), hlY ? "t-big t-atk" : "t-labb", "middle");
+        if (wide) T(svg, gx + gw / 2, stackTop - 10, pctS(d.no_window_pct) + " no window", "t-ax", "middle");
+        T(svg, gx + gw / 2, base + 22, String(d.year), hlY ? "t-labb" : "t-lab", "middle");
+        T(svg, gx + gw / 2, base + 40, wide ? d.n + " exploits" : "n=" + d.n, "t-ax", "middle");
+        hit(svg, { x: gx, y: stackTop - 40, width: gw, height: base - stackTop + 40 }, "<b>" + d.year + "</b> (" + d.n + " exploits)<br>constructor-only: " + pct(d.constructor_pct) + " (" + d.constructor_k + " of " + d.constructor_n + ", 95% interval " + d.constructor_ci[0].toFixed(1) + " to " + d.constructor_ci[1].toFixed(1) + "%)<br>no watchable window at all: " + pct(d.no_window_pct));
       });
-      return t + ph + b;
+      S("line", { x1: 0, x2: w, y1: base + 1, y2: base + 1, "class": "g-base" }, svg);
+      return base + 50;
     });
+    var x0Years = E.years.filter(function (y) { return y.year < 2020; });
     var preN = x0Years.reduce(function (s, y) { return s + y.n; }, 0), preK = x0Years.reduce(function (s, y) { return s + y.constructor_k; }, 0);
-    $("#f2bcap").innerHTML = "The number on top is the total with no window. Faded segment: an attack contract created inside the attack transaction, or deployed in the same block as the attack. On wide screens, ticks beside each bar give the 95% interval for the constructor-only share (also in the tables at the end). 2020 has only " + Y[2020].n + " exploits and is drawn faint; " + x0Years.map(function (y) { return y.year; }).join(" and ") + " (" + preN + " exploits, " + preK + " constructor-only) are left off. " + y26.year + " runs to October." + SE();
-    $("#ch2-how").innerHTML = "<b>How we know.</b> We traced the first attacker transaction of each exploit. Constructor-only means the attack calls happen inside the creation of the attack contract; the detection is a lower bound. The jump from 2024 (" + pct(Y[2024].constructor_pct) + ", interval " + Y[2024].constructor_ci[0] + " to " + Y[2024].constructor_ci[1] + "%) to 2025 (" + pct(y25.constructor_pct) + ", " + y25.constructor_ci[0] + " to " + y25.constructor_ci[1] + "%) is larger than the uncertainty. In " + y26.year + " so far the share is " + pct(y26.constructor_pct) + " (" + y26.constructor_k + " of " + y26.constructor_n + ")." + SF();
+    $("#f2bcap").innerHTML = "The big number over each year is the constructor-only share; " + (window.innerWidth >= 700 ? "the line under it is the share that left no window at all. " : "the no-window share is in the tables at the end. ") + "Trees are counted from the published shares. " + x0Years.map(function (y) { return y.year; }).join(" and ") + " (" + preN + " exploits, " + preK + " constructor-only) are left off. " + y26.year + " runs to October." + SE();
+    $("#ch2-how").innerHTML = "<p>We traced the first attacker transaction of each exploit. Constructor-only means the attack calls happen inside the creation of the attack contract; the detection is a lower bound. Other ways to leave no window: an attack contract created inside the attack transaction, or deployed in the same block as the attack.</p><p>The jump from 2024 (" + pct(Y[2024].constructor_pct) + ", 95% interval " + Y[2024].constructor_ci[0] + " to " + Y[2024].constructor_ci[1] + "%) to 2025 (" + pct(y25.constructor_pct) + ", " + y25.constructor_ci[0] + " to " + y25.constructor_ci[1] + "%) is larger than the uncertainty. In " + y26.year + " so far the share is " + pct(y26.constructor_pct) + " (" + y26.constructor_k + " of " + y26.constructor_n + "). 2020 has only " + Y[2020].n + " exploits." + SF() + "</p>";
   }
 
   /* ================= 3. the window ================= */
   function ch3(Y, y25, y26, eras, dw) {
-    $("#ch3-lede").innerHTML = "When attackers did deploy first, they waited less. The median gap between deploying an attack contract and using it fell from <b>" + gapTxt(eras[0].gap_s) + "</b> before 2021 to <b>" + gapTxt(y25.gap_s_median) + "</b> in " + y25.year + " and " + gapTxt(y26.gap_s_median) + " in " + y26.year + ". In " + y25.year + ", of the " + y25.gap_n + " attacks whose fresh contract was deployed before the attack transaction (within seven days), " + pctS(y25.same_block_deploy_pct) + " deployed it in the very block of the attack." + SE();
+    $("#ch3-lede").innerHTML = "When attackers did deploy first, they waited less. The median gap between deploying an attack contract and using it fell from <b>" + gapTxt(eras[0].gap_s) + "</b> before 2021 to <b>" + gapTxt(y25.gap_s_median) + "</b> in " + y25.year + " (about " + Math.round(y25.gap_s_median / 12) + " blocks of 12 seconds) and " + gapTxt(y26.gap_s_median) + " in " + y26.year + ". In " + y25.year + ", of the " + y25.gap_n + " attacks whose fresh contract was deployed before the attack transaction (within seven days), " + pctS(y25.same_block_deploy_pct) + " deployed it in the very block of the attack." + SE();
 
     var yrs = E.years.filter(function (y) { return y.year >= 2020 && y.gap_s_median != null; });
     mount($("#c3-gap"), "Median deploy-to-attack gap by year: " + yrs.map(function (y) { return y.year + " " + gapTxt(y.gap_s_median); }).join(", "), function (svg, w) {
-      var wide = w >= 640, l = wide ? 92 : 56, r = wide ? 120 : 56, t = 34, rh = wide ? 40 : 38, n = yrs.length, ph = n * rh;
+      var wide = w >= 640, l = wide ? 96 : 62, r = wide ? 130 : 70, t = 40, rh = wide ? 46 : 44, n = yrs.length, ph = n * rh;
       var maxMin = 16, x = BVH.lin(0, maxMin, l, w - r);
       [0, 4, 8, 12, 16].forEach(function (v) {
         S("line", { x1: x(v), x2: x(v), y1: t - 6, y2: t + ph, "class": v === 0 ? "g-base" : "g-grid" }, svg);
-        T(svg, x(v), t + ph + 16, v + (v === 16 ? " min" : ""), "t-ax", "middle");
+        T(svg, x(v), t + ph + 20, v + (v === 16 ? " min" : ""), "t-ax", "middle");
       });
-      /* one-block reference */
       var xb = x(12 / 60);
-      S("line", { x1: xb, x2: xb, y1: t - 14, y2: t + ph, stroke: "var(--gold)", "stroke-width": 1.5 }, svg);
-      T(svg, xb + 5, t - 16, "one block, 12 s", "t-ann", "start", { fill: "var(--gold)" });
+      S("line", { x1: xb, x2: xb, y1: t - 18, y2: t + ph, "class": "g-ref" }, svg);
+      T(svg, xb + 6, t - 22, "one block, 12 s", "t-lab t-gold", "start");
       yrs.forEach(function (d, i) {
-        var cy = t + i * rh + rh / 2, mins = d.gap_s_median / 60, faint = d.gap_n < 10, g = S("g", faint ? { opacity: .5 } : {}, svg);
+        var cy = t + i * rh + rh / 2, mins = d.gap_s_median / 60, faint = d.gap_n < 10, g = S("g", faint ? { "class": "faint" } : {}, svg);
         var hl = d.year >= 2025;
-        T(g, l - 14, cy + 1, String(d.year), hl ? "t-big" : "t-lab", "end");
-        T(g, l - 14, cy + 14, "n=" + d.gap_n, "t-ax", "end");
-        var bh = 16, off = mins > maxMin;
-        var xe = off ? x(maxMin) - 18 : x(mins);
-        S("rect", { x: l, y: cy - bh / 2, width: Math.max(3, xe - l), height: bh, rx: 3, fill: hl ? "var(--gold)" : "var(--ink2)" }, g);
+        T(g, l - 14, cy + 1, String(d.year), hl ? "t-labb" : "t-lab", "end");
+        T(g, l - 14, cy + 17, "n=" + d.gap_n, "t-ax", "end");
+        var bh = 18, off = mins > maxMin, xe = off ? x(maxMin) - 18 : x(mins);
+        S("rect", { x: l, y: cy - bh / 2, width: Math.max(3, xe - l), height: bh, rx: 3, "class": hl ? "gb-hl" : "gb" }, g);
         if (off) {
-          /* broken bar: the value runs off the scale */
-          S("path", { d: "M" + (xe + 4) + " " + (cy - bh / 2 - 3) + "l6 " + (bh + 6) + "M" + (xe + 10) + " " + (cy - bh / 2 - 3) + "l6 " + (bh + 6), stroke: "var(--ink2)", "stroke-width": 1.5, fill: "none" }, g);
-          S("rect", { x: xe + 16, y: cy - bh / 2, width: x(maxMin) - xe - 16, height: bh, rx: 3, fill: "var(--ink2)" }, g);
-          T(g, x(maxMin) + 8, cy + 4, gapTxt(d.gap_s_median) + (wide ? ", off scale" : ""), "t-labb", "start");
-        } else {
-          T(g, xe + 8, cy + 4, gapTxt(d.gap_s_median), hl ? "t-big" : "t-labb", "start");
-        }
+          S("path", { d: "M" + (xe + 4) + " " + (cy - bh / 2 - 3) + "l6 " + (bh + 6) + "M" + (xe + 10) + " " + (cy - bh / 2 - 3) + "l6 " + (bh + 6), "class": "gb-break" }, g);
+          S("rect", { x: xe + 16, y: cy - bh / 2, width: x(maxMin) - xe - 16, height: bh, rx: 3, "class": "gb" }, g);
+          T(g, x(maxMin) + 8, cy + 5, gapTxt(d.gap_s_median) + (wide ? ", off scale" : ""), "t-labb", "start");
+        } else T(g, xe + 8, cy + 5, gapTxt(d.gap_s_median), hl ? "t-big" : "t-labb", "start");
         hit(svg, { x: 0, y: cy - rh / 2, width: w, height: rh }, "<b>" + d.year + "</b><br>median fresh deploy-to-attack gap: " + gapTxt(d.gap_s_median) + " (" + d.gap_s_median + " s)<br>from " + d.gap_n + " attacker-owned contracts deployed at most 7 days before<br>deployed in the attack's own block: " + pct(d.same_block_deploy_pct));
       });
-      return t + ph + 26;
+      return t + ph + 30;
     });
     $("#f3acap").innerHTML = "Median over attacker-owned contracts created at most seven days before the attack; n is how many such contracts that year. Years with fewer than ten are drawn faint. The scale is linear; 2021's median runs off it and is drawn broken. By era: " + eras.map(function (e) { return e.era.replace(/^E\d /, "").replace(/ \(.*$/, "") + " " + gapTxt(e.gap_s); }).join(", ") + "." + SE();
 
-    /* Makina */
+    /* Makina: the two blocks */
     var evs = MK.events || [];
     var dep = evs.filter(function (e) { return e.kind === "deploy" && /attack contract/.test(e.detail); })[0];
     var helper = evs.filter(function (e) { return e.kind === "deploy" && /helper/.test(e.detail); })[0];
     var btx = evs.filter(function (e) { return e.kind === "tx" && e.block === MK.block.number && /searcher/i.test(e.actor); })[0];
     var payout = (MK.txs || []).filter(function (x) { return x.role === "builder"; })[0];
-    var botTx = (MK.txs || []).filter(function (x) { return x.role === "bot"; })[0];
     var gapS = dep && btx ? Math.round((Date.parse(btx.utc) - Date.parse(dep.utc)) / 1000) : null;
     var cb = MK.dataset_money.coinbase_eth;
-    $("#ch3-mk").innerHTML = "Makina's attacker prepared for about " + (helper && dep ? Math.round((Date.parse(dep.utc) - Date.parse(helper.utc)) / 60000) : "n/a") + " minutes, then deployed the attack contract at " + utcTime(dep && dep.utc) + " UTC" + (dep ? src(dep.raw, "Trace of the deploy transaction") : "") + ". It never got to call it. In the next block, " + gapS + " seconds later, a searcher ran the same plan at position " + MK.bot_idx + " and paid <b>" + BVH.eth(cb) + "</b> to the block builder for that spot." + (btx ? src(btx.raw, "Trace of the searcher's transaction") : "");
+    $("#ch3-mk").innerHTML = "Makina's attacker prepared for about " + (helper && dep ? Math.round((Date.parse(dep.utc) - Date.parse(helper.utc)) / 60000) : "n/a") + " minutes, then deployed the attack contract at " + utcTime(dep && dep.utc) + " UTC" + (dep ? src(dep.raw, "Trace of the deploy transaction") : "") + ". It never got to call it. In the next block, " + gapS + " seconds later, a searcher ran the same plan at position " + MK.bot_idx + " and paid " + aboutEth(cb) + " to the block builder for that spot." + (btx ? src(btx.raw, "Trace of the searcher's transaction") : "");
 
     mount($("#c3-mk"), "Two blocks, " + gapS + " seconds apart. Block " + (dep && dep.block) + ": the attacker deploys its attack contract. Block " + MK.block.number + ": a searcher's copy runs at position 0 of " + MK.block.ntx + " transactions and pays " + BVH.eth(cb) + " to the builder. The attacker's own call never lands.", function (svg, w) {
-      var wide = w >= 700, labW = wide ? 210 : 0, x0 = labW, x1 = w - 2, strip = MK.strip || [], nt = MK.block.ntx || strip.length, bh = 40;
-      var fs = wide ? 12.5 : 11.5, y = 6;
-      function head(lines, yy) {
-        lines.forEach(function (L, j) { T(svg, 0, yy + 14 + j * 17, L[0], L[1], "start", L[2]); });
-      }
-      /* row 1: the attacker's deploy */
-      var h1 = [["block " + num(dep ? dep.block : null), "t-labb"], [(dep ? utcTime(dep.utc) : "") + " UTC", "t-ax"]];
-      if (wide) head(h1, y); else { T(svg, 0, y + 14, "block " + num(dep ? dep.block : null), "t-labb", "start"); T(svg, x1, y + 14, (dep ? utcTime(dep.utc) : "") + " UTC", "t-ax", "end"); }
-      var by = wide ? y : y + 24;
-      S("rect", { x: x0, y: by, width: x1 - x0, height: bh, rx: 4, fill: "none", stroke: "var(--line2)" }, svg);
-      S("rect", { x: x0 + 6, y: by + 6, width: x1 - x0 - 12, height: bh - 12, rx: 3, fill: "var(--atk-soft)", stroke: "var(--atk)", "stroke-width": 1.5 }, svg);
-      T(svg, x0 + 16, by + 25, wide ? "the attacker deploys its attack contract and waits" : "attacker deploys its attack contract", "t-lab", "start", { style: "font-size:" + fs + "px" });
-      y = by + bh + 8;
-      /* the 12 s gap */
-      S("line", { x1: x0 + 12, x2: x0 + 12, y1: y, y2: y + 26, stroke: "var(--gold)", "stroke-width": 2 }, svg);
-      T(svg, x0 + 22, y + 18, "+" + gapS + " s, the next block", "t-ann", "start", { fill: "var(--gold)" });
-      y += 34;
-      /* row 2: the next block, one sliver per transaction */
-      if (wide) head([["block " + num(MK.block.number), "t-labb"], [utcTime(btx && btx.utc) + " UTC", "t-ax"]], y);
-      else { T(svg, 0, y + 14, "block " + num(MK.block.number), "t-labb", "start"); T(svg, x1, y + 14, utcTime(btx && btx.utc) + " UTC", "t-ax", "end"); }
-      by = wide ? y : y + 24;
-      var cw = (x1 - x0) / nt;
+      var wide = w >= 700, strip = MK.strip || [], nt = MK.block.ntx || strip.length, gh = wide ? 120 : 84;
+      var hlA = halo(svg, "ev-mk-halo", "var(--bot)"), y = 0;
+      /* block 1: a gate with one ember sliver (we draw only the deploy, not the block's other transactions) */
+      T(svg, 0, y + 18, "Block " + num(dep ? dep.block : null), "t-labb");
+      T(svg, w, y + 18, (dep ? utcTime(dep.utc) : "") + " UTC", "t-lab", "end");
+      y += 30;
+      S("rect", { x: 0, y: y, width: w, height: gh * 0.5, rx: 6, "class": "mk-gate" }, svg);
+      S("rect", { x: 14, y: y + 12, width: 6, height: gh * 0.5 - 24, rx: 2, "class": "mk-atk" }, svg);
+      T(svg, 32, y + gh * 0.25 + 5, wide ? "the attacker deploys its attack contract, and waits" : "attacker deploys its contract", "t-lab");
+      y += gh * 0.5 + 10;
+      /* the 12 s */
+      S("line", { x1: 17, x2: 17, y1: y, y2: y + 34, "class": "g-ref" }, svg);
+      T(svg, 30, y + 23, "+" + gapS + " s: the next block", "t-lab t-gold");
+      y += 46;
+      /* block 2: the lit gate of 105 slivers */
+      T(svg, 0, y + 18, "Block " + num(MK.block.number), "t-labb");
+      T(svg, w, y + 18, utcTime(btx && btx.utc) + " UTC", "t-lab", "end");
+      y += 30;
+      var cw = w / nt;
+      S("rect", { x: 0, y: y - 6, width: w, height: gh + 12, rx: 6, "class": "mk-gate" }, svg);
       for (var k = 0; k < nt; k++) {
-        var st = strip[k] || [], role = st[2];
-        var fill = role === "bot" ? "var(--bot)" : (k === nt - 1 && payout ? "var(--bld)" : "var(--ev-dim2)");
-        S("rect", { x: x0 + k * cw + .5, y: by, width: Math.max(1, cw - 1), height: bh, rx: 1, fill: fill }, svg);
+        var role = (strip[k] || [])[2], hgt = gh * (0.52 + 0.4 * Math.abs(Math.sin(k * 1.7 + 0.4)));
+        var cls = role === "bot" ? "mk-bot" : (k === nt - 1 && payout ? "mk-bld" : "mk-tx");
+        if (role === "bot") hgt = gh;
+        S("rect", { x: k * cw + cw * 0.18, y: y + gh - hgt, width: Math.max(1, cw * 0.64), height: hgt, rx: Math.min(2, cw * 0.3), "class": cls }, svg);
       }
-      var bx = x0 + cw / 2;
-      S("line", { x1: bx, x2: bx, y1: by + bh, y2: by + bh + 10, "class": "g-ann" }, svg);
-      T(svg, x0, by + bh + 24, "position 0: the searcher's copy", "t-labb", "start", { style: "font-size:" + fs + "px" });
-      T(svg, x0, by + bh + 41, "paid " + BVH.eth(cb) + " to the builder", "t-lab", "start", { style: "font-size:" + fs + "px" });
-      if (payout) T(svg, x1, by + bh + (wide ? 24 : 58), wide ? "last: the builder pays the proposer " + BVH.eth(payout.value_eth) : "last: builder pays proposer " + BVH.eth(payout.value_eth), "t-ax", "end");
-      y = by + bh + (wide ? 58 : 74);
-      /* row 3: the call that never came */
-      T(svg, 0, y + (wide ? 23 : 14), "attacker's own call", "t-labb", "start", { fill: "var(--atk)" });
-      by = wide ? y : y + 24;
-      S("rect", { x: x0, y: by + 4, width: Math.min(320, x1 - x0), height: bh - 8, rx: 4, fill: "none", stroke: "var(--atk)", "stroke-dasharray": "4 4" }, svg);
-      T(svg, x0 + 14, by + 25, "never sent", "t-lab", "start", { fill: "var(--atk)" });
-      return by + bh + 4;
+      S("circle", { cx: cw / 2, cy: y + gh * 0.15, r: wide ? 46 : 30, fill: hlA }, svg);
+      y += gh + 14;
+      S("line", { x1: cw / 2, x2: cw / 2, y1: y - 6, y2: y + 6, "class": "g-ann" }, svg);
+      T(svg, 0, y + 24, "position 0: the searcher's copy", "t-labb t-bot");
+      T(svg, 0, y + 46, "paid " + BVH.eth(cb) + " to the builder", "t-lab");
+      if (payout) {
+        if (wide) { T(svg, w, y + 24, "last: the builder pays the proposer", "t-lab", "end"); T(svg, w, y + 46, BVH.eth(payout.value_eth), "t-lab", "end"); }
+        else { T(svg, 0, y + 72, "last sliver: the builder pays the", "t-lab"); T(svg, 0, y + 92, "proposer " + BVH.eth(payout.value_eth), "t-lab"); }
+      }
+      y += wide ? 70 : 112;
+      /* the call that never came */
+      S("rect", { x: 0, y: y, width: Math.min(w, 420), height: 44, rx: 6, "class": "mk-never" }, svg);
+      T(svg, 16, y + 28, "the attacker's own call: never sent", "t-lab t-atk");
+      return y + 48;
     });
-    $("#f3bcap").innerHTML = "Block " + num(MK.block.number) + " held " + MK.block.ntx + " transactions; each sliver is one. The copy sits first" + (payout ? "; the last transaction is the builder paying the proposer " + BVH.eth(payout.value_eth) : "") + "." + BVH.rawA(MK.block.raw.block, "block") + BVH.rawA(MK.block.raw.trace, "trace") + ' <a href="incident.html?slug=makina-2026">The full Makina race</a>.';
+    $("#f3bcap").innerHTML = "Block " + num(MK.block.number) + " held " + MK.block.ntx + " transactions; each sliver is one (sliver heights are decoration). The copy sits first; " + (payout ? "the last transaction is the builder paying the proposer " + BVH.eth(payout.value_eth) + "." : "") + BVH.rawA(MK.block.raw.block, "block") + BVH.rawA(MK.block.raw.trace, "trace") + ' <a href="race.html">Part 1 plays this race second by second.</a>';
 
     var y0 = +dw[0].date.slice(0, 4), y1 = +dw[dw.length - 1].date.slice(0, 4);
     $("#ch3-mk2").innerHTML = "That is the deploy-window copy: the bot copies the attacker's setup instead of the attack. Of the " + INC.filter(function (r) { return r.headline; }).length + " races a bot won, " + dw.length + " worked this way, all in " + (y0 === y1 ? y0 : y0 + " and " + y1) + ". In each one the bot moved in the very next block." + SH();
     $("#c3-dw").innerHTML = dw.map(function (r) {
-      return '<li><div class="blk" aria-hidden="true"><i class="a"></i><i class="b' + (r.bot_idx > 0 ? " p1" : "") + '"></i></div><div><h4>' + incA(r) + '</h4><div class="meta">' + BVH.dateLong(r.date) + ", " + esc(r.bot) + ", position " + r.bot_idx + "</div><p>" + esc(r.one_liner) + BVH.rawA(r.raw.trace, "trace") + "</p></div></li>";
+      return '<li><h4>' + incA(r) + '</h4><div class="meta">' + BVH.dateLong(r.date) + ", " + esc(r.bot.replace(/\s*\(.*$/, "")) + ", position " + r.bot_idx + "</div><p>" + esc(r.one_liner) + BVH.rawA(r.raw.trace, "trace") + "</p></li>";
     }).join("");
-    $("#ch3-how").innerHTML = "<b>How we know.</b> Times are block timestamps, so they move in 12-second steps. Gaps count only contracts the attacker owned and created within seven days; an attack contract created inside the attack transaction counts as zero. How the Makina searcher learned the plan is not visible on chain; its calldata matches the deployed contract, so the contract alone was enough.";
+    $("#ch3-how").innerHTML = "<p>Times are block timestamps, so they move in 12-second steps. Gaps count only contracts the attacker owned and created within seven days; an attack contract created inside the attack transaction counts as zero. How the Makina searcher learned the plan is not visible on chain; its calldata matches the deployed contract, so the contract alone was enough.</p><p>Makina's searcher paid exactly " + BVH.eth(cb) + " to the builder." + BVH.rawA(MK.block.raw.trace, "trace") + "</p>";
   }
 
   /* ================= 4. paying the builder ================= */
   function ch4(Y, ov, bot, head) {
-    var bci = wilson(bot.bribe_paid_n, bot.n_measured);
-    $("#ch4-lede").innerHTML = "A transaction can buy its place in a block by paying the builder directly. Attackers rarely do: <b>" + pct(ov.bribe_pct) + "</b> of attacker transactions, with no clear rise over the years. The bots that copy them mostly do: <b>" + bot.bribe_paid_n + " of " + bot.n_measured + "</b> traced bot transactions (" + pct(bot.bribe_paid_pct_of_measured) + "), " + num(bot.bribe_eth_total, 2) + " ETH in all." + SE();
+    $("#ch4-lede").innerHTML = "A transaction can buy its place in a block by paying the builder directly. Attackers rarely do: <b>" + pct(ov.bribe_pct) + "</b> of attacker transactions, with no clear rise over the years. The bots that copy them mostly do: <b>" + bot.bribe_paid_n + " of " + bot.n_measured + "</b> traced bot transactions (" + pct(bot.bribe_paid_pct_of_measured) + "), " + aboutEth(bot.bribe_eth_total) + " in all." + SE();
 
     var yrs = E.years.filter(function (y) { return y.year >= 2020; });
     mount($("#c4-att"), "Bars by year of the share of attacker transactions that paid the builder, between 0 and " + Math.round(Math.max.apply(null, yrs.map(function (y) { return y.bribe_pct; }))) + " percent, and one bar for bots at " + pct(bot.bribe_paid_pct_of_measured), function (svg, w) {
-      var wide = w >= 640, l = 44, r = 8, t = 26, ph = wide ? 240 : 200, b = 46;
+      var wide = w >= 640;
+      if (!wide) {
+        /* phones: one row per year, horizontal bars on the same linear 0 to 100% scale */
+        var L = 64, R2 = 62, rh = 40, t0 = 8, rowsN = yrs.length + 1, xs = BVH.lin(0, 100, L, w - R2);
+        [0, 50, 100].forEach(function (v) {
+          S("line", { x1: xs(v), x2: xs(v), y1: t0, y2: t0 + rowsN * rh + 6, "class": v === 0 ? "g-base" : "g-grid" }, svg);
+          T(svg, xs(v), t0 + rowsN * rh + 24, v + "%", "t-ax", v === 0 ? "start" : v === 100 ? "end" : "middle");
+        });
+        function hbar(i, v, k, n, cls, lab, sub, tip, faint) {
+          var cy = t0 + i * rh + rh / 2 + (i === yrs.length ? 6 : 0), g = S("g", faint ? { "class": "faint" } : {}, svg), ci = wilson(k, n);
+          S("rect", { x: L, y: cy - 8, width: Math.max(2, xs(v) - L), height: 16, rx: 3, "class": cls }, g);
+          if (!faint) S("line", { x1: xs(ci[0]), x2: xs(ci[1]), y1: cy, y2: cy, "class": "g-ci" }, g);
+          T(g, L - 10, cy - 1, lab, "t-lab", "end");
+          T(g, L - 10, cy + 15, sub, "t-ax", "end");
+          T(g, w - R2 + 8, cy + 5, pctS(v), "t-labb", "start");
+          hit(svg, { x: 0, y: cy - rh / 2, width: w, height: rh }, tip);
+        }
+        yrs.forEach(function (d, i) { hbar(i, d.bribe_pct, Math.round(d.bribe_pct * d.n / 100), d.n, "b-atk", String(d.year), "n=" + d.n, "<b>" + d.year + "</b>, attackers<br>paid the builder: " + pct(d.bribe_pct) + " of " + d.n + " exploits", d.n < 10); });
+        hbar(yrs.length, bot.bribe_paid_pct_of_measured, bot.bribe_paid_n, bot.n_measured, "b-bot", "bots", "n=" + bot.n_measured, "<b>Bot transactions</b> in the same exploit records<br>paid the builder: " + bot.bribe_paid_n + " of " + bot.n_measured + " (" + pct(bot.bribe_paid_pct_of_measured) + ")<br>" + num(bot.bribe_eth_total, 2) + " ETH in total");
+        return t0 + rowsN * rh + 34;
+      }
+      var l = 50, r = 8, t = 30, ph = 230, b = 52;
       var slots = yrs.length + 1.6, bw = (w - l - r) / slots, barW = Math.min(52, bw * .6);
       var y = BVH.lin(0, 100, t + ph, t);
       gridY(svg, y, l, w - r, [0, 25, 50, 75, 100], function (v) { return v + "%"; });
-      function bar(cx, v, k, n, fill, lab, sub, tip, faint) {
-        var g = S("g", faint ? { opacity: .5 } : {}, svg), ci = wilson(k, n);
-        if (v > 0) S("rect", { x: cx - barW / 2, y: y(v), width: barW, height: y(0) - y(v), rx: 3, fill: fill }, g);
-        else S("line", { x1: cx - barW / 2, x2: cx + barW / 2, y1: y(0) - 1, y2: y(0) - 1, stroke: fill, "stroke-width": 2 }, g);
+      function bar(cx, v, k, n, cls, lab, sub, tip, faint) {
+        var g = S("g", faint ? { "class": "faint" } : {}, svg), ci = wilson(k, n);
+        if (v > 0) S("rect", { x: cx - barW / 2, y: y(v), width: barW, height: y(0) - y(v), rx: 3, "class": cls }, g);
+        else S("rect", { x: cx - barW / 2, y: y(0) - 2, width: barW, height: 2, "class": cls }, g);
         if (!faint) {
-          S("line", { x1: cx, x2: cx, y1: y(ci[0]), y2: y(ci[1]), "class": "g-ann" }, g);
-          S("line", { x1: cx - 4, x2: cx + 4, y1: y(ci[1]), y2: y(ci[1]), "class": "g-ann" }, g);
-          S("line", { x1: cx - 4, x2: cx + 4, y1: y(ci[0]), y2: y(ci[0]), "class": "g-ann" }, g);
+          S("line", { x1: cx, x2: cx, y1: y(ci[0]), y2: y(ci[1]), "class": "g-ci" }, g);
+          S("line", { x1: cx - 4, x2: cx + 4, y1: y(ci[1]), y2: y(ci[1]), "class": "g-ci" }, g);
+          S("line", { x1: cx - 4, x2: cx + 4, y1: y(ci[0]), y2: y(ci[0]), "class": "g-ci" }, g);
         }
         T(g, cx, Math.min(y(v), y(faint ? v : ci[1])) - 8, pctS(v), "t-labb", "middle");
-        T(g, cx, t + ph + 17, lab, "t-lab", "middle");
-        T(g, cx, t + ph + 33, sub, "t-ax", "middle");
+        T(g, cx, t + ph + 20, lab, "t-lab", "middle");
+        T(g, cx, t + ph + 38, sub, "t-ax", "middle");
         hit(svg, { x: cx - bw / 2, y: t, width: bw, height: ph }, tip);
       }
       yrs.forEach(function (d, i) {
         var k = Math.round(d.bribe_pct * d.n / 100);
-        bar(l + (i + .5) * bw, d.bribe_pct, k, d.n, "var(--atk)", String(d.year), "n=" + d.n, "<b>" + d.year + "</b>, attackers<br>paid the builder: " + pct(d.bribe_pct) + " of " + d.n + " exploits", d.n < 10);
+        bar(l + (i + .5) * bw, d.bribe_pct, k, d.n, "b-atk", wide ? String(d.year) : "'" + String(d.year).slice(2), "n=" + d.n, "<b>" + d.year + "</b>, attackers<br>paid the builder: " + pct(d.bribe_pct) + " of " + d.n + " exploits", d.n < 10);
       });
       var bx = l + (yrs.length + 1.1) * bw;
-      S("line", { x1: bx - bw * .8, x2: bx - bw * .8, y1: t, y2: t + ph + 36, "class": "g-grid" }, svg);
-      bar(bx, bot.bribe_paid_pct_of_measured, bot.bribe_paid_n, bot.n_measured, "var(--bot)", "bots", "n=" + bot.n_measured, "<b>Bot transactions</b> in the same exploit listings<br>paid the builder: " + bot.bribe_paid_n + " of " + bot.n_measured + " (" + pct(bot.bribe_paid_pct_of_measured) + ")<br>" + num(bot.bribe_eth_total, 2) + " ETH in total");
+      S("line", { x1: bx - bw * .8, x2: bx - bw * .8, y1: t, y2: t + ph + 40, "class": "g-grid" }, svg);
+      bar(bx, bot.bribe_paid_pct_of_measured, bot.bribe_paid_n, bot.n_measured, "b-bot", "bots", "n=" + bot.n_measured, "<b>Bot transactions</b> in the same exploit records<br>paid the builder: " + bot.bribe_paid_n + " of " + bot.n_measured + " (" + pct(bot.bribe_paid_pct_of_measured) + ")<br>" + num(bot.bribe_eth_total, 2) + " ETH in total");
       return t + ph + b;
     });
-    $("#f4acap").innerHTML = "Red: attacker transactions, by year of the exploit. Amber: every bot transaction we traced in the same exploit listings (Sept 2022 to 2026). Ticks: 95% intervals. 2020 and 2021 have few exploits and are drawn faint." + SE() + " The bot bar comes from " + bot.n_measured + " transactions found in exploit records, so it says nothing about how common bots are." + SF();
+    $("#f4acap").innerHTML = "Red: attacker transactions, by year of the exploit. Amber: every bot transaction we traced in the same exploit records (Sept 2022 to 2026), " + num(bot.bribe_eth_total, 2) + " ETH paid in total. Thin lines: 95% intervals. 2020 and 2021 have few exploits and are drawn faint." + SE() + " The bot bar comes from " + bot.n_measured + " transactions found in exploit records, so it says nothing about how common bots are." + SF();
+    $("#ch4-mid").innerHTML = "In the races a bot won, the price of going first changed with the market. Before 2024 the winners paid builders almost nothing. Since then, most paid nearly everything they took, and some of it came back.";
 
-    /* races: share of take to builder */
+    /* races: share of take to builder, drawn as columns of light */
     var BE = HS.block_producer_share.by_era_headline;
     var MERGE = "2022-09-15", PBS2 = "2024-01-01";
-    var eraOf = function (d) { return d < MERGE ? "mev-geth-2021-22" : d < PBS2 ? "early-pbs-2022-23" : "mature-pbs-2024-26"; };
     var pts = head.filter(function (r) { return r.pct_to_builder != null; }).map(function (r) {
       var after = r.builder_refund_eth > 0 && r.gross_eth ? 100 * (r.paid_to_builder_eth - r.builder_refund_eth) / r.gross_eth : null;
       return { r: r, t: tms(r.date), v: r.pct_to_builder, after: after };
     });
     var bandsDef = [
       ["2021-01-01", MERGE, "mev-geth-2021-22", "Before the Merge", "Pre-Merge"],
-      [MERGE, PBS2, "early-pbs-2022-23", "Early builder era", "Early PBS"],
-      [PBS2, "2026-12-31", "mature-pbs-2024-26", "Mature builder era", "Mature PBS"]
+      [MERGE, PBS2, "early-pbs-2022-23", "Early builder era", "Early"],
+      [PBS2, "2026-12-31", "mature-pbs-2024-26", "Mature builder era", "Mature"]
     ];
-    mount($("#c4-races"), "Dot plot of the share of each winning bot's take paid to the block builder, by date. Before 2024 every race paid under " + Math.ceil(Math.max.apply(null, pts.filter(function (p) { return p.r.date < PBS2; }).map(function (p) { return p.v; }))) + " percent; from 2024 the median race paid " + pct(BE["mature-pbs-2024-26"].median_row_pct) + ".", function (svg, w) {
-      var wide = w >= 700, l = 44, r = wide ? 16 : 10, t = wide ? 58 : 22, ph = wide ? 300 : 260, b = wide ? 34 : 52;
+    $("#c4-key").innerHTML = '<li><i class="k-col"></i>paid to the builder, share of the take</li><li><i class="k-ring"></i>after the builder refunded part of it</li>';
+    mount($("#c4-races"), "Columns of light, one per race a bot won, by date: the share of the take paid to the block builder. Before 2024 every race paid under " + Math.ceil(Math.max.apply(null, pts.filter(function (p) { return p.r.date < PBS2; }).map(function (p) { return p.v; }))) + " percent; from 2024 the median race paid " + pct(BE["mature-pbs-2024-26"].median_row_pct) + ".", function (svg, w) {
+      var wide = w >= 700, l = 50, r = wide ? 18 : 10, t = wide ? 60 : 26, ph = wide ? 300 : 250, b = wide ? 40 : 60;
       var x = BVH.lin(tms("2021-01-01"), tms("2026-12-31"), l, w - r), y = BVH.lin(0, 100, t + ph, t);
+      var gA = S("linearGradient", { id: "ev-colg", x1: 0, y1: 1, x2: 0, y2: 0 }, S("defs", {}, svg));
+      S("stop", { offset: "0", style: "stop-color:var(--bot);stop-opacity:.06" }, gA);
+      S("stop", { offset: "1", style: "stop-color:var(--bot);stop-opacity:.75" }, gA);
+      var hb = halo(svg, "ev-col-halo", "var(--bot)");
       bandsDef.forEach(function (bd, i) {
         var xa = x(tms(bd[0])), xb = x(tms(bd[1])), e = BE[bd[2]];
-        if (i % 2 === 1) S("rect", { x: xa, y: wide ? t - 50 : t - 14, width: xb - xa, height: ph + (wide ? 50 : 14) + (wide ? 0 : 50), fill: "var(--bg2)" }, svg);
+        if (i % 2 === 1) S("rect", { x: xa, y: wide ? t - 54 : t - 16, width: xb - xa, height: ph + (wide ? 54 : 16) + (wide ? 0 : 54), "class": "era-band" }, svg);
         if (wide) {
-          T(svg, xa + 6, t - 34, bd[3], "t-labb", "start");
-          T(svg, xa + 6, t - 18, e.rows + " race" + (e.rows === 1 ? "" : "s"), "t-ax", "start");
-        } else {
-          T(svg, (xa + xb) / 2, t + ph + 40, bd[4], "t-ann", "middle");
-        }
+          T(svg, xa + 8, t - 34, bd[3], "t-labb", "start");
+          T(svg, xa + 8, t - 14, e.rows + " race" + (e.rows === 1 ? "" : "s"), "t-ax", "start");
+        } else T(svg, (xa + xb) / 2, t + ph + 50, bd[4], "t-ax", "middle");
       });
       gridY(svg, y, l, w - r, [0, 25, 50, 75, 100], function (v) { return v + "%"; });
-      for (var yr = 2021; yr <= 2026; yr++) {
-        var xx = x(tms(yr + "-07-01"));
-        T(svg, xx, t + ph + 18, wide ? String(yr) : "'" + String(yr).slice(2), "t-ax", "middle");
-      }
-      /* the Merge */
+      for (var yr = 2021; yr <= 2026; yr++) T(svg, x(tms(yr + "-07-01")), t + ph + 22, wide ? String(yr) : "'" + String(yr).slice(2), "t-ax", "middle");
       var xm = x(tms(MERGE));
-      S("line", { x1: xm, x2: xm, y1: t, y2: t + ph, stroke: "var(--ink2)", "stroke-width": 1 }, svg);
-      if (wide) T(svg, xm + 6, y(50), "The Merge, Sep 2022:", "t-ann", "start");
-      if (wide) T(svg, xm + 6, y(50) + 15, "builders and relays start", "t-ann", "start");
-      if (wide) T(svg, xm + 6, y(50) + 30, "building blocks", "t-ann", "start");
+      S("line", { x1: xm, x2: xm, y1: t, y2: t + ph, "class": "g-mark" }, svg);
+      if (wide) { T(svg, xm + 8, y(62), "The Merge, Sep 2022:", "t-lab", "start"); T(svg, xm + 8, y(62) + 18, "builders and relays", "t-lab", "start"); T(svg, xm + 8, y(62) + 36, "start building blocks", "t-lab", "start"); }
+      var cw = wide ? 5 : 3.5;
       pts.forEach(function (p) {
         var cx = x(p.t), cy = y(p.v);
-        if (p.after != null) {
-          S("line", { x1: cx, x2: cx, y1: cy + 6, y2: y(p.after) - 6, stroke: "var(--bld)", "stroke-width": 1.5, opacity: .7 }, svg);
-          S("circle", { cx: cx, cy: y(p.after), r: 5, fill: "var(--bg)", stroke: "var(--bld)", "stroke-width": 2 }, svg);
-        }
-        S("circle", { cx: cx, cy: cy, r: 6, fill: "var(--bld)", stroke: "var(--bg)", "stroke-width": 2 }, svg);
+        if (p.v > 0.5) S("circle", { cx: cx, cy: cy, r: wide ? 20 : 13, fill: hb }, svg);
+        S("rect", { x: cx - cw / 2, y: cy, width: cw, height: Math.max(1.5, y(0) - cy), rx: cw / 2, fill: "url(#ev-colg)" }, svg);
+        if (p.after != null) S("circle", { cx: cx, cy: y(p.after), r: 6, "class": "c-ring" }, svg);
+        S("circle", { cx: cx, cy: cy, r: wide ? 5 : 4, "class": "c-top" }, svg);
       });
-      var labels = wide ? { "earningfarm-2022": [8, -12, "start"], "blueberry-2024": [-12, 4, "end"], "defiplaza-2024": [12, 4, "start"], "alkimiya-2025": [-12, 4, "end", "after"], "makina-2026": [0, -14, "middle"], "kelp-rseth-2026": [-12, -10, "end"], "punk-2021": [0, -14, "middle"] }
-        : { "makina-2026": [0, -12, "middle"] };
+      var labels = wide ? { "earningfarm-2022": [8, -14, "start"], "blueberry-2024": [-12, 5, "end"], "alkimiya-2025": [-12, 5, "end", "after"], "makina-2026": [0, -16, "middle"], "kelp-rseth-2026": [-12, -10, "end"], "punk-2021": [0, -16, "middle"] }
+        : { "makina-2026": [-8, -12, "end"] };
       pts.forEach(function (p) {
         var L = labels[p.r.id]; if (!L) return;
         var vy = L[3] === "after" ? p.after : p.v;
-        var txt = short(p.r).replace(/ (Protocol|SilicaPools|rsETH holder Safe)$/, "") + (L[3] === "after" ? " after refund " : " ") + pctT(vy);
-        T(svg, x(p.t) + L[0], y(vy) + L[1], txt, "t-labb", L[2]);
+        T(svg, x(p.t) + L[0], y(vy) + L[1], short(p.r).replace(/ (Protocol|SilicaPools|rsETH holder Safe)$/, "") + (L[3] === "after" ? " after refund " : " ") + pctT(vy), "t-labb", L[2]);
       });
       pts.forEach(function (p) {
-        hit(svg, { cx: x(p.t), cy: y(p.v), r: 13 }, "<b>" + esc(short(p.r)) + "</b>, " + BVH.dateLong(p.r.date) + "<br>" + esc(p.r.bot) + "<br>paid to the builder: " + BVH.eth(p.r.paid_to_builder_eth) + " of " + BVH.eth(p.r.gross_eth) + " (" + pct(p.v) + ")" + (p.after != null ? "<br>after the builder's refund: " + pct(p.after) : ""));
+        hit(svg, { cx: x(p.t), cy: y(p.v), r: 14 }, "<b>" + esc(short(p.r)) + "</b>, " + BVH.dateLong(p.r.date) + "<br>" + esc(p.r.bot) + "<br>paid to the builder: " + BVH.eth(p.r.paid_to_builder_eth) + " of " + BVH.eth(p.r.gross_eth) + " (" + pct(p.v) + ")" + (p.after != null ? "<br>after the builder's refund: " + pct(p.after) : ""));
       });
       return t + ph + b;
     });
-    var eraRow = document.getElementById("c4-eras") || (function () { var d = document.createElement("ul"); d.id = "c4-eras"; d.className = "ev-eras"; $("#c4-races").insertAdjacentElement("afterend", d); return d; })();
-    eraRow.innerHTML = bandsDef.map(function (bd) { var e = BE[bd[2]]; return "<li><b>" + pctT(e.median_row_pct) + "</b><span>" + bd[3] + ": the median race paid the builder this share of its take (" + e.rows + " race" + (e.rows === 1 ? "" : "s") + ")</span></li>"; }).join("");
-    $("#f4bcap").innerHTML = "Each filled dot is one race a bot won: what its transaction paid the builder, including the priority fee, as a share of what it took. " + pts.length + " of " + head.length + " races are priced; " + head.filter(function (r) { return r.pct_to_builder == null; }).map(short).join(", ") + "'s take is not priced in ETH. Open ring: after the builder refunded part of the payment to the bot, where it did. The era medians are of these races." + SH() + " Builder eras follow the paper; the Merge is block 15,537,394.";
+    $("#c4-eras").innerHTML = bandsDef.map(function (bd) { var e = BE[bd[2]]; return "<li><b>" + pctT(e.median_row_pct) + "</b><span>" + bd[3] + ": the median race paid the builder this share of its take (" + e.rows + " race" + (e.rows === 1 ? "" : "s") + ")</span></li>"; }).join("");
+    $("#f4bcap").innerHTML = "Each column is one race a bot won: what its transaction paid the builder, including the priority fee, as a share of what it took. " + pts.length + " of " + head.length + " races are priced; " + head.filter(function (r) { return r.pct_to_builder == null; }).map(short).join(", ") + "'s take is not priced in ETH. The era medians are of these races." + SH() + " Builder eras follow the paper; the Merge is block 15,537,394.";
 
-    /* where the bribe went */
     var mb = BE["mature-pbs-2024-26"], paid = mb.sum_paid_eth, refund = paid - mb.after_refunds.sum_paid_minus_refund_eth;
     var pass = HS.loot.returns.headline_rows_returned_by_builder_or_proposer, toVictim = pass.sum_eth, kept = paid - refund - toVictim;
     var passNames = Object.keys(pass.rows).map(function (k) { var r = INC.filter(function (x) { return x.id === k; })[0]; return r ? short(r) : k; });
-    $("#c4-split-t").textContent = "Where the " + num(paid, 2) + " ETH the winning bots paid builders since 2024 ended up (" + mb.rows + " races)";
+    $("#c4-split-t").textContent = "Where the money the winning bots paid builders since 2024 ended up (" + mb.rows + " races, " + num(paid, 2) + " ETH)";
     var segs = [[toVictim, "var(--ret)", "back to the victims", "the builder passed it on (" + passNames.join(" and ") + ")"], [kept, "var(--bld)", "stayed with builders and proposers", "the price of going first"], [refund, "var(--bot)", "refunded to the bots", "by the same builder, in the same block"]];
     $("#c4-split").innerHTML = '<div class="ev-sbar" role="img" aria-label="' + segs.map(function (s) { return s[2] + " " + num(s[0], 2) + " ETH"; }).join(", ") + '">' + segs.map(function (s) { return '<div style="flex-grow:' + s[0].toFixed(3) + ';background:' + s[1] + '"></div>'; }).join("") + '</div><div class="k">' +
       segs.map(function (s) { return '<div style="border-color:' + s[1] + '"><b>' + pct(100 * s[0] / paid) + "</b><span>" + s[2] + "</span><small>" + num(s[0], 2) + " ETH, " + s[3] + "</small></div>"; }).join("") + "</div>";
     $("#f4ccap").innerHTML = "Payment before refunds, followed to where it landed. Blueberry's builder sent most of the bot's payment to the protocol's multisig in the same block; Makina's builder forwarded 1,023 ETH to an address that returned 920.7 ETH after a 10% bounty. The rest is what remains with builders and proposers under the flows we traced." + SH();
-    $("#ch4-how").innerHTML = "<b>How we know.</b> A payment to the builder is a direct ETH transfer to the block's fee recipient inside the transaction, read from the trace. An earlier pass of this study counted bot transactions as attackers and showed attackers paying builders more and more; with each sender classified, that trend disappears (" + pct(E.v1_vs_v2.coinbase_bribe_pct.v1) + " before the correction, " + pct(E.v1_vs_v2.coinbase_bribe_pct.v2) + " after). Two large attacker payments remain, Hopelend (263.9 ETH) and Ambient (33.9 ETH); both look like searcher transactions but nothing identifies them as bots." + SF();
+    $("#ch4-how").innerHTML = "<p>A payment to the builder is a direct ETH transfer to the block's fee recipient inside the transaction, read from the trace. In the races chart a ring shows the share after the builder refunded part of the payment to the bot, where it did.</p><p>An earlier pass of this study counted bot transactions as attackers and showed attackers paying builders more and more; with each sender classified, that trend disappears (" + pct(E.v1_vs_v2.coinbase_bribe_pct.v1) + " before the correction, " + pct(E.v1_vs_v2.coinbase_bribe_pct.v2) + " after). Two large attacker payments remain, Hopelend (263.9 ETH) and Ambient (33.9 ETH); both look like searcher transactions but nothing identifies them as bots." + SF() + "</p>";
   }
 
   /* ================= 5. the winning bots ================= */
@@ -462,26 +828,24 @@
 
     var atk0 = vv.tx_index_0_pct.v2;
     var rows = [
-      ["At position 0, the top of the block", atk0, "attackers", bot.tx_index_0_pct, "bots", bot.tx_index_0_n + " of " + bot.n_rows],
-      ["Paid the block builder directly", E.overall.bribe_pct, "attackers", bot.bribe_paid_pct_of_measured, "bots", bot.bribe_paid_n + " of " + bot.n_measured]
+      ["At position 0, the top of the block", atk0, bot.tx_index_0_pct, bot.tx_index_0_n + " of " + bot.n_rows],
+      ["Paid the block builder directly", E.overall.bribe_pct, bot.bribe_paid_pct_of_measured, bot.bribe_paid_n + " of " + bot.n_measured]
     ];
     function lab(v, cls, who, val, extra) {
       var right = v > 55;
       return '<span class="lab ' + cls + '" style="left:' + v + '%;' + (right ? "transform:translateX(-100%);text-align:right" : "") + '">' + who + " <b>" + val + "</b>" + (extra ? " (" + extra + ")" : "") + "</span>";
     }
     $("#c5-db").innerHTML = rows.map(function (r) {
-      var lo = Math.min(r[1], r[3]), hi = Math.max(r[1], r[3]);
-      return '<div class="ev-dbrow"><div class="l">' + r[0] + '</div><div class="ev-dbtrack" role="img" aria-label="' + r[0] + ": attackers " + pct(r[1]) + ", bots " + pct(r[3]) + '"><div class="base"></div><div class="span" style="left:' + lo + "%;width:" + (hi - lo) + '%"></div>' +
-        '<div class="dot atk" style="left:' + r[1] + '%"></div><div class="dot bot" style="left:' + r[3] + '%"></div>' + lab(r[1], "up", "attackers", pct(r[1])) + lab(r[3], "dn", "bots", pct(r[3]), r[5]) + "</div></div>";
+      var lo = Math.min(r[1], r[2]), hi = Math.max(r[1], r[2]);
+      return '<div class="ev-dbrow"><div class="l">' + r[0] + '</div><div class="ev-dbtrack" role="img" aria-label="' + r[0] + ": attackers " + pct(r[1]) + ", bots " + pct(r[2]) + '"><div class="base"></div><div class="span" style="left:' + lo + "%;width:" + (hi - lo) + '%"></div>' +
+        '<div class="dot atk" style="left:' + r[1] + '%"></div><div class="dot bot" style="left:' + r[2] + '%"></div>' + lab(r[1], "up", "attackers", pct(r[1])) + lab(r[2], "dn", "bots", pct(r[2]), r[3]) + "</div></div>";
     }).join("") + '<div class="ev-dbaxis" aria-hidden="true"><div></div><div><span style="left:0">0%</span><span style="left:50%">50%</span><span style="left:100%">100%</span></div></div>';
     $("#f5acap").innerHTML = "Attackers: the first attacker transaction of each of " + E.overall.n + " exploits." + SE() + " Bots: the " + bot.n_rows + " bot transactions listed in the same records (" + bot.n_measured + " traced for payments; the other " + (bot.n_rows - bot.n_measured) + " are c0ffeebabe.eth rows we record by block and position only)." + SF();
 
-    /* lanes */
+    $("#c5-lanes-t").textContent = "The " + head.length + " races a bot won, by year and by what the bot copied";
     var years = []; for (var yv = +head.reduce(function (a, r) { return r.date < a ? r.date : a; }, "9999").slice(0, 4); yv <= 2026; yv++) years.push(yv);
     function chip(r) {
-      var cbb = r.bot === "c0ffeebabe.eth";
-      var botName = r.bot.replace(/\s*\(.*$/, "");
-      return '<a class="ev-chip' + (r.race_type === "deploy-window-copy" ? " dw" : "") + (cbb ? " cb" : "") + '" href="incident.html?slug=' + encodeURIComponent(r.id) + '">' + esc(r.sub_label ? short(r) + ", " + r.sub_label : short(r)) + "<small>" + esc(botName) + ", " + month(r.date) + "</small></a>";
+      return '<a class="ev-chip' + (r.race_type === "deploy-window-copy" ? " dw" : "") + '" href="incident.html?slug=' + encodeURIComponent(r.id) + '">' + esc(r.sub_label ? short(r) + ", " + r.sub_label : short(r)) + "<small>" + esc(r.bot.replace(/\s*\(.*$/, "")) + ", " + month(r.date) + "</small></a>";
     }
     var html = '<div class="lrow lhd"><div class="yr"></div><div class="la"><i class="sw"></i>Copied a pending attack<small>' + head.filter(function (r) { return r.race_type === "beat-pending-attack"; }).length + ' races</small></div><div class="lb"><i class="sw dw"></i>Copied the attacker\'s setup<small>' + dw.length + " races</small></div></div>";
     years.forEach(function (yy) {
@@ -495,9 +859,8 @@
     $("#ch5-side").innerHTML =
       "<p>Look at the amber chips. Through " + (+dw[0].date.slice(0, 4) - 1) + ", every one of these races was won against a pending attack transaction. Since then, " + dw.length + " wins came from the attacker's setup: a contract, an upgrade or a prepare() call that landed one block before the attack.</p>" +
       "<p>The data cannot say why. It fits the first three chapters: when the attack itself is private and runs in one step, what a copier can still see is the setup that lands on chain first, and only for a block or two.</p>" +
-      "<p>Of the races since the archive began, the attacker's transaction was seen in public in " + uniq.join(", ").replace(/, ([^,]*)$/, " and $1") + ". In the other " + oi.not_seen.length + " the archive never saw the attacker's transaction before its block.</p>";
+      "<p>Of the races since the archive began, the attacker's transaction was seen in public in " + list(uniq) + ". In the other " + oi.not_seen.length + " the archive never saw the attacker's transaction before its block.</p>";
 
-    /* c0ffeebabe public facts */
     var cbRows = head.filter(function (r) { return r.bot === "c0ffeebabe.eth"; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
     function outcome(r) {
       if (r.fate_kind === "returned") return "Returned";
@@ -505,31 +868,32 @@
       if (r.fate_kind === "kept") return "No return found";
       return "Unknown";
     }
-    function drawCb(DS) { $("#c5-cb").innerHTML = "<h3>Where c0ffeebabe.eth appears</h3><p>Public transaction facts only: which block, which position, and where the money went. " + cbRows.length + " of the " + head.length + " races. Its transactions in exploit listings are recorded by block and position only; we do not analyse its bot.</p><ol>" +
-      cbRows.map(function (r, ri) {
-        var sp = BVH.moneySplit ? BVH.splitHTML(BVH.moneySplit(r), { compact: false, sources: BVH.moneySrc(r, DS && DS[ri]) }) : "<p>" + outcome(r) + "</p>";
-        return '<li><div class="cbh">' + incA(r, short(r) + (r.sub_label ? ", " + r.sub_label : "")) + "<span>" + esc(outcome(r)) + '</span></div><div class="cbm">' + BVH.dateLong(r.date) + ", block " + num(r.block) + ", position " + r.bot_idx + BVH.rawA(r.raw.block, "block") + BVH.rawA(r.raw.trace, "trace") + "</div>" + sp + "</li>";
-      }).join("") + "</ol>"; }
+    function drawCb(DS) {
+      $("#c5-cb").innerHTML = "<h3>Where c0ffeebabe.eth appears</h3><p>Public transaction facts only: which block, which position, and where the money went. " + Word(cbRows.length) + " of the " + head.length + " races. Its transactions in exploit records are recorded by block and position only; we do not analyse its bot.</p><ol>" +
+        cbRows.map(function (r, ri) {
+          var sp = BVH.splitHTML(BVH.moneySplit(r), { compact: false, sources: BVH.moneySrc(r, DS && DS[ri]) });
+          return '<li><div class="cbh">' + incA(r, short(r) + (r.sub_label ? ", " + r.sub_label : "")) + "<span>" + esc(outcome(r)) + '</span></div><div class="cbm">' + BVH.dateLong(r.date) + ", block " + num(r.block) + ", position " + r.bot_idx + BVH.rawA(r.raw.block, "block") + BVH.rawA(r.raw.trace, "trace") + "</div>" + sp + "</li>";
+        }).join("") + "</ol>";
+    }
     drawCb(null);
     Promise.all(cbRows.map(function (r) { return BVH.json("data/incident/" + r.id + ".json").catch(function () { return null; }); })).then(drawCb);
 
-    $("#ch5-how").innerHTML = "<b>How we know.</b> The " + head.length + " races are those confirmed on chain where a bot beat a pending attack or used the attacker's setup. Euler (2023), an earlier setup copy, is left out because the copier's identity is unresolved. Positions and payments come from each block's trace. The bot-side counts come from bot transactions that happen to appear in exploit listings, not from a census of bots. For c0ffeebabe.eth we describe public transactions only." + SH();
+    $("#ch5-how").innerHTML = "<p>The " + head.length + " races are those confirmed on chain where a bot beat a pending attack or used the attacker's setup. Euler (2023), an earlier setup copy, is left out because the copier's identity is unresolved. Positions and payments come from each block's trace.</p><p>The bot-side counts come from bot transactions that happen to appear in exploit records, not from a census of bots. For c0ffeebabe.eth we describe public transactions only." + SH() + "</p>";
   }
 
-  /* ================= end ================= */
-  function ending(m, seen, lastSeen, y25, dw) {
-    var none = E.quarters.filter(function (q) { return q.q > "2025Q1"; }).every(function (q) { return q.public === 0; });
-    var cards = [
-      ["Attackers hid", pct(m.attacker_seen_pct) + " of attacker transactions were seen in the public mempool" + (none ? ", and none after " + month(lastSeen.d) : "") + ". Ordinary transactions in the same blocks: " + pct(m.control_seen_pct) + "."],
-      ["The window closed", pctS(y25.constructor_pct) + " of " + y25.year + " exploits were constructor-only, and " + pctS(y25.same_tx_pct) + " deployed and attacked in the same transaction. Where a fresh contract went up first, the median wait was " + gapTxt(y25.gap_s_median) + " (" + y25.gap_n + " exploits)."],
-      ["The bots adapted", "Winning bots sit at the top of the block, pay the builder for it, and since " + dw[0].date.slice(0, 4) + " have won by copying the attacker's setup instead of the attack."]
-    ];
-    $("#sum").innerHTML = cards.map(function (c) { return "<div><h3>" + c[0] + "</h3><p>" + c[1] + "</p></div>"; }).join("");
+  /* ================= the takeaway ================= */
+  function ending(D, head, dw) {
+    var races = head.map(function (r) { return { d: r.date, alt: r.race_type === "deploy-window-copy" }; });
+    EVART.mount($("#end-art"), function (ctx, w, h) { EVART.lamps(ctx, w, h, races, { labels: true, x0: w < 700 ? 0.07 : 0.05, x1: w < 700 ? 0.93 : 0.95 }); });
+    $("#end-lede").textContent = COPY.endLede(D);
+    $("#sum").innerHTML = COPY.takeaways(D).map(function (c) { return "<li><h3>" + c[0] + "</h3><p>" + c[1] + "</p></li>"; }).join("");
+    $("#end-close").innerHTML = COPY.close(D);
+    $("#end-note").innerHTML = "The picture above is drawn from the data: " + head.length + " lamps over the forest, one for each race a bot won, placed by date from 2021 to 2026. The " + word(dw.length) + " pale gold lamps are the races won by copying the attacker's setup." + SH();
   }
 
   /* ================= tables ================= */
-  function tbl(title, head, rows, note) {
-    return "<section><h3>" + title + '</h3><div class="ev-tw"><table><thead><tr>' + head.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr></thead><tbody>" +
+  function tbl(title, hd, rows, note) {
+    return "<section><h3>" + title + '</h3><div class="ev-tw"><table><thead><tr>' + hd.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr></thead><tbody>" +
       rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + (c == null ? "n/a" : c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>" + (note ? '<p class="ev-cap">' + note + "</p>" : "") + "</section>";
   }
   function tables(head) {
@@ -549,9 +913,9 @@
     $("#tables").innerHTML = t1 + t2 + t3 + t4;
   }
   function downloads() {
-    var list = (META.downloads || []).filter(function (x) { return /^downloads\/evolution\/.*v2/.test(x.path); });
-    list = list.concat([{ path: F.evo, desc: "Aggregates drawn on this page" }, { path: F.hs, desc: "Race-level totals: payments to builders, returns" }, { path: F.inc, desc: "One row per race" }]);
-    $("#t-dl").innerHTML = "<thead><tr><th>download</th><th>what is in it</th></tr></thead><tbody>" + list.map(function (x) {
+    var lst = (META.downloads || []).filter(function (x) { return /^downloads\/evolution\/.*v2/.test(x.path); });
+    lst = lst.concat([{ path: F.evo, desc: "Aggregates drawn on this page" }, { path: F.hs, desc: "Race-level totals: payments to builders, returns" }, { path: F.inc, desc: "One row per race" }]);
+    $("#t-dl").innerHTML = "<thead><tr><th>download</th><th>what is in it</th></tr></thead><tbody>" + lst.map(function (x) {
       return '<tr><td><a href="' + esc(x.path) + '">' + esc(x.path.split("/").pop()) + "</a></td><td>" + esc(x.desc) + "</td></tr>";
     }).join("") + "</tbody>";
   }
